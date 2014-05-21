@@ -31,6 +31,7 @@ namespace Wms.Controllers.SMS
             ViewBag.hasAdd = true;
             ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
+            ViewBag.hasPrint = true;
             //ViewBag.hasAudit = true;
             //ViewBag.hasAntiTrial = true;
             ViewBag.ModuleID = moduleID;
@@ -59,7 +60,7 @@ namespace Wms.Controllers.SMS
         }
 
 
-     
+     [HttpPost]
         public ActionResult Create(Led ledInfo)
         {
             string strResult = string.Empty;
@@ -67,6 +68,16 @@ namespace Wms.Controllers.SMS
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]//添加分屏
+        public ActionResult LedDetailCreate(Led ledDetail)
+        {
+            string strResult = string.Empty;
+            bool bResult = LedService.Add(ledDetail, out strResult);
+            string msg = bResult ? "新增成功" : "新增失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult Edit(Led ledInfo)
         {
@@ -76,7 +87,25 @@ namespace Wms.Controllers.SMS
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]  //修改分屏
+        public ActionResult InBillDetailEdit(Led ledInfo)
+        {
+            string strResult = string.Empty;
+            bool bResult = LedService.Save(ledInfo, out strResult);
+            string msg = bResult ? "修改成功" : "修改失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Delete(string ledCode)
+        {
+            string strResult = string.Empty;
+            bool bResult = LedService.Delete(ledCode, out strResult);
+            string msg = bResult ? "删除成功" : "删除失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]  //删除分屏InLedDetailDelete
+        public ActionResult InLedDetailDelete(string ledCode)
         {
             string strResult = string.Empty;
             bool bResult = LedService.Delete(ledCode, out strResult);

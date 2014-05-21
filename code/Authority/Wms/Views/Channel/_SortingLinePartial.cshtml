@@ -15,7 +15,18 @@
             if (selectedRow.IsActive == '可用') {
                 $('#details-SortingLineCode').val(selectedRow.SortingLineCode);
                 $('#details-SortingLineName').val(selectedRow.SortingLineName);
+
+
+                //LED信息赋值
+                $('#addSortingLineCode').val(selectedRow.SortingLineCode);
+                $('#addSortingLineName').val(selectedRow.SortingLineName);
+                $('#detailSortingLineCode').val(selectedRow.SortingLineCode);
+                $('#detailSortingLineName').val(selectedRow.SortingLineName);
+
+
+
                 $('#dlg-SortingLine').dialog('close');
+              
             } else {
                 $.messager.alert('提示', '请选择可用分拣线！！', 'warning');
             }

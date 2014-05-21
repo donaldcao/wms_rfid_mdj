@@ -2015,15 +2015,10 @@
     <Content Include="Views\BatchSort\Index.cshtml" />
     <Content Include="Views\Channel\SearchPage.cshtml" />
     <Content Include="Views\Channel\_AddPartial.cshtml" />
-    <Content Include="Views\Channel\_DeletePartial.cshtml" />
-    <Content Include="Views\Channel\_EditPartial.cshtml" />
-    <Content Include="Views\Channel\_SearchPartial.cshtml" />
-    <Content Include="Views\Channel\Index.cshtml" />
     <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
     <Content Include="Views\BatchSort\AddPage.cshtml" />
     <Content Include="Views\Channel\Index.cshtml" />
     <Content Include="Views\Channel\_SearchPartial.cshtml" />
-    <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\Channel\_ProductPartial.cshtml" />
     <Content Include="Views\Channel\_SortingLinePartial.cshtml" />
     <Content Include="Views\Channel\_EditPartial.cshtml" />
@@ -2478,7 +2473,6 @@
     <Content Include="Views\Led\_SearchPartial.cshtml" />
     <Content Include="Views\Led\Index.cshtml" />
     <Content Include="Views\Led\_LedGroupCodePartial.cshtml" />
-    <Content Include="Views\Led\_AddPartial2.cshtml" />
     <Content Include="Views\SortOrderAllot\Index.cshtml" />
     <Content Include="Views\SortOrderAllot\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderAllot\_PrintPartial.cshtml" />

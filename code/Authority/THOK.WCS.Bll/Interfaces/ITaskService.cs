@@ -2,25 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using THOK.WCS.DbModel;
+using THOK.WCS.Bll.Models;
 
 namespace THOK.WCS.Bll.Interfaces
 {
     public interface ITaskService
     {
-        bool CreateNewTaskFromInBill(string billNo);
+        object GetDetails(int page, int rows, Task task);
+        bool Add(Task task, out string strResult);
+        bool Save(Task task, out string strResult);
+        bool Delete(string taskID, out string strResult);
 
-        bool CreateNewTaskFromOutBill(string billNo);
+        bool CreateInBillTask(string billNo, out string errInfo);
+        bool CreateOutBillTask(string billNo, out string errInfo);
+        bool CreateMoveBillTask(string billNo,int taskLevel, out string errInfo);
+        bool CreateCheckBillTask(string billNo, out string errorInfo);
+        bool CreateSortWorkDispatchTask(string billNo, out string errorInfo);
 
-        bool CreateNewTaskFromMoveBill(string billNo);
+        bool CreateNewTaskForEmptyPalletStack(int positionID, string positionName, out string errorInfo);
+        bool CreateNewTaskForEmptyPalletSupply(int positionID, string positionName, out string errorInfo);
+        bool CreateNewTaskForMoveBackRemain(int taskID, out string errorInfo);
 
-        bool CreateNewTaskFromCheckBill(string billNo);
+        bool FinishTask(int taskID, out string errorInfo);
+        bool FinishTask(int taskID, string orderType, string orderID, int allotID, string originCellCode, string targetCellCode, string originStorageCode, string targetStorageCode, out string errorInfo);
 
-        bool CreateNewTaskForEmptyPalletStack(int positionID);
+        bool ClearTask(out string errorInfo);
+        bool ClearTask(string orderID, out string errorInfo);
 
-        bool CreateNewTaskForEmptyPalletSupply(int positionID);
+        int FinishStockOutTask(int taskID, int stockOutQuantity, out string errorInfo);
+        int FinishInventoryTask(int taskID, int realQuantity, out string errorInfo);
 
-        bool CreateNewTaskForMoveBackRemain(int taskID);
+        bool CreateAutoMoveBill(out string errorInfo);
 
-        bool FinishTask(int taskID);        
+        void GetOutTask(string positionType, string orderType, RestReturn result);
+        void FinishTask(string taskID, RestReturn result);
+
+        bool CreateAutoMoveCell(out string errorInfo);
     }
 }

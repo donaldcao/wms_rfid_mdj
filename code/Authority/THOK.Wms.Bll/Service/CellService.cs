@@ -42,11 +42,77 @@ namespace THOK.Wms.Bll.Service
         public object GetDetails(int page, int rows, string cellCode)
         {
             IQueryable<Cell> cellQuery = CellRepository.GetQueryable();
-            var cell = cellQuery.OrderBy(b => b.CellCode).AsEnumerable().Select(b => new { b.CellCode, b.CellName, b.CellType, b.ShortName, b.Rfid, b.Layer, b.Col, b.ImgX, b.ImgY, b.IsSingle, b.MaxQuantity, b.Description, b.Warehouse.WarehouseName, b.Warehouse.WarehouseCode, b.Area.AreaCode, b.Area.AreaName, b.Shelf.ShelfCode, b.Shelf.ShelfName, IsActive = b.IsActive == "1" ? "可用" : "不可用", UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") });
+            var cell = cellQuery.OrderBy(b => b.CellCode).AsEnumerable().Select(b => new { 
+                b.CellCode, 
+                b.CellName, 
+                b.CellType, 
+                b.ShortName, 
+                b.Rfid, 
+                b.Layer, 
+                b.Col, 
+                b.ImgX, 
+                b.ImgY, 
+                b.IsSingle, 
+                b.MaxQuantity, 
+                b.Description, 
+                b.Warehouse.WarehouseName, 
+                b.Warehouse.WarehouseCode,
+                b.Area.AreaCode, 
+                b.Area.AreaName, 
+                b.Shelf.ShelfCode, 
+                b.Shelf.ShelfName, 
+                IsActive = b.IsActive == "1" ? "可用" : "不可用", 
+                UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss"),
+                FirstInFirstOut = b.FirstInFirstOut == true ? "是" : "否"
+            });
             int total = cell.Count();
             cell = cell.Skip((page - 1) * rows).Take(rows);
             return new { total, rows = cell.ToArray() };
         }
+        public object GetDetails(int page, int rows, string queryString, string value)
+        {
+            string cellCode = "", cellName = "";
+
+            if (queryString == "CellCode")
+            {
+                cellCode = value;
+            }
+            else
+            {
+                cellName = value;
+            }
+            IQueryable<Cell> cellQuery = CellRepository.GetQueryable();
+            var cell = cellQuery.Where(c => c.CellCode.Contains(cellCode) && c.CellName.Contains(cellName))
+                .OrderBy(b => b.CellCode).AsEnumerable()
+                .Select(b => new
+                {
+                    b.CellCode,
+                    b.CellName,
+                    b.CellType,
+                    b.ShortName,
+                    b.Rfid,
+                    b.Layer,
+                    b.Col,
+                    b.ImgX,
+                    b.ImgY,
+                    b.IsSingle,
+                    b.MaxQuantity,
+                    b.Description,
+                    b.Warehouse.WarehouseName,
+                    b.Warehouse.WarehouseCode,
+                    b.Area.AreaCode,
+                    b.Area.AreaName,
+                    b.Shelf.ShelfCode,
+                    b.Shelf.ShelfName,
+                    IsActive = b.IsActive == "1" ? "可用" : "不可用",
+                    UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss"),
+                    FirstInFirstOut = b.FirstInFirstOut == true ? "是" : "否"
+                });
+            int total = cell.Count();
+            cell = cell.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = cell.ToArray() };
+        }
+
         public object GetDetail(int page, int rows, string type, string id)
         {
             var warehouses = WarehouseRepository.GetQueryable();
@@ -125,6 +191,7 @@ namespace THOK.Wms.Bll.Service
                         cellTree.Layer = cell.Layer;
                         cellTree.MaxQuantity = cell.MaxQuantity;
                         cellTree.ProductName = cell.Product == null ? string.Empty : cell.Product.ProductName;
+                        cellTree.FirstInFirstOut = cell.FirstInFirstOut;
                         cellTree.attributes = "cell";
                         cellSet.Add(cellTree);
                     }
@@ -155,6 +222,7 @@ namespace THOK.Wms.Bll.Service
                     cellTree.ShortName = cell.ShortName;
                     cellTree.Layer = cell.Layer;
                     cellTree.MaxQuantity = cell.MaxQuantity;
+                    cellTree.FirstInFirstOut =  cell.FirstInFirstOut;
                     cellTree.ProductName = cell.Product == null ? string.Empty : cell.Product.ProductName;
                     cellTree.attributes = "cell";
                     cellSet.Add(cellTree);
@@ -223,6 +291,8 @@ namespace THOK.Wms.Bll.Service
                 cellAdd.Description = cell.Description;
                 cellAdd.IsActive = cell.IsActive;
                 cellAdd.UpdateTime = DateTime.Now;
+                cellAdd.FirstInFirstOut = cell.FirstInFirstOut;
+                cellAdd.IsMultiBrand = cell.IsMultiBrand;
 
                 CellRepository.Add(cellAdd);
                 CellRepository.SaveChanges();
@@ -277,6 +347,8 @@ namespace THOK.Wms.Bll.Service
             cellSave.Description = cell.Description;
             cellSave.IsActive = cell.IsActive;
             cellSave.UpdateTime = DateTime.Now;
+            cellSave.IsMultiBrand = cell.IsMultiBrand;
+            cellSave.FirstInFirstOut = cell.FirstInFirstOut;
 
             CellRepository.SaveChanges();
             //仓储属性上报
@@ -332,53 +404,6 @@ namespace THOK.Wms.Bll.Service
             }            
         }
         
-        //Test 
-        public bool SetTree2(string strId, string proCode)
-        {
-            string[] arrayList = strId.Split(',');
-            string id;
-            string type;
-            bool isCheck;
-            bool result = false;
-            for (int i = 0; i < arrayList.Length - 1; i++)
-            {
-                string[] array = arrayList[i].Split('^');
-                type = array[0];
-                id = array[1];
-                isCheck = Convert.ToBoolean(array[2]);
-                string proCode2 = proCode;
-                UpdateTree(type, id, isCheck, proCode2);
-                result = true;
-            }
-            return result;
-        }
-
-        public bool UpdateTree(string type, string id,bool isCheck, string proCode2)
-        {
-            bool result = false;
-
-            if (type == "cell")
-            {
-                IQueryable<Cell> queryCell = CellRepository.GetQueryable();
-                var cell = queryCell.FirstOrDefault(i => i.CellCode == id);
-                if (isCheck == true)
-                {
-                    cell.DefaultProductCode = proCode2;
-                }
-                else
-                {
-                    cell.DefaultProductCode = null;
-                }
-                CellRepository.SaveChanges();
-                result = true;
-            }
-            else
-            {
-                return false;
-            }
-            return result;
-        }
-        
         /// <summary>删除货位数量的信息</summary>
         public bool DeleteCell(string productCodes)
         {
@@ -391,19 +416,21 @@ namespace THOK.Wms.Bll.Service
         }
 
         /// <summary>加载卷烟信息</summary>
-        public object GetCellInfo()
+        public object GetCellInfo(int page,int rows)
         {
-            IQueryable<Cell> cellQuery = CellRepository.GetQueryable();
-
-            var cellInfo = cellQuery.Where(c1 => c1.Product != null)
+            var cell = CellRepository.GetQueryable()
+                .Where(c1 => c1.Product != null)
                 .GroupBy(c2 => c2.Product)
                 .Select(c3 => new
                 {
                     ProductCode = c3.Key.ProductCode,
                     ProductName = c3.Key.ProductName,
                     ProductQuantity = c3.Count()
-                });
-            return cellInfo;
+                })
+                .OrderBy(c=>c.ProductCode);
+            int total = cell.Count();
+            var cell2 = cell.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = cell2.ToArray() };
         }
 
         public object GetCellBy(int page, int rows, string QueryString, string Value)
@@ -622,7 +649,32 @@ namespace THOK.Wms.Bll.Service
         {
             IQueryable<Cell> cellQuery = CellRepository.GetQueryable();
             var cell = cellQuery.Where(c => c.CellCode == cellCode).OrderBy(b => b.CellCode).AsEnumerable()
-                                .Select(b => new { b.CellCode, b.CellName, b.CellType, b.ShortName, b.Rfid, b.Layer, b.Col, b.ImgX, b.ImgY, b.IsSingle, b.MaxQuantity, b.Description, b.Warehouse.WarehouseName, b.Warehouse.WarehouseCode, b.Area.AreaCode, b.Area.AreaName, b.Shelf.ShelfCode, b.Shelf.ShelfName, DefaultProductCode = b.Product == null ? string.Empty : b.Product.ProductCode, ProductName = b.Product == null ? string.Empty : b.Product.ProductName, IsActive = b.IsActive == "1" ? "可用" : "不可用", UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") });
+                                .Select(b => new {
+                                    b.CellCode, 
+                                    b.CellName, 
+                                    b.CellType, 
+                                    b.ShortName, 
+                                    b.Rfid, 
+                                    b.Layer, 
+                                    b.Col, 
+                                    b.ImgX, 
+                                    b.ImgY, 
+                                    b.IsSingle, 
+                                    b.MaxQuantity, 
+                                    b.Description, 
+                                    b.Warehouse.WarehouseName, 
+                                    b.Warehouse.WarehouseCode, 
+                                    b.Area.AreaCode, 
+                                    b.Area.AreaName, 
+                                    b.Shelf.ShelfCode, 
+                                    b.Shelf.ShelfName, 
+                                    DefaultProductCode = b.Product == null ? string.Empty : b.Product.ProductCode, 
+                                    ProductName = b.Product == null ? string.Empty : b.Product.ProductName, 
+                                    IsActive = b.IsActive == "1" ? "可用" : "不可用", 
+                                    UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") ,
+                                    IsMultiBrand=b.IsMultiBrand=="1"?"是":"否",
+                                    FirstInFirstOut = b.FirstInFirstOut == true ? "是" : "否"
+                                });
             return cell.First(c => c.CellCode == cellCode);
         }
 
@@ -810,34 +862,12 @@ namespace THOK.Wms.Bll.Service
                 }
                 else if (inOrOut == "in")//查询出可以移入卷烟的货位 ,
                 {
-                    var cellf = cells.Where(c => c.Shelf.ShelfCode == shelfCode && c.IsSingle == "0" && c.IsActive == "1").OrderBy(c => c.CellCode).Select(c => c);
-                    cells = cells.Where(c => c.Shelf.ShelfCode == shelfCode && c.IsActive == "1"
-                                            && (c.Storages.Count == 0 || c.Storages.Any(s => (s.ProductCode == productCode && (c.MaxQuantity * s.Product.Unit.Count) - (s.Quantity + s.InFrozenQuantity) > 0))
-                                            || c.Storages.Sum(s => s.Quantity + s.InFrozenQuantity) == 0) && c.IsSingle == "1")
-                                             .OrderBy(c => c.CellCode).Select(c => c);
-                    foreach (var cell in cellf)//货位
-                    {
-                        string quantityStr = "";
-                        if (inOrOut == "in")
-                        {
-                            if (cell.Storages.Count != 0 && cell.Storages.Sum(s => s.Quantity + s.InFrozenQuantity) != 0)
-                            {
-                                var cellQuantity = cell.Storages.GroupBy(g => new { g.Cell }).Select(s => new { quan = s.Key.Cell.Product == null ? s.Key.Cell.MaxQuantity : ((s.Key.Cell.MaxQuantity * s.Key.Cell.Product.Unit.Count) - s.Sum(p => p.Quantity + p.InFrozenQuantity)) / s.Key.Cell.Product.Unit.Count });
-                                decimal quantity = Convert.ToDecimal(cellQuantity.Sum(s => s.quan));
-                                // quantity = Math.Round(quantity, 2);
-                                quantityStr = "<可入：" + quantity + ">件,当前品牌：" + productCode + "";
-                            }
-                            else
-                                quantityStr = "<可入：" + cell.MaxQuantity + ">件";
-                        }
-
-                        Tree cellTree = new Tree();
-                        cellTree.id = cell.CellCode;
-                        cellTree.text = "货位：" + cell.CellName + quantityStr;
-                        cellTree.state = "open";
-                        cellTree.attributes = "cell";
-                        wareSet.Add(cellTree);
-                    }
+                    cells = cells.Where(i => i.Shelf.ShelfCode == shelfCode && i.IsActive == "1")
+                        //.Where(i => string.IsNullOrEmpty(i.DefaultProductCode))
+                                 .Where(i => i.IsMultiBrand == "1" || i.Storages.All(s => s.ProductCode == productCode || (s.Quantity == 0 && s.InFrozenQuantity == 0)))
+                                 .Where(i => i.Storages.Count() < i.MaxPalletQuantity
+                                                        || i.Storages.Any(s => string.IsNullOrEmpty(s.LockTag) && s.Quantity == 0 && s.InFrozenQuantity == 0))
+                                 .OrderBy(c => c.CellCode).Select(c => c);
                 }
                 else if (inOrOut == "stockOut")//查询可以出库的数量 --出库使用
                 {
@@ -853,18 +883,19 @@ namespace THOK.Wms.Bll.Service
                 }
                 foreach (var cell in cells)//货位
                 {
-                    string quantityStr = "";
+                    string quantityStr = string.Empty;
                     if (inOrOut == "in")
                     {
+                        quantityStr = "<可入：";
                         if (cell.Storages.Count != 0 && cell.Storages.Sum(s => s.Quantity + s.InFrozenQuantity) != 0)
                         {
-                            var cellQuantity = cell.Storages.GroupBy(g => new { g.Cell }).Select(s => new { quan = s.Key.Cell.Storages.Max(t => t.ProductCode) == null ? s.Key.Cell.MaxQuantity : ((s.Key.Cell.MaxQuantity * s.Key.Cell.Storages.Max(t => t.Product.Unit.Count)) - s.Sum(p => p.Quantity + p.InFrozenQuantity)) / s.Key.Cell.Storages.Max(t => t.Product.Unit.Count) });
+                            var cellQuantity = cell.Storages.Select(s => new { quan = s.Product == null ? s.Cell.MaxQuantity : ((s.Cell.MaxQuantity * s.Product.Unit.Count) - (s.Quantity+s.InFrozenQuantity)) / s.Product.Unit.Count });
                             decimal quantity = Convert.ToDecimal(cellQuantity.Sum(s => s.quan));
-                           // quantity = Math.Round(quantity, 2);
-                            quantityStr = "<可入：" + quantity + ">件,当前品牌："+productCode+"";
+                            // quantity = Math.Round(quantity, 2);
+                            quantityStr += cell.MaxPalletQuantity.ToString() == "8" ? cell.MaxPalletQuantity - cell.Storages.Where(s => s.Quantity + s.InFrozenQuantity > 0).Count() + ">托盘，当前卷烟：" + productCode : quantity + ">件，当前卷烟：" + productCode;
                         }
                         else
-                            quantityStr = "<可入：" + cell.MaxQuantity + ">件";
+                            quantityStr += cell.MaxPalletQuantity.ToString() == "8" ? cell.MaxPalletQuantity + ">托盘" : cell.MaxQuantity + ">件";
                     }
 
                     Tree cellTree = new Tree();
@@ -998,6 +1029,72 @@ namespace THOK.Wms.Bll.Service
             }
             return cellCodeStr;
         }
+
+        #region 用于 任务管理浏览的信息
+        /// <summary>用于 任务管理浏览的信息 JJ</summary>
+        public object GetCellDetail(string shelfCode)
+        {
+            var warehouses = WarehouseRepository.GetQueryable().AsEnumerable();
+            HashSet<Tree> wareSet = new HashSet<Tree>();
+            if (shelfCode == null || shelfCode == string.Empty)//判断是否是加载货位
+            {
+                foreach (var warehouse in warehouses)//仓库
+                {
+                    Tree wareTree = new Tree();
+                    wareTree.id = warehouse.WarehouseCode;
+                    wareTree.text = "仓库：" + warehouse.WarehouseName;
+                    wareTree.attributes = "ware";
+                    wareTree.state = "open";
+
+                    var areas = AreaRepository.GetQueryable().Where(a => a.Warehouse.WarehouseCode == warehouse.WarehouseCode && a.IsActive == "1")
+                                                             .OrderBy(a => a.AreaCode).Select(a => a);
+                    HashSet<Tree> areaSet = new HashSet<Tree>();
+                    foreach (var area in areas)//库区
+                    {
+                        Tree areaTree = new Tree();
+                        areaTree.id = area.AreaCode;
+                        areaTree.text = "库区：" + area.AreaName;
+                        areaTree.attributes = "area";
+                        areaTree.state = "open";
+
+                        var shelfs = ShelfRepository.GetQueryable().Where(s => s.Area.AreaCode == area.AreaCode)
+                                                                   .OrderBy(s => s.ShelfCode).Select(s => s);
+                        HashSet<Tree> shelfSet = new HashSet<Tree>();
+                        foreach (var shelf in shelfs)//货架
+                        {
+                            Tree shelfTree = new Tree();
+                            shelfTree.id = shelf.ShelfCode;
+                            shelfTree.text = "货架：" + shelf.ShelfName;
+                            shelfTree.attributes = "shelf";
+                            shelfTree.state = "closed";
+
+                            shelfSet.Add(shelfTree);
+                        }
+                        areaTree.children = shelfSet.ToArray();
+                        areaSet.Add(areaTree);
+                    }
+                    wareTree.children = areaSet.ToArray();
+                    wareSet.Add(wareTree);
+                }
+            }
+            else
+            {
+                var cells = CellRepository.GetQueryable().Where(c => c.ShelfCode == shelfCode);
+                //货位
+                foreach (var cell in cells)
+                {
+                    Tree cellTree = new Tree();
+                    cellTree.id = cell.CellCode;
+                    cellTree.text = "货位：" + cell.CellName;
+                    cellTree.attributes = "cell";
+                    cellTree.state = "open";
+
+                    wareSet.Add(cellTree);
+                }
+            }
+            return wareSet.ToArray();
+        }
+        #endregion
 
         public System.Data.DataTable GetCell(int page, int rows, string type, string id)
         {
@@ -1266,5 +1363,96 @@ namespace THOK.Wms.Bll.Service
             return ds;
         }
         #endregion
+
+        /// <summary>查询 拆盘位信息</summary>
+        public object GetSplitPalletCell(int page, int rows, string productCode, string shelfType)
+        {
+            IQueryable<Cell> cellQuery = null;
+            string cpw = "001-07", dpz1 = "001-07-001", dpz2 = "001-07-002", xpz1 = "001-07-003", yxy1 = "001-07-004";
+
+            if ((productCode == "" || productCode == null) && (shelfType == "" || shelfType == null))
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            else if ((productCode != "" || productCode != null) && (shelfType == "" || shelfType == null))
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.AreaCode == cpw && (c.DefaultProductCode.Contains(productCode)));
+            }
+            else if ((productCode == "" || productCode == null) && shelfType == "01")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            else if ((productCode != "" || productCode != null) && shelfType == "01")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode)));
+            }
+            else if ((productCode == "" || productCode == null) && shelfType == "02")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            else if ((productCode != "" || productCode != null) && shelfType == "02")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode)));
+            }
+            else if ((productCode == "" || productCode == null) && shelfType == "03")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            else if ((productCode != "" || productCode != null) && shelfType == "03")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode)));
+            }
+            else if ((productCode == "" || productCode == null) && shelfType == "04")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            else if ((productCode != "" || productCode != null) && shelfType == "04")
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode)));
+            }
+            else
+            {
+                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+            }
+            var cell = cellQuery.OrderBy(b => b.CellCode).Select(b => new
+            {
+                b.CellCode,
+                b.CellName,
+                b.DefaultProductCode,
+                DefaultProductName = b.Product.ProductName
+            });
+            int total = cell.Count();
+            cell = cell.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = cell.ToArray() };
+        }
+        public bool SaveSplitPalletCell(Cell cell, out string strResult)
+        {
+            bool bResult = false;
+            strResult = string.Empty;
+
+            var isExist = CellRepository.GetQueryable().Where(a => a.DefaultProductCode == cell.DefaultProductCode
+                                                                && a.CellCode != cell.CellCode
+                                                                && a.AreaCode == "001-07");
+            var c = CellRepository.GetQueryable().FirstOrDefault(a => a.CellCode == cell.CellCode);
+            
+            if (isExist.Count() < 1)
+            {
+                if (c != null)
+                {
+                    c.DefaultProductCode = cell.DefaultProductCode;
+                    CellRepository.SaveChanges();
+                    bResult = true;
+                }
+                else
+                {
+                    strResult = "未找到此货位信息！";
+                }
+            }
+            else
+            {
+                strResult = "此品牌在拆盘位中已存在预设！（一个品牌对应一个拆盘位）";
+            }
+            return bResult;
+        }
     }
 }

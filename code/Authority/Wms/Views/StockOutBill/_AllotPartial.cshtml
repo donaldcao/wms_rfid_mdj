@@ -143,7 +143,7 @@
                 billNo = row.BillNo;
             }
         } else {
-            $.messager.confirm('错误', '没有选择行！');
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
     function allotClick() {
@@ -165,7 +165,7 @@
                 billNo = row.BillNo;
             }
         } else {
-            $.messager.alert('错误', '没有选择行！');
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     };
 
@@ -195,7 +195,7 @@
                 $.messager.alert('错误', '所选卷烟已分配完成！');
             }
         } else {
-            $.messager.alert('错误', '没有选择行！');
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
 
@@ -205,9 +205,15 @@
         if (detailRow) {
             $('#dlg_allot_modify').dialog('open').dialog('setTitle', '修改');
             $('#fm_allot').form('load', detailRow);
+            if (detailRow.IsWholePallet == 1) {//是整托盘，分配数量只读
+                $('#allQuantity').attr('readonly', 'readonly');
+            }
+            else {
+                $('#allQuantity').removeAttr('readonly');
+            }
             modifyUrl = '/StockOutBillAllot/AllotEdit/';
         } else {
-            $.messager.alert('错误', '没有选择行！');
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
 
@@ -219,7 +225,7 @@
             $('#fm_allot').form('load', detailRow);
             modifyUrl = '/StockOutBillAllot/AllotDelete/';
         } else {
-            $.messager.alert('错误', '没有选择行！');
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
 
@@ -227,6 +233,7 @@
         $.ajaxSender.send('/StockOutBillAllot/AllotCancel/',
                         { billNo: billNo },
                         function (data) {
+                            $('#details').datagrid('reload');
                             $('#outBillDetails1').datagrid('reload');
                             $('#allotBillDetails').datagrid('reload');
                         }, $('#dlg-allot'));
@@ -308,6 +315,7 @@
                         <th field="StartTime" width="80" align="right">开始时间</th>
                         <th field="FinishTime" width="80" align="right">完成时间</th>
                         <th field="Status" width="80" align="right">作业状态</th>
+                        <th field="IsWholePallet" width="80" align="right" hidden="true">是否整托盘</th>
                     </tr>
                 </thead>
             </table>
@@ -359,7 +367,7 @@
                     <td >储位编码</td>
                     <td align="left">
                       <input type="text" name="CellCode" class="easyui-validatebox"  readonly="true" missingmessage="请选择储位！"/>
-                      <a href="#" onclick="javascript:outCellSelect($('input[name=CellCode]'),$('input[name=CellName]'))" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
+                      <a href="#" onclick="javascript:outCellSelect($('input[name=CellCode]'),$('input[name=CellName]'),$('input[name=StorageCode]'))" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                   </tr>
                   <tr>
@@ -380,6 +388,10 @@
                     <td >分配数量</td>
                     <td align="left"><input type="text" name="AllotQuantity" id="allQuantity" class="easyui-numberbox" min="0" max="999999999" precision="2" required="true"/></td>
                   </tr>
+                  <tr style="display:none">
+                    <td >库存编码</td>
+                    <td align="left"><input type="text" name="StorageCode" class="easyui-validatebox" readonly="true" /></td>
+                  </tr>
                 </table>
         </form>
 </div>
@@ -389,7 +401,7 @@
                 fit="true" fitColumns="true"  pagination="true" rownumbers="true" pageSize="10">
                 <thead>
                     <tr>
-                        <th field="ID" width="50" align="left" hidden="true">ID</th>
+                        <th field="ID" width="50" align="left">分配号</th>
                         <th field="BillNo" width="80"  hidden="true">订单号</th>
                         <th field="ProductCode" width="100">商品编码</th>
                         <th field="ProductName" width="80" align="right">商品名称</th>

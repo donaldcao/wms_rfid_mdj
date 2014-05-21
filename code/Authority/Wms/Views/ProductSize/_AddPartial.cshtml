@@ -18,8 +18,8 @@
         if (addDialog == null) {
             addDialog = $('<div></div>').dialog({
                 title: title,
-                width: 310,
-                height: 200,
+                width: 300,
+                height: 250,
                 closed: true,
                 cache: false,
                 modal: true,
@@ -41,6 +41,27 @@
                     if (title == '编辑') {
                         var erow = $('#details').datagrid('getSelected');
                         $('#fm').form('load', erow);
+                        if (erow.AreaNo == '密集库一区') {
+                            $('#inputAreaNo').combo('setValue', '1').combo('setText', erow.AreaNo);
+                        }
+                        else if (erow.AreaNo == '密集库二区') {
+                            $('#inputAreaNo').combo('setValue', '2').combo('setText', erow.AreaNo);
+                        }
+                        else if (erow.AreaNo == '大品种一区') {
+                            $('#inputAreaNo').combo('setValue', '3').combo('setText', erow.AreaNo);
+                        }
+                        else if (erow.AreaNo == '大品种二区') {
+                            $('#inputAreaNo').combo('setValue', '4').combo('setText', erow.AreaNo);
+                        }
+                        else if (erow.AreaNo == '小品种') {
+                            $('#inputAreaNo').combo('setValue', '5').combo('setText', erow.AreaNo);
+                        }
+                        else if (erow.AreaNo == '异型烟') {
+                            $('#inputAreaNo').combo('setValue', '6').combo('setText', erow.AreaNo);
+                        }
+                        else {
+                            $('#inputAreaNo').combo('setValue', '1').combo('setText', erow.AreaNo);
+                        }
                     }
                     else if (title == '删除') {
                         var drow = $('#details').datagrid('getSelected');
@@ -61,11 +82,10 @@
         addKey = true;
         addDialog.dialog('open');
 
-        $('#fm .easyui-validatebox').validatebox({
-            required: true
-        });
-        $('form input').removeAttr("disabled");
         $('#fm').form('clear');
+        $('#fm .easyui-validatebox').validatebox({required: true});
+        $('form input').removeAttr("disabled");
+        
         $('#inputID').attr('value', '自动增长');
         url = '/ProductSize/Create/';
     };
@@ -92,11 +112,6 @@
                 }
             }
         });
-    }
-    function ProductSearchClick() {
-        $('#productData').dialog('open').dialog('setTitle', '商品名称');
-        $('#productDetail').datagrid({ url: '/Product/GetProductBy/' });
-        $("#productDetail").datagrid('reload');
     }
     function SizeSearchClick() {
         $('#sizeData').dialog('open').dialog('setTitle', '件烟尺寸信息');

@@ -245,7 +245,7 @@ namespace THOK.Wms.Bll.Service
                 }
             }
             var storages = storageQuery.Where(s => (ware.Contains(s.Cell.Shelf.Area.Warehouse.WarehouseCode) || area.Contains(s.Cell.Shelf.Area.AreaCode) || shelf.Contains(s.Cell.Shelf.ShelfCode) || cell.Contains(s.Cell.CellCode)) && s.Quantity > 0 && s.IsLock == "0")
-                                       .OrderBy(s => s.StorageCode)
+                                       .OrderBy(s => s.CellCode).ThenBy(s => s.StorageSequence)
                                        .Select(s => s);
 
             int total = storages.Count();
@@ -263,7 +263,8 @@ namespace THOK.Wms.Bll.Service
                                            Quantity = s.Quantity / s.Product.Unit.Count,
                                            IsActive = s.IsActive == "1" ? "可用" : "不可用",
                                            StorageTime = s.StorageTime.ToString("yyyy-MM-dd"),
-                                           UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd")
+                                           UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd"),
+                                           s.StorageSequence
                                        });
             return new { total, rows = temp.ToArray() };
         }
@@ -447,7 +448,7 @@ namespace THOK.Wms.Bll.Service
                 products = products.Substring(0, products.Length - 1);
 
                 var storages = storageQuery.Where(s => s.ProductCode != null && products.Contains(s.ProductCode) && s.Quantity > 0 && s.IsLock == "0")
-                                      .OrderBy(s => s.StorageCode)
+                                      .OrderBy(s => s.ProductCode).ThenBy(s => s.CellCode).ThenBy(s => s.StorageSequence)
                                       .Select(s => s);
                 int total = storages.Count();
                 storages = storages.Skip((page - 1) * rows).Take(rows);
@@ -464,7 +465,8 @@ namespace THOK.Wms.Bll.Service
                     Quantity = s.Quantity / s.Product.Unit.Count,
                     IsActive = s.IsActive == "1" ? "可用" : "不可用",
                     StorageTime = s.StorageTime.ToString("yyyy-MM-dd"),
-                    UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd")
+                    UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd"),
+                    s.StorageSequence
                 });
                 return new { total, rows = temp.ToArray() };
             }
@@ -663,7 +665,7 @@ namespace THOK.Wms.Bll.Service
                         sw.Start();
 
                         #region 循环所有仓库的订单，一个仓库一个盘点单据
-                        var warehouses = wareQuery.OrderBy(w => w.WarehouseCode);
+                        var warehouses = wareQuery.OrderBy(w => w.WarehouseCode);                        
                         foreach (var item in warehouses.ToArray())
                         {
                             var inCells = inAllotQuery.Where(i => i.FinishTime >= begin && i.FinishTime <= end && i.Cell.WarehouseCode == item.WarehouseCode).OrderBy(i => i.CellCode).Select(i => i.CellCode);
@@ -679,7 +681,7 @@ namespace THOK.Wms.Bll.Service
                                 var check = new CheckBillMaster();
                                 check.BillNo = billNo;
                                 check.BillDate = DateTime.Now;
-                                check.BillTypeCode = billType;
+                                check.BillTypeCode = "4003";
                                 check.WarehouseCode = item.WarehouseCode;
                                 check.OperatePersonID = employee.ID;
                                 check.Status = "1";
@@ -800,7 +802,7 @@ namespace THOK.Wms.Bll.Service
                                                                     && c.ProductCode == c.RealProductCode
                                                                     && c.Quantity != c.RealQuantity
                                                                     && c.Status == "2");
-            using (var scope = new TransactionScope())
+            using (TransactionScope scope = new TransactionScope())
             {
                 try
                 {
@@ -822,9 +824,7 @@ namespace THOK.Wms.Bll.Service
                             pbm.UpdateTime = DateTime.Now;
 
                             ProfitLossBillMasterRepository.Add(pbm);
-                            ProfitLossBillMasterRepository.SaveChanges();
                         }
-
                         //添加损益细表
                         foreach (var item in checkDetail.ToArray())
                         {
@@ -850,31 +850,29 @@ namespace THOK.Wms.Bll.Service
                                 }
                                 ProfitLossBillDetailRepository.Add(pbd);
                                 item.Storage.LockTag = string.Empty;
-                                ProfitLossBillDetailRepository.SaveChanges();
                             }
-                            scope.Complete();
                         }
                     }
-
                     var checkBillDetail = CheckBillDetailRepository.GetQueryable().Where(c => c.BillNo == checkbm.BillNo);//解锁盘点锁定
                     foreach (var item in checkBillDetail.ToArray())
                     {
                         item.Storage.IsLock = "0";
                     }
-                    if (checkbm != null && checkbm.Status == "4")
+                    if (checkbm != null && (checkbm.Status == "4" || checkbm.Status == "3"))
                     {
                         checkbm.Status = "5";
                         checkbm.VerifyDate = DateTime.Now;
                         checkbm.UpdateTime = DateTime.Now;
-                        CheckBillMasterRepository.SaveChanges();
-                        result = true;
                     }
+                    CheckBillMasterRepository.SaveChanges();
+
+                    scope.Complete();
+                    result = true;
                 }
                 catch (Exception e)
                 {
                     errorInfo = "确认盘点损益失败！原因：" + e.Message;
                 }
-                scope.Complete();
             }
             return result;
         }

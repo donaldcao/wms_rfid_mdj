@@ -22,8 +22,8 @@
                 new City()
                 {
                     CityID = new Guid("F8344F88-08AD-4F9A-8F45-EAD8BB471105"),
-                    CityName = "玉林市",
-                    Description = "玉林市",
+                    CityName = "牡丹江市",
+                    Description = "牡丹江市",
                     IsActive = true
                 }
             );
@@ -34,8 +34,8 @@
                 new Server()
                 {
                     ServerID = new Guid("F8344F88-08AD-4F9A-8F45-EAD8BB471106"),
-                    ServerName = "玉林服务器",
-                    Description = "玉林服务器",
+                    ServerName = "牡丹江服务器",
+                    Description = "牡丹江服务器",
                     Url = "",
                     IsActive = true,
                     City = city,
@@ -55,15 +55,15 @@
                     new System()
                     {
                         SystemID = new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"),
-                        SystemName = "烟草商业企业数字仓储管理系统",
-                        Description = "烟草商业企业数字仓储管理系统",
+                        SystemName = "自动化仓储管理系统",
+                        Description = "自动化仓储管理系统",
                         Status = true
                     },
                     new System()
                     {
-                        SystemID = new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B234A19"),
-                        SystemName = "烟草数字仓储控制系统",
-                        Description = "烟草数字仓储控制系统",
+                        SystemID = new Guid("ED0E6430-9DEB-4CDE-8DCF-702D5B528AA8"),
+                        SystemName = "分拣管理信息系统",
+                        Description = "半自动化分拣管理信息系统",
                         Status = true
                     }
                 );
@@ -88,9 +88,10 @@
             CreateProductQuality(context);
             
             //CreateUpload(context);
-            //CreateAutomotiveSystems(context);
+            CreateAutomotiveSystems(context);
             CreateSystemParameter(context);
             CreateSystemInfo(context);
+            CreateSortSystemInfo(context);
         }
 
         private void CreateServer(AuthorizeContext context)
@@ -1184,8 +1185,7 @@
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("B8344F88-08AD-4FDA-8F45-EAD3BB471101")
-                    }
-                    ,
+                    },
                     new Module()
                     {
                         ModuleID = new Guid("D3344F88-08AD-4FDA-8F45-EAD3BB471102"),
@@ -1194,6 +1194,30 @@
                         ModuleURL = "/DefaultProductSet/",
                         IndicateImage = "icon-son_Warehouse",
                         DeskTopImage = "image-son_Warehouse",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("B8344F88-08AD-4FDA-8F45-EAD3BB471101")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("0587FC63-9DE4-447F-B15C-7261A6CBB2EA"),
+                        ModuleName = "拆盘位预设置",
+                        ShowOrder = 3,
+                        ModuleURL = "/SplitPalletCell/",
+                        IndicateImage = "icon-son_Bill_Type",
+                        DeskTopImage = "image-son_Bill_Type",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("B8344F88-08AD-4FDA-8F45-EAD3BB471101")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("A410FB87-3C37-4CC9-8284-9D08EC2C3AD8"),
+                        ModuleName = "库存货位预览",
+                        ShowOrder = 4,
+                        ModuleURL = "/StorageCellPreview/",
+                        IndicateImage = "icon-search",
+                        DeskTopImage = "image-search",
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("B8344F88-08AD-4FDA-8F45-EAD3BB471101")
@@ -1297,6 +1321,32 @@
                     ControlName = "help",
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("D3344F88-08AD-4FDA-8F45-EAD3BB471102")
+                },
+                new Function()
+                {
+                    //拆盘位预设置
+                    FunctionID = new Guid("6D2E6B3C-F0C2-4CE4-9870-991F06B82B6A"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("0587FC63-9DE4-447F-B15C-7261A6CBB2EA")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("358A066F-0656-4125-ABFF-9700EDA376A8"),
+                    FunctionName = "编辑",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("0587FC63-9DE4-447F-B15C-7261A6CBB2EA")
+                },
+                new Function()
+                {
+                    //库存货位预览
+                    FunctionID = new Guid("4C4660E5-7D03-4F4E-BE12-25BB5FB34B4F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("A410FB87-3C37-4CC9-8284-9D08EC2C3AD8")
                 }
                 );
             context.SaveChanges();
@@ -2377,6 +2427,14 @@
                     FunctionID = new Guid("E0000000-64A9-4eb2-9C72-9C24C39F5652"),
                     FunctionName = "迁移",
                     ControlName = "migration",
+                    IndicateImage = "icon-reload",
+                    Module_ModuleID = new Guid("FA344F88-08AD-4FDA-8F45-EAD3BB471104")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("87CCA685-5A77-47CC-B4A2-000E793DA8C9"),
+                    FunctionName = "作业",
+                    ControlName = "task",
                     IndicateImage = "icon-reload",
                     Module_ModuleID = new Guid("FA344F88-08AD-4FDA-8F45-EAD3BB471104")
                 }
@@ -3761,19 +3819,19 @@
             context.Set<Module>().AddOrUpdate(
                 new Module()
                 {
-                    ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180"),
+                    ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD"),
                     ModuleName = "仓库作业管理",
-                    ShowOrder = 14,
+                    ShowOrder = 15,
                     ModuleURL = "",
                     IndicateImage = "icon-son_Bill_Type",
                     DeskTopImage = "image-son_Bill_Type",
                     System = system,
                     System_SystemID = system.SystemID,
-                    ParentModule_ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180")
+                    ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
                 },
                  new Module()
                  {
-                     ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B"),
+                     ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB"),
                      ModuleName = "入库作业",
                      ShowOrder = 1,
                      ModuleURL = "/StockInTask/",
@@ -3781,11 +3839,11 @@
                      DeskTopImage = "image-son_StockIntoBill",
                      System = system,
                      System_SystemID = system.SystemID,
-                     ParentModule_ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180")
+                     ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
                  },
                  new Module()
                  {
-                     ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C"),
+                     ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05"),
                      ModuleName = "出库作业",
                      ShowOrder = 2,
                      ModuleURL = "/StockOutTask/",
@@ -3793,11 +3851,11 @@
                      DeskTopImage = "image-son_StockOutBill",
                      System = system,
                      System_SystemID = system.SystemID,
-                     ParentModule_ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180")
+                     ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
                  },
                  new Module()
                  {
-                     ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF"),
+                     ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598"),
                      ModuleName = "移库作业",
                      ShowOrder = 3,
                      ModuleURL = "/StockMoveTask/",
@@ -3805,11 +3863,11 @@
                      DeskTopImage = "image-son_MoveBill",
                      System = system,
                      System_SystemID = system.SystemID,
-                     ParentModule_ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180")
+                     ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
                  },
                  new Module()
                  {
-                     ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D"),
+                     ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C"),
                      ModuleName = "盘点作业",
                      ShowOrder = 4,
                      ModuleURL = "/StockCheckTask/",
@@ -3817,176 +3875,209 @@
                      DeskTopImage = "image-son_CheckBill",
                      System = system,
                      System_SystemID = system.SystemID,
-                     ParentModule_ModuleID = new Guid("F0B8A807-3668-4210-A1F5-AF09CD633180")
+                     ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
+                 },
+                 new Module()
+                 {
+                     ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1"),
+                     ModuleName = "手持作业",
+                     ShowOrder = 5,
+                     ModuleURL = "/PdaTask/",
+                     IndicateImage = "icon-son_Employee",
+                     DeskTopImage = "image-son_Employee",
+                     System = system,
+                     System_SystemID = system.SystemID,
+                     ParentModule_ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD")
                  }
              );
             context.SaveChanges();
             context.Set<Function>().AddOrUpdate(
-               new Function()
-               {
-                   FunctionID = new Guid("1546490D-CF88-460C-9BA4-D19F83B7517D"),
-                   FunctionName = "查询",
-                   ControlName = "search",
-                   IndicateImage = "icon-search",
-                   Module_ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("063E0310-8C7C-403A-AF59-80745F4493E7"),
-                   FunctionName = "申请",
-                   ControlName = "apply",
-                   IndicateImage = "icon-apply",
-                   Module_ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("1767DC45-5F74-4DE5-94E4-7B825B40B318"),
-                   FunctionName = "取消",
-                   ControlName = "cancel",
-                   IndicateImage = "icon-cancel2",
-                   Module_ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("1B2BAE5C-C9AF-4CCC-BF14-5A1F5F4EF34E"),
-                   FunctionName = "完成",
-                   ControlName = "finish",
-                   IndicateImage = "icon-finish",
-                   Module_ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("96E54F68-9269-445F-8CE2-94488E548510"),
-                   FunctionName = "批量",
-                   ControlName = "batch",
-                   IndicateImage = "icon-batch",
-                   Module_ModuleID = new Guid("3E4F99B6-9705-4C7F-896D-E9F9070E8F6B")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("F5DB1D72-9E42-4C8A-84B2-540D2199A2F7"),
-                   FunctionName = "查找",
-                   ControlName = "search",
-                   IndicateImage = "icon-search",
-                   Module_ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("7C266332-5931-4582-B4E7-435F3FD2265F"),
-                   FunctionName = "申请",
-                   ControlName = "apply",
-                   IndicateImage = "icon-apply",
-                   Module_ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("A1623B50-8436-4150-906E-15B1C9533BC8"),
-                   FunctionName = "取消",
-                   ControlName = "cancel",
-                   IndicateImage = "icon-cancel2",
-                   Module_ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("8EF6C43A-7AB6-4F01-9787-87B04B6B882A"),
-                   FunctionName = "完成",
-                   ControlName = "finish",
-                   IndicateImage = "icon-finish",
-                   Module_ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("4F1DE8BD-6C8A-4AF1-B873-A64088FB932D"),
-                   FunctionName = "批量",
-                   ControlName = "batch",
-                   IndicateImage = "icon-batch",
-                   Module_ModuleID = new Guid("A91EF32E-EE48-400B-B149-B5EF9DF7727C")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("F5DB1D72-9E42-4C8A-84B2-540D2199A2F7"),
-                   FunctionName = "查找",
-                   ControlName = "search",
-                   IndicateImage = "icon-search",
-                   Module_ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("69029E64-3AD0-429C-9B8B-8F7619EEFBB1"),
-                   FunctionName = "申请",
-                   ControlName = "apply",
-                   IndicateImage = "icon-apply",
-                   Module_ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("5975B8CC-61AE-407D-A7F7-C3A9553E7843"),
-                   FunctionName = "取消",
-                   ControlName = "cancel",
-                   IndicateImage = "icon-cancel2",
-                   Module_ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("CDC6D96A-C056-4EBD-9096-88F30C1AF5DB"),
-                   FunctionName = "完成",
-                   ControlName = "finish",
-                   IndicateImage = "icon-finish",
-                   Module_ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("E35FF192-C17C-4A87-A3EB-FF48D00CEA9B"),
-                   FunctionName = "批量",
-                   ControlName = "batch",
-                   IndicateImage = "icon-batch",
-                   Module_ModuleID = new Guid("9C177134-A96C-4343-A54A-413C83CCA9BF")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("52983D56-B8CD-48C2-838B-FF6E9395E3E3"),
-                   FunctionName = "查询",
-                   ControlName = "search",
-                   IndicateImage = "icon-search",
-                   Module_ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("9725DAAC-7FE5-445D-B1F6-25B6CDF230E1"),
-                   FunctionName = "申请",
-                   ControlName = "apply",
-                   IndicateImage = "icon-apply",
-                   Module_ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("C34D2149-F702-4914-B868-7315DD7D1D52"),
-                   FunctionName = "取消",
-                   ControlName = "cancel",
-                   IndicateImage = "icon-cancel2",
-                   Module_ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D")
-               }
-               ,
-               new Function()
-               {
-                   FunctionID = new Guid("2D0C3147-B77C-4B55-898F-5DBD5C4F786C"),
-                   FunctionName = "完成",
-                   ControlName = "finish",
-                   IndicateImage = "icon-finish",
-                   Module_ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D")
-               },
-               new Function()
-               {
-                   FunctionID = new Guid("312F0CC6-B1A3-4E52-9235-DD9B3466E43B"),
-                   FunctionName = "批量",
-                   ControlName = "batch",
-                   IndicateImage = "icon-batch",
-                   Module_ModuleID = new Guid("3F67FD24-D57A-48CF-A5C1-FC2F9BB8DB1D")
-               }
+                // 入库作业按钮
+                new Function()
+                {
+                    FunctionID = new Guid("E7CFD8A5-9B4C-4383-ACAF-76F1B92C4AE6"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("368AEC97-1EA1-4016-A37E-503442EEE3E8"),
+                    FunctionName = "申请",
+                    ControlName = "apply",
+                    IndicateImage = "icon-apply",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("DA331CEC-C9AA-4F14-A146-57F4AB399B2C"),
+                    FunctionName = "取消",
+                    ControlName = "cancel",
+                    IndicateImage = "icon-cancel2",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("DE54C0F9-9A2F-47ED-94A0-B13CD9EC5466"),
+                    FunctionName = "完成",
+                    ControlName = "finish",
+                    IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("40AEB689-8C5A-4EBE-9D70-D8341E17ECDD"),
+                    FunctionName = "批量",
+                    ControlName = "batch",
+                    IndicateImage = "icon-batch",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                // 出库作业按钮
+                new Function()
+                {
+                    FunctionID = new Guid("9FFBFEA3-CF40-480B-908C-96845C0AF79A"),
+                    FunctionName = "查找",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AD26265-304C-4AE2-93C4-7CE55A8D598B"),
+                    FunctionName = "申请",
+                    ControlName = "apply",
+                    IndicateImage = "icon-apply",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("C90B96D0-3EC4-4F50-BFE4-E0A0867693EF"),
+                    FunctionName = "取消",
+                    ControlName = "cancel",
+                    IndicateImage = "icon-cancel2",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("0B73416B-5308-457C-ACC8-1F8012DFD640"),
+                    FunctionName = "完成",
+                    ControlName = "finish",
+                    IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("B38FD945-875D-4B4B-818A-AF7952B5651D"),
+                    FunctionName = "批量",
+                    ControlName = "batch",
+                    IndicateImage = "icon-batch",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                // 移库作业按钮
+                new Function()
+                {
+                    FunctionID = new Guid("7CA56AA2-C264-4CDC-9AA3-644B7292CAA1"),
+                    FunctionName = "查找",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("59ED93EA-02A1-43E1-9037-3DE3EFB54917"),
+                    FunctionName = "申请",
+                    ControlName = "apply",
+                    IndicateImage = "icon-apply",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("92F94D43-C09C-49DC-A103-A0AE3AB81013"),
+                    FunctionName = "取消",
+                    ControlName = "cancel",
+                    IndicateImage = "icon-cancel2",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("CFEE5475-70D2-4F01-95F2-8A3BFF704D36"),
+                    FunctionName = "完成",
+                    ControlName = "finish",
+                    IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("DEE0CE91-B090-42DF-A77E-21493B1A4DAB"),
+                    FunctionName = "批量",
+                    ControlName = "batch",
+                    IndicateImage = "icon-batch",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                // 盘点作业按钮
+                new Function()
+                {
+                    FunctionID = new Guid("20AD5809-2485-4FC8-B338-5F51071ADC61"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("20ADED65-404F-4844-8A65-35F7BD64B2B7"),
+                    FunctionName = "申请",
+                    ControlName = "apply",
+                    IndicateImage = "icon-apply",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EC0195A0-A4D4-47BE-9B79-46D5410F329E"),
+                    FunctionName = "取消",
+                    ControlName = "cancel",
+                    IndicateImage = "icon-cancel2",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                }
+                ,
+                new Function()
+                {
+                    FunctionID = new Guid("6CA10850-4F76-40A5-A579-78E56593DF77"),
+                    FunctionName = "完成",
+                    ControlName = "finish",
+                    IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("D51D7FBC-7B13-4641-87BE-A56BD84F7BF8"),
+                    FunctionName = "批量",
+                    ControlName = "batch",
+                    IndicateImage = "icon-batch",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
+                //手持作业
+                new Function()
+                {
+                    FunctionID = new Guid("1FC72DA0-6D0D-4E6B-B59D-3F8B424A3588"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("85440D29-012A-4C84-A0BB-8AA0460323D3"),
+                    FunctionName = "完成",
+                    ControlName = "finish",
+                    IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1")
+                }
             );
-            // context.SaveChanges();
-        }
-
+            context.SaveChanges();
+        } 
+        
         private void CreateSystemParameter(AuthorizeContext context)
         {
             System system = context.Set<System>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"));
@@ -3995,7 +4086,7 @@
                     {
                         ModuleID = new Guid("EDABFF3B-AD8A-4D50-8DB9-71D36EF77F9D"),
                         ModuleName = "系统参数管理",
-                        ShowOrder = 15,
+                        ShowOrder = 16,
                         ModuleURL = "",
                         IndicateImage = "icon-Menu_Jurisdiction",
                         DeskTopImage = "image-Menu_Jurisdiction",
@@ -4057,16 +4148,28 @@
 
         private void CreateSystemInfo(AuthorizeContext context)
         {
-            System system = context.Set<System>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B234A19"));
+            System system = context.Set<System>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"));
             context.Set<Module>().AddOrUpdate(
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D"),
-                        ModuleName = "基础信息管理",
-                        ShowOrder = 1,
+                        ModuleName = "仓储控制管理",
+                        ShowOrder = 14,
                         ModuleURL = "",
                         IndicateImage = "icon-Menu_Jurisdiction",
                         DeskTopImage = "image-Menu_Jurisdiction",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D")
+                    },
+                    new Module
+                    {
+                        ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E"),
+                        ModuleName = "任务管理",
+                        ShowOrder = 0,
+                        ModuleURL = "/TaskManage/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D")
@@ -4624,8 +4727,928 @@
                     ControlName = "help",
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003319C7B1DC")
+                },
+                //任务管理
+                new Function()
+                {
+                    FunctionID = new Guid("42D64D0C-2DA2-4FD4-91AC-EF8D9D798CD0"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9EB915C3-1934-46CF-9028-2DA72862A4FD"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EFDF4A22-3BEB-420A-8155-7700F5718B3E"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("54D0BD9B-E4B0-4C77-B9CA-95E22AB5813D"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("3ACA760B-2340-423F-9611-34379965E8E1"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("5DCD76B9-E275-4E69-BCC7-D0E305807FFD"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("F035AF71-87D0-4D18-98EE-3318BF65145C"),
+                    FunctionName = "清空",
+                    ControlName = "empty",
+                    IndicateImage = "icon-cancel",
+                    Module_ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E")
                 }
+            );
+            context.SaveChanges();
+        }
 
+        private void CreateSortSystemInfo(AuthorizeContext context)
+        {
+            System system = context.Set<System>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6430-9DEB-4CDE-8DCF-702D5B528AA8"));
+            context.Set<Module>().AddOrUpdate(
+                    new Module()
+                    {
+                        ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D"),
+                        ModuleName = "基础信息管理",
+                        ShowOrder = 1,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_Jurisdiction",
+                        DeskTopImage = "image-Menu_Jurisdiction",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module
+                    {
+                        ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E"),
+                        ModuleName = "分拣线信息",
+                        ShowOrder = 1,
+                        ModuleURL = "/SortingLine/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC"),
+                        ModuleName = "区域信息",
+                        ShowOrder = 2,
+                        ModuleURL = "/DeliverDist/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E"),
+                        ModuleName = "线路信息",
+                        ShowOrder = 3,
+                        ModuleURL = "/DeliverLine/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC"),
+                        ModuleName = "客户信息",
+                        ShowOrder = 4,
+                        ModuleURL = "/Channel/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC"),
+                        ModuleName = "卷烟信息",
+                        ShowOrder = 5,
+                        ModuleURL = "/Product/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC"),
+                        ModuleName = "LED信息",
+                        ShowOrder = 6,
+                        ModuleURL = "/Led/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC"),
+                        ModuleName = "烟道信息",
+                        ShowOrder = 7,
+                        ModuleURL = "/Channel/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                     new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200"),
+                        ModuleName = "分拣管理",
+                        ShowOrder = 1,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                        ModuleName = "批次信息",
+                        ShowOrder = 1,
+                        ModuleURL = "/Batch/",
+                        IndicateImage = "icon-son_Bill_Type",
+                        DeskTopImage = "image-son_Bill_Type",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                        ModuleName = "分拣状态",
+                        ShowOrder = 2,
+                        ModuleURL = "/BatchStatus/",
+                        IndicateImage = "icon-son_StockIntoBill",
+                        DeskTopImage = "image-son_StockIntoBill",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                        ModuleName = "分拣作业",
+                        ShowOrder = 3,
+                        ModuleURL = "/SortAllot/",
+                        IndicateImage = "icon-son_StockIntoBill",
+                        DeskTopImage = "image-son_StockIntoBill",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200")
+                    },
+                     new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300"),
+                        ModuleName = "分拣信息查询",
+                        ShowOrder = 2,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                        ModuleName = "线路分配查询",
+                        ShowOrder = 1,
+                        ModuleURL = "/DeliverAllot/",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                        ModuleName = "烟道分配查询",
+                        ShowOrder = 2,
+                        ModuleURL = "/ChannelAllot/",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                        ModuleName = "补货信息查询",
+                        ShowOrder = 3,
+                        ModuleURL = "/SortSupply/",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
+                        ModuleName = "分拣订单查询",
+                        ShowOrder = 4,
+                        ModuleURL = "/SortOrder/",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    }
+            );
+            context.SaveChanges();
+
+            context.Set<Function>().AddOrUpdate(
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-23E9-8901-C864C062319F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("938024C4-5622-45E9-8232-38BF28AD34B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC03E-4533-4B19-8433-18643D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E504-D227-32A7-9E04-D77C8D3794AB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB105C2-8A95-23E9-8ED5-C68DC068919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C6-56E5-45E9-45E9-38BFD8AD43B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB141C1-8A97-23E9-89A7-C664C0682E6F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5A18-45E9-81C8-38BF28AD43B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-9619-4B19-8609-182A3D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E599-D347-12A7-9E10-D73C8D3794BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A95-23E9-8211-C67DC068519F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-56D5-45E9-8A12-38BFD86D43B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A97-23E9-8957-C661C068919F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-2158-45E9-8468-38BF28AD43B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-9619-4B19-8A19-18643D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E4A9-D287-12A7-9E10-D73C8D3794EB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A95-23E9-87E1-C67DC068919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5A45-45E9-8492-38BFD86D43B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-454B-8913-C664C068919F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-562A-45E9-8474-38BF28AD43B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-4533-4B19-8615-18633D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E299-D227-12A7-9E16-D77C8D3794BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A91-23E9-8917-C66DC068919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5645-45E9-823B-38BFD8AD43B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-23E9-8919-C634C068919F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5622-45E9-8420-38BF28A443B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-4533-5B19-8621-18643D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E599-D227-4056-9E22-D67C8D3794BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A95-23E9-8923-C67DC078919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5647-45E9-8424-38BFD8A843B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-23E9-8925-C664C06891DF"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5622-45E9-8426-38BF28A643B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-4533-4B19-8627-18673D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E599-D227-12A7-9E28-D78C8D3794BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A95-23E9-8929-C66DC068919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5645-43A4-8430-38BFD8AD43B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E915C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-4E6B-8931-C664C068919F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-5622-45E9-8432-38B428AD43B4"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-4533-4B19-8633-186A3D1FC308"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E599-D227-12A7-9E34-DB7C8D3794BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A95-23E9-8935-C65DC068919F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("9AF054C4-A213-45E9-8436-38BFD8A143B4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "下载",
+                     ControlName = "download",
+                     IndicateImage = "icon-reload",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "分配",
+                     ControlName = "allot",
+                     IndicateImage = "icon-Menu_CheckBill",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("07432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "确认",
+                     ControlName = "confirm",
+                     IndicateImage = "icon-tip",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("08432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("09432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0301"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0301")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("01432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("02432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                    FunctionName = "增加",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("03432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                    FunctionName = "修改",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("04432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303")
+                }
             );
             context.SaveChanges();
         }

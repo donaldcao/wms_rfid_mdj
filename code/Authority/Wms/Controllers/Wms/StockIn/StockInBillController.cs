@@ -11,6 +11,7 @@ using THOK.WMS.DownloadWms.Bll;
 using THOK.Wms.DownloadWms.Bll;
 using THOK.Authority.Bll.Interfaces;
 using THOK.Security;
+using THOK.WCS.Bll.Interfaces;
 
 namespace Authority.Controllers.Wms.StockIn
 {
@@ -24,7 +25,7 @@ namespace Authority.Controllers.Wms.StockIn
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
         [Dependency]
-        public THOK.Wms.Bll.Interfaces.ITaskService TaskService { get; set; }
+        public ITaskService TaskService { get; set; }
 		[Dependency]
         public IInBillMasterHistoryService InBillMasterHistoryService { get; set; }
 
@@ -224,8 +225,11 @@ namespace Authority.Controllers.Wms.StockIn
         // POST: /StockInBill/inBillMasterSettle/
         public ActionResult InBillMasterSettle(string BillNo)
         {
-            string strResult = string.Empty;
-            bool bResult = InBillMasterService.Settle(BillNo, out strResult);
+            bool bResult = false; string strResult = string.Empty;
+            
+            bResult = TaskService.ClearTask(BillNo, out strResult)
+                && InBillMasterService.Settle(BillNo, out strResult);
+
             string msg = bResult ? "结单成功" : "结单失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -236,7 +240,7 @@ namespace Authority.Controllers.Wms.StockIn
         public ActionResult InBillTask(string BillNo)
         {
             string strResult = string.Empty;
-            bool bResult = TaskService.InBillTask(BillNo, out strResult);
+            bool bResult = TaskService.CreateInBillTask(BillNo, out strResult);
             string msg = bResult ? "作业成功" : "作业失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

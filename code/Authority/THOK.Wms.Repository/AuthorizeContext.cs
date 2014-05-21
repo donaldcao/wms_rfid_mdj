@@ -1,7 +1,9 @@
 using System.Data.Entity;
-using THOK.Wms.DbModel.Mapping;
 using THOK.Wms.Repository.Migrations;
 using THOK.Authority.DbModel.Mapping;
+using THOK.Wms.DbModel.Mapping;
+using THOK.WCS.DbModel.Mapping;
+using THOK.SMS.DbModel.Mapping;
 
 namespace THOK.Wms.Repository
 {
@@ -128,6 +130,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new SizeMap());
             modelBuilder.Configurations.Add(new ProductSizeMap());
             modelBuilder.Configurations.Add(new TaskMap());
+            modelBuilder.Configurations.Add(new TaskHistoryMap());
             modelBuilder.Configurations.Add(new AlarmInfoMap());
 
             #endregion
@@ -141,6 +144,18 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new NavicertMap());
             modelBuilder.Configurations.Add(new PalletMap());
 
+            #endregion
+
+            #region sms
+            modelBuilder.Configurations.Add(new BatchMap());
+            modelBuilder.Configurations.Add(new BatchSortMap());
+            modelBuilder.Configurations.Add(new ChannelMap());
+            modelBuilder.Configurations.Add(new ChannelAllotMap());
+            modelBuilder.Configurations.Add(new LedMap());
+            modelBuilder.Configurations.Add(new DeliverLineAllotMap());
+            modelBuilder.Configurations.Add(new SortOrderAllotMasterMap());
+            modelBuilder.Configurations.Add(new SortOrderAllotDetailMap());
+            modelBuilder.Configurations.Add(new SortSupplyMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

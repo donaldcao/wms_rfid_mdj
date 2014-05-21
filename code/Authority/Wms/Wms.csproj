@@ -75,8 +75,10 @@
     </Reference>
     <Reference Include="Microsoft.Build.Conversion.v4.0" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Microsoft Office\Office15\DCF\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -159,23 +161,30 @@
     <Compile Include="Controllers\Authority\UserController.cs" />
     <Compile Include="Controllers\Authority\UserPermissionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SMS\BatchController.cs" />
+    <Compile Include="Controllers\SMS\BatchSortController.cs" />
+    <Compile Include="Controllers\SMS\ChannelController.cs" />
+    <Compile Include="Controllers\SMS\LedController.cs" />
+    <Compile Include="Controllers\SMS\SortOrderAllotController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
+    <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockCheckTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockInTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockMoveTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockOutTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\TaskController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\AlarmInfoController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\CellPositionController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\PathController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\PathNodeController.cs">
+    <Compile Include="Controllers\WCS\AlarmInfoController.cs" />
+    <Compile Include="Controllers\WCS\CellPositionController.cs" />
+    <Compile Include="Controllers\WCS\PathController.cs" />
+    <Compile Include="Controllers\WCS\PathNodeController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\WMS\BasisInfo\ProductSizeController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\PositionController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\RegionController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\SizeController.cs" />
-    <Compile Include="Controllers\WMS\BasisInfo\SRMController.cs" />
+    <Compile Include="Controllers\WCS\ProductSizeController.cs" />
+    <Compile Include="Controllers\WCS\PositionController.cs" />
+    <Compile Include="Controllers\WCS\RegionController.cs" />
+    <Compile Include="Controllers\WCS\SizeController.cs" />
+    <Compile Include="Controllers\WCS\SRMController.cs" />
+    <Compile Include="Controllers\WCS\TaskManageController.cs" />
     <Compile Include="Controllers\WMS\ComplexSearch\OverStockProductSearchController.cs" />
     <Compile Include="Controllers\WMS\ComplexSearch\SortOrderSearchController.cs" />
     <Compile Include="Controllers\WMS\ComplexSearch\StockCheckSearchController.cs" />
@@ -237,6 +246,8 @@
     <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcel2Controller.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcelController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\ShelfController.cs" />
+    <Compile Include="Controllers\WMS\WarehouseInfo\SplitPalletCellController.cs" />
+    <Compile Include="Controllers\WMS\WarehouseInfo\StorageCellPreviewController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\Warehouse2Controller.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\WarehouseController.cs" />
@@ -245,6 +256,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quartz\JobDoDailyBalance.cs" />
+    <Compile Include="Quartz\JobClearTask.cs" />
     <Compile Include="Security\FormsAuthenticationService.cs" />
     <Compile Include="Security\FormsAuthorizeAttribute.cs" />
     <Compile Include="Security\IFormsAuthenticationService.cs" />
@@ -1642,6 +1654,9 @@
     <Content Include="Scripts\mykeyboardshortcuts.js" />
     <Content Include="Scripts\mymigration.js" />
     <Content Include="Service\WMSService.asmx" />
+    <Content Include="TransactionScopeFactoryProviderConfig.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Company\_%40EditPartial.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -1713,6 +1728,18 @@
     <ProjectReference Include="..\THOK.Common\THOK.Common.csproj">
       <Project>{2F9C4207-F8A0-4E55-A2CB-3514ADC0A437}</Project>
       <Name>THOK.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.Bll\THOK.SMS.Bll.csproj">
+      <Project>{3857795F-03BB-49A4-B6CD-7B01AF22C563}</Project>
+      <Name>THOK.SMS.Bll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.Dal\THOK.SMS.Dal.csproj">
+      <Project>{A83872B4-27B6-4521-91F2-060062551EB8}</Project>
+      <Name>THOK.SMS.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.DbModel\THOK.SMS.DbModel.csproj">
+      <Project>{90503686-2101-43DA-B8BA-473F0F3D7A41}</Project>
+      <Name>THOK.SMS.DbModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\THOK.WCS.Bll\THOK.WCS.Bll.csproj">
       <Project>{C7885513-E200-41BD-8409-359DE49C232D}</Project>
@@ -1919,9 +1946,6 @@
     <Content Include="Views\Department\AddPage.cshtml" />
     <Content Include="Views\Department\SearchPage.cshtml" />
     <Content Include="Views\CellInfo\Index.cshtml" />
-    <Content Include="Views\Employee\SearchPage.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\Employee\_AddPartial.cshtml" />
     <Content Include="Views\HelpEdit\Index.cshtml" />
     <Content Include="Views\DeliverDist\Index.cshtml" />
@@ -1974,6 +1998,37 @@
     <Content Include="Views\CellPosition\_CellCodePartial.cshtml" />
     <Content Include="Views\CellPosition\_CellPartial.cshtml" />
     <Content Include="Views\CellPosition\_CellNamePartial.cshtml" />
+    <Content Include="Views\CheckBill\_TaskPartial.cshtml" />
+    <Content Include="Views\Cargospace\_PrintPartial.cshtml" />
+    <Content Include="Views\Distribution\_PrintPartial.cshtml" />
+    <Content Include="Views\Batch\_AddPartial.cshtml" />
+    <Content Include="Views\Batch\Index.cshtml" />
+    <Content Include="Views\Batch\_DeletePartial.cshtml" />
+    <Content Include="Views\Batch\_EditPartial.cshtml" />
+    <Content Include="Views\Batch\_SearchPartial.cshtml" />
+    <Content Include="Views\Batch\SearchPage.cshtml" />
+    <Content Include="Views\BatchSort\SearchPage.cshtml" />
+    <Content Include="Views\BatchSort\_AddPartial.cshtml" />
+    <Content Include="Views\BatchSort\_DeletePartial.cshtml" />
+    <Content Include="Views\BatchSort\_EditPartial.cshtml" />
+    <Content Include="Views\BatchSort\_SearchPartial.cshtml" />
+    <Content Include="Views\BatchSort\Index.cshtml" />
+    <Content Include="Views\Channel\SearchPage.cshtml" />
+    <Content Include="Views\Channel\_AddPartial.cshtml" />
+    <Content Include="Views\Channel\_DeletePartial.cshtml" />
+    <Content Include="Views\Channel\_EditPartial.cshtml" />
+    <Content Include="Views\Channel\_SearchPartial.cshtml" />
+    <Content Include="Views\Channel\Index.cshtml" />
+    <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
+    <Content Include="Views\BatchSort\AddPage.cshtml" />
+    <Content Include="Views\Channel\Index.cshtml" />
+    <Content Include="Views\Channel\_SearchPartial.cshtml" />
+    <Content Include="Views\Channel\_AddPartial.cshtml" />
+    <Content Include="Views\Channel\_ProductPartial.cshtml" />
+    <Content Include="Views\Channel\_SortingLinePartial.cshtml" />
+    <Content Include="Views\Channel\_EditPartial.cshtml" />
+    <Content Include="Views\Channel\_DeletePartial.cshtml" />
+    <Content Include="Views\Channel\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />
@@ -2363,7 +2418,6 @@
     <Content Include="Views\SystemEventLog\_EmptyPartial.cshtml" />
     <Content Include="Views\SystemEventLog\_PrintPartial.cshtml" />
     <Content Include="Views\SystemEventLog\_DeletePartial.cshtml" />
-    <Content Include="Views\Shared\_EmptyPartial.cshtml" />
     <Content Include="Views\Home\_ProductWarningPartial.cshtml" />
     <Content Include="Views\Shared\_EmptyPartial.cshtml">
       <SubType>Code</SubType>
@@ -2385,7 +2439,6 @@
     <Content Include="Views\Path\_NodePartial.cshtml" />
     <Content Include="Views\Path\_NodeAdmin.cshtml" />
     <Content Include="Views\Shared\_NodePartial.cshtml" />
-    <Content Include="Views\ProductSize\_ProductPartial.cshtml" />
     <Content Include="Views\ProductSize\_SizePartial.cshtml" />
     <Content Include="Views\Path\_PositionPartial.cshtml" />
     <Content Include="Views\StockOutBill\_TaskPartial.cshtml" />
@@ -2394,17 +2447,52 @@
     <Content Include="Views\Server\_PrintPartial.cshtml" />
     <Content Include="Views\System\_PrintPartial.cshtml" />
     <Content Include="Views\Module\_PrintPartial.cshtml" />
-    <Content Include="Views\ProductSize\_Product1Partial.cshtml" />
     <Content Include="Views\ProfitLossBill\_UnitPartial.cshtml" />
     <Content Include="Views\Position\_SRMName1Partial.cshtml" />
     <Content Include="Views\Path\_OriginPartial1.cshtml" />
     <Content Include="Views\Path\_TargetPartial1.cshtml" />
+    <Content Include="Views\TaskManage\Index.cshtml" />
+    <Content Include="Views\TaskManage\_AddPartial.cshtml" />
+    <Content Include="Views\TaskManage\_EditPartial.cshtml" />
+    <Content Include="Views\TaskManage\_SearchPartial.cshtml" />
+    <Content Include="Views\TaskManage\_DeletePartial.cshtml" />
+    <Content Include="Views\TaskManage\_PrintPartial.cshtml" />
+    <Content Include="Views\TaskManage\_PathPartial.cshtml" />
+    <Content Include="Views\TaskManage\_ProductPartial.cshtml" />
+    <Content Include="Views\TaskManage\_CellPartial.cshtml" />
+    <Content Include="Views\TaskManage\_PositionPartial.cshtml" />
+    <Content Include="Views\TaskManage\_EmptyPartial.cshtml" />
+    <Content Include="Views\SplitPalletCell\Index.cshtml" />
+    <Content Include="Views\SplitPalletCell\_SearchPartial.cshtml" />
+    <Content Include="Views\SplitPalletCell\_EditPartial.cshtml" />
+    <Content Include="Views\SplitPalletCell\_ProductPartial.cshtml" />
+    <Content Include="Views\PdaTask\_FinishPartial.cshtml" />
+    <Content Include="Views\PdaTask\_SearchPartial.cshtml" />
+    <Content Include="Views\PdaTask\Index.cshtml" />
+    <Content Include="Views\ProductSize\_ProductPartial.cshtml" />
+    <Content Include="Views\StorageCellPreview\Index.cshtml" />
+    <Content Include="Views\StorageCellPreview\_SearchPartial.cshtml" />
+    <Content Include="Views\Led\_AddPartial.cshtml" />
+    <Content Include="Views\Led\_DeletePartial.cshtml" />
+    <Content Include="Views\Led\_EditPartial.cshtml" />
+    <Content Include="Views\Led\_SearchPartial.cshtml" />
+    <Content Include="Views\Led\Index.cshtml" />
+    <Content Include="Views\Led\_LedGroupCodePartial.cshtml" />
+    <Content Include="Views\Led\_AddPartial2.cshtml" />
+    <Content Include="Views\SortOrderAllot\Index.cshtml" />
+    <Content Include="Views\SortOrderAllot\_SearchPartial.cshtml" />
+    <Content Include="Views\SortOrderAllot\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -2420,7 +2508,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3535</DevelopmentServerPort>
+          <DevelopmentServerPort>5333</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

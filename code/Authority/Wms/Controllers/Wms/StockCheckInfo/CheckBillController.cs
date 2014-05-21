@@ -9,6 +9,8 @@ using THOK.Common.WebUtil;
 using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.WCS.Bll.Service;
+using THOK.WCS.Bll.Interfaces;
 
 namespace Authority.Controllers.Wms.StockCheckInfo
 {
@@ -21,6 +23,8 @@ namespace Authority.Controllers.Wms.StockCheckInfo
         public ICheckBillDetailService CheckBillDetailService { get; set; }
         [Dependency]
         public ICheckBillMasterHistoryService CheckBillMasterHistoryService { get; set; }
+        [Dependency]
+        public ITaskService TaskService { get; set; }
         //
         // GET: /CheckBill/
 
@@ -36,6 +40,7 @@ namespace Authority.Controllers.Wms.StockCheckInfo
             ViewBag.hasAntiTrial = true;
             ViewBag.hasAudit = true;
             ViewBag.hasConfirm = true;
+            ViewBag.hasTask = true;
             ViewBag.ModuleID = moduleID;
             return View();
         }
@@ -156,25 +161,27 @@ namespace Authority.Controllers.Wms.StockCheckInfo
         // POST: /CheckBill/checkBillMasterConfirm/
         public ActionResult checkBillMasterConfirm(string BillNo)
         {
-            string errorInfo = string.Empty;
-            bool bResult = CheckBillMasterService.confirmCheck(BillNo, this.User.Identity.Name.ToString(), out errorInfo);
+            bool bResult = false; string errorInfo = string.Empty;
+
+            bResult = TaskService.ClearTask(BillNo, out errorInfo)
+                    && CheckBillMasterService.confirmCheck(BillNo, this.User.Identity.Name.ToString(), out errorInfo);   
+
             string msg = bResult ? "确认成功" : "确认失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, errorInfo), "text", JsonRequestBehavior.AllowGet);
         }
 
-        #region /MoveBillMaster/CreateExcelToClient/
+        // GET: /CheckBill/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
             string billNo = Request.QueryString["billNo"];
+            string orderByType = Request.QueryString["orderByType"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CheckBillDetailService.GetCheckBillDetail(page, rows, billNo);
+            ep.DT1 = CheckBillDetailService.GetCheckBillDetail(page, rows, billNo, orderByType);
             ep.HeadTitle1 = "盘点单明细";
             return PrintService.Print(ep);
         }
-        #endregion
-
 
         public ActionResult CheckBillMasterHistory(DateTime datetime)
         {
@@ -184,6 +191,15 @@ namespace Authority.Controllers.Wms.StockCheckInfo
             string msg = bResult ? "迁移成功" : "迁移失败";
             if (msg != "迁移成功") result = "原因：" + strResult;
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, result), "text", JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /CheckBill/CheckBillTask/
+        public ActionResult CheckBillTask(string billNo)
+        {
+            string strResult = string.Empty;
+            bool bResult = TaskService.CreateCheckBillTask(billNo, out strResult);
+            string msg = bResult ? "作业成功" : "作业失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
     }
 }

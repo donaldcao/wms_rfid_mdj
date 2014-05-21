@@ -125,6 +125,7 @@ namespace THOK.Wms.Bll.Service
                                                     s.ProductCode,
                                                     s.ProductName
                                                 })
+                                                .OrderBy(s => s.Key.ProductName)
                                                 .Select(s => new
                                                 {
                                                     s.Key.ProductCode,
@@ -262,7 +263,7 @@ namespace THOK.Wms.Bll.Service
             {
                 storages = storageQuery.Where(s => s.Cell.Shelf.ShelfCode == id && s.ProductCode == productCode);
             }
-            var storage = storages.OrderBy(s => s.Product.ProductName).Where(s => s.Quantity > 0);
+            var storage = storages.OrderBy(s => s.CellCode).ThenBy(s => s.StorageSequence).Where(s => s.Quantity > 0);
             int total = storage.Count();
             storage = storage.Skip((page - 1) * rows).Take(rows);
             if (unitType == "1")
@@ -282,7 +283,8 @@ namespace THOK.Wms.Bll.Service
                     Quantity1 = d.Quantity / count1,
                     Quantity2 = d.Quantity / count2,
                     Quantity = d.Quantity,
-                    StorageTime = d.StorageTime.ToString("yyyy-MM-dd")
+                    StorageTime = d.StorageTime.ToString("yyyy-MM-dd"),
+                    d.StorageSequence
                 });
                 return new { total, rows = currentstorage.ToArray() };
             }

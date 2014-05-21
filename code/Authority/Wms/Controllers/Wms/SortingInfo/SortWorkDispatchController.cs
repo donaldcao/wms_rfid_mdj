@@ -10,6 +10,7 @@ using THOK.Common.WebUtil;
 using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.WCS.Bll.Interfaces;
 
 namespace Authority.Controllers.Wms.SortingInfo
 {
@@ -19,7 +20,7 @@ namespace Authority.Controllers.Wms.SortingInfo
         [Dependency]
         public ISortWorkDispatchService SortWorkDispatchService { get; set; }
         [Dependency]
-        public THOK.Wms.Bll.Interfaces.ITaskService TaskService { get; set; }
+        public ITaskService TaskService { get; set; }
         //
         // GET: /SortWorkDispatch/
         public ActionResult Index(string moduleID)
@@ -102,7 +103,7 @@ namespace Authority.Controllers.Wms.SortingInfo
         public ActionResult Task(string moveBillNo)
         {
             string errorInfo = string.Empty;
-            bool bResult = TaskService.MoveBillTask(moveBillNo, out errorInfo);
+            bool bResult = TaskService.CreateSortWorkDispatchTask(moveBillNo, out errorInfo);
             string msg = bResult ? "作业成功" : "作业失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, errorInfo), "text", JsonRequestBehavior.AllowGet);
         }

@@ -75,10 +75,18 @@ namespace THOK.Wms.DbModel.Mapping
                 .IsFixedLength()
                 .HasMaxLength(1);
 
+            this.Property(t => t.IsMultiBrand)
+                .IsRequired()
+                .IsFixedLength()
+                .HasMaxLength(1);
+
             this.Property(t => t.UpdateTime)
                 .IsRequired();
 
             this.Property(t => t.RowVersion).IsRowVersion();
+
+            this.Property(t => t.FirstInFirstOut)
+                .IsRequired();            
 
             // Table & Column Mappings
             this.Property(t => t.CellCode).HasColumnName(ColumnMap.Value.To("CellCode"));
@@ -102,6 +110,8 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.IsActive).HasColumnName(ColumnMap.Value.To("IsActive"));
             this.Property(t => t.UpdateTime).HasColumnName(ColumnMap.Value.To("UpdateTime"));
             this.Property(t => t.RowVersion).HasColumnName(ColumnMap.Value.To("RowVersion"));
+            this.Property(t => t.FirstInFirstOut).HasColumnName(ColumnMap.Value.To("FirstInFirstOut"));
+            this.Property(t => t.StorageTime).HasColumnName(ColumnMap.Value.To("StorageTime"));
 
             // Relationships
             this.HasRequired(t => t.Warehouse)

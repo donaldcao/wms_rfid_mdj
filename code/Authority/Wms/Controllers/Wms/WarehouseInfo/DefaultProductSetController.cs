@@ -74,9 +74,9 @@ namespace Wms.Controllers.Wms.WarehouseInfo
 
         //首页加载卷烟信息
         //POST: /DefaultProductSet/GetProductCell/
-        public ActionResult GetProductCell()
+        public ActionResult GetProductCell(int page,int rows)
         {
-            var product = CellService.GetCellInfo();
+            var product = CellService.GetCellInfo(page,rows);
             return Json(product, "text", JsonRequestBehavior.AllowGet);
         }
 
@@ -112,14 +112,6 @@ namespace Wms.Controllers.Wms.WarehouseInfo
         {
             bool bResult = CellService.DeleteCell(productCodes);
             string msg = bResult ? "删除成功" : "删除失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
-        }
-
-        //POST: /DefaultProductSet/SetTree2/
-        public ActionResult SetTree2(string strId, string proCode)
-        {
-            bool bResult = CellService.SetTree2(strId, proCode);
-            string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }
 

@@ -11,6 +11,7 @@ using THOK.Wms.AutomotiveSystems.Models;
 using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.WCS.Bll.Interfaces;
 
 namespace Authority.Controllers.Wms.StockMove
 {
@@ -22,7 +23,7 @@ namespace Authority.Controllers.Wms.StockMove
         [Dependency]
         public IMoveBillDetailService MoveBillDetailService { get; set; }
         [Dependency]
-        public THOK.Wms.Bll.Interfaces.ITaskService TaskService { get; set; }
+        public ITaskService TaskService { get; set; }
         [Dependency]
         public IMoveBillMasterHistoryService MoveBillMasterHistoryService { get; set; }
         //
@@ -183,8 +184,11 @@ namespace Authority.Controllers.Wms.StockMove
 
         public ActionResult MoveBillMasterSettle(string billNo)
         {
-            string strResult = string.Empty;
-            bool bResult = MoveBillMasterService.Settle(billNo, out strResult);
+            bool bResult = false; string strResult = string.Empty;
+            
+            bResult = TaskService.ClearTask(billNo, out strResult) 
+                && MoveBillMasterService.Settle(billNo, out strResult);
+
             string msg = bResult ? "结单成功" : "结单失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -194,7 +198,7 @@ namespace Authority.Controllers.Wms.StockMove
         public ActionResult MoveBillTask(string moveBillNo)
         {
             string strResult = string.Empty;
-            bool bResult = TaskService.MoveBillTask(moveBillNo, out strResult);
+            bool bResult = TaskService.CreateMoveBillTask(moveBillNo,0, out strResult);
             string msg = bResult ? "作业成功" : "作业失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

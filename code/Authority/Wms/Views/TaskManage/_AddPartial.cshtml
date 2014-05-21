@@ -1,0 +1,277 @@
+﻿<script type="text/javascript">
+    var Module = "TaskManage";
+    var url;
+    var type;
+
+    $(function () {
+        addInit();
+    })
+    //初始化
+    function addInit() {
+        $('#originRegionName2').attr('readonly', 'true');
+        $('#targetRegionName2').attr('readonly', 'true');
+        $('#productCode2').attr('readonly', 'true');
+        $('#productName2').attr('readonly', 'true');
+        $('#originPositionName2').attr('readonly', 'true');
+        $('#targetPositionName2').attr('readonly', 'true');
+        $('#currentPositionName2').attr('readonly', 'true');
+        $('#originCellName2').attr('readonly', 'true');
+        $('#targetCellName2').attr('readonly', 'true');
+        $('#currentCellName2').attr('readonly', 'true');
+
+        $('#taskType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#currentPositionState2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#state2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#tagState2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#orderType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#downloadState2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+
+        $('#quantity2').attr('placeholder', '只能为数字');
+        $('#taskQuantity2').attr('placeholder', '只能为数字');
+        $('#operateQuantity2').attr('placeholder', '只能为数字');
+    }
+    //添加
+    function addClick() {
+        $('#dlg-add').dialog('open').dialog('setTitle', '新增任务管理信息');
+
+        $('#addFm').form('clear');
+        //恢复Form中的文本的有效验证
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        //恢复Form中禁用的文本
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+
+        url = '/TaskManage/Create/';
+    };
+
+    //保存
+    function save() {
+        $('#addFm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    $('#dlg-add').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
+</script>
+<style type="text/css">
+    #dlg-add
+    {
+        width: 500px;
+        height: 260px;
+        padding: 0px 0px;
+    }
+    .div1
+    {
+        padding: 10px 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+    }
+    .addtable
+    {
+        width: 480px;
+        padding: 0px 0px;
+    }
+</style>
+<div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" class="div1">
+            <form id="addFm" method="post" novalidate>
+            <table class="addtable">
+                <tr>
+                    <input name="ID" style="display: none" />
+                </tr>
+                <tr>
+                    <td>
+                        起始位置
+                    </td>
+                    <td>
+                        <input id="originCellCode2" name="OriginCellCode" type="text" style="display: none;" />
+                        <input id="originCellName2" name="OriginCellName" type="text" class="easyui-validatebox"
+                            missingmessage="请选择要移出的货位" />
+                        <a href="#" onclick="cellQuery(1)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        目标位置
+                    </td>
+                    <td>
+                        <input id="targetCellCode2" name="TargetCellCode" type="text" class="easyui-validatebox"
+                            style="display: none;" />
+                        <input id="targetCellName2" name="TargetCellName" type="text" class="easyui-validatebox"
+                            missingmessage="请选择要移出的货位" />
+                        <a href="#" onclick="cellQuery(2)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        当前位置
+                    </td>
+                    <td>
+                        <input id="currentPositionID2" name="CurrentPositionID" style="display: none;" />
+                        <input id="currentPositionName2" name="CurrentPositionName" />
+                        <a href="#" onclick="positionQuery(3)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        当前位置状态
+                    </td>
+                    <td>
+                        <select id="currentPositionState2" name="CurrentPositionState" class="easyui-combobox">
+                            <option value="01">未达到</option>
+                            <option value="02">已达到</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任务类型
+                    </td>
+                    <td style="padding-right: 30px;">
+                        <select id="taskType2" name="TaskType" class="easyui-combobox">
+                            <option value="01">正常任务</option>
+                            <option value="02">叠空托盘</option>
+                            <option value="03">自动移库</option>
+                        </select>
+                    </td>
+                    <td>
+                        状态
+                    </td>
+                    <td>
+                        <select id="state2" name="State" class="easyui-combobox">
+                            <option value="01">等待中</option>
+                            <option value="02">执行中</option>
+                            <option value="03">拣选中</option>
+                            <option value="04">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        商品编码
+                    </td>
+                    <td>
+                        <input id="productCode2" name="ProductCode" class="easyui-validatebox" required="true"/>
+                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        商品名称
+                    </td>
+                    <td>
+                        <input id="productName2" name="ProductName" />
+                    </td>
+                </tr>                
+                <tr>
+                    <td>
+                        原数量
+                    </td>
+                    <td>
+                        <input id="quantity2" name="Quantity" class="easyui-numberbox" min="0" max="999999999" />
+                    </td>
+                    <td>
+                        任务数量
+                    </td>
+                    <td>
+                        <input id="taskQuantity2" name="TaskQuantity" class="easyui-numberbox" min="0" max="999999999" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        已操作数量
+                    </td>
+                    <td>
+                        <input id="operateQuantity2" name="OperateQuantity" class="easyui-numberbox" min="0" max="999999999" />
+                    </td>
+                    <td>
+                        原订单号
+                    </td>
+                    <td>
+                        <input name="OrderID" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        原订单类型
+                    </td>
+                    <td>
+                        <select id="orderType2" name="OrderType" class="easyui-combobox">
+                            <option value="00">无</option>
+                            <option value="01">入库单</option>
+                            <option value="02">移库单</option>
+                            <option value="03">出库单</option>
+                            <option value="04">盘点单</option>
+                            <option value="05">叠空托盘</option>
+                            <option value="06">补空托盘</option>
+                            <option value="07">移库余烟反库</option>
+                            <option value="08">出库余烟返库</option>
+                            <option value="09">盘点余烟返库</option>
+                        </select>
+                    </td>
+                    <td>
+                        原订单分配号
+                    </td>
+                    <td>
+                        <input name="AllotID" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        标签状态
+                    </td>
+                    <td>
+                        <select id="tagState2" name="TagState" class="easyui-combobox">
+                            <option value="01">未点亮</option>
+                            <option value="02">已点亮</option>
+                        </select>
+                    </td>
+                    <td>
+                        补货下载状态
+                    </td>
+                    <td>
+                        <select id="downloadState2" name="DownloadState" class="easyui-combobox">
+                            <option value="0">未下载</option>
+                            <option value="1">已下载</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        任务优先级
+                    </td>
+                    <td>
+                        <input name="TaskLevel" />
+                    </td>
+                    <td>
+                        库存顺序
+                    </td>
+                    <td>
+                        <input name="StorageSequence" />
+                    </td>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">
+        取消</a>
+</div>
+@Html.Partial("_PositionPartial")
+@Html.Partial("_ProductPartial")
+@Html.Partial("_CellPartial")
+@Html.Partial("_PathPartial")

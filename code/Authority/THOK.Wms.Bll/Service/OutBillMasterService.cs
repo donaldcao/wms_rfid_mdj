@@ -455,7 +455,7 @@ namespace THOK.Wms.Bll.Service
             var outbm = OutBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo);
             if (outbm != null && outbm.Status == "5")
             {
-                using (var scope = new TransactionScope())
+                using (TransactionScope scope = new TransactionScope())
                 {
                     try
                     {
@@ -489,6 +489,8 @@ namespace THOK.Wms.Bll.Service
                                     && m.OutStorage.OutFrozenQuantity >= m.RealQuantity)
                                 {
                                     m.InStorage.InFrozenQuantity -= m.RealQuantity;
+                                    m.InStorage.ProductCode = null;
+                                    m.InStorage.StorageSequence = 0;
                                     m.OutStorage.OutFrozenQuantity -= m.RealQuantity;
                                     m.InStorage.LockTag = string.Empty;
                                     m.OutStorage.LockTag = string.Empty;
@@ -526,6 +528,7 @@ namespace THOK.Wms.Bll.Service
                         outbm.Status = "6";
                         outbm.UpdateTime = DateTime.Now;
                         OutBillMasterRepository.SaveChanges();
+
                         scope.Complete();
                         result = true;
                     }

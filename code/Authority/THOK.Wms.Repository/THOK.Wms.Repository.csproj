@@ -366,6 +366,58 @@
     <Compile Include="Migrations\201307080246357_Add_xml_value.Designer.cs">
       <DependentUpon>201307080246357_Add_xml_value.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201308280038013_add_product_size.cs" />
+    <Compile Include="Migrations\201308280038013_add_product_size.Designer.cs">
+      <DependentUpon>201308280038013_add_product_size.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308280137286_add_srm_canceltask.cs" />
+    <Compile Include="Migrations\201308280137286_add_srm_canceltask.Designer.cs">
+      <DependentUpon>201308280137286_add_srm_canceltask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308291104387_modify_task_downloadstate.cs" />
+    <Compile Include="Migrations\201308291104387_modify_task_downloadstate.Designer.cs">
+      <DependentUpon>201308291104387_modify_task_downloadstate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308300548228_modify_cell_add_IsMultiBrand.cs" />
+    <Compile Include="Migrations\201308300548228_modify_cell_add_IsMultiBrand.Designer.cs">
+      <DependentUpon>201308300548228_modify_cell_add_IsMultiBrand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201309010654118_add_position.cs" />
+    <Compile Include="Migrations\201309010654118_add_position.Designer.cs">
+      <DependentUpon>201309010654118_add_position.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201309050228171_modify_cell_and_modify_storage_modify_task.cs" />
+    <Compile Include="Migrations\201309050228171_modify_cell_and_modify_storage_modify_task.Designer.cs">
+      <DependentUpon>201309050228171_modify_cell_and_modify_storage_modify_task.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201310101056238_add_task_history.cs" />
+    <Compile Include="Migrations\201310101056238_add_task_history.Designer.cs">
+      <DependentUpon>201310101056238_add_task_history.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311180323319_add_task_and_history_createtime.cs" />
+    <Compile Include="Migrations\201311180323319_add_task_and_history_createtime.Designer.cs">
+      <DependentUpon>201311180323319_add_task_and_history_createtime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311180502482_modify_task_and_history_to_cellcode.cs" />
+    <Compile Include="Migrations\201311180502482_modify_task_and_history_to_cellcode.Designer.cs">
+      <DependentUpon>201311180502482_modify_task_and_history_to_cellcode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311180541385_add_task_and_history_storagecode.cs" />
+    <Compile Include="Migrations\201311180541385_add_task_and_history_storagecode.Designer.cs">
+      <DependentUpon>201311180541385_add_task_and_history_storagecode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201401030833308_modify_system_parameter_length.cs" />
+    <Compile Include="Migrations\201401030833308_modify_system_parameter_length.Designer.cs">
+      <DependentUpon>201401030833308_modify_system_parameter_length.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404150636429_AddSmsBatch.cs" />
+    <Compile Include="Migrations\201404150636429_AddSmsBatch.Designer.cs">
+      <DependentUpon>201404150636429_AddSmsBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405080244564_Add-SMS_Tables.cs" />
+    <Compile Include="Migrations\201405080244564_Add-SMS_Tables.Designer.cs">
+      <DependentUpon>201405080244564_Add-SMS_Tables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="AuthorizeContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -390,6 +442,14 @@
       <Project>{59FB8EB5-F5B8-4423-8550-A7819C855CDE}</Project>
       <Name>THOK.Common.Ef</Name>
     </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.DbModel\THOK.SMS.DbModel.csproj">
+      <Project>{90503686-2101-43DA-B8BA-473F0F3D7A41}</Project>
+      <Name>THOK.SMS.DbModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.WCS.DbModel\THOK.WCS.DbModel.csproj">
+      <Project>{B8A298CE-D286-4381-9B61-6527B3677ACA}</Project>
+      <Name>THOK.WCS.DbModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.Wms.DbModel\THOK.WMS.DbModel.csproj">
       <Project>{E243AB76-351D-4C97-BFE3-D55E0BA0DECF}</Project>
       <Name>THOK.WMS.DbModel</Name>
@@ -413,6 +473,45 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307080246357_Add_xml_value.resx">
       <DependentUpon>201307080246357_Add_xml_value.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308280038013_add_product_size.resx">
+      <DependentUpon>201308280038013_add_product_size.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308280137286_add_srm_canceltask.resx">
+      <DependentUpon>201308280137286_add_srm_canceltask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308291104387_modify_task_downloadstate.resx">
+      <DependentUpon>201308291104387_modify_task_downloadstate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308300548228_modify_cell_add_IsMultiBrand.resx">
+      <DependentUpon>201308300548228_modify_cell_add_IsMultiBrand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201309010654118_add_position.resx">
+      <DependentUpon>201309010654118_add_position.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201309050228171_modify_cell_and_modify_storage_modify_task.resx">
+      <DependentUpon>201309050228171_modify_cell_and_modify_storage_modify_task.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201310101056238_add_task_history.resx">
+      <DependentUpon>201310101056238_add_task_history.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311180323319_add_task_and_history_createtime.resx">
+      <DependentUpon>201311180323319_add_task_and_history_createtime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311180502482_modify_task_and_history_to_cellcode.resx">
+      <DependentUpon>201311180502482_modify_task_and_history_to_cellcode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311180541385_add_task_and_history_storagecode.resx">
+      <DependentUpon>201311180541385_add_task_and_history_storagecode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401030833308_modify_system_parameter_length.resx">
+      <DependentUpon>201401030833308_modify_system_parameter_length.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404150636429_AddSmsBatch.resx">
+      <DependentUpon>201404150636429_AddSmsBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405080244564_Add-SMS_Tables.resx">
+      <DependentUpon>201405080244564_Add-SMS_Tables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

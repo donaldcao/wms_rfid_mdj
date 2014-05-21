@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="gb2312"?>
+<Config>
+  <ConnetionType>
+    <Type name="Type" value="NetWork" />
+  </ConnetionType>
+  <HttpConnectionStr>
+    <Type name="HttpConnStr" value="http://192.168.0.105:8080/TaskRest/" />
+  </HttpConnectionStr>
+</Config>

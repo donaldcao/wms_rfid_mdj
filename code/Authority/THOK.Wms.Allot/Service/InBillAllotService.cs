@@ -38,7 +38,7 @@ namespace THOK.Wms.Allot.Service
             get { return this.GetType(); }
         }
 
-        #region IInBillAllotService 成员
+        #region 状态
         public string WhatStatus(string status)
         {
             string statusStr = "";
@@ -55,9 +55,11 @@ namespace THOK.Wms.Allot.Service
                     break;
             }
             return statusStr;
-        }
+        } 
+        #endregion
 
-        public object Search(string billNo, int page, int rows)
+        #region 查询
+		public object Search(string billNo, int page, int rows)
         {
             var allotQuery = InBillAllotRepository.GetQueryable();
             var query = allotQuery.Where(a => a.BillNo == billNo).OrderBy(a => a.ID).Select(i => i);
@@ -83,9 +85,11 @@ namespace THOK.Wms.Allot.Service
                                           Status = WhatStatus(a.Status)
                                       });
             return new { total, rows = temp.ToArray() };
-        }
+        } 
+	#endregion
 
-        public bool AllotCancel(string billNo, out string strResult)
+        #region 取消分配
+		public bool AllotCancel(string billNo, out string strResult)
         {
             Locker.LockKey = billNo;
             bool result = false;
@@ -163,9 +167,11 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已分配，或当前订单不存在！";
             }
             return result;
-        }
+        } 
+	#endregion
 
-        public bool AllotDelete(string billNo, long id, out string strResult)
+        #region 删除分配
+		public bool AllotDelete(string billNo, long id, out string strResult)
         {
             bool result = false;
             var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo && i.Status == "3");
@@ -212,9 +218,11 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已分配，或当前订单不存在！";
             }
             return result;
-        }
+        } 
+	#endregion
 
-        public bool AllotEdit(string billNo, long id, string cellCode, decimal allotQuantity, out string strResult)
+        #region 修改分配
+		public bool AllotEdit(string billNo, long id, string cellCode, decimal allotQuantity, out string strResult)
         {
             bool result = false;
             var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo && i.Status == "3");
@@ -292,9 +300,11 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已分配，或当前订单不存在！";
             }
             return result;
-        }
+        } 
+	#endregion
 
-        public bool AllotConfirm(string billNo, out string strResult)
+        #region 确认分配
+		public bool AllotConfirm(string billNo, out string strResult)
         {
             bool result = false;
             var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo && i.Status == "3");
@@ -334,9 +344,11 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已分配，或当前订单不存在！";
             }
             return result;
-        }
+        } 
+	#endregion
 
-        public bool AllotCancelConfirm(string billNo, out string strResult)
+        #region 取消分配
+		public bool AllotCancelConfirm(string billNo, out string strResult)
         {
             bool result = false;
             var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo && i.Status == "4");
@@ -367,9 +379,11 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已确认，或当前订单不存在！";
             }
             return result;
-        }
+        } 
+	#endregion
 
-        /// <summary>
+        #region 手工分配
+		/// <summary>
         /// 手工分配入库单
         /// </summary>
         /// <param name="billNo"></param>
@@ -452,8 +466,8 @@ namespace THOK.Wms.Allot.Service
                 strResult = "当前订单状态不是已分配，或当前订单不存在！";
             }
             return result;
-        }
-        #endregion
+        } 
+	#endregion
 
         #region 手动分配入库单
         public bool AllotAdd(string billNo, long id, string cellCode, string productname, out string strResult,out decimal allotQuantity)
@@ -582,7 +596,7 @@ namespace THOK.Wms.Allot.Service
         }
         #endregion
 
-        #region IInBillAllotService 成员
+        #region 打印
         public System.Data.DataTable AllotSearch(int page, int rows, string billNo)
         {
             System.Data.DataTable dt = null;
@@ -643,7 +657,7 @@ namespace THOK.Wms.Allot.Service
         }
         #endregion
 
-        #region 车载系统
+        #region 任务作业
         public object GetInBillMaster()
         {
             var inBillMaster = InBillMasterRepository.GetQueryable()
@@ -685,51 +699,75 @@ namespace THOK.Wms.Allot.Service
         {
             strResult = string.Empty;
             bool result = false;
-            string[] ids = id.Split(',');
-            string strId = "";
+            string[] ids = id.Split(',').ToArray();
+            int strId;
             InBillAllot allot = null;
 
             var employee = EmployeeRepository.GetQueryable().FirstOrDefault(e => e.UserName == operater);
 
-            for (int i = 0; i < ids.Length; i++)
+            for (int i = 0; i < ids.Length - 1; i++)
             {
-                strId = ids[i].ToString();
-                allot = InBillAllotRepository.GetQueryable().ToArray().FirstOrDefault(a => strId == a.ID.ToString());
+                strId = Convert.ToInt32(ids[i].ToString());
+                allot = InBillAllotRepository.GetQueryable().FirstOrDefault(a => strId == a.ID);
                 if (allot != null)
                 {
-                    if (allot.Status == "0" && status == "1"
-                     || allot.Status == "1" && status == "0"
-                     || allot.Status == "1" && status == "2")
+                    try
                     {
-                        try
+                        decimal quantity = allot.AllotQuantity;
+                        if (allot.Status == "0" && status == "1")//申请
                         {
                             allot.Status = status;
-                            if (operater != "")
-                            {
-                                allot.Operator = employee.EmployeeName;
-                            }
-                            else
-                            {
-                                allot.Operator = "";
-                            }
-                            InBillAllotRepository.SaveChanges();
+                            allot.StartTime = DateTime.Now;
+                            allot.Operator = employee.EmployeeName;
                             result = true;
                         }
-                        catch (Exception ex)
+                        else if (allot.Status == "1" && status == "0" && allot.Operator == employee.EmployeeName)//取消
                         {
-                            strResult = "原因：" + ex.Message;
+                            allot.Status = status;
+                            allot.StartTime = null;
+                            allot.Operator = string.Empty;
+                            result = true;
+                        }
+                        else if (allot.Status == "1" && status == "2" && allot.Operator == employee.EmployeeName)//完成
+                        {
+                            if ((allot.InBillMaster.Status == "4"
+                                    || allot.InBillMaster.Status == "5"
+                                    )&&string.IsNullOrEmpty(allot.Storage.LockTag)
+                                        && allot.AllotQuantity >= quantity
+                                        && allot.Storage.InFrozenQuantity >= quantity)
+                            {
+                                allot.Status = status;
+                                allot.RealQuantity += quantity;
+                                allot.Storage.Quantity += quantity;
+                                allot.Storage.StorageTime = DateTime.Now;
+                                allot.Storage.InFrozenQuantity -= quantity;
+                                allot.InBillDetail.RealQuantity += quantity;
+                                allot.InBillMaster.Status = "5";
+                                allot.FinishTime = DateTime.Now;
+                                if (allot.InBillMaster.InBillAllots.All(c => c.Status == "2"))
+                                {
+                                    allot.InBillMaster.Status = "6";
+                                }
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+                            strResult = "查询状态错误,该数据没有当前状态，请尝试使用车载系统完成！";
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        strResult = "原因：操作错误！";
+                        strResult = "原因：" + ex.Message;
                     }
                 }
                 else
                 {
-                    strResult = "原因：未找到该记录！";
+                    strResult = "原因：未找到细表单号为：" + allot.ID + " 主表单号为:" + allot.BillNo + " 的记录！";
+                    return result;
                 }
             }
+            InBillAllotRepository.SaveChanges();
             return result;
         }
         #endregion

@@ -10,6 +10,8 @@ namespace THOK.Wms.Bll.Interfaces
     {
         object GetDetails(int page, int rows, string cellCode);
 
+        object GetDetails(int page, int rows, string queryString, string value);
+
         object  GetDetail(int page, int rows, string type, string id);
 
         bool Add(Cell cell, out string errorInfo);
@@ -32,8 +34,7 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool SaveCell(string wareCodes, string areaCodes, string shelfCodes, string cellCodes, string defaultProductCode, string editType);
 
-
-        object GetCellInfo();
+        object GetCellInfo(int page,int rows);
 
         object GetCellInfo(string productCode);
 
@@ -42,8 +43,6 @@ namespace THOK.Wms.Bll.Interfaces
         object GetCellCheck(string productCode);
 
         bool DeleteCell(string productCodes);
-
-        bool SetTree2(string strId, string proCode);
 
         object GetCellBy(int page, int rows, string QueryString, string Value);
 
@@ -54,5 +53,10 @@ namespace THOK.Wms.Bll.Interfaces
         System.Data.DataTable GetCellByE(int page, int rows, string QueryString, string Value);
 
         bool uploadCell();
+
+        object GetCellDetail(string shelfCode);
+
+        object GetSplitPalletCell(int page, int rows, string productCode,string shelfType);
+        bool SaveSplitPalletCell(Cell cell, out string strResult);
     }
 }

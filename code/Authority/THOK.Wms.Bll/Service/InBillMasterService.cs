@@ -467,7 +467,7 @@ namespace THOK.Wms.Bll.Service
             var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == BillNo);
             if (ibm != null && ibm.Status == "5")
             {
-                using (var scope = new TransactionScope())
+                using (TransactionScope scope = new TransactionScope())
                 {
                     try
                     {
@@ -499,10 +499,10 @@ namespace THOK.Wms.Bll.Service
                                 }
                             }
                         );
-
                         ibm.Status = "6";
                         ibm.UpdateTime = DateTime.Now;
                         InBillMasterRepository.SaveChanges();
+
                         scope.Complete();
                         result = true;
                     }

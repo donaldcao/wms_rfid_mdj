@@ -1,0 +1,283 @@
+﻿<script type="text/javascript">
+    var Module = "TaskManage";
+
+    $(function () {
+        searchInit();
+    })
+
+    //初始化控件
+    function searchInit() {
+        $('#originRegionName1').attr('readonly', 'true');
+        $('#targetRegionName1').attr('readonly', 'true');
+        $('#productCode1').attr('readonly', 'true');
+        $('#productName1').attr('readonly', 'true');
+        $('#originCellName1').attr('readonly', 'true');
+        $('#targetCellName1').attr('readonly', 'true');
+        $('#originPositionName1').attr('readonly', 'true');
+        $('#targetPositionName1').attr('readonly', 'true');
+        $('#currentPositionName1').attr('readonly', 'true');
+
+        $('#taskType1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#currentPositionState1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#state1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#tagState1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#orderType1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#downloadState1').combo({ editable: false, width: 130, panelHeight: 'auto' });
+    }
+    //清空文本
+    function serachClear() {
+        $("input[type=text]").attr("value", "");
+        $('#taskType1').combo('setValue', "");
+        $('#currentPositionState1').combo('setValue', "");
+        $('#state1').combo('setValue', "");
+        $('#tagState1').combo('setValue', "");
+        $('#orderType1').combo('setValue', "");
+        $('#downloadState1').combo('setValue', "");
+    }
+    //点击查询
+    function searchClick() {
+        serachClear();
+        $('#dlg-search').dialog('open').dialog('setTitle', '查询任务管理信息');
+    }
+    //查询条件
+    function searchByParams() {
+        var queryParams = $('#details').datagrid('options').queryParams;
+        queryParams.ID = $('#id1').val();
+        queryParams.TaskType = $('#taskType1').combo('getValue');
+        queryParams.PathID = $('#pathID1').val();
+        queryParams.ProductCode = $('#productCode1').val();
+        queryParams.ProductName = $('#productName1').val();
+        queryParams.OriginCellCode = $('#originCellCode1').val();
+        queryParams.TargetCellCode = $('#targetCellCode1').val();
+        queryParams.OriginPositionID = $('#originPositionID1').val();
+        queryParams.TargetPositionID = $('#targetPositionID1').val();
+        queryParams.CurrentPositionID = $('#currentPositionID1').val();
+        queryParams.CurrentPositionState = $('#currentPositionState1').combo('getValue');
+        queryParams.State = $('#state1').combo('getValue');
+        queryParams.TagState = $('#tagState1').combo('getValue');
+        queryParams.OrderID = $('#orderID1').val();
+        queryParams.OrderType = $('#orderType1').combo('getValue');
+        queryParams.DownloadState = $('#downloadState1').combo('getValue');
+        queryParams.AllotID = $('#allotID1').val();
+        $('#details').datagrid('options').queryParams = queryParams;
+        $('#details').datagrid({ pageNumber: 1, pageSize: 50 });
+        $("#details").datagrid('reload');
+        $('#dlg-search').dialog('close');
+    }
+</script>
+<style type="text/css">
+    .searchTd1
+    {
+        width: 60;
+        text-align: left;
+    }
+    .searchtable
+    {
+        width: 520;
+    }
+    #dlg-search
+    {
+        width: 520px;
+        height: 270px;
+        padding: 2px 2px;
+    }
+    .searchdiv2
+    {
+        padding: 10px 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+</style>
+<div id="dlg-search" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-search-buttons">
+    <div class="easyui-layout" fit="true">
+        <div class="searchdiv2" region="center">
+            <table class="searchtable">
+                <tr>
+                    <td class="searchTd1">
+                        任务号：
+                    </td>
+                    <td width="168" align="left">
+                        <input id="id1" type="text" />
+                    </td>
+                    <td class="searchTd1">
+                        分配号：
+                    </td>
+                    <td align="left">
+                        <input id="allotID1" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="searchTd1">
+                        任务类型：
+                    </td>
+                    <td align="left">
+                        <select id="taskType1" class="easyui-combobox">
+                            <option value="">　</option>
+                            <option value="01">正常任务</option>
+                            <option value="02">叠空托盘</option>
+                        </select>
+                    </td>
+                    <td class="searchTd1">
+                        状态：
+                    </td>
+                    <td align="left">
+                        <select id="state1" class="easyui-combobox">
+                            <option value="">　</option>
+                            <option value="01">等待中</option>
+                            <option value="02">执行中</option>
+                            <option value="03">拣选中</option>
+                            <option value="04">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="searchTd1">
+                        商品编码：
+                    </td>
+                    <td width="168" align="left">
+                        <input id="productCode1" type="text" />
+                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td class="searchTd1">
+                        商品名称：
+                    </td>
+                    <td align="left">
+                        <input id="productName1" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        起始区域：
+                    </td>
+                    <td>
+                        <input id="pathID1" type="text" style="display: none;" />
+                        <input id="originRegionName1" type="text" />
+                        <a href="#" onclick="pathQuery()" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        目标区域：
+                    </td>
+                    <td>
+                        <input id="targetRegionName1" type="text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        起始存储位：
+                    </td>
+                    <td>
+                        <input id="originCellCode1" name="OriginCellCode" type="text" style="display: none;" />
+                        <input id="originCellName1" name="OriginCellName" type="text" />
+                        <a href="#" onclick="cellQuery(1)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        目标存储位：
+                    </td>
+                    <td>
+                        <input id="targetCellCode1" name="TargetCellCode" type="text" style="display: none;" />
+                        <input id="targetCellName1" name="TargetCellName" type="text" />
+                        <a href="#" onclick="cellQuery(2)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        起始位置：
+                    </td>
+                    <td>
+                        <input id="originPositionID1" type="text" style="display:none;"/>
+                        <input id="originPositionName1" type="text"/>
+                        <a href="#" onclick="positionQuery(1)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td>
+                        目标位置：
+                    </td>
+                    <td>
+                        <input id="targetPositionID1" type="text" style="display:none;" />
+                        <input id="targetPositionName1" type="text"/>
+                        <a href="#" onclick="positionQuery(2)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        当前位置：
+                    </td>
+                    <td>
+                        <input id="currentPositionID1" type="text" style="display:none;" />
+                        <input id="currentPositionName1" type="text"/>
+                        <a href="#" onclick="positionQuery(3)" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true"></a>
+                    </td>
+                    <td class="searchTd1">
+                        当前位置状态：
+                    </td>
+                    <td align="left">
+                        <select id="currentPositionState1" class="easyui-combobox">
+                            <option value="">　</option>
+                            <option value="01">未到达</option>
+                            <option value="02">已达到</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="searchTd1">
+                        原订单号：
+                    </td>
+                    <td align="left">
+                        <input id="orderID1" type="text" />
+                    </td>
+                    <td class="searchTd1">
+                        原订单类型：
+                    </td>
+                    <td align="left">
+                        <select id="orderType1" class="easyui-combobox">
+                            <option value="">　</option>
+                            <option value="01">入库单</option>
+                            <option value="02">移库单</option>
+                            <option value="03">出库单</option>
+                            <option value="04">盘点单</option>
+                            <option value="05">叠空托盘</option>
+                            <option value="06">补空托盘</option>
+                            <option value="07">移库余烟反库</option>
+                            <option value="08">出库余烟返库</option>
+                            <option value="09">盘点余烟返库</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="searchTd1">
+                        标签状态：
+                    </td>
+                    <td align="left">
+                        <select id="tagState1" class="easyui-combobox">
+                            <option value="">　</option>
+                            <option value="01">未点亮</option>
+                            <option value="02">已点亮</option>
+                        </select>
+                    </td>
+                    <td class="searchTd1">
+                        补货下载状态：
+                    </td>
+                    <td align="left">
+                        <select id="downloadState1" class="easyui-combobox" style="width: 130px">
+                            <option value="">　</option>
+                            <option value="0">未下载</option>
+                            <option value="1">已下载</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="dlg-search-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="searchByParams()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+        取消</a>
+</div>

@@ -29,6 +29,9 @@
             else if (row.PositionType == "空托盘出库位") {
                 $('#inputPositionType').combo('setValue', '05').combo('setText', row.PositionType);
             }
+            else if (row.PositionType == "出入库位") {
+                $('#inputPositionType').combo('setValue', '06').combo('setText', row.PositionType);
+            }
             //Extension
             if (row.Extension == "单右伸") {
                 $('#selectExtension').combo('setValue', 0).combo('setText', row.Extension);
@@ -65,6 +68,20 @@
                 $('#selectState').combo('setValue', '01').combo('setText', row.State);
             } else {
                 $('#selectState').combo('setValue', '02').combo('setText', row.State);
+            }
+            //HasGetRequest
+            if (row.HasGetRequest == '是') {
+                $('#selectHasGetRequest').combo('setValue', true).combo('setText', row.HasGetRequest);
+            }
+            else {
+                $('#selectHasGetRequest').combo('setValue', false).combo('setText', row.HasGetRequest);
+            }
+            //HasPutRequest
+            if (row.HasPutRequest == '是') {
+                $('#selectHasPutRequest').combo('setValue', true).combo('setText', row.HasPutRequest);
+            }
+            else {
+                $('#selectHasPutRequest').combo('setValue', false).combo('setText', row.HasPutRequest);
             }
         } else {
             $.messager.alert('错误', '没有选择行！', 'info');

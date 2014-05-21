@@ -153,94 +153,94 @@ namespace Wms
 
         void Session_End()
         {
-            if (Session["userName"] != null)
-            {
-                ServiceFactory UserFactory = new ServiceFactory();
-                UserFactory.GetService<IUserService>().DeleteUserIp(Session["userName"].ToString());
-                UserFactory.GetService<ILoginLogService>().UpdateLoginLog(Session["userName"].ToString(), DateTime.Now.ToString());
-            }
+            //if (Session["userName"] != null)
+            //{
+            //    ServiceFactory UserFactory = new ServiceFactory();
+            //    UserFactory.GetService<IUserService>().DeleteUserIp(Session["userName"].ToString());
+            //    UserFactory.GetService<ILoginLogService>().UpdateLoginLog(Session["userName"].ToString(), DateTime.Now.ToString());
+            //}
         }        
 
-        void Application_AuthenticateRequest(object sender, EventArgs e)
-        {
-            //bool enableGzip = this.Request.Headers["Accept-Encoding"] != null ?
-            //    this.Request.Headers["Accept-Encoding"].Contains("gzip") : false;
-            //if (enableGzip)
-            //{
-            //    this.Response.Filter = new GZipStream(this.Response.Filter, CompressionMode.Compress);
-            //    this.Response.AppendHeader("Content-Encoding", "gzip");
-            //}
+        //void Application_AuthenticateRequest(object sender, EventArgs e)
+        //{
+        //    //bool enableGzip = this.Request.Headers["Accept-Encoding"] != null ?
+        //    //    this.Request.Headers["Accept-Encoding"].Contains("gzip") : false;
+        //    //if (enableGzip)
+        //    //{
+        //    //    this.Response.Filter = new GZipStream(this.Response.Filter, CompressionMode.Compress);
+        //    //    this.Response.AppendHeader("Content-Encoding", "gzip");
+        //    //}
 
-            if (Context.User == null)
-            {
-                var oldTicket = ExtractTicketFromCookie(Context, FormsAuthentication.FormsCookieName);
-                if (oldTicket != null && !oldTicket.Expired)
-                {
-                    var ticket = oldTicket;
-                    if (FormsAuthentication.SlidingExpiration)
-                    {
-                        ticket = FormsAuthentication.RenewTicketIfOld(oldTicket);
-                        if (ticket == null)
-                        {
-                            return;
-                        }
-                    }
-                    string[] roles = new string[] { "Administrator" };
-                    Context.User = new GenericPrincipal(new FormsIdentity(ticket), roles);
-                    if (ticket != oldTicket)
-                    {
-                        string cookieValue = FormsAuthentication.Encrypt(ticket);
-                        var cookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName] ?? new HttpCookie(FormsAuthentication.FormsCookieName, cookieValue) { Path = ticket.CookiePath };
-                        if (ticket.IsPersistent)
-                        {
-                            cookie.Expires = ticket.Expiration;
-                        }
-                        cookie.Value = cookieValue;
-                        cookie.Secure = FormsAuthentication.RequireSSL;
-                        cookie.HttpOnly = true;
-                        if (FormsAuthentication.CookieDomain != null)
-                        {
-                            cookie.Domain = FormsAuthentication.CookieDomain;
-                        }
-                        Context.Response.Cookies.Remove(cookie.Name);
-                        Context.Response.Cookies.Add(cookie);
-                    }
-                }
-            }
-        }
+        //    if (Context.User == null)
+        //    {
+        //        var oldTicket = ExtractTicketFromCookie(Context, FormsAuthentication.FormsCookieName);
+        //        if (oldTicket != null && !oldTicket.Expired)
+        //        {
+        //            var ticket = oldTicket;
+        //            if (FormsAuthentication.SlidingExpiration)
+        //            {
+        //                ticket = FormsAuthentication.RenewTicketIfOld(oldTicket);
+        //                if (ticket == null)
+        //                {
+        //                    return;
+        //                }
+        //            }
+        //            string[] roles = new string[] { "Administrator" };
+        //            Context.User = new GenericPrincipal(new FormsIdentity(ticket), roles);
+        //            if (ticket != oldTicket)
+        //            {
+        //                string cookieValue = FormsAuthentication.Encrypt(ticket);
+        //                var cookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName] ?? new HttpCookie(FormsAuthentication.FormsCookieName, cookieValue) { Path = ticket.CookiePath };
+        //                if (ticket.IsPersistent)
+        //                {
+        //                    cookie.Expires = ticket.Expiration;
+        //                }
+        //                cookie.Value = cookieValue;
+        //                cookie.Secure = FormsAuthentication.RequireSSL;
+        //                cookie.HttpOnly = true;
+        //                if (FormsAuthentication.CookieDomain != null)
+        //                {
+        //                    cookie.Domain = FormsAuthentication.CookieDomain;
+        //                }
+        //                Context.Response.Cookies.Remove(cookie.Name);
+        //                Context.Response.Cookies.Add(cookie);
+        //            }
+        //        }
+        //    }
+        //}
 
-        private static FormsAuthenticationTicket ExtractTicketFromCookie(HttpContext context, string name)
-        {
-            FormsAuthenticationTicket ticket = null;
-            string encryptedTicket = null;
+        //private static FormsAuthenticationTicket ExtractTicketFromCookie(HttpContext context, string name)
+        //{
+        //    FormsAuthenticationTicket ticket = null;
+        //    string encryptedTicket = null;
 
-            var cookie = context.Request.Cookies[name];
-            if (cookie != null)
-            {
-                encryptedTicket = cookie.Value;
-            }
+        //    var cookie = context.Request.Cookies[name];
+        //    if (cookie != null)
+        //    {
+        //        encryptedTicket = cookie.Value;
+        //    }
 
-            if (!string.IsNullOrEmpty(encryptedTicket))
-            {
-                try
-                {
-                    ticket = FormsAuthentication.Decrypt(encryptedTicket);
-                }
-                catch
-                {
-                    context.Request.Cookies.Remove(name);
-                }
+        //    if (!string.IsNullOrEmpty(encryptedTicket))
+        //    {
+        //        try
+        //        {
+        //            ticket = FormsAuthentication.Decrypt(encryptedTicket);
+        //        }
+        //        catch
+        //        {
+        //            context.Request.Cookies.Remove(name);
+        //        }
 
-                if (ticket != null && !ticket.Expired)
-                {
-                    return ticket;
-                }
+        //        if (ticket != null && !ticket.Expired)
+        //        {
+        //            return ticket;
+        //        }
 
-                context.Request.Cookies.Remove(name);
-            }
+        //        context.Request.Cookies.Remove(name);
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         private static void ResetContext()
         {
@@ -260,24 +260,40 @@ namespace Wms
             ISchedulerFactory sf = new StdSchedulerFactory(properties);
             IScheduler sched = sf.GetScheduler();
 
-            IJobDetail job = JobBuilder.Create<JobDoDailyBalance>()
-                .WithIdentity("HelloJob", "HelloJobGroup")
-                .WithDescription("This is my first job")
+            IJobDetail job1 = JobBuilder.Create<JobDoDailyBalance>()
+                .WithIdentity("JobDoDailyBalance", "JobDoDailyBalance")
                 .RequestRecovery()
                 .Build();
 
-            ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity("HelloJob", "HelloJobGroup")
-                .WithDescription("This is my first trigger")
+            ITrigger trigger1 = TriggerBuilder.Create()
+                .WithIdentity("JobDoDailyBalance", "JobDoDailyBalance")
                 //.WithCronSchedule("0/10 * * * * ?")//每10秒执行；
                 .WithCronSchedule("0 0 0/1 1/1 * ? *")//每小时执行；
                 //.WithCronSchedule("0 0 4 1/1 * ? *")//每天4点执行；
                 .StartNow()
                 .Build();
 
-            if (!sched.CheckExists(job.Key))
+            IJobDetail job2 = JobBuilder.Create<JobClearTask>()
+                .WithIdentity("JobClearTask", "JobClearTask")
+                .RequestRecovery()
+                .Build();
+
+            ITrigger trigger2 = TriggerBuilder.Create()
+                .WithIdentity("JobClearTask", "JobClearTask")
+                //.WithCronSchedule("0/10 * * * * ?")//每10秒执行；
+                //.WithCronSchedule("0 0 0/1 1/1 * ? *")//每小时执行；
+                .WithCronSchedule("0 0 4 1/1 * ? *")//每天4点执行；
+                .StartNow()
+                .Build();
+
+            if (!sched.CheckExists(job1.Key))
             {
-                sched.ScheduleJob(job, trigger);
+                sched.ScheduleJob(job1, trigger1);
+            }
+
+            if (!sched.CheckExists(job2.Key))
+            {
+                sched.ScheduleJob(job2, trigger2);
             }
 
             if (!sched.IsStarted)

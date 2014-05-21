@@ -88,6 +88,7 @@ namespace THOK.Wms.Bll.Service
                 c.BuyPrice,
                 c.CostPrice,
                 c.CustomCode,
+                c.CellMaxProductQuantity,
                 c.Description,
                 IsAbnormity = c.IsAbnormity == "1" ? "是" : "不是",
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
@@ -105,6 +106,7 @@ namespace THOK.Wms.Bll.Service
                 c.ProductCode,
                 c.ProductName,
                 c.ProductTypeCode,
+                c.PointAreaCodes,
                 c.RetailPrice,
                 c.ShortCode,
                 c.StatisticType,
@@ -385,10 +387,10 @@ namespace THOK.Wms.Bll.Service
         }
 
         /// <summary>
-        /// 产品盘点显示卷烟信息，入库新增显示卷烟数据
+        /// 出库查询卷烟
         /// </summary>
         /// <returns></returns>
-        public object checkFindProduct(string QueryString, string value)
+        public object OutBillFindProduct(string QueryString, string value)
         {
             IQueryable<Product> ProductQuery = ProductRepository.GetQueryable();
             IQueryable<Storage> StorageQuery = StorageRepository.GetQueryable();
@@ -405,7 +407,45 @@ namespace THOK.Wms.Bll.Service
             var storage = StorageQuery.Join(ProductQuery,
                                            s => s.ProductCode,
                                            p => p.ProductCode,
-                                           (s, p) => new { p.ProductCode, p.ProductName, s.Quantity, s.Product, p.Unit, p.BuyPrice }
+                                           (s, p) => new 
+                                           { 
+                                               p.ProductCode, p.ProductName, s.Quantity, s.Product, p.Unit, p.BuyPrice, s.OutFrozenQuantity 
+                                           })
+                                           .GroupBy(s => new { s.Product })
+                                           .Select(s => new
+                                           {
+                                               ProductCode = s.Key.Product.ProductCode,
+                                               ProductName = s.Key.Product.ProductName,
+                                               UnitCode = s.Key.Product.Unit.UnitCode,
+                                               UnitName = s.Key.Product.Unit.UnitName,
+                                               BuyPrice = s.Key.Product.BuyPrice,
+                                               Quantity = s.Sum(st => ((st.Quantity-st.OutFrozenQuantity) / st.Product.Unit.Count))
+                                           })
+                                           .Where(p => p.ProductCode.Contains(ProductCode) && p.ProductName.Contains(ProductName));
+            return storage.ToArray();
+        }
+        /// <summary>
+        /// 产品盘点显示卷烟信息，入库新增显示卷烟数据
+        /// </summary>
+        /// <returns></returns>
+        public object checkFindProduct(string QueryString, string value)
+        {
+            IQueryable<Product> ProductQuery = ProductRepository.GetQueryable();
+            IQueryable<Storage> StorageQuery = StorageRepository.GetQueryable();
+            string ProductName = "";
+            string ProductCode = "";
+            if (QueryString == "ProductCode")
+            {
+                ProductCode = value;
+            }
+            else 
+            {
+                ProductName = value;
+            }
+            var storage = StorageQuery.Join(ProductQuery,
+                                           s => s.ProductCode,
+                                           p => p.ProductCode,
+                                           (s, p) => new { p.ProductCode, p.ProductName, s.Quantity, s.Product, p.Unit, p.BuyPrice, s.OutFrozenQuantity }
                                            ).GroupBy(s => new { s.ProductCode, s.ProductName, s.Unit, s.BuyPrice })
                                            .Select(s => new
                                            {
@@ -413,9 +453,9 @@ namespace THOK.Wms.Bll.Service
                                                ProductName = s.Key.ProductName,
                                                UnitCode = s.Key.Unit.UnitCode,
                                                UnitName = s.Key.Unit.UnitName,
-                                               BuyPrice = s.Key.BuyPrice,
-                                               Quantity = s.Sum(st => (st.Quantity / st.Product.Unit.Count))
-                                           }).Where(p=>p.ProductCode.Contains(ProductCode)&&p.ProductName.Contains(ProductName));
+                                               BuyPrice = s.Key.BuyPrice,                                             
+                                               Quantity = s.Sum(st => (st.Quantity - st.OutFrozenQuantity) / st.Product.Unit.Count)
+                                           }).Where(p => p.ProductCode.Contains(ProductCode) && p.ProductName.Contains(ProductName));
             // var product = ProductQuery.OrderBy(p => p.ProductCode).Where(p => p.Storages.Any(s => s.ProductCode == p.ProductCode));
             return storage.ToArray();
         }

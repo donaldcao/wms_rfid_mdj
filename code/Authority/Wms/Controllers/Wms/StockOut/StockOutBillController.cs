@@ -10,6 +10,7 @@ using THOK.Common.WebUtil;
 using THOK.WMS.DownloadWms.Bll;
 using THOK.Authority.Bll.Interfaces;
 using THOK.Security;
+using THOK.WCS.Bll.Interfaces;
 
 namespace Authority.Controllers.Wms.StockOut
 {
@@ -24,7 +25,7 @@ namespace Authority.Controllers.Wms.StockOut
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
         [Dependency]
-        public THOK.Wms.Bll.Interfaces.ITaskService TaskService { get; set; }
+        public ITaskService TaskService { get; set; }
         [Dependency]
         public IOutBillMasterHistoryService OutBillMasterHistoryService { get; set; }
         //
@@ -164,13 +165,16 @@ namespace Authority.Controllers.Wms.StockOut
         // POST: /StockOutBill/outBillMasterSettle/
         public ActionResult outBillMasterSettle(string BillNo)
         {
-            string errorInfo = string.Empty;
-            bool bResult = OutBillMasterService.Settle(BillNo, out errorInfo);
+            bool bResult = false; string errorInfo = string.Empty;
+            
+            bResult = TaskService.ClearTask(BillNo, out errorInfo)
+                && OutBillMasterService.Settle(BillNo, out errorInfo);
+
             string msg = bResult ? "结单成功" : "结单失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, errorInfo), "text", JsonRequestBehavior.AllowGet);
         }
 
-        //主单结单
+        //主单下载
         // POST: /StockOutBill/DownOutBillMaster/
         public ActionResult DownOutBillMaster(string beginDate, string endDate, string wareCode, string billType)
         {
@@ -196,8 +200,14 @@ namespace Authority.Controllers.Wms.StockOut
                     pbll.DownProductInfos();//创联
                     custBll.DownCustomerInfos();//创联
                 }
-                bResult = ibll.GetOutBills(beginDate, endDate, this.User.Identity.Name.ToString(), out errorInfo, wareCode, billType);
-
+                if (!SystemParameterService.SetSystemParameter())
+                {
+                    bResult = ibll.GetOutBill2(beginDate, endDate, this.User.Identity.Name.ToString(), out errorInfo, wareCode, billType);
+                }
+                else
+                {
+                    bResult = ibll.GetOutBills(beginDate, endDate, this.User.Identity.Name.ToString(), out errorInfo, wareCode, billType);
+                }
             }
             catch (Exception e)
             {
@@ -225,7 +235,7 @@ namespace Authority.Controllers.Wms.StockOut
         public ActionResult OutBillTask(string BillNo)
         {
             string strResult = string.Empty;
-            bool bResult = TaskService.OutBillTask(BillNo, out strResult);
+            bool bResult = TaskService.CreateOutBillTask(BillNo, out strResult);
             string msg = bResult ? "作业成功" : "作业失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

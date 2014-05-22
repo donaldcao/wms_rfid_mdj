@@ -8,6 +8,8 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface IDeliverLineAllotService : IService<DeliverLineAllot>
     {
-        object GetDetails(int page, int rows, DeliverLineAllot DeliverLineAllot);
+        object GetDetails(int page, int rows, DeliverLineAllot dladeliverLineAllot);
+
+        System.Data.DataTable GetDeliverLineAllot(int page, int rows, DeliverLineAllot deliverLineAllot);
     }
 }

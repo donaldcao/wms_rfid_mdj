@@ -164,8 +164,10 @@
     <Compile Include="Controllers\SMS\BatchController.cs" />
     <Compile Include="Controllers\SMS\BatchSortController.cs" />
     <Compile Include="Controllers\SMS\ChannelController.cs" />
+    <Compile Include="Controllers\SMS\DeliverAllotController.cs" />
     <Compile Include="Controllers\SMS\LedController.cs" />
     <Compile Include="Controllers\SMS\SortOrderAllotController.cs" />
+    <Compile Include="Controllers\SMS\SortSupplyController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockCheckTaskController.cs" />
@@ -2029,6 +2031,9 @@
     <Content Include="Views\Channel\_EditPartial.cshtml" />
     <Content Include="Views\Channel\_DeletePartial.cshtml" />
     <Content Include="Views\Channel\_PrintPartial.cshtml" />
+    <Content Include="Views\DeliverAllot\Index.cshtml" />
+    <Content Include="Views\DeliverAllot\_SearchPartial.cshtml" />
+    <Content Include="Views\DeliverAllot\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />

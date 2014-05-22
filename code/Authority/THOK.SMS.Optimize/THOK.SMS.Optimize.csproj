@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.208.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,8 +52,18 @@
     <Compile Include="Service\DeliverLineOptimizeService.cs" />
     <Compile Include="Service\ServiceBase.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\THOK.Authority.Dal\THOK.Authority.Dal.csproj">
+      <Project>{A8E32F0A-A9F4-4CDD-8C7A-8304CD034070}</Project>
+      <Name>THOK.Authority.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.Authority.DbModel\THOK.Authority.DbModel.csproj">
+      <Project>{F7EB9C5D-6082-4DE6-B1C0-740AFF0CFE11}</Project>
+      <Name>THOK.Authority.DbModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.Common.Ef\THOK.Common.Ef.csproj">
       <Project>{59FB8EB5-F5B8-4423-8550-A7819C855CDE}</Project>
       <Name>THOK.Common.Ef</Name>

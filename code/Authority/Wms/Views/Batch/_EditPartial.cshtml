@@ -2,23 +2,12 @@
     function editClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            batchno = row.BatchId;
-//            if (row.State != "初始化") {
-//                $.messager.confirm('错误', '当前状态无法编辑！');
-//                              
-//            } else {
-             
+            batchno = row.BatchId;             
                 $('#dlg').dialog('open').dialog('setTitle', '编辑');
-                editKey = true;
-         
+                editKey = true;         
                 $('#fm').form('load', row);        
-//                $('#fm .easyui-validatebox').validatebox({
-//                    required: true
-//                });
                 $('form input').removeAttr("disabled");
                 url = '/Batch/Edit/';
-               
-//            }
         } else {
             $.messager.alert('错误', '没有选择行！', 'info');
         }

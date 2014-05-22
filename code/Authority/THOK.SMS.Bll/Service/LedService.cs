@@ -7,6 +7,10 @@ using THOK.Wms.SignalR.Common;
 using Microsoft.Practices.Unity;
 using THOK.Common.Entity;
 
+
+using THOK.Wms.DbModel;
+using THOK.Wms.Dal.Interfaces;
+
 namespace THOK.SMS.Bll.Service
 {
     public class LedService : ServiceBase<Led>, ILedService
@@ -17,6 +21,10 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public IChannelRepository ChannelRepository { get; set; }
 
+        [Dependency]
+        public ISortingLineRepository SortingLineRepository { get; set; }
+
+        
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -27,8 +35,10 @@ namespace THOK.SMS.Bll.Service
             IQueryable<Led> ledquery = LedRepository.GetQueryable();
             IQueryable<Channel> channelquery = ChannelRepository.GetQueryable();
 
+            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
 
-            var led = ledquery.OrderBy(c => c.LedCode==LedCode).Select(a => new
+
+            var led = ledquery.OrderBy(c => c.LedCode == LedCode).Select(a => new
             {
                 a.Height,
                 a.LedCode,
@@ -38,6 +48,7 @@ namespace THOK.SMS.Bll.Service
                 a.LedType,
                 a.OrderNo,
                 a.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == a.SortingLineCode).Select(s => s.SortingLineName),
                 a.Status,
                 a.Width,
                 a.XAxes,
@@ -56,7 +67,7 @@ namespace THOK.SMS.Bll.Service
             }
             if (LedName != null && LedName != string.Empty)
             {
-                led = led.Where(a => a.LedName.Contains( LedName));
+                led = led.Where(a => a.LedName.Contains(LedName));
 
             }
             if (LedGroupCode != null && LedGroupCode != string.Empty)
@@ -79,7 +90,8 @@ namespace THOK.SMS.Bll.Service
                     a.LedIp,
                     a.LedName,
                     LedType = a.LedType == "1" ? "整屏" : "分屏",
-                    SortingLineCode = a.SortingLineCode == "01" ? "分拣线A" : "分拣线B",
+                    SortingLineCode = a.SortingLineCode,
+                    SortingLineName=a.SortingLineName,
                     Status = a.Status == "1" ? "可用" : "不可用",
                     OrderNo = a.OrderNo,
                     a.Width,
@@ -120,10 +132,10 @@ namespace THOK.SMS.Bll.Service
                 Led leds = new Led();
                 try
                 {
-                    leds.LedCode = ledInfo.LedCode;                
+                    leds.LedCode = ledInfo.LedCode;
                     leds.Height = ledInfo.Height;
                     leds.LedGroupCode = groupCode;
-                    leds.LedIp ="127.0.0.1"; //ledInfo.LedIp;   结构限制 注意及时修改
+                    leds.LedIp = "127.0.0.1"; //ledInfo.LedIp;   结构限制 注意及时修改
                     leds.LedName = ledInfo.LedName;
                     leds.LedType = ledInfo.LedType;
                     leds.OrderNo = ledInfo.OrderNo;
@@ -131,7 +143,7 @@ namespace THOK.SMS.Bll.Service
                     leds.Width = ledInfo.Width;
                     leds.XAxes = ledInfo.XAxes;
                     leds.YAxes = ledInfo.YAxes;
-                    leds.SortingLineCode =ledInfo.SortingLineCode; 
+                    leds.SortingLineCode = ledInfo.SortingLineCode;
 
                     LedRepository.Add(leds);
                     LedRepository.SaveChanges();
@@ -176,13 +188,13 @@ namespace THOK.SMS.Bll.Service
                 leds.LedGroupCode = groupCode;
                 leds.LedIp = "127.0.0.1"; //ledInfo.LedIp;   结构限制 注意及时修改
                 leds.LedName = ledInfo.LedName;
-                leds.LedType = ledInfo.LedType=="整屏"?"1":"2";
+                leds.LedType = ledInfo.LedType ;//== "整屏" ? "1" : "2";
                 leds.OrderNo = ledInfo.OrderNo;
                 leds.Status = ledInfo.Status;// == "可用" ? "1" : "0";
                 leds.Width = ledInfo.Width;
                 leds.XAxes = ledInfo.XAxes;
                 leds.YAxes = ledInfo.YAxes;
-                leds.SortingLineCode =ledInfo.SortingLineCode;  
+                leds.SortingLineCode = ledInfo.SortingLineCode;
 
                 LedRepository.SaveChanges();
                 result = true;
@@ -201,14 +213,20 @@ namespace THOK.SMS.Bll.Service
 
             strResult = string.Empty;
             bool result = false;
-            var ledInfo = LedRepository.GetQueryable().FirstOrDefault(a => a.LedCode.Contains(LedCode));
-         
+            var ledInfo = LedRepository.GetQueryable().FirstOrDefault(a => a.LedCode.Contains(LedCode));      
+
             if (ledInfo != null)
             {
 
-
-               
-              
+                var leddetail = LedRepository.GetQueryable().Where(a => a.LedGroupCode == LedCode);
+                if (leddetail != null)
+                {
+                    foreach (var tsub in leddetail)
+                    {
+                        LedRepository.Delete(tsub);
+                    }
+                    result = true;
+                }
                 LedRepository.Delete(ledInfo);
                 LedRepository.SaveChanges();
                 result = true;
@@ -221,7 +239,7 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-
+     
 
         public object GetLedGroupCode(int page, int rows, string QueryString, string Value)
         {

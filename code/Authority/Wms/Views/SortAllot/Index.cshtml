@@ -1,0 +1,45 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#master').datagrid({
+            onClickRow: function () {
+                var row = $('#master').datagrid('getSelected');
+                if (row) {
+                    $('#details').datagrid({ url: '/SortAllot/GetDeliverLine/?orderDate=' + row.OrderDate }); //根据主单ID查询细单
+
+                } else {
+                    $.messager.show({ title: '提示', msg: '失败!请检查原因！' });
+                }
+            }
+        })
+    });
+</script>
+<div region="center" split="true" border="false" style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #99BBE8">    
+    <table id="master" class="easyui-datagrid" border="false" singleSelect="true" url='/SortAllot/OrderInformation/'
+        fit="true" fitColumns="true" pagination="true" rownumbers="true" pageSize="20">
+        <thead>
+            <tr>
+                <th field="OrderDate" width="100" >订单日期</th>
+                <th field="Explanation" width="200" >说明</th>
+                <th field="SumQuantity" width="100" >总数量（条）</th>
+                <th field="AbnormityQuantity" width="100" >异形烟（条）</th>
+                <th field="DeliverLineCount" width="100">线路条数</th>
+                <th field="IsWarehousSortIntegration" width="80">是否仓储分拣一体化</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div region="south" split="true" border="false" style="height: 250px; border-top-style: solid; border-top-width: 1px; border-top-color: 99BBE8;">
+   <table id="details" class="easyui-datagrid" border="false" singleSelect="true" url=""
+        fit="true" fitColumns="true" pagination="true" rownumbers="true" pageSize="50">
+        <thead>
+            <tr>
+                <th field="DeliverLineCode" width="100" >送货线路编码</th>
+                <th field="DeliverLineName" width="150" >送货线路名称</th>
+                <th field="Quantity" width="80">数量(条)</th>
+                <th field="DeliverOrder" width="100" >送货线路顺序</th>
+                <th field="State" width="100">任务状态</th>
+                <th field="DistCode" width="100">配送区域编码</th>
+            </tr>
+        </thead>
+    </table>
+</div>

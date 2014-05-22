@@ -12,9 +12,24 @@
         return t;
     }
 
+    function AddLoad() {
+        $('#addOptimizeSchedule').combo({
+            required: true,
+            editable: false,
+            panelHeight: 80,
+            panelWidth: 130
+        });
+        $('#addStatus').combo({
+            required: true,
+            editable: false,
+            panelHeight: 110,
+            panelWidth: 130
+        });
+    }
+
     function addClick() {
 
-
+        AddLoad();
 
         $('#OrderDate').attr("readonly", true);
         $('#OperateDate').attr("readonly", true);
@@ -104,7 +119,7 @@
                 <input id="OrderDate" name="OrderDate" type="text" class="easyui-validatebox" readonly="readonly" />
             </td>
             <td width="60">
-                操作日期:
+                分拣日期:
             </td>
             <td width="168">
                 <input id="OperateDate" name="OperateDate" type="text" class="easyui-validatebox"
@@ -116,13 +131,13 @@
                 批次号:
             </td>
             <td width="168">
-                <input name="BatchNo" class="easyui-validatebox" required="true"  readonly="readonly" />
+                <input name="BatchNo" class="easyui-validatebox" required="true" />
             </td>
             <td width="60">
                 批次名称:
             </td>
             <td width="168">
-                <input name="BatchName" class="easyui-validatebox" validtype="maxLength[50]" required="true"   readonly="readonly"/>
+                <input name="BatchName" class="easyui-validatebox" required="true"/>
             </td>
         </tr>
         <tr>
@@ -130,8 +145,8 @@
                 经办人:
             </td>
             <td width="168">
-                <input name="OperatePersonName" readonly="true" id="OperatePersonID" />
-                <input name="OperatePersonId" readonly="true" id="addOperatePersonId" style="display: none" />
+                <input name="OperatePersonName" readonly="readonly" id="OperatePersonID" />
+                <input name="OperatePersonId" readonly="readonly" id="addOperatePersonId" style="display: none" />
                 <td width="60">
                     审核人员:
                 </td>
@@ -145,19 +160,19 @@
                 优化进度:
             </td>
             <td width="168">
-                <select id="addOptimizeSchedule" name="OptimizeSchedule" class="easyui-combobox" readonly="readonly">
+                <select id="addOptimizeSchedule" name="OptimizeSchedule" class="easyui-combobox">
                     <option value="1">分拣线优化</option>
-                    <option value="02">分拣线路优化</option>
-                    <option value="03">烟道优化</option>
-                    <option value="04"></option>
-                    <option value="05"></option>
+                    <option value="2">分拣线路优化</option>
+                    <option value="3">烟道优化</option>
+                    <option value="4"></option>
+                    <option value="5"></option>
                 </select>
             </td>
             <td width="70">
                 工程批次号:
             </td>
             <td width="168">
-                <input id="ProjectBatchNo" name="ProjectBatchNo" />
+                <input id="ProjectBatchNo" name="ProjectBatchNo"  class="easyui-numberbox"  missingmessage="请输入工程批次号(必须为数字)"   />
             </td>
         </tr>
         <tr>
@@ -165,7 +180,7 @@
                 任务状态:
             </td>
             <td width="168">
-                <select name="State" id="addState" class="easyui-combobox" readonly="readonly">
+                <select name="Status" id="addStatus" class="easyui-combobox">
                     <option value="01">初始化</option>
                     <option value="02">已下载</option>
                     <option value="03">已优化</option>
@@ -179,7 +194,7 @@
                 描述:
             </td>
             <td width="168" colspan="3">
-                <textarea name="Description" id="adddesId" style="width: 367px; height: 60px"  readonly="readonly"></textarea>
+                <textarea  name="Description" id="adddesId" style="width: 367px; height: 60px"></textarea>
             </td>
         </tr>
     </table>

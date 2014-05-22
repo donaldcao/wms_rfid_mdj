@@ -97,29 +97,7 @@ namespace THOK.SMS.Bll.Service
                 a.Status,
                 a.VerifyPersonId
 
-            })
-            
-            //.GroupJoin(userquery, a => a.VerifyPersonId, uu => uu.UserID, (a, uu) => new
-            //{
-            //    a.BatchId,
-            //    a.BatchName,
-            //    a.BatchNo,
-            //    a.Description,
-            //    a.OrderDate,
-            //    a.OperatePersonId,
-            //    a.OperatePersonName,
-            //    a.OptimizeSchedule,
-            //    a.OperateDate,
-            //    a.ProjectBatchNo,
-            //    a.State,
-            //    a.VerifyPersonId,
-            //    VerifyPersonName=uu
-
-            //});
-
-
-
-
+            })                 
             .Join(userquery, a => a.VerifyPersonId, uu => uu.UserID, (a, uu) => new
             {
                 a.BatchId,
@@ -135,10 +113,7 @@ namespace THOK.SMS.Bll.Service
                 a.Status,
                 a.VerifyPersonId,
                 VerifyPersonName = uu.UserName
-
-
             });
-            //.Where(a => a.BatchName.Contains(BatchName));
 
             if (BatchNo != "")
             {
@@ -155,10 +130,7 @@ namespace THOK.SMS.Bll.Service
                 DateTime opdate = Convert.ToDateTime(operateDate);
                 batchs = batchs.Where(a => a.OperateDate >= opdate);
             }
-
-
-
-            var batch = batchs.OrderByDescending(a => a.BatchId).ToArray()//.AsEnumerable()
+            var batch = batchs.OrderByDescending(a => a.BatchId).ToArray()
                  .Select(a =>
                  new
                  {
@@ -183,8 +155,6 @@ namespace THOK.SMS.Bll.Service
             return new { total, rows = batch.ToArray() };
         }
 
-
-
         public bool Add(Batch batchInfo, string userName, out string strResult)
         {
 
@@ -201,10 +171,10 @@ namespace THOK.SMS.Bll.Service
                     batchs.BatchNo = batchInfo.BatchNo;
                     batchs.Description = batchInfo.Description;
                     batchs.OperateDate = batchInfo.OperateDate;
-                    batchs.OptimizeSchedule = 0;
+                    batchs.OptimizeSchedule = batchInfo.OptimizeSchedule;
                     batchs.OrderDate = batchInfo.OrderDate;
-                    batchs.ProjectBatchNo = 0;
-                    batchs.Status = "01";
+                    batchs.ProjectBatchNo =batchInfo.ProjectBatchNo;
+                    batchs.Status =batchInfo.Status;
                     batchs.OperatePersonId = al.UserID;
                     batchs.VerifyPersonId = al.UserID;
 
@@ -263,7 +233,6 @@ namespace THOK.SMS.Bll.Service
             var batchInfo = BatchRepository.GetQueryable().FirstOrDefault(a => a.BatchId.Equals(batchId));
             if (batchInfo != null)
             {
-
                 BatchRepository.Delete(batchInfo);
                 BatchRepository.SaveChanges();
                 result = true;

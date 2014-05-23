@@ -9,6 +9,9 @@ using THOK.Common.WebUtil;
 using THOK.Wms.DbModel;
 using THOK.Security;
 
+using THOK.Common.NPOI.Service;
+using THOK.Common.NPOI.Models;
+
 namespace Wms.Controllers.Wms.InterfaceInfo
 {
     [TokenAclAuthorize]
@@ -97,6 +100,22 @@ namespace Wms.Controllers.Wms.InterfaceInfo
             bool bResult = DeliverLineService.Delete(DeliverLineCode);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        public FileStreamResult CreateExcelToClient()
+        {
+
+            
+            int page = 0, rows = 0;
+            string DeliverLineCode = Request.QueryString["DeliverLineCode"];
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = DeliverLineService.GetDeliverLineInfo(page, rows, DeliverLineCode);
+            ep.HeadTitle1 = "线路信息";
+
+            return PrintService.Print(ep);
         }
     }
 }

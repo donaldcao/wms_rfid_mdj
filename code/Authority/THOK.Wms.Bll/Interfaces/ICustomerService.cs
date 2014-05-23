@@ -19,5 +19,9 @@ namespace THOK.Wms.Bll.Interfaces
         bool Delete(string CustomerCode);
 
         bool Save(Customer customer, out string strResult);
+
+        System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode);
+
+     
     }
 }

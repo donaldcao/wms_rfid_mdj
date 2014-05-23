@@ -1,0 +1,9 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var dptCode = null
+
+        if ($('#DistCode').val() == null) { dptCode = ""; } else { dptCode = $('#DistCode').val(); }
+        window.location.href = "/DeliverDist/CreateExcelToClient/?DistCode=" + dptCode;
+
+    }
+</script>

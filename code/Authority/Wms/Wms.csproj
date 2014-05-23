@@ -2025,6 +2025,9 @@
     <Content Include="Views\Channel\_DeletePartial.cshtml" />
     <Content Include="Views\Channel\_PrintPartial.cshtml" />
     <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
+    <Content Include="Views\Customer\_PrintPartial.cshtml" />
+    <Content Include="Views\DeliverLine\_PrintPartial.cshtml" />
+    <Content Include="Views\DeliverDist\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />
@@ -2504,7 +2507,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>5333</DevelopmentServerPort>
+          <DevelopmentServerPort>10300</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

@@ -138,10 +138,8 @@ namespace Wms.Controllers.SMS
             string ledcode = Request.QueryString["LedCode"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = LedService.GetLed(page, rows, ledcode);
-            //ep.DT2 = LedService.GetLedDetail(page, rows, ledcode); ;
-            ep.HeadTitle1 = "LED整屏";
-            ep.HeadTitle2 = "LED分屏";
+            ep.DT1 = LedService.GetLed(page, rows, ledcode);     
+            ep.HeadTitle1 = "LED信息";         
             return PrintService.Print(ep);
         }
     }

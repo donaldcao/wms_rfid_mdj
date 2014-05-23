@@ -1,13 +1,9 @@
 ﻿<script type="text/javascript">
     function printClick() {
+        var dptCode = null    
 
-        var row = $('#details').datagrid('getSelected');
-        if (row) {
-            var rowCode = null;
-            if (row.BatchSortId == null) { row.BatchSortId = ""; } else { rowCode = row.BatchSortId; }
-            window.location.href = '/BatchSort/CreateExcelToClient/?BatchSortId=' + rowCode;
-        } else {
-            $.messager.alert('系统提示', '未选中行', "info");
-        }
+        if ($('#BatchSortId').val() == null) { dptCode = ""; } else { dptCode = $('#BatchSortId').val(); }
+        window.location.href = "/BatchSort/CreateExcelToClient/?BatchSortId=" + dptCode;
+                         
     }
 </script>

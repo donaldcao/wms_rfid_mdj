@@ -9,6 +9,10 @@ using THOK.Wms.DbModel;
 using THOK.Common.WebUtil;
 using THOK.Security;
 
+
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
+
 namespace Wms.Controllers.Wms.DeliveryInfo
 {
     [TokenAclAuthorize]
@@ -88,6 +92,19 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             bool bResult = CustomerService.Delete(CustomerCode);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+        }
+
+
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            string CustomerCode = Request.QueryString["CustomerCode"];
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = CustomerService.GetCustomerInfo(page, rows, CustomerCode);      
+            ep.HeadTitle1 = "客户信息";
+         
+            return PrintService.Print(ep);
         }
     }
 }

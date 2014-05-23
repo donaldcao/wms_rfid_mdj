@@ -1,0 +1,9 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var dptCode = null
+
+        if ($('#CustomerCode').val() == null) { dptCode = ""; } else { dptCode = $('#CustomerCode').val(); }
+        window.location.href = "/Customer/CreateExcelToClient/?CustomerCode=" + dptCode;
+
+    }
+</script>

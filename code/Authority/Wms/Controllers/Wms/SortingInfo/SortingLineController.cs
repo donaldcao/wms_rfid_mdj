@@ -84,12 +84,11 @@ namespace Authority.Controllers.Wms.SortingInfo
         {
             int page = 0, rows = 0;
             string sortingLineCode = Request.QueryString["sortingLineCode"];
-            string sortingLineName = Request.QueryString["sortingLineName"];
-            string sortingLineType = Request.QueryString["SortingLineType"];
+     
             string isActive = Request.QueryString["IsActive"];
             
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode, sortingLineName, sortingLineType, isActive);
+            ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode);
             ep.HeadTitle1 = "分拣线信息设置";
             return PrintService.Print(ep);
         }

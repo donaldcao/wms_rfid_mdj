@@ -29,6 +29,68 @@ namespace Wms.Controllers.SMS
             return View();
         }
 
+        public ActionResult Details(int page, int rows, FormCollection collection)
+        {
+            SortSupply sortSupply = new SortSupply();
+            sortSupply.SortSupplyCode = collection["SortSupplyCode"] ?? "";
+            sortSupply.ChannelCode = collection["ChannelCode"] ?? "";
+            sortSupply.ProductCode = collection["ProductCode"] ?? "";
+            sortSupply.ProductName = collection["ProductName"] ?? "";
+
+            string BatchSortId = collection["BatchSortId"] ?? "";
+            if (BatchSortId != "" && BatchSortId != null)
+            {
+                sortSupply.BatchSortId = Convert.ToInt32(BatchSortId);
+            }
+
+            string SupplyId = collection["SupplyId"] ?? "";
+            if (SupplyId != "" && SupplyId != null)
+            {
+                sortSupply.SupplyId = Convert.ToInt32(SupplyId);
+            }
+
+            string PackNo = collection["PackNo"] ?? "";
+            if (PackNo != "" && PackNo != null)
+            {
+                sortSupply.PackNo = Convert.ToInt32(PackNo);
+            }
+
+            var sortSupplyDetail = SortSupplyServer.GetDetails(page, rows, sortSupply);
+            return Json(sortSupplyDetail, "text", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SearchPage()
+        {
+            return View();
+        }
+
+        //打印
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+
+            string SortSupplyCode = Request.QueryString["SortSupplyCode"] ?? "";
+            int BatchSortId = Convert.ToInt32(Request.QueryString["BatchSortId"] ?? "");
+            string ChannelCode = Request.QueryString["ChannelCode"] ?? "";
+            int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"] ?? "");
+            int PackNo = Convert.ToInt32(Request.QueryString["PackNo"] ?? "");
+            string ProductCode = Request.QueryString["ProductCode"] ?? "";
+            string ProductName = Request.QueryString["ProductName"] ?? "";
+
+            SortSupply sortSupply = new SortSupply();
+            sortSupply.SortSupplyCode = SortSupplyCode;
+            sortSupply.BatchSortId = BatchSortId;
+            sortSupply.ChannelCode = ChannelCode;
+            sortSupply.SupplyId = SupplyId;
+            sortSupply.PackNo = PackNo;
+            sortSupply.ProductCode = ProductCode;
+            sortSupply.ProductName = ProductName;
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = SortSupplyServer.GetSortSupply(page, rows, sortSupply);
+            ep.HeadTitle1 = "分拣补货";
+            return PrintService.Print(ep);
+        }
 
     }
 }

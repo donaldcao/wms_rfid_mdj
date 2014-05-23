@@ -10,6 +10,8 @@ using THOK.SMS.Bll.Interfaces;
 using THOK.SMS.DbModel;
 
 using THOK.Common.WebUtil;
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
 
 namespace Wms.Controllers.SMS
 {
@@ -61,37 +63,39 @@ namespace Wms.Controllers.SMS
 
 
      [HttpPost]
-        public ActionResult Create(Led ledInfo)
+        public ActionResult Create(Led ledInfo, string LedType, string LedGroupCode, string SortingLineCode)
         {
             string strResult = string.Empty;
-            bool bResult = LedService.Add(ledInfo, out strResult);
+            bool bResult = LedService.Add(ledInfo, LedType, LedGroupCode, SortingLineCode, out strResult);
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]//添加分屏
-        public ActionResult LedDetailCreate(Led ledDetail)
+     public ActionResult LedDetailCreate(Led ledDetail, string LedType, string LedGroupCode, string SortingLineCode)
         {
             string strResult = string.Empty;
-            bool bResult = LedService.Add(ledDetail, out strResult);
+            bool bResult = LedService.Add(ledDetail, LedType, LedGroupCode, SortingLineCode, out strResult);
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
 
-        public ActionResult Edit(Led ledInfo)
+        public ActionResult Edit(Led ledInfo,string LedGroupCode, string SortingLineCode)
         {
+
+            string LedType = "1";
             string strResult = string.Empty;
-            bool bResult = LedService.Save(ledInfo, out strResult);
+            bool bResult = LedService.Save(ledInfo,LedType, LedGroupCode, SortingLineCode,out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]  //修改分屏
-        public ActionResult InBillDetailEdit(Led ledInfo)
+        public ActionResult InBillDetailEdit(Led ledInfo,string LedType,string LedGroupCode,string SortingLineCode)
         {
             string strResult = string.Empty;
-            bool bResult = LedService.Save(ledInfo, out strResult);
+            bool bResult = LedService.Save(ledInfo, LedType, LedGroupCode, SortingLineCode, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -126,6 +130,19 @@ namespace Wms.Controllers.SMS
             }
             var product = LedService.GetLedGroupCode(page, rows, QueryString, Value);
             return Json(product, "text", JsonRequestBehavior.AllowGet);
+        }
+
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            string ledcode = Request.QueryString["LedCode"];
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = LedService.GetLed(page, rows, ledcode);
+            //ep.DT2 = LedService.GetLedDetail(page, rows, ledcode); ;
+            ep.HeadTitle1 = "LED整屏";
+            ep.HeadTitle2 = "LED分屏";
+            return PrintService.Print(ep);
         }
     }
 }

@@ -7,20 +7,25 @@ using THOK.Wms.SignalR.Common;
 using Microsoft.Practices.Unity;
 using THOK.Common.Entity;
 
+using THOK.Wms.DbModel;
+using THOK.Wms.Dal.Interfaces;
+
 namespace THOK.SMS.Bll.Service
 {
     public class BatchSortService : ServiceBase<BatchSort>, IBatchSortService
     {
         [Dependency]
         public IBatchSortRepository BatchSortRepository { get; set; }
-
         [Dependency]
         public IBatchRepository BatchRepository { get; set; }
+        [Dependency]
+
+        public ISortingLineRepository SortingLineRepository { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
         }
-
 
         //判断其状态
         public string WhatStatus(string state)
@@ -79,21 +84,23 @@ namespace THOK.SMS.Bll.Service
 
             IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
             IQueryable<Batch> batchquery = BatchRepository.GetQueryable();
-
-            //未实行关联    分拣线信息表【SortingLine】
+            IQueryable<SortingLine> sortlingquery = SortingLineRepository.GetQueryable();
+          
             var batchsort = batchsortquery.Join(batchquery, a => a.BatchId, u => u.BatchId, (a, u) => new
             {
                 a.BatchId,
                 a.BatchSortId,
-                BatchName=u.BatchName,
-                BatchNo=u.BatchNo,
-                OperateDate=u.OperateDate,
+                BatchName = u.BatchName,
+                BatchNo = u.BatchNo,
+                OperateDate = u.OperateDate,
 
                 a.SortingLineCode,
+                SortingLineName=sortlingquery.Where(b=>b.SortingLineCode==a.SortingLineCode).Select(b=>b.SortingLineName),
+                SortingLineType = sortlingquery.Where(b => b.SortingLineCode == a.SortingLineCode).Select(b => b.SortingLineType == "1" ? "半自动" : "全自动"),
                 a.Status
 
             });
-               
+
             if (BatchNo != "")
             {
                 int batchNo = 0;
@@ -111,12 +118,12 @@ namespace THOK.SMS.Bll.Service
             }
 
             if (Status != string.Empty && Status != null)
-            {              
-                batchsort = batchsort.Where(a => a.Status==Status);
+            {
+                batchsort = batchsort.Where(a => a.Status == Status);
             }
             if (BatchName != string.Empty && BatchName != null)
             {
-                batchsort = batchsort.Where(a => a.BatchName==BatchName);
+                batchsort = batchsort.Where(a => a.BatchName == BatchName);
             }
 
             var batch = batchsort.OrderByDescending(a => a.BatchSortId).ToArray()
@@ -130,8 +137,10 @@ namespace THOK.SMS.Bll.Service
 
                      Status = WhatStatus(a.Status),
                      a.SortingLineCode,
+                     a.SortingLineName,
+                     SortingLineType = a.SortingLineType,
                      OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
-               
+
 
                  });
 
@@ -153,9 +162,9 @@ namespace THOK.SMS.Bll.Service
                 batchname = value;
             }
             IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
-            var batchs = batchQuery.Where(e =>e.BatchName.Contains(batchname));
-              
-              
+            var batchs = batchQuery.Where(e => e.BatchName.Contains(batchname));
+
+
             if (batchno != "")
             {
                 int batchNo = 0;
@@ -170,8 +179,8 @@ namespace THOK.SMS.Bll.Service
             {
                 a.BatchId,
                 a.BatchName,
-                a.BatchNo,  
-                OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")           
+                a.BatchNo,
+                OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             int total = batch.Count();
@@ -193,7 +202,7 @@ namespace THOK.SMS.Bll.Service
                 try
                 {
                     BatchSorts.BatchId = BatchSort.BatchId;
-                    BatchSorts.SortingLineCode = "1"; // 未实现 给默认值
+                    BatchSorts.SortingLineCode = BatchSort.SortingLineCode;
                     BatchSorts.Status = BatchSort.Status;
                     BatchSortRepository.Add(BatchSorts);
                     BatchSortRepository.SaveChanges();
@@ -223,9 +232,9 @@ namespace THOK.SMS.Bll.Service
             var BatchSorts = BatchSortRepository.GetQueryable().FirstOrDefault(a => a.BatchSortId == BatchSort.BatchSortId);
             if (BatchSorts != null)
             {
-                BatchSorts.BatchId=BatchSort.BatchId;
-                BatchSorts.SortingLineCode=BatchSort.SortingLineCode;
-                BatchSorts.Status = BatchSort.Status;// WhatState(BatchSort.Status);
+                BatchSorts.BatchId = BatchSort.BatchId;
+                BatchSorts.SortingLineCode = BatchSort.SortingLineCode;
+                BatchSorts.Status = BatchSort.Status;
                 BatchSortRepository.SaveChanges();
                 result = true;
             }
@@ -244,7 +253,6 @@ namespace THOK.SMS.Bll.Service
             var BatchSort = BatchSortRepository.GetQueryable().FirstOrDefault(a => a.BatchSortId.Equals(BatchSortId));
             if (BatchSort != null)
             {
-
                 BatchSortRepository.Delete(BatchSort);
                 BatchSortRepository.SaveChanges();
                 result = true;
@@ -252,19 +260,72 @@ namespace THOK.SMS.Bll.Service
             else
             {
                 strResult = "原因:没有找到相应数据";
-
             }
             return result;
         }
 
-
-        public System.Data.DataTable GetBatchSort(int page, int rows, BatchSort BatchSortInfo)
+        public System.Data.DataTable GetBatchSort(int page, int rows, int BatchSortId)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
-            //
-            //   未更新。。
-            //
+          
+                IQueryable<BatchSort> batchsortQuery = BatchSortRepository.GetQueryable();
+                IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
+                IQueryable<SortingLine> SortingLineQuery = SortingLineRepository.GetQueryable();
+                var batchsort = batchsortQuery.Join(batchQuery, a => a.BatchId, u => u.BatchId, (a, u) => new
+                {
+                    a.BatchId,
+                    a.BatchSortId,
+                    BatchName = u.BatchName,
+                    BatchNo = u.BatchNo,
+                    OperateDate = u.OperateDate,
+
+                    a.SortingLineCode,
+                    pSortingLineName = SortingLineQuery.Where(b => b.SortingLineCode == a.SortingLineCode).Select(b => b.SortingLineName),
+                    pSortingLineType = SortingLineQuery.Where(b => b.SortingLineCode == a.SortingLineCode).Select(b => b.SortingLineType == "1" ? "半自动" : "全自动"),
+                    a.Status
+
+                });
+
+                var batch = batchsort.OrderByDescending(a => a.BatchSortId).ToArray()
+                   .Select(a =>
+                   new
+                   {
+                       a.BatchSortId,
+                       a.BatchId,
+                       a.BatchName,
+                       a.BatchNo,
+
+                       Status = WhatStatus(a.Status),
+                       a.SortingLineCode,
+                       pSortingLineName=a.pSortingLineName.ToArray().Count()>0?a.pSortingLineName.ToArray()[0]:"",
+                       pSortingLineType = a.pSortingLineType.ToArray().Count()>0?a.pSortingLineType.ToArray()[0]:"",
+                       OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
+
+                   }).ToArray();
+             
+                dt.Columns.Add("批次号", typeof(string));
+                dt.Columns.Add("批次名称", typeof(string));
+                dt.Columns.Add("分拣日期", typeof(string));
+                dt.Columns.Add("分拣线名称", typeof(string));
+            
+                dt.Columns.Add("分拣线类型", typeof(string));
+                dt.Columns.Add("状态", typeof(string));
+
+                foreach (var item in batch)
+                {
+                    dt.Rows.Add
+                        (
+                        item.BatchNo,
+                        item.BatchName,
+                        item.OperateDate,
+                        item.pSortingLineName,
+                        item.pSortingLineType,
+                        item.Status
+                        );
+                }
+          
             return dt;
         }
+
     }
 }

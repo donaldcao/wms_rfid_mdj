@@ -2024,6 +2024,7 @@
     <Content Include="Views\Channel\_EditPartial.cshtml" />
     <Content Include="Views\Channel\_DeletePartial.cshtml" />
     <Content Include="Views\Channel\_PrintPartial.cshtml" />
+    <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />

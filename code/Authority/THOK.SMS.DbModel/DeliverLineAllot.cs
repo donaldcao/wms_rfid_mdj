@@ -14,6 +14,5 @@ namespace THOK.SMS.DbModel
         public string Status { get; set; }
 
         public BatchSort batchSort { get; set; }
-
     }
 }

@@ -2017,11 +2017,12 @@
     <Content Include="Views\BatchSort\_DeletePartial.cshtml" />
     <Content Include="Views\BatchSort\_EditPartial.cshtml" />
     <Content Include="Views\BatchSort\_SearchPartial.cshtml" />
+    <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <Content Include="Views\BatchSort\Index.cshtml" />
-    <Content Include="Views\Channel\SearchPage.cshtml" />
-    <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
     <Content Include="Views\BatchSort\AddPage.cshtml" />
+    <Content Include="Views\Channel\SearchPage.cshtml" />
+    <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\Channel\Index.cshtml" />
     <Content Include="Views\Channel\_SearchPartial.cshtml" />
     <Content Include="Views\Channel\_ProductPartial.cshtml" />

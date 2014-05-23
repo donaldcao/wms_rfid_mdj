@@ -15,8 +15,8 @@
         if (addDialog == null) {
             addDialog = $('<div></div>').dialog({
                 title: title,
-                width: 350,
-                height: 200,
+                width: 330,
+                height: 250,
                 closed: true,
                 cache: false,
                 modal: true,
@@ -109,4 +109,13 @@
         $('#batchDetail').datagrid({ url: '/Batch/Details/' });
         $("#batchDetail").datagrid('reload');
     }
+
+    //查询分拣线
+    function addSortingLineNameSearchClick() {
+        $('#dlg-SortingLine').dialog('open').dialog('setTitle', '选择分拣线');
+        $('#SortingLineDetails').datagrid({ url: '/SortingLine/Details/' });
+        $("#SortingLineDetails").datagrid('load');
+    }
+
+
 </script>

@@ -26,7 +26,7 @@
         //todo:查询LED
 
         $('#dlg-Led').dialog('open').dialog('setTitle', 'LED 信息');
-        $('#LedGroupCodeDetail').datagrid({ url: '/Led/Details/?LedType=1' });
+        $('#LedGroupCodeDetail').datagrid({ url: '/Led/Details/' });
         $("#LedGroupCodeDetail").datagrid('reload');
 
     }

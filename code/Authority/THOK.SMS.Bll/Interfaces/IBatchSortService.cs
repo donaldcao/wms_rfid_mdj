@@ -18,6 +18,6 @@ namespace THOK.SMS.Bll.Interfaces
         bool Add(BatchSort BatchSort, out string strResult);
         bool Save(BatchSort BatchSort, out string strResult);
         bool Delete(int BatchSortId, out string strResult);
-        System.Data.DataTable GetBatchSort(int page, int rows, BatchSort BatchSort);
+        System.Data.DataTable GetBatchSort(int page, int rows, int BatchSortId);
     }
 }

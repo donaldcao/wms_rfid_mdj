@@ -10,6 +10,9 @@ using THOK.Security;
 using Microsoft.Practices.Unity;
 using THOK.SMS.Bll.Interfaces;
 
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
+
 namespace Wms.Controllers.SMS
 {
      [TokenAclAuthorize]
@@ -28,6 +31,7 @@ namespace Wms.Controllers.SMS
             ViewBag.hasAdd = true;
             ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
+            ViewBag.hasPrint = true;
             //ViewBag.hasAudit = true;
             //ViewBag.hasAntiTrial = true;
             ViewBag.ModuleID = moduleID;
@@ -87,6 +91,19 @@ namespace Wms.Controllers.SMS
             bool bResult = BatchSortService.Delete(BatchSortId, out strResult);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;           
+            string Id = Request.QueryString["BatchSortId"];
+            int BatchSortId = Convert.ToInt16(Id);
+           
+            ExportParam ep = new ExportParam();
+            ep.DT1 = BatchSortService.GetBatchSort(page, rows, BatchSortId);
+            ep.HeadTitle1 = "分拣状态";
+           
+            return PrintService.Print(ep);
         }
     }
 }

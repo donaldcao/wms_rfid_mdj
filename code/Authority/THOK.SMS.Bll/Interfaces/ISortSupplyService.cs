@@ -8,6 +8,8 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface ISortSupplyService : IService<SortSupply>
     {
-        object GetDetails(int page, int rows, SortSupply SortSupply);
+        object GetDetails(int page, int rows, SortSupply sortSupply);
+
+        System.Data.DataTable GetSortSupply(int page, int rows, SortSupply sortSupply);
     }
 }

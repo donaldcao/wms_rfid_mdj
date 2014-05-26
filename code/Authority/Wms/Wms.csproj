@@ -164,8 +164,11 @@
     <Compile Include="Controllers\SMS\BatchController.cs" />
     <Compile Include="Controllers\SMS\BatchSortController.cs" />
     <Compile Include="Controllers\SMS\ChannelController.cs" />
+    <Compile Include="Controllers\SMS\DeliverAllotController.cs" />
+    <Compile Include="Controllers\SMS\SortAllotController.cs" />
     <Compile Include="Controllers\SMS\LedController.cs" />
     <Compile Include="Controllers\SMS\SortOrderAllotController.cs" />
+    <Compile Include="Controllers\SMS\SortSupplyController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockCheckTaskController.cs" />
@@ -1741,6 +1744,10 @@
       <Project>{90503686-2101-43DA-B8BA-473F0F3D7A41}</Project>
       <Name>THOK.SMS.DbModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.Optimize\THOK.SMS.Optimize.csproj">
+      <Project>{50BD809C-BC8D-498E-9F09-A5C2593C5E43}</Project>
+      <Name>THOK.SMS.Optimize</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.WCS.Bll\THOK.WCS.Bll.csproj">
       <Project>{C7885513-E200-41BD-8409-359DE49C232D}</Project>
       <Name>THOK.WCS.Bll</Name>
@@ -2012,11 +2019,12 @@
     <Content Include="Views\BatchSort\_DeletePartial.cshtml" />
     <Content Include="Views\BatchSort\_EditPartial.cshtml" />
     <Content Include="Views\BatchSort\_SearchPartial.cshtml" />
+    <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <Content Include="Views\BatchSort\Index.cshtml" />
-    <Content Include="Views\Channel\SearchPage.cshtml" />
-    <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
     <Content Include="Views\BatchSort\AddPage.cshtml" />
+    <Content Include="Views\Channel\SearchPage.cshtml" />
+    <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\Channel\Index.cshtml" />
     <Content Include="Views\Channel\_SearchPartial.cshtml" />
     <Content Include="Views\Channel\_ProductPartial.cshtml" />
@@ -2024,10 +2032,15 @@
     <Content Include="Views\Channel\_EditPartial.cshtml" />
     <Content Include="Views\Channel\_DeletePartial.cshtml" />
     <Content Include="Views\Channel\_PrintPartial.cshtml" />
+
     <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <Content Include="Views\Customer\_PrintPartial.cshtml" />
     <Content Include="Views\DeliverLine\_PrintPartial.cshtml" />
     <Content Include="Views\DeliverDist\_PrintPartial.cshtml" />
+
+    <Content Include="Views\DeliverAllot\Index.cshtml" />
+    <Content Include="Views\DeliverAllot\_SearchPartial.cshtml" />
+    <Content Include="Views\DeliverAllot\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />
@@ -2481,6 +2494,10 @@
     <Content Include="Views\SortOrderAllot\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderAllot\_PrintPartial.cshtml" />
     <Content Include="Views\Led\_PrintPartial.cshtml" />
+    <Content Include="Views\SortSupply\Index.cshtml" />
+    <Content Include="Views\SortSupply\_SearchPartial.cshtml" />
+    <Content Include="Views\SortSupply\_ProductPartial.cshtml" />
+    <Content Include="Views\SortSupply\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
@@ -2507,7 +2524,9 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>10300</DevelopmentServerPort>
+
+          <DevelopmentServerPort>7851</DevelopmentServerPort>
+
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

@@ -2023,7 +2023,6 @@
     <Content Include="Views\BatchSort\Index.cshtml" />
     <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
     <Content Include="Views\BatchSort\AddPage.cshtml" />
-    <Content Include="Views\Channel\SearchPage.cshtml" />
     <Content Include="Views\Channel\_AddPartial.cshtml" />
     <Content Include="Views\Channel\Index.cshtml" />
     <Content Include="Views\Channel\_SearchPartial.cshtml" />
@@ -2032,12 +2031,10 @@
     <Content Include="Views\Channel\_EditPartial.cshtml" />
     <Content Include="Views\Channel\_DeletePartial.cshtml" />
     <Content Include="Views\Channel\_PrintPartial.cshtml" />
-
     <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <Content Include="Views\Customer\_PrintPartial.cshtml" />
     <Content Include="Views\DeliverLine\_PrintPartial.cshtml" />
     <Content Include="Views\DeliverDist\_PrintPartial.cshtml" />
-
     <Content Include="Views\DeliverAllot\Index.cshtml" />
     <Content Include="Views\DeliverAllot\_SearchPartial.cshtml" />
     <Content Include="Views\DeliverAllot\_PrintPartial.cshtml" />
@@ -2498,6 +2495,8 @@
     <Content Include="Views\SortSupply\_SearchPartial.cshtml" />
     <Content Include="Views\SortSupply\_ProductPartial.cshtml" />
     <Content Include="Views\SortSupply\_PrintPartial.cshtml" />
+    <Content Include="Views\SortAllot\_AllotPartial.cshtml" />
+    <Content Include="Views\SortAllot\_EditPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
@@ -2524,9 +2523,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-
           <DevelopmentServerPort>7851</DevelopmentServerPort>
-
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

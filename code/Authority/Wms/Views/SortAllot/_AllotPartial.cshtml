@@ -1,0 +1,16 @@
+﻿<script type="text/javascript">
+    function allotClick() {
+        var row = $('#master').datagrid('getSelected');
+        if (row) {
+            $('#dlg-edit').dialog('open').dialog('setTitle', "分配");
+            $('#fm-sortOrderInfo').form('load', row);
+            $('#btnEditDeliverLine').css('display', 'none');
+            $('#btnRemoveDeliverLineAllot').css('display', 'none');
+            $('#btnDeliverLineAllot').removeAttr("style");
+            $('#deliverLineDetail').datagrid({ url: '/SortAllot/GetUnAllotDeliverLine/?orderDate=' + row.OrderDate, singleSelect: false });
+        }
+        else {
+            $.messager.alert('提示', '没有选择行！', 'info');
+        }
+    }
+</script>

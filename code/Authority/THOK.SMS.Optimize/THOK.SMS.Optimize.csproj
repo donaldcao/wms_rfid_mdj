@@ -76,6 +76,10 @@
       <Project>{2F9C4207-F8A0-4E55-A2CB-3514ADC0A437}</Project>
       <Name>THOK.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.Bll\THOK.SMS.Bll.csproj">
+      <Project>{3857795F-03BB-49A4-B6CD-7B01AF22C563}</Project>
+      <Name>THOK.SMS.Bll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.SMS.Dal\THOK.SMS.Dal.csproj">
       <Project>{A83872B4-27B6-4521-91F2-060062551EB8}</Project>
       <Name>THOK.SMS.Dal</Name>

@@ -10,6 +10,10 @@ namespace THOK.SMS.Bll.Interfaces
     {
         object GetDetails(int page, int rows, DeliverLineAllot dladeliverLineAllot);
 
+        bool Add(DeliverLineAllot deliverLineAllot, out string strResult);
+
+        bool Delete(string deliverLineCode, out string strResult);
+
         System.Data.DataTable GetDeliverLineAllot(int page, int rows, DeliverLineAllot deliverLineAllot);
     }
 }

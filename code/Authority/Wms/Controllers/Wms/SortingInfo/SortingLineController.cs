@@ -44,6 +44,12 @@ namespace Authority.Controllers.Wms.SortingInfo
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetDetailsForSort(int page, int rows)
+        {
+            var sortingLine = SortingLineService.GetDetailsForSort(page, rows);
+            return Json(sortingLine, "text", JsonRequestBehavior.AllowGet);
+        }
+
         //
         // GET: /SortingLine/GetSortLine/
         public ActionResult GetSortLine()

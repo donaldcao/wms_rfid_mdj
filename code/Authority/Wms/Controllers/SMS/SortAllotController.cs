@@ -71,5 +71,13 @@ namespace Wms.Controllers.SMS
             string msg=bResult?"分配成功":"分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult,msg,strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult UpdateDeliverLineAllot2(string orderDate, string deliverLineCodes,string sortingLineCode)
+        {
+            string strResult = string.Empty;
+            bool bResult = DeliverLineOptimizeService.UpdateDeliverLineAllot(orderDate, deliverLineCodes, sortingLineCode, this.User.Identity.Name.ToString(), out strResult);
+            string msg = bResult ? "分配成功" : "分配失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
     }
 }

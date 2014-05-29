@@ -42,6 +42,41 @@ namespace THOK.SMS.Bll.Service
             return new { total, rows = deliverLineAllotArray.ToArray() };
         }
 
+        public bool Add(DeliverLineAllot deliverLineAllot, out string strResult)
+        {
+            strResult = string.Empty;
+            bool bResult = false;
+            try
+            {
+                DeliverLineAllotRepository.Add(deliverLineAllot);
+                DeliverLineAllotRepository.SaveChanges();
+                bResult = true;
+            }
+            catch(Exception ex)
+            {
+                strResult = "原因：" + ex.Message;
+            }
+            return bResult;
+        }
+
+        public bool Delete(string deliverLineCode, out string strResult)
+        {
+            strResult = string.Empty;
+            bool bResult = false;
+            var deliverLineAllot = DeliverLineAllotRepository.GetQueryable().FirstOrDefault(a => a.DeliverLineCode.Equals(deliverLineCode));
+            try
+            {
+                DeliverLineAllotRepository.Delete(deliverLineAllot);
+                DeliverLineAllotRepository.SaveChanges();
+                bResult = true;
+            }
+            catch (Exception ex)
+            {
+                strResult = "原因：" + ex.Message;
+            }
+            return bResult;
+        }
+
         public System.Data.DataTable GetDeliverLineAllot(int page, int rows, DeliverLineAllot deliverLineAllot)
         {
             IQueryable<DeliverLineAllot> deliverLineAllotQuery = DeliverLineAllotRepository.GetQueryable();

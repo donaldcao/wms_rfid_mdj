@@ -11,6 +11,13 @@ using THOK.Authority.Dal.Interfaces;
 using THOK.Authority.DbModel;
 using THOK.SMS.Bll.Interfaces;
 
+
+
+using THOK.WMS.DownloadWms.Bll;
+using THOK.Wms.DownloadWms.Bll;
+using THOK.Authority.Bll.Interfaces;
+
+
 namespace THOK.SMS.Optimize.Service
 {
     public class DeliverLineOptimizeService : ServiceBase<SortOrder>, IDeliverLineOptimizeService
@@ -51,6 +58,11 @@ namespace THOK.SMS.Optimize.Service
         [Dependency]
         public IBatchSortRepository BatchSortRepository { get; set; }
 
+
+
+        [Dependency]
+        public ISystemParameterService SystemParameterService { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -80,27 +92,27 @@ namespace THOK.SMS.Optimize.Service
                                 && (product.Where(p => p.IsAbnormity.Equals("1")).Select(p => p.ProductCode)).Contains(d.ProductCode))
                         .Sum(a => a.DemandQuantity),
                     DeliverLineCount = sortOrderQuery.Where(a => a.OrderDate.Equals(s.Key)).GroupBy(a => a.DeliverLineCode).Count(),
-                    IsWarehousSortIntegration = parameterValue ??"0"
+                    IsWarehousSortIntegration = parameterValue ?? "0"
                 })).ToArray();
-            return new { total=sortOrderDetails.Count(),rows=sortOrderDetails.ToArray()};
+            return new { total = sortOrderDetails.Count(), rows = sortOrderDetails.ToArray() };
         }
 
         public object GetDeliverLine(string orderDate)
         {
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
             var sortOrderDetails = sortOrderQuery.Where(s => s.OrderDate.Equals(orderDate))
-                .GroupBy(s =>new {s.DeliverLineCode,s.DeliverLine.DeliverLineName,s.DeliverLine.DistCode,s.DeliverLine.DeliverOrder} )
+                .GroupBy(s => new { s.DeliverLineCode, s.DeliverLine.DeliverLineName, s.DeliverLine.DistCode, s.DeliverLine.DeliverOrder })
                 .AsEnumerable()
-                .OrderBy(a=>a.Key.DeliverOrder)
+                .OrderBy(a => a.Key.DeliverOrder)
                 .Select(s => new
                 {
                     DeliverLineCode = s.Key.DeliverLineCode,
-                    DeliverLineName=s.Key.DeliverLineName,
-                    Quantity=s.Sum(a=>a.QuantitySum),
-                    DistCode=s.Key.DistCode,
+                    DeliverLineName = s.Key.DeliverLineName,
+                    Quantity = s.Sum(a => a.QuantitySum),
+                    DistCode = s.Key.DistCode,
                     State = GetDeliverLineAllotState(s.Key.DeliverLineCode)[0],
                     SortingLineCode = GetDeliverLineAllotState(s.Key.DeliverLineCode)[1],
-                    DeliverOrder=s.Key.DeliverOrder
+                    DeliverOrder = s.Key.DeliverOrder
                 }).ToArray();
             return sortOrderDetails;
         }
@@ -115,7 +127,7 @@ namespace THOK.SMS.Optimize.Service
                 IQueryable<SortOrderDispatch> sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
                 var sortOrderDispatchDetails = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate))
                     .AsEnumerable()
-                    .OrderBy(a=>a.DeliverLine.DeliverOrder)
+                    .OrderBy(a => a.DeliverLine.DeliverOrder)
                     .Select(a => new
                     {
                         a.ID,
@@ -130,6 +142,88 @@ namespace THOK.SMS.Optimize.Service
             }
             return null;
         }
+
+
+        //仓储分拣一体化
+        public bool IsWarehousSortIntegration(out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+
+            IQueryable<SystemParameter> systemParameterQuery = SystemParameterRepository.GetQueryable();
+            var parameterValue = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("IsWarehousSortIntegration")).ParameterValue;
+            if (parameterValue == "1") //仓储分拣一体化
+            {
+                result = true;
+            }
+            return result;
+        }
+
+        //已下载
+        public bool DownLoad(string beginDate, string endDate, out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+            var sort = sortOrderQuery.Where(a => a.OrderDate.Equals(beginDate.Replace("-", "")));
+            int count = sort.Count();
+            //已下载
+            if (count > 0)
+            {
+                result = true;
+            }
+            return result;
+        }
+        //下载数据
+        public bool DownSortOrder(string beginDate, string endDate)
+        {
+            string errorInfo = string.Empty;
+   
+            bool bResult = false;
+            bool lineResult = false;
+
+            beginDate = Convert.ToDateTime(beginDate).ToString("yyyyMMdd");
+            endDate = Convert.ToDateTime(endDate).ToString("yyyyMMdd");
+
+            DownSortingInfoBll sortBll = new DownSortingInfoBll();
+            DownRouteBll routeBll = new DownRouteBll();
+            DownSortingOrderBll orderBll = new DownSortingOrderBll();
+            DownCustomerBll custBll = new DownCustomerBll();
+            DownDistStationBll stationBll = new DownDistStationBll();
+            DownDistCarBillBll carBll = new DownDistCarBillBll();
+            DownUnitBll ubll = new DownUnitBll();
+            DownProductBll pbll = new DownProductBll();
+
+            try
+            {
+                ubll.DownUnitCodeInfo();
+                pbll.DownProductInfo();
+                routeBll.DeleteTable();
+                stationBll.DownDistStationInfo();
+                if (!SystemParameterService.SetSystemParameter())
+                {
+                    bool custResult = custBll.DownCustomerInfo();
+                    carBll.DownDistCarBillInfo(beginDate);
+                    //从营销下载分拣数据 
+                    lineResult = routeBll.DownRouteInfo();
+                    bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮                  
+                }
+                else
+                {
+                    bool custResult = custBll.DownCustomerInfos();//创联
+
+                    //从营销下载分拣数据 创联
+                    lineResult = routeBll.DownRouteInfos();
+                    bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                errorInfo += e.Message;
+            }        
+            return bResult;
+        }
+
 
         private string[] GetDeliverLineAllotState(string deliverLineCode)
         {
@@ -149,12 +243,12 @@ namespace THOK.SMS.Optimize.Service
             return array;
         }
 
-        public bool EditDeliverLine(DeliverLine deliverLine,out string strResult)
+        public bool EditDeliverLine(DeliverLine deliverLine, out string strResult)
         {
             strResult = string.Empty;
-            bool result=false;
+            bool result = false;
             DeliverLine deliver = DeliverLineRepository.GetQueryable().FirstOrDefault(a => a.DeliverLineCode.Equals(deliverLine.DeliverLineCode));
-            if (deliver!=null)
+            if (deliver != null)
             {
                 try
                 {
@@ -170,14 +264,14 @@ namespace THOK.SMS.Optimize.Service
             return result;
         }
 
-        public bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes,string userName,out string strResult)
+        public bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes, string userName, out string strResult)
         {
             strResult = string.Empty;
             bool bResult = false;
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
             string[] deliverLineCodeArray = deliverLineCodes.Substring(0, deliverLineCodes.Length - 1).Split(',').ToArray();
             IQueryable<SortOrderDispatch> sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
-            var sortOrderDispatchDetails = sortOrderDispatchQuery.Where(a => deliverLineCodeArray.Contains(a.DeliverLineCode)&& a.OrderDate.Equals(orderDate)&&a.IsActive.Equals("1"))
+            var sortOrderDispatchDetails = sortOrderDispatchQuery.Where(a => deliverLineCodeArray.Contains(a.DeliverLineCode) && a.OrderDate.Equals(orderDate) && a.IsActive.Equals("1"))
                 .Select(a => new
                 {
                     a.OrderDate,
@@ -200,14 +294,14 @@ namespace THOK.SMS.Optimize.Service
                 batch.OptimizeSchedule = 2;
                 batch.Description = "1";
                 batch.Status = "01";
-                result=BatchService.Add(batch, userName, out strResult);
+                result = BatchService.Add(batch, userName, out strResult);
                 if (!result)
                 {
                     return false;
                 }
                 //更新批次分拣表
                 var sortingLineCodes = sortOrderDispatchDetails.GroupBy(a => a.SortingLineCode).Select(a => a.Key).ToArray();
-                IQueryable<Batch> batchQuery=BatchRepository.GetQueryable();
+                IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
                 var batchId = batchQuery.FirstOrDefault(a => a.BatchNo.Equals(batchNo) && a.OrderDate.Equals(date)).BatchId;
                 foreach (var item in sortingLineCodes)
                 {
@@ -234,7 +328,7 @@ namespace THOK.SMS.Optimize.Service
                     }).ToArray();
                 foreach (var item in deliverLineCodeArray)
                 {
-                    int batchSortId=batchSortDetails.FirstOrDefault(a=>a.SortingLineCode.Equals(item)).BatchSortId;
+                    int batchSortId = batchSortDetails.FirstOrDefault(a => a.SortingLineCode.Equals(item)).BatchSortId;
                     DeliverLineAllot deliverLineAllot = new DeliverLineAllot();
                     deliverLineAllot.DeliverLineAllotCode = batchSortId.ToString() + "-" + item;
                     deliverLineAllot.BatchSortId = batchSortId;

@@ -1,0 +1,92 @@
+﻿<script type="text/javascript">
+    function downloadClick() {
+        $.ajax({
+            url: "/SortAllot/IsWareHouseSorting/",
+            success: function (responseText) {
+                var result = $.evalJSON(responseText);
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                }
+                else {
+                    $('#dlg_sortAllot_date').dialog('open').dialog('setTitle', '提示下载');
+                    downloadKey = true;
+                    $('#beginDate').datebox({ editable: false });
+                    $('#beginDate').datebox('setValue', "");
+
+                }
+            }
+        });
+    }
+    function download() {
+        var begin = $('#beginDate').datebox('getValue');
+        if (begin != "") {
+            var j_waitDialog = ShowWaitMessageDialog();
+            $.ajax({
+                url: "/SortAllot/DownDataSource/", type: "GET", dataType: "text",
+                data: { 'beginDate': begin, "endDate": begin },
+                complete: function () { HideWaitMessageDialog(j_waitDialog); },
+                success: function (responseText) {
+                    var result = $.evalJSON(responseText);
+                    if (result.success) {
+                        $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                        $("#details").datagrid('reload');
+                        $('#dlg_sorting_date').dialog('close');
+                    } else {
+                        $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                        $("#details").datagrid('reload');
+                        $('#dlg_sorting_date').dialog('close');
+                    }
+                }
+            });
+        } else {
+            $.messager.confirm('错误', '没选时间！请选择时间！');
+        }
+    }
+
+    function generateCheckClick() {
+        var begin = $('#beginDate').datebox('getValue');
+        if (begin != "") {
+            $.ajax({
+                url: "/SortAllot/DownLoad/", type: "GET", dataType: "text",
+                data: { 'beginDate': begin, 'endDate': begin },
+                success: function (responseText) {
+                    var result = $.evalJSON(responseText);
+                    if (result.success) {
+                        $.messager.confirm(g_MsgBoxTitle, result.msg, function (r) {
+                            if (r) {
+                                download();
+                            } else {
+                                $('#dlg_sorting_date').dialog('close');
+                            }
+                        });
+                    } else {
+                        download();
+                    }
+                }
+            });
+        } else {
+            $.messager.confirm('错误', '请选择下载日期');
+        }
+    }
+</script>
+<div id="dlg_sortAllot_date" class="easyui-dialog" modal="true" style="width: 290px;
+    height: 150px; padding: 20px 10px" closed="true" buttons="#dlg_allot_modify_buttons"
+    align="center">
+    <form id="fm_sortAllot_date" method="post" novalidate>
+    <table align="left" width="240">
+        <tr>
+            <td width="60" style="text-align: right">
+                下载日期:
+            </td>
+            <td colspan="2">
+                <input id="beginDate" class="easyui-datebox" type="text" style="width: 140px" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<div id="dlg_allot_modify_buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="generateCheckClick()">
+        确定</a> <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg_sortAllot_date').dialog('close')">
+            取消</a>
+</div>

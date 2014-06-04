@@ -70,7 +70,7 @@ namespace THOK.SMS.Optimize.Service
         {
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
             IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
-            IQueryable<Product> product=ProductRepository.GetQueryable();
+            IQueryable<Product> product = ProductRepository.GetQueryable();
             IQueryable<SystemParameter> systemParameterQuery = SystemParameterRepository.GetQueryable();
             var parameterValue = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("IsWarehousSortIntegration")).ParameterValue;
             var sortOrderDetails = (sortOrderQuery.GroupBy(s => s.OrderDate)
@@ -84,27 +84,27 @@ namespace THOK.SMS.Optimize.Service
                                 && (product.Where(p => p.IsAbnormity.Equals("1")).Select(p => p.ProductCode)).Contains(d.ProductCode))
                         .Sum(a => a.DemandQuantity),
                     DeliverLineCount = sortOrderQuery.Where(a => a.OrderDate.Equals(s.Key)).GroupBy(a => a.DeliverLineCode).Count(),
-                    IsWarehousSortIntegration = parameterValue ??"0"
+                    IsWarehousSortIntegration = parameterValue ?? "0"
                 })).ToArray();
-            return new { total=sortOrderDetails.Count(),rows=sortOrderDetails.ToArray()};
+            return new { total = sortOrderDetails.Count(), rows = sortOrderDetails.ToArray() };
         }
 
         public object GetDeliverLine(string orderDate)
         {
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
             var sortOrderDetails = sortOrderQuery.Where(s => s.OrderDate.Equals(orderDate))
-                .GroupBy(s =>new {s.DeliverLineCode,s.DeliverLine.DeliverLineName,s.DeliverLine.DistCode,s.DeliverLine.DeliverOrder} )
+                .GroupBy(s => new { s.DeliverLineCode, s.DeliverLine.DeliverLineName, s.DeliverLine.DistCode, s.DeliverLine.DeliverOrder })
                 .AsEnumerable()
-                .OrderBy(a=>a.Key.DeliverOrder)
+                .OrderBy(a => a.Key.DeliverOrder)
                 .Select(s => new
                 {
                     DeliverLineCode = s.Key.DeliverLineCode,
-                    DeliverLineName=s.Key.DeliverLineName,
-                    Quantity=s.Sum(a=>a.QuantitySum),
-                    DistCode=s.Key.DistCode,
+                    DeliverLineName = s.Key.DeliverLineName,
+                    Quantity = s.Sum(a => a.QuantitySum),
+                    DistCode = s.Key.DistCode,
                     State = GetDeliverLineAllotState(s.Key.DeliverLineCode)[0],
                     SortingLineCode = GetDeliverLineAllotState(s.Key.DeliverLineCode)[1],
-                    DeliverOrder=s.Key.DeliverOrder
+                    DeliverOrder = s.Key.DeliverOrder
                 }).ToArray();
             return sortOrderDetails;
         }
@@ -138,16 +138,17 @@ namespace THOK.SMS.Optimize.Service
                 var sortOrderDeliverLine = sortOrderQuery.Where(a => a.OrderDate.Equals(orderDate))
                     .GroupBy(a => new { a.DeliverLineCode, a.DeliverLine.DeliverLineName, a.DeliverLine.DeliverOrder })
                     .AsEnumerable()
-                    .OrderBy(a=>a.Key.DeliverOrder)
-                    .Select(a => new { 
+                    .OrderBy(a => a.Key.DeliverOrder)
+                    .Select(a => new
+                    {
                         a.Key.DeliverLineCode,
                         a.Key.DeliverLineName,
-                        Quantity=a.Sum(b=>b.QuantitySum),
+                        Quantity = a.Sum(b => b.QuantitySum),
                         State = GetDeliverLineAllotState(a.Key.DeliverLineCode)[0],
                         SortingLineCode = GetDeliverLineAllotState(a.Key.DeliverLineCode)[1],
                         DeliverOrder = a.Key.DeliverOrder
                     }).Where(a => a.State.Equals("未分配"))
-                    .Select(a=>a).ToArray();
+                    .Select(a => a).ToArray();
                 return sortOrderDeliverLine;
                 //IQueryable<DeliverLine> deliverLineQuery = DeliverLineRepository.GetQueryable();
             }
@@ -171,12 +172,12 @@ namespace THOK.SMS.Optimize.Service
             return array;
         }
 
-        public bool EditDeliverLine(DeliverLine deliverLine,out string strResult)
+        public bool EditDeliverLine(DeliverLine deliverLine, out string strResult)
         {
             strResult = string.Empty;
-            bool result=false;
+            bool result = false;
             DeliverLine deliver = DeliverLineRepository.GetQueryable().FirstOrDefault(a => a.DeliverLineCode.Equals(deliverLine.DeliverLineCode));
-            if (deliver!=null)
+            if (deliver != null)
             {
                 try
                 {
@@ -192,14 +193,14 @@ namespace THOK.SMS.Optimize.Service
             return result;
         }
 
-        public bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes,string userName,out string strResult)
+        public bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes, string userName, out string strResult)
         {
             strResult = string.Empty;
             bool bResult = false;
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
             string[] deliverLineCodeArray = deliverLineCodes.Substring(0, deliverLineCodes.Length - 1).Split(',').ToArray();
             IQueryable<SortOrderDispatch> sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
-            var sortOrderDispatchDetails = sortOrderDispatchQuery.Where(a => deliverLineCodeArray.Contains(a.DeliverLineCode)&& a.OrderDate.Equals(orderDate)&&a.IsActive.Equals("1"))
+            var sortOrderDispatchDetails = sortOrderDispatchQuery.Where(a => deliverLineCodeArray.Contains(a.DeliverLineCode) && a.OrderDate.Equals(orderDate) && a.IsActive.Equals("1"))
                 .Select(a => new
                 {
                     a.OrderDate,
@@ -277,7 +278,7 @@ namespace THOK.SMS.Optimize.Service
                         DeliverLineCode = s.Key,
                         Quantity = s.Sum(a => a.QuantitySum),
                     }).OrderByDescending(a => a.Quantity).ToArray();
-                IQueryable<DeliverLineAllot> deliverLineAllotQuery=DeliverLineAllotRepository.GetQueryable();
+                IQueryable<DeliverLineAllot> deliverLineAllotQuery = DeliverLineAllotRepository.GetQueryable();
                 for (int i = 0; i < sortOrderDetails.Count(); i++)
                 {
                     var batchSortId = batchSortDetails
@@ -341,7 +342,7 @@ namespace THOK.SMS.Optimize.Service
             IQueryable<BatchSort> batchSortQuery = BatchSortRepository.GetQueryable();
             foreach (var item in sortingLineCodes)
             {
-                var batchSortDetails = batchSortQuery.AsEnumerable().FirstOrDefault(a => a.BatchId.Equals(batchId)&&a.SortingLineCode.Equals(item.ToString()));
+                var batchSortDetails = batchSortQuery.AsEnumerable().FirstOrDefault(a => a.BatchId.Equals(batchId) && a.SortingLineCode.Equals(item.ToString()));
                 if (batchSortDetails == null)
                 {
                     BatchSort batchSort = new BatchSort();

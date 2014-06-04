@@ -49,14 +49,20 @@
   <ItemGroup>
     <Compile Include="Interfaces\IDeliverLineOptimizeService.cs" />
     <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\ISortOrderDownService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\DeliverLineOptimizeService.cs" />
     <Compile Include="Service\ServiceBase.cs" />
+    <Compile Include="Service\SortOrderDownService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\THOK.Authority.Bll\THOK.Authority.Bll.csproj">
+      <Project>{8375EB8C-20CB-4E3E-BCF4-85E54F61D241}</Project>
+      <Name>THOK.Authority.Bll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.Authority.Dal\THOK.Authority.Dal.csproj">
       <Project>{A8E32F0A-A9F4-4CDD-8C7A-8304CD034070}</Project>
       <Name>THOK.Authority.Dal</Name>

@@ -39,14 +39,17 @@ namespace Wms.Controllers.SMS
         public ActionResult Index(string moduleID)
         {
             ViewBag.hasSearch = true;
-            ViewBag.hasAllot = true;
             ViewBag.hasAdd = true;
             ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
+            ViewBag.hasDownload = true;
+            ViewBag.hasAllot = true;
+            ViewBag.hasEmpty = true;
+            ViewBag.hasChanneloptimze = true;
+            ViewBag.hasChannelcancel = true;
+            ViewBag.hasOptimize = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
-            ViewBag.hasPrint = true;
-            ViewBag.hasDownload = true;
             ViewBag.ModuleID = moduleID;
             return View();
         }

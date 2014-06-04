@@ -2512,6 +2512,9 @@
     <Content Include="Views\SortAllot\_EditPartial.cshtml" />
     <Content Include="Views\SortAllot\_DownLoadPartial.cshtml" />
     <Content Include="Views\SortAllot\Index.cshtml" />
+    <Content Include="Views\Shared\_OptimizePartial.cshtml" />
+    <Content Include="Views\Shared\_ChannelPartial.cshtml" />
+    <Content Include="Views\Shared\_ChannelcancelPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

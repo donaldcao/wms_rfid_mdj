@@ -60,3 +60,9 @@
 {    @Html.Partial("_EmptyPartial")}
 @if (ViewBag.hasNode != null && ViewBag.hasNode)
 {    @Html.Partial("_NodePartial")}
+@if (ViewBag.hasOptimize != null && ViewBag.hasOptimize)
+{    @Html.Partial("_OptimizePartial")}
+@if (ViewBag.hasChanneloptimze != null && ViewBag.hasChanneloptimze)
+{    @Html.Partial("_ChannelPartial")}
+@if (ViewBag.hasChannelcancel != null && ViewBag.hasChannelcancel)
+{    @Html.Partial("_ChannelcancelPartial")}

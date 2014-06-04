@@ -25,7 +25,8 @@ namespace THOK.SMS.Bll.Service
             IQueryable<DeliverLineAllot> deliverLineAllotQuery = DeliverLineAllotRepository.GetQueryable();
 
             var deliverLineAllotDetails = deliverLineAllotQuery.Where(d =>
-                d.DeliverLineCode.Contains(deliverLineAllot.DeliverLineAllotCode)
+                d.DeliverLineAllotCode.Contains(deliverLineAllot.DeliverLineAllotCode)
+                &&d.DeliverLineCode.Contains(deliverLineAllot.DeliverLineCode)
                 && d.Status.Contains(deliverLineAllot.Status)).OrderBy(ul=>ul.DeliverLineAllotCode);
 
             int total = deliverLineAllotDetails.Count();

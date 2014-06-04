@@ -1,0 +1,194 @@
+﻿<script type="text/javascript">
+    function editClick() {
+        var row = $('#master').datagrid('getSelected');
+        if (row) {
+            $('#dlg-edit').dialog('open').dialog('setTitle',"编辑");
+            $('#fm-sortOrderInfo').form('load', row);
+            $('#btnEditDeliverLine').removeAttr("style");
+            $('#btnRemoveDeliverLineAllot').removeAttr("style");
+            $('#btnDeliverLineAllot').css('display', 'none');
+            $('#deliverLineDetail').datagrid({ url: '/SortAllot/GetDeliverLine/?orderDate=' + row.OrderDate, singleSelect: true });
+        }
+        else {
+            $.messager.alert('提示', '没有选择行！', 'info');
+        }
+    }
+
+    function editDeliverLineClick() {
+        var row = $('#deliverLineDetail').datagrid('getSelected');
+        if (row) {
+            $('#dlg-edit-deliverLine').dialog('open').dialog('setTitle', "编辑");
+            $('#fm-edit-deliverLine').form('load', row);
+        }
+        else {
+            $.messager.alert('提示', '没有选择行！', 'info');
+        }
+    }
+
+    //取消分配
+    function removeDeliverLineAllotClick() {
+        var row = $('#deliverLineDetail').datagrid('getSelected');
+        if (row) {
+            if (row.State == "已分配") {
+                $.messager.confirm('询问', '你确定要取消'+row.DeliverLineCode+'的分配吗?', function (r) {
+                    if (r) {
+                        alert('confirmed: ' + r);//todo:
+                    }
+                });
+
+            }
+            else {
+                $.messager.alert('提示', '请选择已分配的记录！', 'info');
+            }
+        }
+        else {
+            $.messager.alert('提示', '没有选择行！', 'info');
+        }
+    }
+
+    //分配
+    function deliverLineAllotClick() {
+        var row = $('#master').datagrid('getSelected')
+        if (row.IsWarehousSortIntegration == '1') {//分拣仓储一体化
+            var deliverLineRows = $('#deliverLineDetail').datagrid('getSelections');
+            if (row.DeliverLineCount != deliverLineRows.length) {//未选择当日所有分拣线
+                $.messager.confirm('提示', '今日分拣线路总条数' + row.DeliverLineCount + '条，只选择了' + deliverLineRows.length + '条，是否继续?', function (r) {
+                    if (r) {
+                        saveDeliverLineAllot(row.OrderDate,deliverLineRows);
+                    }
+                });
+            } else {
+                saveDeliverLineAllot(row.OrderDate,deliverLineRows);
+            }
+        }
+    }
+
+    //保存分配
+    function saveDeliverLineAllot(orderDate,deliverLineRows) {
+//        $.asyncProcessing.OnProcessComplete = function () {
+//            $('#dlg-edit').dialog('close');
+//            $('#details').datagrid('reload')
+//        }
+        var dispatchParameter = "";
+        for (var i = 0; i < deliverLineRows.length; i++) {
+            dispatchParameter += deliverLineRows[i].DeliverLineCode + ',';
+        }
+        if (dispatchParameter != "" && dispatchParameter != null) {
+            // $.asyncProcessing.Start('/allotSortWork', $.toJSON({ ActionType: 'start', workDispatchId: dispatchParameter }));
+            $.ajax({
+                type: "POST",
+                url: "/SortAllot/UpdateDeliverLineAllot",
+                data: "orderDate=" + orderDate + "&deliverLineCodes=" + dispatchParameter,
+                success: function (result) {
+                    var result = eval('(' + result + ')');
+                    if (result.success) {
+                        $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                        $("#dlg-edit").dialog('close');
+                        $('#details').datagrid('reload');
+                    } else {
+                        $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                        $('#details').datagrid('reload');
+                    }
+                }
+            });  
+        } else {
+            $.messager.alert('提示', '请选择需要分配的线路！');
+        }
+    }
+
+    function save() {
+        $('#fm-edit-deliverLine').form('submit', {
+            url: "/SortAllot/EditDeliverLine/",
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    $("#dlg-edit-deliverLine").dialog('close');
+                    $('#deliverLineDetail').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#deliverLineDetail').datagrid('reload');
+                }
+            }
+        });
+    }
+</script>
+<div id="dlg-edit" class="easyui-dialog" modal="true" style="width:800px;height:450px;padding:0px 0px" closed="true" buttons="#dlg-buttons">
+   <div class="easyui-layout" fit="true">
+        <div region="center" border="false">
+            <table class="easyui-datagrid" border="false" toolbar="#dlg-detailButtons" width="700" id="deliverLineDetail"
+                fit="true" fitColumns="true" rownumbers="true" pagination="true" checkOnSelect="true" pageSize="50">
+                <thead>
+                    <tr>
+                        <th field="ck" checkbox="true"></th> 
+                        <th field="DeliverLineCode" width="100">送货线路编码</th>
+                        <th field="DeliverLineName" width="150">送货线路名称</th>
+                        <th field="Quantity" width="100">数量(条)</th>
+                        <th field="State" width="60">任务状态</th>
+                        <th field="SortingLineCode" width="100">分拣线编码</th>
+                        <th field="DeliverOrder" width="100">送货线路顺序</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="dlg-detailButtons" style="width: auto; height: auto; background-color: #FFFFFF;">
+	<div border="false" style="padding:4px 4px;" >     
+	    <form id="fm-sortOrderInfo" method="post">
+            <table height="50px">
+                <tr>
+                <td width="60">订单日期</td>
+                <td width="190"><input name="OrderDate" id="dlg-OrderDate" disabled="disabled"></td>
+                <td width="80">总数量（条）</td>
+                <td width="190"><input name="SumQuantity" id="dlg-SumQuantity" disabled="disabled"></td>
+                <td width="60">线路条数</td>
+                <td width="190"><input name="DeliverLineCount" disabled="disabled" id="dlg-DeliverLineCount"></td>
+                </tr>
+                <tr>
+                <td width="60">说明</td>
+                <td width="190"><input name="Explanation" id="dlg-Explanation" disabled="disabled"></td>
+                <td width="80">异形烟（条）</td>
+                <td width="190"><input name="AbnormityQuantity" id="dlg-AbnormityQuantity" disabled="disabled"></td>
+                <td width="80"></td>
+                <td width="190"></td>
+                </tr>
+            </table>
+	    </form>
+    </div>
+    <div border="false" style="padding:4px 4px;" > 
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editDeliverLineClick()" id="btnEditDeliverLine">修改明细</a>
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDeliverLineAllotClick()" id="btnRemoveDeliverLineAllot">取消分配</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-Menu_CheckBill" plain="true" onclick="deliverLineAllotClick()" id="btnDeliverLineAllot">分配</a>
+    </div>
+</div>
+<div id="dlg-buttons">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-edit').dialog('close')">关闭</a>
+</div>
+<div id="dlg-edit-deliverLine" class="easyui-dialog" style="width:280px;height:190px;padding:10px 10px" closed="true" buttons="#dlg-buttons-edit-deliverLine">
+    <form id="fm-edit-deliverLine" method="post">
+        <table>
+            <tr>
+                <td width="90">送货线路编码</td>
+                <td><input style="width:160px" name="DeliverLineCode" class="easyui-validatebox" readonly="readonly" /></td>
+            </tr>
+            <tr>
+                <td width="90">送货线路名称</td>
+                <td><input style="width:160px" name="DeliverLineName" class="easyui-validatebox" readonly="readonly" /></td>
+            </tr>
+            <tr>
+                <td width="90">送货线路顺序</td>
+                <td><input style="width:160px" name="DeliverOrder" class="easyui-numberbox" placeholder="请输入数字" required="true"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="dlg-buttons-edit-deliverLine">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="save()">确定</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-edit-deliverLine').dialog('close')">取消</a>
+</div>
+

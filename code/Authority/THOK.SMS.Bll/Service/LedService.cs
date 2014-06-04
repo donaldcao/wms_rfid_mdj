@@ -24,7 +24,6 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public ISortingLineRepository SortingLineRepository { get; set; }
 
-
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -82,7 +81,6 @@ namespace THOK.SMS.Bll.Service
             var channel = led.OrderByDescending(a => a.LedCode).ToArray()
                 .Select(a => new
                 {
-
                     a.Height,
                     a.LedCode,
                     a.LedGroupCode,
@@ -109,25 +107,23 @@ namespace THOK.SMS.Bll.Service
         {
 
             string groupCode, SortingCode;
-          //无父节点
+            //无父节点
             if (ledInfo.LedGroupCode == "" && ledInfo.LedGroupCode == string.Empty)
             {
-                groupCode = null;              
+                groupCode = null;
             }
             else
             {
-                groupCode = ledInfo.LedGroupCode;           
+                groupCode = ledInfo.LedGroupCode;
             }
             //无分屏
             if (SortingLineCode == "" && SortingLineCode == string.Empty)
             {
-
-                SortingCode = SortingLineCode; 
+                SortingCode = SortingLineCode;
             }
             else
             {
                 SortingCode = ledInfo.SortingLineCode;
-
             }
 
             strResult = string.Empty;
@@ -144,16 +140,13 @@ namespace THOK.SMS.Bll.Service
                     leds.LedGroupCode = groupCode;
                     leds.LedIp = "127.0.0.1"; //ledInfo.LedIp;   结构限制 注意及时修改
                     leds.LedName = ledInfo.LedName;
-
                     leds.LedType = ledInfo.LedType;//ledInfo.LedType;
-                                                        
                     leds.OrderNo = ledInfo.OrderNo;
                     leds.Status = ledInfo.Status;
                     leds.Width = ledInfo.Width;
                     leds.XAxes = ledInfo.XAxes;
                     leds.YAxes = ledInfo.YAxes;
                     leds.SortingLineCode = SortingCode;
-
                     LedRepository.Add(leds);
                     LedRepository.SaveChanges();
 
@@ -171,31 +164,27 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public bool Save(Led ledInfo,string LedType,string LedGroupCode,string SortingLineCode, out string strResult)
+        public bool Save(Led ledInfo, string LedType, string LedGroupCode, string SortingLineCode, out string strResult)
         {
 
             string groupCode, SortingCode;
             if (ledInfo.LedGroupCode == "" && ledInfo.LedGroupCode == string.Empty)
             {
-
                 groupCode = null;
             }
             else
             {
-
                 groupCode = ledInfo.LedGroupCode;
             }
 
             //无分屏
             if (SortingLineCode == "" && SortingLineCode == string.Empty)
             {
-
                 SortingCode = SortingLineCode;
             }
             else
             {
                 SortingCode = ledInfo.SortingLineCode;
-
             }
 
             strResult = string.Empty;
@@ -237,7 +226,6 @@ namespace THOK.SMS.Bll.Service
 
             if (ledInfo != null)
             {
-
                 var leddetail = LedRepository.GetQueryable().Where(a => a.LedGroupCode == LedCode);
                 if (leddetail != null)
                 {
@@ -260,7 +248,6 @@ namespace THOK.SMS.Bll.Service
         }
 
 
-
         public object GetLedGroupCode(int page, int rows, string QueryString, string Value)
         {
             string LedName = "";
@@ -275,21 +262,14 @@ namespace THOK.SMS.Bll.Service
                 LedIp = Value;
             }
             IQueryable<Led> HelpContentQuery = LedRepository.GetQueryable();
-            var LedContent = HelpContentQuery.Where(c => c.LedName.Contains(LedName) && c.LedIp.Contains(LedIp));
-
-            //if (!LedIp.Equals(string.Empty))
-            //{
-            //    LedContent = LedContent.Where(p => p.LedIp == LedIp);
-            //}
+            var LedContent = HelpContentQuery.Where(c => c.LedName.Contains(LedName) && c.LedIp.Contains(LedIp));         
 
             if (!LedType.Equals(string.Empty))
             {
                 LedContent = LedContent.Where(p => p.LedType == LedType);
             }
-
             var leds = LedContent.OrderByDescending(a => a.LedCode).AsEnumerable().Select(a => new
             {
-
                 a.LedCode,
                 a.LedName,
                 a.LedIp,
@@ -297,11 +277,8 @@ namespace THOK.SMS.Bll.Service
                 Status = a.Status == "1" ? "可用" : "不可用"
             });
 
-
             int total = LedContent.Count();
             leds = leds.Skip((page - 1) * rows).Take(rows);
-
-
             return new { total, rows = leds.ToArray() };
         }
 
@@ -312,61 +289,53 @@ namespace THOK.SMS.Bll.Service
             if (ledcode != "" && ledcode != null)
             {
                 IQueryable<Led> ledQuery = LedRepository.GetQueryable();
-                var led = ledQuery.Where(i => i.LedCode.Contains(ledcode)).OrderBy(i => i.LedCode).Select(i => i);
-                var temp = led.ToArray().AsEnumerable().Select(i => new
+                IQueryable<SortingLine> sortlingQuery = SortingLineRepository.GetQueryable();
+
+                var led = ledQuery.Join(sortlingQuery, a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new
                 {
-                    i.LedCode,
-                    i.LedName,
-                    i.LedType,
-                    i.LedIp,
-                    i.SortingLineCode,
-                    i.LedGroupCode,
-                    i.XAxes,
-                    i.YAxes,
-                    i.Width,
-                    i.Height,
-                    i.OrderNo,
-                    i.Status
+                    a.Height,
+                    a.LedCode,
+                    a.LedGroupCode,
+                    a.LedIp,
+                    a.LedName,
+                    a.LedType,
+                    a.OrderNo,
+                    a.SortingLineCode,
+                    SortingLineName = b.SortingLineName,
+                    a.Status,
+                    a.Width,
+                    a.XAxes,
+                    a.YAxes
                 });
+
                 dt.Columns.Add("LED编号", typeof(string));
                 dt.Columns.Add("LED名称", typeof(string));
                 dt.Columns.Add("LED类型", typeof(string));
                 dt.Columns.Add("LED地址", typeof(string));
-                dt.Columns.Add("分拣线名称", typeof(Int32));
+                dt.Columns.Add("分拣线名称", typeof(string));
                 dt.Columns.Add("X坐标", typeof(Int32));
                 dt.Columns.Add("Y坐标", typeof(Int32));
                 dt.Columns.Add("LED宽", typeof(Int32));
                 dt.Columns.Add("LED高", typeof(Int32));
-                dt.Columns.Add("父级编号", typeof(string));
                 dt.Columns.Add("顺序号", typeof(Int32));
                 dt.Columns.Add("状态", typeof(string));
-                foreach (var item in temp)
+                foreach (var item in led)
                 {
                     dt.Rows.Add
                         (
-                           item.Height,
                            item.LedCode,
-                           item.LedGroupCode,
-                           item.LedIp,
                            item.LedName,
                            item.LedType,
+                           item.LedIp,
+                           item.SortingLineName,
                            item.OrderNo,
-                           item.SortingLineCode,
-                           item.Status,
-                           item.Width,
                            item.XAxes,
-                           item.YAxes
+                           item.YAxes,
+                           item.Height,
+                           item.Width,
+                           item.Status
                         );
-                }
-                //if (temp.Count() > 0)
-                //{
-                //    dt.Rows.Add(
-                //        null, null, null, "总数：",
-                //        temp.Sum(m => m.BillQuantity),
-                //        temp.Sum(m => m.AllotQuantity),
-                //        temp.Sum(m => m.RealQuantity),
-                //        null);
-                //}
+                }     
             }
             return dt;
         }

@@ -264,7 +264,7 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public System.Data.DataTable GetBatchSort(int page, int rows, int BatchSortId)
+        public System.Data.DataTable GetBatchSort(int page, int rows, string BatchSortId)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
           

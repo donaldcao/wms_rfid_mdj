@@ -180,5 +180,50 @@ namespace THOK.Wms.Bll.Service
         }
 
         #endregion
+
+
+
+        public System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode)
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+          
+                IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
+
+                var DeliverDistinfo = DeliverDistQuery.OrderBy(a => a.DistCode).Select(a => new
+                {
+                    //a.DistCode,
+                    a.CustomCode,
+                    a.DistName,
+                    a.DistCenterCode,
+                    a.CompanyCode,
+                    a.UpdateTime,
+                    IsActive = a.IsActive == "1" ? "可用" : "不可用"
+
+                });
+
+                //dt.Columns.Add("配送区域编码", typeof(string));
+                dt.Columns.Add("自定义编码", typeof(string));
+                dt.Columns.Add("配送区域名称", typeof(string));
+                dt.Columns.Add("配送中心编码", typeof(string));
+                dt.Columns.Add("所属单位编码", typeof(string));
+                dt.Columns.Add("更新时间", typeof(string));
+                dt.Columns.Add("是否可用", typeof(string));
+
+                foreach (var item in DeliverDistinfo)
+                {
+                    dt.Rows.Add
+                        (
+                    //item.DistCode,
+                    item.CustomCode,
+                    item.DistName,
+                    item.DistCenterCode,
+                    item.CompanyCode,
+                    item.UpdateTime,
+                    item.IsActive
+                        );
+                }
+            
+            return dt;
+        }
     }
 }

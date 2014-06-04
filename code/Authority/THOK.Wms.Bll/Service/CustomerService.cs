@@ -84,20 +84,20 @@ namespace THOK.Wms.Bll.Service
         #region ICustomerService 成员
 
 
-       
+
         #endregion
 
         #region ICustomerService 成员
 
 
-        public object GetDetails(int page, int rows, string CustomerCode,string CustomerName, string CompanyCode, string SaleRegionCode, string CustomerType, string CityOrCountryside, string LicenseCode, string IsActive)
+        public object GetDetails(int page, int rows, string CustomerCode, string CustomerName, string CompanyCode, string SaleRegionCode, string CustomerType, string CityOrCountryside, string LicenseCode, string IsActive)
         {
             IQueryable<Customer> customerQuery = CustomerRepository.GetQueryable();
             var customer = customerQuery.Where(c => c.CustomerCode.Contains(CustomerCode) &&
                                                           c.CustomerType.Contains(CustomerType) &&
                                                           c.SaleRegionCode.Contains(SaleRegionCode) &&
                                                           c.CityOrCountryside.Contains(CityOrCountryside) &&
-                                                          c.CustomerName.Contains(CustomerName)&&
+                                                          c.CustomerName.Contains(CustomerName) &&
                                                           c.IsActive.Contains(IsActive));
             if (!CompanyCode.Equals(string.Empty))
             {
@@ -126,17 +126,17 @@ namespace THOK.Wms.Bll.Service
                 DeliverOrder = c.DeliverOrder,
                 DeliverLineCode = c.DeliverLineCode,
                 Address = c.Address,
-                Phone=c.Phone,
-                LicenseType=c.LicenseType,
-                LicenseCode=c.LicenseCode,
-                PrincipalName=c.PrincipalName,
-                PrincipalPhone=c.PrincipalPhone,
-                PrincipalAddress=c.PrincipalAddress,
-                ManagementName=c.ManagementName,
-                ManagementPhone=c.ManagementPhone,
-                Bank=c.Bank,
+                Phone = c.Phone,
+                LicenseType = c.LicenseType,
+                LicenseCode = c.LicenseCode,
+                PrincipalName = c.PrincipalName,
+                PrincipalPhone = c.PrincipalPhone,
+                PrincipalAddress = c.PrincipalAddress,
+                ManagementName = c.ManagementName,
+                ManagementPhone = c.ManagementPhone,
+                Bank = c.Bank,
                 BankAccounts = c.BankAccounts,
-                Description=c.Description,
+                Description = c.Description,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
                 UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
@@ -267,7 +267,7 @@ namespace THOK.Wms.Bll.Service
             strResult = string.Empty;
             try
             {
-                var cust= CustomerRepository.GetQueryable()
+                var cust = CustomerRepository.GetQueryable()
                     .FirstOrDefault(i => i.CustomerCode == customer.CustomerCode);
                 cust.CustomCode = customer.CustomCode;
                 cust.CustomerName = customer.CustomerName;
@@ -379,5 +379,55 @@ namespace THOK.Wms.Bll.Service
             return ds;
         }
         #endregion
+
+
+        public System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode)
+        {
+            
+               System.Data.DataTable dt = new System.Data.DataTable();
+           
+                IQueryable<Customer> customerQuery = CustomerRepository.GetQueryable();
+                var customerinfo = customerQuery.OrderBy(a => a.CustomerCode).Select(a => new
+                {
+                    a.CustomerCode,
+                    a.CustomerName,
+                    a.CompanyCode,
+                    a.SaleRegionCode,
+                    a.CustomerType,
+                    a.CityOrCountryside,
+                    a.DeliverOrder,
+                    a.Address,
+                    IsActive=a.IsActive=="1"?"可用":"不可用"
+
+                });
+
+                dt.Columns.Add("客户编码", typeof(string));
+                dt.Columns.Add("客户名称", typeof(string));
+                dt.Columns.Add("所属单位编码", typeof(string));
+                dt.Columns.Add("营销部编码", typeof(string));
+                dt.Columns.Add("客户类型", typeof(string));
+                dt.Columns.Add("商品类型编码", typeof(string));
+                dt.Columns.Add("送货顺序", typeof(string));
+                dt.Columns.Add("送货地址", typeof(string));
+                dt.Columns.Add("是否可用", typeof(string));
+
+                foreach (var item in customerinfo)
+                {
+                    dt.Rows.Add
+                        (
+                    item.CustomerCode,
+                    item.CustomerName,
+                    item.CompanyCode,
+                    item.SaleRegionCode,
+                    item.CustomerType,
+                    item.CityOrCountryside,
+                    item.DeliverOrder,
+                    item.Address,
+                    item.IsActive
+                        );
+                }
+            return dt;
+        }
+
     }
 }

@@ -95,9 +95,9 @@ namespace Wms.Controllers.SMS
 
         public FileStreamResult CreateExcelToClient()
         {
-            int page = 0, rows = 0;           
-            string Id = Request.QueryString["BatchSortId"];
-            int BatchSortId = Convert.ToInt16(Id);
+            int page = 0, rows = 0;
+            string BatchSortId = Request.QueryString["BatchSortId"];
+          //  int BatchSortId = Convert.ToInt16(Id);
            
             ExportParam ep = new ExportParam();
             ep.DT1 = BatchSortService.GetBatchSort(page, rows, BatchSortId);

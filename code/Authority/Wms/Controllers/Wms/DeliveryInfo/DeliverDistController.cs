@@ -9,6 +9,10 @@ using THOK.Wms.DbModel;
 using THOK.Common.WebUtil;
 using THOK.Security;
 
+
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
+
 namespace Wms.Controllers.Wms.DeliveryInfo
 {
     [TokenAclAuthorize]
@@ -87,6 +91,20 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             bool bResult = DeliverDistService.Delete(DistCode);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            string DistCode = Request.QueryString["DistCode"];
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = DeliverDistService.GetDeliverDistInfo(page, rows, DistCode);
+            ep.HeadTitle1 = "区域信息";
+
+            return PrintService.Print(ep);
         }
     }
 }

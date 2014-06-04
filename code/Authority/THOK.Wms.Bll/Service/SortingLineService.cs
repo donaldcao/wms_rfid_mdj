@@ -122,29 +122,13 @@ namespace THOK.Wms.Bll.Service
 
         #endregion
 
-        public System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode, string sortingLineName, string SortingLineType, string IsActive)
+        public System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode)
         {
             IQueryable<SortingLine> sortLineQuery = SortingLineRepository.GetQueryable();
-            var sortLine = sortLineQuery.Where(s => s.SortingLineCode == s.SortingLineCode);
-            if (sortingLineCode != string.Empty && sortingLineCode != null)
+
+            var temp = sortLineQuery.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
             {
-                sortLine = sortLine.Where(s => s.SortingLineCode.Contains(sortingLineCode));
-            }
-            if (sortingLineName != string.Empty && sortingLineName != null)
-            {
-                sortLine = sortLine.Where(s => s.SortingLineName.Contains(sortingLineName));
-            }
-            if (SortingLineType != string.Empty && SortingLineType != null)
-            {
-                sortLine = sortLine.Where(s => s.SortingLineType.Contains(SortingLineType));
-            }
-            if (IsActive != string.Empty && IsActive != null)
-            {
-                sortLine = sortLine.Where(s => s.IsActive == IsActive);
-            }
-            var temp = sortLine.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
-            {
-                b.SortingLineCode,
+                //b.SortingLineCode,
                 b.SortingLineName,
                 SortingLineType = b.SortingLineType == "1" ? "半自动分拣线" : "全自动分拣线",
                 b.OutBillTypeCode,
@@ -155,26 +139,27 @@ namespace THOK.Wms.Bll.Service
                 UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
             System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("分拣线编码", typeof(string));
+            //dt.Columns.Add("分拣线编码", typeof(string));
             dt.Columns.Add("分拣线名称", typeof(string));
             dt.Columns.Add("分拣线类型", typeof(string));
             dt.Columns.Add("出库单类型", typeof(string));
             dt.Columns.Add("移库单类型", typeof(string));
-            dt.Columns.Add("货位名称", typeof(string));
-            dt.Columns.Add("是否可用", typeof(string));
+            dt.Columns.Add("货位名称", typeof(string));         
             dt.Columns.Add("修改时间", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
             foreach (var item in temp)
             {
                 dt.Rows.Add
                     (
-                        item.SortingLineCode,
+                        //item.SortingLineCode,
                         item.SortingLineName,
                         item.SortingLineType,
                         item.OutBillTypeCode,
                         item.MoveBillTypeCode,
                         item.CellName,
-                        item.IsActive,
-                        item.UpdateTime
+                        item.UpdateTime,
+                        item.IsActive
+                      
                     );
             }
             return dt;

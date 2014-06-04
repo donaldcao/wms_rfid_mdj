@@ -228,5 +228,49 @@ namespace THOK.Wms.Bll.Service
         #endregion
 
 
+        public System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode)
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+          
+                IQueryable<DeliverLine> DeliverLineQuery = DeliverLineRepository.GetQueryable();
+
+               // var DeliverLine = DeliverLineQuery.Where(a => a.DeliverLineCode.Contains(DeliverLineCode));
+
+                var DeliverLineinfo = DeliverLineQuery.OrderBy(a => a.DeliverLineCode).Select(a => new
+                {
+                    a.DeliverLineCode,
+                    a.CustomCode,
+                    a.DeliverLineName,
+                    a.DistCode,
+                    a.DeliverOrder,                
+                    a.UpdateTime,
+                    IsActive=a.IsActive=="1"?"可用":"不可用"
+
+                });
+
+                dt.Columns.Add("送货线路编码", typeof(string));
+                dt.Columns.Add("自定义编码", typeof(string));
+                dt.Columns.Add("送货线路名称", typeof(string));
+                dt.Columns.Add("配送区域编码", typeof(string));
+                dt.Columns.Add("送货线路顺序", typeof(string));                   
+                dt.Columns.Add("更新时间", typeof(string));
+                dt.Columns.Add("是否可用", typeof(string));
+
+                foreach (var item in DeliverLineinfo)
+                {
+                    dt.Rows.Add
+                        (
+                    item.DeliverLineCode,
+                    item.CustomCode,
+                    item.DeliverLineName,
+                    item.DistCode,
+                    item.DeliverOrder,                                 
+                    item.UpdateTime,
+                    item.IsActive
+                        );
+                }           
+            return dt;
+        }
+
     }
 }

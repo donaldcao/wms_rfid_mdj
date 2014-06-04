@@ -18,6 +18,6 @@ namespace THOK.Wms.Bll.Interfaces
 
         object GetSortLine();
 
-        System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode, string sortingLineName, string SortingLineType, string IsActive);
+        System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode);
     }
 }

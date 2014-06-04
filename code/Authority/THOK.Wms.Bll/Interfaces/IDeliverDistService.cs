@@ -17,5 +17,7 @@ namespace THOK.Wms.Bll.Interfaces
        bool Save(string DistCode, string CustomCode, string DistName, string DistCenterCode, string CompanyCode, string UniformCode, string Description, string IsActive, out string strResult);
 
        bool Delete(string DistCode);
+
+       System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode);
     }
 }

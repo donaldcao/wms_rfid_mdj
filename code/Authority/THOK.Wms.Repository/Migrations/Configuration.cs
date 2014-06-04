@@ -4990,7 +4990,7 @@
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
                         ModuleName = "分拣订单查询",
                         ShowOrder = 4,
-                        ModuleURL = "/SortOrder/",
+                        ModuleURL = "/SortingOrder/",
                         IndicateImage = "icon-Menu_StockInto",
                         DeskTopImage = "image-Menu_StockInto",
                         System = system,

@@ -163,6 +163,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SMS\BatchController.cs" />
     <Compile Include="Controllers\SMS\BatchSortController.cs" />
+    <Compile Include="Controllers\SMS\ChannelAllotController.cs" />
     <Compile Include="Controllers\SMS\ChannelController.cs" />
     <Compile Include="Controllers\SMS\DeliverAllotController.cs" />
     <Compile Include="Controllers\SMS\SortAllotController.cs" />
@@ -2046,6 +2047,10 @@
     <Content Include="Views\DeliverAllot\Index.cshtml" />
     <Content Include="Views\DeliverAllot\_SearchPartial.cshtml" />
     <Content Include="Views\DeliverAllot\_PrintPartial.cshtml" />
+    <Content Include="Views\ChannelAllot\Index.cshtml" />
+    <Content Include="Views\ChannelAllot\_PrintPartial.cshtml" />
+    <Content Include="Views\ChannelAllot\_ProductPartial.cshtml" />
+    <Content Include="Views\ChannelAllot\_SearchPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />

@@ -70,19 +70,19 @@ namespace Wms.Controllers.SMS
             int page = 0, rows = 0;
 
             string SortSupplyCode = Request.QueryString["SortSupplyCode"] ?? "";
-            int BatchSortId = Convert.ToInt32(Request.QueryString["BatchSortId"] ?? "");
+            //int BatchSortId = Convert.ToInt32(Request.QueryString["BatchSortId"] ?? "");
             string ChannelCode = Request.QueryString["ChannelCode"] ?? "";
-            int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"] ?? "");
-            int PackNo = Convert.ToInt32(Request.QueryString["PackNo"] ?? "");
+            //int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"] ?? "");
+            //int PackNo = Convert.ToInt32(Request.QueryString["PackNo"] ?? "");
             string ProductCode = Request.QueryString["ProductCode"] ?? "";
             string ProductName = Request.QueryString["ProductName"] ?? "";
 
             SortSupply sortSupply = new SortSupply();
             sortSupply.SortSupplyCode = SortSupplyCode;
-            sortSupply.BatchSortId = BatchSortId;
+            //sortSupply.BatchSortId = BatchSortId;
             sortSupply.ChannelCode = ChannelCode;
-            sortSupply.SupplyId = SupplyId;
-            sortSupply.PackNo = PackNo;
+            //sortSupply.SupplyId = SupplyId;
+            //sortSupply.PackNo = PackNo;
             sortSupply.ProductCode = ProductCode;
             sortSupply.ProductName = ProductName;
 

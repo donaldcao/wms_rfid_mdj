@@ -9,10 +9,8 @@
         queryParams.ProductCode = $('#productCode').val();
         queryParams.ProductName = $('#productName').val();
 
-        queryParams.SortSupplyCode = $('#sortSupplyCode').val();
+        queryParams.ChannelAllotCode = $('#channelAllotCode').val();
         queryParams.BatchSortId = $('#batchSortId').val();
-        queryParams.SupplyId = $('#supplyId').val();
-        queryParams.PackNo = $('#packNo').val();
         queryParams.ChannelCode = $('#channelCode').val();
 
         $('#master').datagrid('options').queryParams = queryParams;
@@ -22,44 +20,30 @@
         $('#dlg-search').dialog("close");
     }
 </script>
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width:350px;height:300px;padding:2px 2px"
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width:350px;height:250px;padding:2px 2px"
 		closed="true" buttons="#dlg-buttons-search">
     <div class="easyui-layout" fit="true">
         <div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; ">
             <table width ="320">
                     <tr>
-                        <td width="100" align="right">订单细单代码：</td>
-                        <td width="168"><input id="sortSupplyCode" name="SortSupplyCode" type="text"/></td>
+                        <td width="75" align="right">烟道分配代码：</td>
+                        <td width="168"><input id="channelAllotCode" name="ChannelAllotCode" type="text"/></td>
                     </tr> 
                                          
                     <tr>
-                        <td width="100" align="right">批次分拣编号：</td>
+                        <td width="75" align="right">批次分拣编号：</td>
                         <td width="168">
-                            <input id="batchSortId" name="BatchSortId"  type="text" class="easyui-numberbox" placeholder="请输入数字"/>
-                            @*<a href="#" id="BatchSearch" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="batchQuery()"></a>*@
+                            <input id="batchSortId" name="BatchSortId" type="text" class="easyui-numberbox" placeholder="请输入数字"/>
                         </td>
                     </tr>
 
                     <tr>
-                        <td width="100" align="right">补货编码：</td>
+                        <td width="70" align="right">烟道代码：</td>
                         <td width="168">
-                            <input id="supplyId" name="SupplyId"  type="text" class="easyui-numberbox" placeholder="请输入数字"/>
+                            <input id="channelCode" name="ChannelCode" type="text" />
                         </td>
                     </tr>
 
-                    <tr>
-                        <td width="100" align="right">烟包包号：</td>
-                        <td width="168">
-                            <input id="packNo" name="PackNo"  type="text" class="easyui-numberbox" placeholder="请输入数字"/>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td width="100" align="right">烟道代码：</td>
-                        <td width="168">
-                            <input id="channelCode" name="ChannelCode"  type="text" />
-                        </td>
-                    </tr>
                     <tr>
                         <td width="100" align="right">商品代码：</td>
                         <td width="168">

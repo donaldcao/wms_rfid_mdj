@@ -38,7 +38,7 @@ namespace THOK.SMS.Bll.Service
                 s.SupplyId,
                 s.PackNo,
                 s.ProductCode,
-                s.ProductName,
+                s.ProductName
             });
             return new { total, rows = sortSupplyArray.ToArray() };
         }

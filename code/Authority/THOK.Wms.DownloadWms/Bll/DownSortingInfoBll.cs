@@ -76,6 +76,60 @@ namespace THOK.Wms.DownloadWms.Bll
             return tag;
         }
 
+
+        //SMS 下载数据
+        public bool GetSortingOrderDate(string startDate, string endDate, out string errorInfo)
+        {
+            bool tag = false;
+            errorInfo = string.Empty;
+            using (PersistentManager dbpm = new PersistentManager())
+            {
+                DownSortingInfoDao dao = new DownSortingInfoDao();
+                try
+                {
+                                     
+                    //查询仓库7天内的订单号
+                    DataTable orderdt = this.GetOrderId(startDate, endDate);
+                    string orderlist = UtinString.MakeString(orderdt, "order_id");
+                    string orderlistDate = "ORDERDATE >='" + startDate + "' AND ORDERDATE <='" + endDate + "'";
+                    DataTable masterdt = this.GetSortingOrder(orderlistDate);//下载主表
+                    DataRow[] masterdr = masterdt.Select("ORDERID NOT IN(" + orderlist + ")");//排除已经下载的
+
+                    string ordermasterlist = UtinString.MakeString(masterdr, "OrderID");
+                    ordermasterlist = "OrderID IN (" + ordermasterlist + ")";
+                    DataTable detaildt = this.GetSortingOrderDetail(orderlistDate);
+                    DataRow[] detaildr = detaildt.Select(ordermasterlist);
+                    if (masterdr.Length > 0 && detaildr.Length > 0)
+                    {
+                        DataSet masterds = this.SaveSortingOrder(masterdr);
+                        DataSet detailds = this.SaveSortingOrderDetail(detaildr);
+                        this.Insert(masterds, detailds);
+                        //上报分拣订单
+                        //upload.uploadSort(masterds, detailds);
+                        
+                            try
+                            {
+                                DataTable diapLine = this.GetDispatchLine(ordermasterlist);
+                                DataSet dispDs = this.SaveDispatch(diapLine);
+                                this.Insert(dispDs);
+                                tag = true;
+                            }
+                            catch (Exception e)
+                            {
+                                errorInfo = "调度出错,请手动进行线路调度，出错原因：" + e.Message;
+                            }
+                    }
+                    else
+                        errorInfo = "没有可用的数据下载！";
+                }
+                catch (Exception e)
+                {
+                    errorInfo = "下载错误：" + e.Message;
+                }
+            }
+            return tag;
+        }
+
         //查询数仓3天内分拣订单
         public DataTable GetOrderId(string startDate, string endDate)
         {
@@ -195,6 +249,28 @@ namespace THOK.Wms.DownloadWms.Bll
             }
             return ds;
         }
+
+
+        //SMS
+        //保存线路调度表信息
+        public DataSet SaveDispatch(DataTable diapTable)
+        {
+            DataSet ds = this.GenerateEmptyTables();
+            foreach (DataRow row in diapTable.Rows)
+            {
+                DataRow disprow = ds.Tables["WMS_SORT_ORDER_DISPATCH"].NewRow();
+                disprow["order_date"] = row["OrderDate"].ToString();//订单时间
+                disprow["sorting_line_code"] = "";//调度分拣线
+                disprow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();
+                disprow["is_active"] = "1";//是否可用
+                disprow["update_time"] = DateTime.Now;//调度时间
+                disprow["sort_work_dispatch_id"] = null;//作业调度ID
+                disprow["work_status"] = "1";//调度状态
+                ds.Tables["WMS_SORT_ORDER_DISPATCH"].Rows.Add(disprow);
+            }
+            return ds;
+        }
+
 
         //保存到数据库
         public void Insert(DataSet masterds, DataSet detailds)

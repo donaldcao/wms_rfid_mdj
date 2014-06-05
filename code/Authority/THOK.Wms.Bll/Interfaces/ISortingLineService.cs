@@ -10,6 +10,8 @@ namespace THOK.Wms.Bll.Interfaces
     {
        object GetDetails(int page, int rows, string sortingLineCode, string sortingLineName, string SortingLineType, string IsActive);
 
+       object GetDetailsForSort(int page, int rows);
+
         bool Add(SortingLine sortingLine);
 
         bool Delete(string sortingLineCode);

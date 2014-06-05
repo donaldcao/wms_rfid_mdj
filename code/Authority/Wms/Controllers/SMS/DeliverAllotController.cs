@@ -47,6 +47,17 @@ namespace Wms.Controllers.SMS
             return View();
         }
 
+        //
+        // POST: /Channel/Delete/
+        [HttpPost]
+        public ActionResult Delete(string deliverLineCode)
+        {
+            string strResult = string.Empty;
+            bool bResult = DeliverLineAllotServer.Delete(deliverLineCode, out strResult);
+            string msg = bResult ? "删除成功" : "删除失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
         //打印
         public FileStreamResult CreateExcelToClient()
         {

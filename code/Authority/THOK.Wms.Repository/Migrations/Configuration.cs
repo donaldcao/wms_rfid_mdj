@@ -4990,7 +4990,7 @@
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
                         ModuleName = "分拣订单查询",
                         ShowOrder = 4,
-                        ModuleURL = "/SortOrder/",
+                        ModuleURL = "/SortingOrder/",
                         IndicateImage = "icon-Menu_StockInto",
                         DeskTopImage = "image-Menu_StockInto",
                         System = system,
@@ -5484,14 +5484,38 @@
                  new Function()
                  {
                      FunctionID = new Guid("07432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
-                     FunctionName = "确认",
-                     ControlName = "confirm",
-                     IndicateImage = "icon-tip",
+                     FunctionName = "撤销",
+                     ControlName = "empty",
+                     IndicateImage = "icon-cancel",
+                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 },
+                  new Function()
+                  {
+                      FunctionID = new Guid("08432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                      FunctionName = "审核",
+                      ControlName = "channeloptimize",
+                      IndicateImage = "icon-ok",
+                      Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                  },
+                  new Function()
+                  {
+                      FunctionID = new Guid("09432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                      FunctionName = "反审",
+                      ControlName = "channelcancel",
+                      IndicateImage = "icon-undo",
+                      Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                  },
+                 new Function()
+                 {
+                     FunctionID = new Guid("10432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionName = "优化",
+                     ControlName = "optimize",
+                     IndicateImage = "icon-apply",
                      Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
                  },
                  new Function()
                  {
-                     FunctionID = new Guid("08432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                     FunctionID = new Guid("11432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
                      FunctionName = "打印",
                      ControlName = "print",
                      IndicateImage = "icon-print",
@@ -5499,7 +5523,7 @@
                  },
                 new Function()
                 {
-                    FunctionID = new Guid("09432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                    FunctionID = new Guid("12432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
                     FunctionName = "帮助",
                     ControlName = "help",
                     IndicateImage = "icon-help",

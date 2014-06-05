@@ -61,6 +61,24 @@ namespace THOK.Wms.Bll.Service
             return new { total, rows = temp.ToArray() };
         }
 
+        public object GetDetailsForSort(int page,int rows)
+        {
+            IQueryable<SortingLine> sortLineQuery = SortingLineRepository.GetQueryable();
+            int total = sortLineQuery.Count();
+            var temp = sortLineQuery.Where(a => a.IsActive.Equals("1") && (new string[] { "1", "3" }).Contains(a.SortingLineType))
+                .OrderBy(b => b.SortingLineCode)
+                .Skip((page - 1) * rows).Take(rows)
+                .Select(b => new
+                {
+                    b.SortingLineCode,
+                    b.SortingLineName,
+                    SortingLineType = b.SortingLineType == "1" ? "分拣线" : "整件线",
+                    IsActive = b.IsActive == "1" ? "可用" : "不可用"
+                }).ToArray();
+            
+            return new { total, rows = temp };
+        }
+
         public new bool Add(SortingLine sortingLine)
         {
             var sortLine = new SortingLine();

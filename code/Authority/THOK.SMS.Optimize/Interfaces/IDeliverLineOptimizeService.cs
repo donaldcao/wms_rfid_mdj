@@ -20,5 +20,7 @@ namespace THOK.SMS.Optimize.Interfaces
         bool EditDeliverLine(DeliverLine deliverLine,out string strResult);
 
         bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes,string userName,out string strResult);
+
+        bool UpdateDeliverLineAllot(string orderDate, string deliverLineCodes,string sortingLineCode, string userName, out string strResult);
     }
 }

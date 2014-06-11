@@ -76,7 +76,7 @@ namespace THOK.SMS.Bll.Service
         }
 
 
-        public object GetDetails(int page, int rows, string BatchNo, string operateDate)
+        public object GetDetails(int page, int rows, string BatchNo, string OrderDate)
         {
 
             IQueryable<Batch> bathquery = BatchRepository.GetQueryable();
@@ -125,10 +125,10 @@ namespace THOK.SMS.Bll.Service
                 }
             }
 
-            if (operateDate != string.Empty && operateDate != null)
+            if (OrderDate != string.Empty && OrderDate != null)
             {
-                DateTime opdate = Convert.ToDateTime(operateDate);
-                batchs = batchs.Where(a => a.OperateDate >= opdate);
+                DateTime opdate = Convert.ToDateTime(OrderDate);
+                batchs = batchs.Where(a => a.OrderDate == opdate);
             }
             var batch = batchs.OrderByDescending(a => a.BatchId).ToArray()
                  .Select(a =>
@@ -138,11 +138,11 @@ namespace THOK.SMS.Bll.Service
                      a.BatchName,
                      a.BatchNo,
                      a.Description,
-                     OrderDate = a.OrderDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                     OrderDate = a.OrderDate.ToString("yyyy-MM-dd"),
                      a.ProjectBatchNo,
                      State = WhatStatus(a.Status),
                      a.VerifyPersonId,
-                     OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                     OperateDate = a.OperateDate.ToString("yyyy-MM-dd"),
                      OptimizeSchedule = WhatOptimizeSchedule(a.OptimizeSchedule.ToString()),
                      a.OperatePersonName,
                      a.OperatePersonId,
@@ -160,6 +160,9 @@ namespace THOK.SMS.Bll.Service
 
             strResult = string.Empty;
             bool result = false;
+
+          
+
             var al = UserRepository.GetQueryable().FirstOrDefault(a => a.UserName == userName);
             if (al != null)
             {
@@ -167,31 +170,38 @@ namespace THOK.SMS.Bll.Service
                 Batch batchs = new Batch();
                 try
                 {
-                    batchs.BatchName = batchInfo.BatchName;
-                    batchs.BatchNo = batchInfo.BatchNo;
-                    batchs.Description = batchInfo.Description;
-                    batchs.OperateDate = batchInfo.OperateDate;
-                    batchs.OptimizeSchedule = batchInfo.OptimizeSchedule;
-                    batchs.OrderDate = batchInfo.OrderDate;
-                    batchs.ProjectBatchNo =batchInfo.ProjectBatchNo;
-                    batchs.Status =batchInfo.Status;
-                    batchs.OperatePersonId = al.UserID;
-                    batchs.VerifyPersonId = al.UserID;
 
-                    BatchRepository.Add(batchs);
-                    BatchRepository.SaveChanges();
+                    //判断批次号是否重复
+                    var batchno = BatchRepository.GetQueryable().FirstOrDefault(a => a.BatchNo == batchInfo.BatchNo&&a.OrderDate==batchInfo.OrderDate);
+                   
+                    if (batchno!=null)
+                    {
+                        strResult = "原因:批次号已存在,请重新输入批次号信息";
+                    }
+                    else
+                    {
+                        batchs.BatchName = batchInfo.BatchName;
+                        batchs.BatchNo = batchInfo.BatchNo;
+                        batchs.Description = batchInfo.Description;
+                        batchs.OperateDate = batchInfo.OperateDate;
+                        batchs.OptimizeSchedule = batchInfo.OptimizeSchedule;
+                        batchs.OrderDate = batchInfo.OrderDate;
+                        batchs.ProjectBatchNo = batchInfo.ProjectBatchNo;
+                        batchs.Status = batchInfo.Status;
+                        batchs.OperatePersonId = al.UserID;
+                        batchs.VerifyPersonId = al.UserID;
 
-                    result = true;
+                        BatchRepository.Add(batchs);
+                        BatchRepository.SaveChanges();
+
+                        result = true;
+                    }
                 }
                 catch (Exception e)
                 {
                     strResult = "原因:" + e.Message;
                 }
-            }
-            else
-            {
-                strResult = "原因:批次号已存在";
-            }
+            }           
             return result;
         }
 

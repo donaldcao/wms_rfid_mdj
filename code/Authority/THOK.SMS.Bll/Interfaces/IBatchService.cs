@@ -9,7 +9,7 @@ namespace THOK.SMS.Bll.Interfaces
     public interface IBatchService:IService<Batch>
     {
 
-        object GetDetails(int page, int rows, string BatchNo, string operateDate);
+        object GetDetails(int page, int rows, string BatchNo, string OrderDate);
         //object GetDetails(int page, int rows, string BatchNo, string BatchName, string orderDate, string operateDate);
 
 

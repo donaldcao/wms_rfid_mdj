@@ -26,10 +26,10 @@ namespace THOK.SMS.Bll.Service
         }
 
         //判断其状态
-        public string WhatStatus(string state)
+        public string WhatStatus(string State)
         {
             string statusStr = "";
-            switch (state)
+            switch (State)
             {
                 case "01":
                     statusStr = "初始化";
@@ -79,41 +79,10 @@ namespace THOK.SMS.Bll.Service
         public object GetDetails(int page, int rows, string BatchNo, string OrderDate)
         {
 
-            IQueryable<Batch> bathquery = BatchRepository.GetQueryable();
+            IQueryable<Batch> batchquery = BatchRepository.GetQueryable();
             IQueryable<User> userquery = UserRepository.GetQueryable();
 
-            var batchs = bathquery.Join(userquery, a => a.OperatePersonId, u => u.UserID, (a, u) => new
-            {
-                a.BatchId,
-                a.BatchName,
-                a.BatchNo,
-                a.Description,
-                a.OrderDate,
-                a.OperatePersonId,
-                OperatePersonName = u.UserName,
-                a.OptimizeSchedule,
-                a.OperateDate,
-                a.ProjectBatchNo,
-                a.Status,
-                a.VerifyPersonId
-
-            })                 
-            .Join(userquery, a => a.VerifyPersonId, uu => uu.UserID, (a, uu) => new
-            {
-                a.BatchId,
-                a.BatchName,
-                a.BatchNo,
-                a.Description,
-                a.OrderDate,
-                a.OperatePersonId,
-                a.OperatePersonName,
-                a.OptimizeSchedule,
-                a.OperateDate,
-                a.ProjectBatchNo,
-                a.Status,
-                a.VerifyPersonId,
-                VerifyPersonName = uu.UserName
-            });
+            var batch = batchquery;
 
             if (BatchNo != "")
             {
@@ -121,47 +90,55 @@ namespace THOK.SMS.Bll.Service
                 int.TryParse(BatchNo, out batchNo);
                 if (batchNo > 0)
                 {
-                    batchs = batchs.Where(a => a.BatchNo == batchNo);
+                    batch = batch.Where(a => a.BatchNo == batchNo);
                 }
             }
 
             if (OrderDate != string.Empty && OrderDate != null)
             {
                 DateTime opdate = Convert.ToDateTime(OrderDate);
-                batchs = batchs.Where(a => a.OrderDate == opdate);
+                batch = batch.Where(a => a.OrderDate == opdate);
             }
-            var batch = batchs.OrderByDescending(a => a.BatchId).ToArray()
-                 .Select(a =>
-                 new
-                 {
+
+            var batchs = batch.OrderByDescending(a => a.BatchId).Select(a => new {
                      a.BatchId,
                      a.BatchName,
                      a.BatchNo,
                      a.Description,
-                     OrderDate = a.OrderDate.ToString("yyyy-MM-dd"),
+                     a.OrderDate,
                      a.ProjectBatchNo,
-                     State = WhatStatus(a.Status),
+                     a.Status,
                      a.VerifyPersonId,
-                     OperateDate = a.OperateDate.ToString("yyyy-MM-dd"),
-                     OptimizeSchedule = WhatOptimizeSchedule(a.OptimizeSchedule.ToString()),
-                     a.OperatePersonName,
-                     a.OperatePersonId,
-                     VerifyPersonName = a.VerifyPersonName
-
+                     a.OperateDate,
+                     a.OptimizeSchedule,                 
+                     a.OperatePersonId             
                  });
 
             int total = batch.Count();
             var batchsRow = batch.Skip((page - 1) * rows).Take(rows);
-            return new { total, rows = batch.ToArray() };
+            var batchss = batchs.ToArray().Select(a => new
+            {
+                a.BatchId,
+                a.BatchName,
+                a.BatchNo,
+                a.Description,
+                OrderDate=a.OrderDate.ToString("yyyy-MM-dd"),
+                a.ProjectBatchNo,
+                State = WhatStatus(a.Status),
+                OperatePersonName = a.VerifyPersonId == null ? "" : (userquery.Where(b=> b.UserID==a.VerifyPersonId).ToArray().FirstOrDefault().UserName),
+                OperateDate = a.OperateDate.ToString("yyyy-MM-dd"),
+                OptimizeSchedule = WhatOptimizeSchedule(a.OptimizeSchedule.ToString()),
+                VerifyPersonName = a.OperatePersonId == null ? "" : (userquery.Where(b => b.UserID.Equals(a.OperatePersonId)).ToArray().FirstOrDefault().UserName)  
+
+            });
+            return new { total, rows = batchss.ToArray() };
         }
 
         public bool Add(Batch batchInfo, string userName, out string strResult)
         {
 
             strResult = string.Empty;
-            bool result = false;
-
-          
+            bool result = false;          
 
             var al = UserRepository.GetQueryable().FirstOrDefault(a => a.UserName == userName);
             if (al != null)
@@ -170,13 +147,11 @@ namespace THOK.SMS.Bll.Service
                 Batch batchs = new Batch();
                 try
                 {
-
                     //判断批次号是否重复
-                    var batchno = BatchRepository.GetQueryable().FirstOrDefault(a => a.BatchNo == batchInfo.BatchNo&&a.OrderDate==batchInfo.OrderDate);
-                   
+                    var batchno = BatchRepository.GetQueryable().FirstOrDefault(a => a.BatchNo == batchInfo.BatchNo&&a.OrderDate==batchInfo.OrderDate);                   
                     if (batchno!=null)
                     {
-                        strResult = "原因:批次号已存在,请重新输入批次号信息";
+                        strResult = "原因:批次号已存在,请重新输入";
                     }
                     else
                     {

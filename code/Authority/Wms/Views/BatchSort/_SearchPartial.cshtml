@@ -11,8 +11,8 @@
         $("input[type=text]").attr("value", "");
         $('#searchStatus').combo({ editable: false });
         $('#searchStatus').combo('setValue', "");
-        $('#searchOperateDate').datebox({ editable: false });
-        $('#searchOperateDate').datebox('setValue', "");
+        $('#searchOrderDate').datebox({ editable: false });
+        $('#searchOrderDate').datebox('setValue', "");
         if (searchDialog == null) {
             searchDialog = $('<div></div>').dialog({
                 title: '查询',
@@ -44,7 +44,7 @@
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.Status = $('#searchStatus').combo('getValue');
         queryParams.BatchName = $('#searchBatchName').val();
-        queryParams.OperateDate = $('#searchOperateDate').datebox('getValue');
+        queryParams.OrderDate = $('#searchOrderDate').datebox('getValue');
         queryParams.BatchNo = $('#searchBatchNo').val();
         $('#details').datagrid('options').queryParams = queryParams;
         $("#details").datagrid('load');

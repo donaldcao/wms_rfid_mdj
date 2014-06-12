@@ -79,7 +79,7 @@ namespace THOK.SMS.Bll.Service
         }
 
 
-        public object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OperateDate)
+        public object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate)
         {
 
             IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();       
@@ -93,18 +93,18 @@ namespace THOK.SMS.Bll.Service
                 int.TryParse(BatchNo, out batchNo);
                 if (batchNo > 0)
                 {
-                    batchsort = batchsortquery.Where(a => a.batch.BatchNo.Equals(BatchNo));
+                    batchsort = batchsortquery.Where(a => a.batch.BatchNo == batchNo);
                 }
             }
 
-            if (OperateDate != string.Empty && OperateDate != null)
+            if (OrderDate != string.Empty && OrderDate != null)
             {
-                DateTime opdate = Convert.ToDateTime(OperateDate);
-                batchsort = batchsortquery.Where(a => a.batch.OperateDate == opdate);
+                DateTime opdate = Convert.ToDateTime(OrderDate);
+                batchsort = batchsortquery.Where(a => a.batch.OrderDate == opdate);
             }
             if (Status != string.Empty && Status != null)
             {
-                batchsort = batchsortquery.Where(a => a.batch.Status == Status);
+                batchsort = batchsortquery.Where(a => a.Status == Status);
             }
             if (BatchName != string.Empty && BatchName != null)
             {
@@ -137,7 +137,7 @@ namespace THOK.SMS.Bll.Service
                      a.SortingLineCode,                  
                      SortingLineName =a.SortingLineCode==null? "":(sortlingquery.Where(b => b.SortingLineCode==a.SortingLineCode).FirstOrDefault().SortingLineName),            
                      SortingLineType = a.SortingLineCode == null ? "" : (sortlingquery.Where(b => b.SortingLineCode == a.SortingLineCode).FirstOrDefault().SortingLineType),
-                     OperateDate = a.OrderDate.ToString("yyyy-MM-dd")
+                     OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
                  });
         
             return new { total, rows = batch.ToArray() };
@@ -158,7 +158,6 @@ namespace THOK.SMS.Bll.Service
             IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
             var batchs = batchQuery.Where(e => e.BatchName.Contains(batchname));
 
-
             if (batchno != "")
             {
                 int batchNo = 0;
@@ -174,7 +173,7 @@ namespace THOK.SMS.Bll.Service
                 a.BatchId,
                 a.BatchName,
                 a.BatchNo,
-                OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
             });
 
             int total = batch.Count();

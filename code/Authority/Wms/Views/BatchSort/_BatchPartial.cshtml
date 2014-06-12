@@ -21,16 +21,12 @@
             $('#searchBatchId').val(batchRow.BatchId);
             $('#searchBatchNo').val(batchRow.BatchNo);
             $('#searchBatchName').val(batchRow.BatchName);
-//            $('#searchBatchSortId').val(batchRow.BatchSortId);
-
-
 
             $('#addBatchId').val(batchRow.BatchId);
             $('#addBatchNo').val(batchRow.BatchNo);
             $('#addBatchName').val(batchRow.BatchName);
-//            $('#addBatchSortId').val(batchRow.BatchSortId);
 
-           $('#addOperateDate').val(batchRow.OperateDate);        
+           $('#addOrderDate').val(batchRow.OrderDate);        
             $('#batchData').dialog('close');
         }
         else {
@@ -52,8 +48,7 @@
     <td></td>
         <select id="queryBatch" class="easyui-combobox" style="width: 100px;" readonly="true">
             <option value="BatchNo">批次号</option>
-            <option value="BatchName">批次名称</option>
-           @* <option value="OperateDate">分拣日期</option>*@
+            <option value="BatchName">批次名称</option>       
         </select>
         <input id="batchInfo">
         <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="batchQueryClick()"
@@ -73,8 +68,8 @@
                     <th field="BatchName" width="80">
                         批次名称
                     </th>
-                    <th field="OperateDate" width="100">
-                       分拣日期
+                    <th field="OrderDate" width="100">
+                       订单日期
                     </th>
                 </tr>
             </thead>

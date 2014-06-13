@@ -6,6 +6,7 @@ using System.Linq;
 using THOK.Common.Entity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.DbModel;
+using THOK.SMS.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.Authority.Dal.Interfaces;
 using THOK.Authority.DbModel;
@@ -34,6 +35,8 @@ namespace THOK.SMS.Optimize.Service
 
         [Dependency]
         public IChannelRepository ChannelRepository { get; set; }
+        [Dependency]
+        public IChannelAllotRepository ChannelAllotRepository { get; set; }
 
 
 
@@ -62,7 +65,7 @@ namespace THOK.SMS.Optimize.Service
             get { return this.GetType(); }
         }
 
-        public bool ChannelAllot(string orderDate ,out string strResult)
+        public bool ChannelAllotOptimize(string orderDate ,out string strResult)
         {
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
             IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
@@ -114,9 +117,15 @@ namespace THOK.SMS.Optimize.Service
                             smalls.Add(item.ProductCode, item.Quantity);
                         }
                     }
+                    Dictionary<string, decimal> bigQuantitys = new Dictionary<string, decimal>();
+                    foreach (var item in bigs)
+                    {
+                        bigQuantitys.Add(item.Key, item.Value);
+                    }
+
                     string sortLineCode = batchsortquery.Where(b => b.BatchSortId == batchSortCode).Select(b => b.SortingLineCode).FirstOrDefault();
-                    var canAllotChannels = ChannelRepository.GetQueryable()
-                        .Where(c => (c.ChannelType == "3" || c.ChannelType == "4") && c.SortingLineCode.Equals(sortLineCode) && c.Status=="1")
+                    IQueryable<Channel> channelquery = ChannelRepository.GetQueryable();
+                    var canAllotChannels = channelquery.Where(c => (c.ChannelType == "3" || c.ChannelType == "4") && c.SortingLineCode.Equals(sortLineCode) && c.Status=="1")
                         .OrderByDescending(c => c.OrderNo);
                     int canAllotChannelCount = canAllotChannels.Count();
                     //按可用大品牌烟道进行二次划分
@@ -129,11 +138,6 @@ namespace THOK.SMS.Optimize.Service
                         }
                     }
                     string[] canAllChannelProducts = new string[canAllotChannelCount];
-                    //for (int i = 0; i < bigCount; i++)
-                    //{
-                    //    canAllChannelProducts[i] = bigProductCodeArray[i - 1];
-                    //}
-
                     //依据品牌比重分配烟道
                     decimal tempSumChannelCount = 0;
                     foreach (string productCode in bigProductCodeArray)
@@ -170,15 +174,58 @@ namespace THOK.SMS.Optimize.Service
                     }
                     if (tempChannelCount == canAllotChannelCount)//验证分配是否正确
                     {
-                        //继续进行单品牌多烟道数量拆分
-                        strResult = "false";
-                        return true;
+                        //继续进行大品种单品牌多烟道数量拆分
+                        foreach (var beAllotChannel in canAllotChannels)
+                        {
+                            ChannelAllot addChannelAllot = new ChannelAllot();
+                            addChannelAllot.BatchSortId = batchSortCode;
+                            addChannelAllot.ChannelCode = beAllotChannel.ChannelCode;
+                            addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                            addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotChannel.ChannelCode).FirstOrDefault();
+                            //addChannelAllot.ChannelAllotCode = batchSortCode + "-" + beAllotChannel.ChannelCode;
+
+                            addChannelAllot.InQuantity = 0;
+                            addChannelAllot.OutQuantity = 0;
+                            addChannelAllot.RemainQuantity = 0;
+                            //烟道卷烟分配
+                            string productCode = null;
+                            int quantity = 0;
+                            for (int i = 0; i < bigCount; i++)
+                            {
+                                productCode = bigProductCodeArray[i];
+                                if (bigs[productCode] >= 1)
+                                {
+                                    int allotQuantity = Convert.ToInt32(bigQuantitys[productCode]);
+                                    quantity = (allotQuantity - allotQuantity % 50) / 50 / Convert.ToInt32(bigs[productCode]) * 50;
+                                    bigQuantitys[productCode] -= quantity;
+                                    bigs[productCode] -= 1;
+                                    break;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            if (productCode == null)
+                            {
+                                strResult = "Error：无品牌可分配   无法继续执行！";
+                                return false;
+                            }
+                            string productName = beAllotProducts.Where(p => p.ProductCode == productCode).Select(p => p.ProductName).FirstOrDefault();
+                            addChannelAllot.ProductCode = productCode;
+                            addChannelAllot.ProductName = productName;
+                            addChannelAllot.RealQuantity = quantity;
+                            addChannelAllot.ChannelAllotCode = batchSortCode + "-" + beAllotChannel.ChannelCode + "-" + productCode;
+                            ChannelAllotRepository.Add(addChannelAllot);
+                            ChannelAllotRepository.SaveChanges();
+                        }
                     }
                     else
                     {
                         strResult = "Error：烟道分配出错  无法继续执行！";
-                        return true;
+                        return false;
                     }
+                    strResult = "true";
                     //do
                     //{
                         

@@ -141,7 +141,7 @@ namespace Wms.Controllers.SMS
         public ActionResult ChannelAllot(string orderDate)
         {
             string strResult = string.Empty;
-            bool bResult = channelOptimizeService.ChannelAllot(orderDate ,out strResult);
+            bool bResult = channelOptimizeService.ChannelAllotOptimize(orderDate ,out strResult);
             string msg = bResult ? "审核成功" : "审核失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

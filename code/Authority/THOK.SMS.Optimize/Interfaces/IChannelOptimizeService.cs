@@ -9,7 +9,7 @@ namespace THOK.SMS.Optimize.Interfaces
 {
     public interface IChannelOptimizeService : IService<SortOrder>
     {
-        bool ChannelAllot(string orderDate ,out string strResult);
+        bool ChannelAllotOptimize(string orderDate ,out string strResult);
 
         object GetBatchSort(string orderDate);
     }

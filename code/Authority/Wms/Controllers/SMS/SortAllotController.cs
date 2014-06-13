@@ -25,10 +25,14 @@ namespace Wms.Controllers.SMS
         public ISortOrderDownService SortOrderDownService { get; set; }
 
         [Dependency]
+        public IChannelOptimizeService channelOptimizeService { get; set; }
+
+        [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
 
         [Dependency]
         public ISortOrderRepository SortOrderRepository { get; set; }
+
         //
         // GET: /SortAllot/
 
@@ -132,6 +136,23 @@ namespace Wms.Controllers.SMS
             bool bResult = DeliverLineOptimizeService.UpdateDeliverLineAllot(orderDate, deliverLineCodes, sortingLineCode, this.User.Identity.Name.ToString(), out strResult);
             string msg = bResult ? "分配成功" : "分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+        //烟道分配优化
+        public ActionResult ChannelAllot(string orderDate)
+        {
+            string strResult = string.Empty;
+            bool bResult = channelOptimizeService.ChannelAllot(orderDate ,out strResult);
+            string msg = bResult ? "审核成功" : "审核失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetBatchSort(int page, int rows, string orderDate)
+        {
+            if (orderDate == null)
+            {
+                return null;
+            }
+            var BatchSorts = channelOptimizeService.GetBatchSort(orderDate);
+            return Json(BatchSorts, "text", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -145,6 +145,7 @@ namespace Wms.Controllers.SMS
             string msg = bResult ? "审核成功" : "审核失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult GetBatchSort(int page, int rows, string orderDate)
         {
             if (orderDate == null)
@@ -154,5 +155,17 @@ namespace Wms.Controllers.SMS
             var BatchSorts = channelOptimizeService.GetBatchSort(orderDate);
             return Json(BatchSorts, "text", JsonRequestBehavior.AllowGet);
         }
+
+        //烟道分配优化
+        public ActionResult GetChannelAllot(string batchSortId)
+        {
+            if (batchSortId == null)
+            {
+                return null;
+            }
+            var deliverLineDetail = channelOptimizeService.GetChannelAllot(batchSortId);
+            return Json(deliverLineDetail, "text", JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

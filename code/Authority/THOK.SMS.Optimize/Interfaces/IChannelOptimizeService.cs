@@ -12,5 +12,7 @@ namespace THOK.SMS.Optimize.Interfaces
         bool ChannelAllotOptimize(string orderDate ,out string strResult);
 
         object GetBatchSort(string orderDate);
+
+        object GetChannelAllot(string batchSortId);
     }
 }

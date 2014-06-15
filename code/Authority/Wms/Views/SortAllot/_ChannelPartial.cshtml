@@ -34,7 +34,7 @@
             onClickRow: function () {
                 var row = $('#deliverline').datagrid('getSelected');
                 if (row) {
-                    $('#details').datagrid({ url: '/SortAllot/GetChannelAllot/?batchSortId=' + row.BatchSortId });
+                    $('#allotBillDetails').datagrid({ url: '/SortAllot/GetChannelAllot/?batchSortId=' + row.BatchSortId });
 
                 } else {
                     $.messager.show({ title: '提示', msg: '失败!请检查原因！' });
@@ -71,7 +71,6 @@
                     <tr>
                         <th field="ChannelAllotCode" width="100" hidden="true">烟道分配代码</th>
                         <th field="BatchSortId" width="80" hidden="true">批次分拣编号</th>
-                        <th field="ChannelCode" width="80">烟道代码</th>
                         <th field="ChannelCode" width="80">烟道代码</th>
                         <th field="ProductCode" width="80">商品代码</th>
                         <th field="ProductName" width="120">商品名称</th>

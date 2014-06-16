@@ -102,7 +102,6 @@ namespace THOK.SMS.Optimize.Service
                         }
                         else
                         {
-                            //smallProductCodeArray[itemCount - 1] = item.ProductCode;
                             smalls.Add(item.ProductCode, item.Quantity);
                         }
                     }
@@ -160,19 +159,21 @@ namespace THOK.SMS.Optimize.Service
                             tempChannelCount += bigs[productCode];
                         }
                     }
-                    if (tempChannelCount == canAllotBigChannelCount)//验证分配是否正确
+                    if (tempChannelCount == canAllotBigChannelCount)//验证分配是否正确  是则继续进行大品种单品牌多烟道数量拆分
                     {
-                        //继续进行大品种单品牌多烟道数量拆分
-                        foreach (var beAllotBigChannel in canAllotBigChannels)
+                        //大品种烟道优化（New）   采用大品种烟道组A,B(C...)平均分配原则
+                        var channelGroups = channelquery.Where(c => c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
+                            .Select(c => c.GroupNo).Distinct();
+                        Dictionary<int, int> groupQuantity = new Dictionary<int, int>();
+                        Dictionary<int, int> groupCount = new Dictionary<int, int>();
+                        Dictionary<string, int> usedChannelGroupNo = new Dictionary<string, int>();
+                        foreach (var groupNo in channelGroups)
                         {
-                            ChannelAllot addChannelAllot = new ChannelAllot();
-                            addChannelAllot.BatchSortId = batchSortCode;
-                            addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
-                            addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
-                            addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotBigChannel.ChannelCode).FirstOrDefault();
-                            addChannelAllot.InQuantity = 0;
-                            addChannelAllot.OutQuantity = 0;
-                            addChannelAllot.RemainQuantity = 0;
+                            groupQuantity.Add(groupNo, 0);
+                            groupCount.Add(groupNo, 0);
+                        }
+                        while (bigs.Max(v => v.Value) > 0)
+                        {
                             string productCode = null;
                             int quantity = 0;
                             for (int i = 0; i < bigCount; i++)
@@ -191,11 +192,25 @@ namespace THOK.SMS.Optimize.Service
                                     continue;
                                 }
                             }
-                            if (productCode == null)
+                            int groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                            if (groupCount[groupNo] == canAllotBigChannels.Where(c => c.GroupNo == groupNo).Count())
                             {
-                                strResult = "Error：无品牌可分配   无法继续执行！";
-                                return false;
+                                do
+                                {
+                                    groupQuantity.Remove(groupNo);
+                                    groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                                } while (groupCount[groupNo] == canAllotBigChannels.Where(c => c.GroupNo == groupNo).Count());
+                                
                             }
+                            var beAllotBigChannel = canAllotBigChannels.Where(c => c.GroupNo == groupNo && (usedChannelGroupNo.Count == 0 || usedChannelGroupNo.Keys.Contains(c.ChannelCode) == false)).FirstOrDefault();
+                            ChannelAllot addChannelAllot = new ChannelAllot();
+                            addChannelAllot.BatchSortId = batchSortCode;
+                            addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
+                            addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                            addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotBigChannel.ChannelCode).FirstOrDefault();
+                            addChannelAllot.InQuantity = 0;
+                            addChannelAllot.OutQuantity = 0;
+                            addChannelAllot.RemainQuantity = 0;
                             string productName = beAllotProducts.Where(p => p.ProductCode == productCode).Select(p => p.ProductName).FirstOrDefault();
                             addChannelAllot.ProductCode = productCode;
                             addChannelAllot.ProductName = productName;
@@ -203,7 +218,53 @@ namespace THOK.SMS.Optimize.Service
                             addChannelAllot.ChannelAllotCode = batchSortCode + "-" + beAllotBigChannel.ChannelCode + "-" + productCode;
                             ChannelAllotRepository.Add(addChannelAllot);
                             ChannelAllotRepository.SaveChanges();
+                            usedChannelGroupNo.Add(beAllotBigChannel.ChannelCode, groupNo);
+                            groupQuantity[groupNo] += quantity;
+                            groupCount[groupNo] += 1;
                         }
+                        #region 大品种优化old   注释不采用  适合单烟道组
+                        //foreach (var beAllotBigChannel in canAllotBigChannels)
+                        //{
+                        //    ChannelAllot addChannelAllot = new ChannelAllot();
+                        //    addChannelAllot.BatchSortId = batchSortCode;
+                        //    addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
+                        //    addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                        //    addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotBigChannel.ChannelCode).FirstOrDefault();
+                        //    addChannelAllot.InQuantity = 0;
+                        //    addChannelAllot.OutQuantity = 0;
+                        //    addChannelAllot.RemainQuantity = 0;
+                        //    string productCode = null;
+                        //    int quantity = 0;
+                        //    for (int i = 0; i < bigCount; i++)
+                        //    {
+                        //        productCode = bigProductCodeArray[i];
+                        //        if (bigs[productCode] >= 1)
+                        //        {
+                        //            int allotQuantity = Convert.ToInt32(bigQuantitys[productCode]);
+                        //            quantity = (allotQuantity - allotQuantity % 50) / 50 / Convert.ToInt32(bigs[productCode]) * 50;
+                        //            bigQuantitys[productCode] -= quantity;
+                        //            bigs[productCode] -= 1;
+                        //            break;
+                        //        }
+                        //        else
+                        //        {
+                        //            continue;
+                        //        }
+                        //    }
+                        //    if (productCode == null)
+                        //    {
+                        //        strResult = "Error：无品牌可分配   无法继续执行！";
+                        //        return false;
+                        //    }
+                        //    string productName = beAllotProducts.Where(p => p.ProductCode == productCode).Select(p => p.ProductName).FirstOrDefault();
+                        //    addChannelAllot.ProductCode = productCode;
+                        //    addChannelAllot.ProductName = productName;
+                        //    addChannelAllot.RealQuantity = quantity;
+                        //    addChannelAllot.ChannelAllotCode = batchSortCode + "-" + beAllotBigChannel.ChannelCode + "-" + productCode;
+                        //    ChannelAllotRepository.Add(addChannelAllot);
+                        //    ChannelAllotRepository.SaveChanges();
+                        //}
+                        #endregion
                         //小品种增加大品种零烟
                         foreach (var item in bigQuantitys)
                         {
@@ -349,7 +410,7 @@ namespace THOK.SMS.Optimize.Service
         {
             IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
             int bSortId=Convert.ToInt32(batchSortId);
-            var channelallots = channelallotquery.Where(c => c.BatchSortId == bSortId).OrderBy(c=>c.channel.OrderNo).ToArray();
+            var channelallots = channelallotquery.Where(c => c.BatchSortId == bSortId).OrderBy(c=>c.channel.Address).ToArray();
             return channelallots;
         }
     }

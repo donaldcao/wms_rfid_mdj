@@ -61,7 +61,7 @@ namespace THOK.SMS.Optimize.Service
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
             IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
             var batchsorts = batchsortquery.Where(a => a.batch.OrderDate == date).Select(b => b.BatchSortId).Distinct().ToArray();
-            
+
             foreach (int batchSortCode in batchsorts)//遍历每条批次分拣线
             {
                 IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
@@ -71,7 +71,7 @@ namespace THOK.SMS.Optimize.Service
                 //}
                 var deliverLines = DeliverLineAllotRepository.GetQueryable()
                     .Where(a => a.BatchSortId == batchSortCode)
-                    .Select(a=>a.DeliverLineCode).ToArray();
+                    .Select(a => a.DeliverLineCode).ToArray();
                 if (deliverLines.Count() > 0)
                 {
                     IQueryable<SortOrder> sortorderquery = SortOrderRepository.GetQueryable();
@@ -89,6 +89,7 @@ namespace THOK.SMS.Optimize.Service
                         if (deliverLineCode != tempDeliverLine)
                         {
                             customerDeliverOrder += 1;
+                            tempDeliverLine = deliverLineCode;
                         }
                         IQueryable<SortOrderDetail> sortorderdetailquery = SortOrderDetailRepository.GetQueryable();
                         var beAllotOrderDetails = sortorderdetailquery.Where(s => s.OrderID == singleOrder.OrderID).OrderByDescending(s => s.RealQuantity);
@@ -96,6 +97,10 @@ namespace THOK.SMS.Optimize.Service
                         //主单拆包
                         Dictionary<int, int> BagQuantity = new Dictionary<int, int>();
                         int splitQuantity = 25;
+                        if (orderQuantity % 25 > 0 && orderQuantity % 25 < 5)
+                        {
+                            splitQuantity = 20;
+                        }
                         int bagCount = orderQuantity / 25;
                         if (orderQuantity % 25 == 0)
                         {
@@ -107,11 +112,6 @@ namespace THOK.SMS.Optimize.Service
                         else
                         {
                             bagCount += 1;
-                            if (orderQuantity % 25 > 0 && orderQuantity % 25 < 5)
-                            {
-                                splitQuantity = 20;
-                            }
-
                             if (bagCount == 1)
                             {
                                 BagQuantity.Add(1, orderQuantity);
@@ -119,10 +119,7 @@ namespace THOK.SMS.Optimize.Service
                             else if (bagCount == 2)
                             {
                                 BagQuantity.Add(1, splitQuantity);
-                                if (orderQuantity % splitQuantity > 0)
-                                {
-                                    BagQuantity.Add(2, orderQuantity % splitQuantity);
-                                }
+                                BagQuantity.Add(2, orderQuantity % splitQuantity);
                             }
                             else
                             {
@@ -131,12 +128,14 @@ namespace THOK.SMS.Optimize.Service
                                     BagQuantity.Add(i, 25);
                                 }
                                 BagQuantity.Add(bagCount - 1, splitQuantity);
-                                BagQuantity.Add(bagCount, orderQuantity % splitQuantity);
+
+                                BagQuantity.Add(bagCount, orderQuantity % 25 + (splitQuantity == 20 ? 5 : 0));
                             }
                         }
-                        for (int i = 1; i < BagQuantity.Count; i++)
+                        for (int i = 1; i <= bagCount; i++)
                         {
                             packNo += 1;
+                            customerOrder += 1;
                             SortOrderAllotMaster addSortOrderAllotMaster = new SortOrderAllotMaster();
                             addSortOrderAllotMaster.BatchSortId = batchSortCode;
                             addSortOrderAllotMaster.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
@@ -152,9 +151,8 @@ namespace THOK.SMS.Optimize.Service
                             addSortOrderAllotMaster.Status = "01";
                             addSortOrderAllotMaster.OrderMasterCode = batchSortCode + "-" + packNo;
                             SortOrderAllotMasterRepository.Add(addSortOrderAllotMaster);
-                            SortOrderAllotMasterRepository.SaveChanges();
                         }
-                        
+
                         ////明细拆包
                         //foreach (var singleOrderDetail in beAllotOrderDetails)
                         //{
@@ -163,12 +161,13 @@ namespace THOK.SMS.Optimize.Service
                         //    int bagQuantity = BagQuantity[BagQuantity.Min(b => b.Key)];
                         //    if (true)
                         //    {
-                                
+
                         //    }
                         //}
                     }
                 }
             }
+            SortOrderAllotMasterRepository.SaveChanges();
             strResult = "false";
             return true;
         }

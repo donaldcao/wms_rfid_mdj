@@ -2516,6 +2516,7 @@
     <Content Include="Views\Shared\_ChannelPartial.cshtml" />
     <Content Include="Views\Shared\_ChannelcancelPartial.cshtml" />
     <Content Include="Views\SortAllot\_ChannelPartial.cshtml" />
+    <Content Include="Views\SortAllot\_OptimizePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

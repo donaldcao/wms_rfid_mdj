@@ -28,18 +28,19 @@ namespace Wms.Controllers.SMS
         public IChannelOptimizeService channelOptimizeService { get; set; }
 
         [Dependency]
+        public IOrderOptimizeService orderOptimizeService { get; set; }
+
+        [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
 
         [Dependency]
         public ISortOrderRepository SortOrderRepository { get; set; }
 
-        //
-        // GET: /SortAllot/
-
-
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
 
+
+        // GET: /SortAllot/
         public ActionResult Index(string moduleID)
         {
             ViewBag.hasSearch = true;
@@ -155,8 +156,6 @@ namespace Wms.Controllers.SMS
             var BatchSorts = channelOptimizeService.GetBatchSort(orderDate);
             return Json(BatchSorts, "text", JsonRequestBehavior.AllowGet);
         }
-
-        //烟道分配优化
         public ActionResult GetChannelAllot(string batchSortId)
         {
             if (batchSortId == null)
@@ -165,6 +164,15 @@ namespace Wms.Controllers.SMS
             }
             var deliverLineDetail = channelOptimizeService.GetChannelAllot(batchSortId);
             return Json(deliverLineDetail, "text", JsonRequestBehavior.AllowGet);
+        }
+
+        //订单分配优化
+        public ActionResult OrderAllot(string orderDate)
+        {
+            string strResult = string.Empty;
+            bool bResult = orderOptimizeService.OrderAllotOptimize(orderDate, out strResult);
+            string msg = bResult ? "优化成功" : "优化失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
         
     }

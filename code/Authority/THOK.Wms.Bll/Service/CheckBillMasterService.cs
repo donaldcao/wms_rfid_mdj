@@ -10,6 +10,7 @@ using System.Transactions;
 using THOK.Wms.SignalR.Common;
 using System.Diagnostics;
 using THOK.Common.Entity;
+using EntityFramework.Extensions;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -168,8 +169,14 @@ namespace THOK.Wms.Bll.Service
                 using (var scope = new TransactionScope())
                 {
                     CheckBillMasterRepository.SaveChanges();
-                    CheckBillDetailRepository.GetObjectSet().DeleteEntity(d => d.BillNo == billNo);
-                    CheckBillMasterRepository.GetObjectSet().DeleteEntity(c => c.BillNo == billNo);
+
+                    CheckBillDetailRepository.GetQueryable()
+                        .Where(d => d.BillNo == billNo)
+                        .Delete();
+                    CheckBillMasterRepository.GetQueryable()
+                        .Where(c => c.BillNo == billNo)
+                        .Delete();
+
                     scope.Complete();
                 }
             }

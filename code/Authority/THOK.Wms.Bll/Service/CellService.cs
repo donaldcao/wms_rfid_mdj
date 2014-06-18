@@ -9,6 +9,8 @@ using THOK.Wms.Bll.Models;
 using THOK.Common.Entity;
 using THOK.WMS.Upload.Bll;
 using System.Data;
+using EntityFramework.Extensions;
+
 namespace THOK.Wms.Bll.Service
 {
     public class CellService : ServiceBase<Cell>, ICellService
@@ -383,20 +385,17 @@ namespace THOK.Wms.Bll.Service
 
                 if (editType == "edit")
                 {
-                    CellRepository.GetObjectSet()
-                        .UpdateEntity(
-                            c => c.DefaultProductCode == defaultProductCode,
-                            c => new Cell() { DefaultProductCode = null }
-                        );
+                    CellRepository.GetQueryable()
+                        .Where(c => c.DefaultProductCode == defaultProductCode)
+                        .Update(c => new Cell() { DefaultProductCode = null });
                 }
-                CellRepository.GetObjectSet()
-                    .UpdateEntity(
-                        c => wareCodes.Contains(c.Warehouse.WarehouseCode)
+
+                CellRepository.GetQueryable()
+                    .Where(c => wareCodes.Contains(c.Warehouse.WarehouseCode)
                             || areaCodes.Contains(c.Area.AreaCode)
                             || shelfCodes.Contains(c.ShelfCode)
-                            || cellCodes.Contains(c.CellCode),
-                        c => new Cell() { DefaultProductCode = defaultProductCode }
-                    );
+                            || cellCodes.Contains(c.CellCode))
+                    .Update(c => new Cell() { DefaultProductCode = defaultProductCode });
                 return true;
             }catch(Exception e)
             {
@@ -407,11 +406,9 @@ namespace THOK.Wms.Bll.Service
         /// <summary>删除货位数量的信息</summary>
         public bool DeleteCell(string productCodes)
         {
-            CellRepository.GetObjectSet()
-                .UpdateEntity(
-                    c => productCodes.Contains(c.DefaultProductCode),
-                    c => new Cell() { DefaultProductCode = null }
-                );
+            CellRepository.GetQueryable()
+                .Where(c => productCodes.Contains(c.DefaultProductCode))
+                .Update(c => new Cell() { DefaultProductCode = null });
             return true;
         }
 

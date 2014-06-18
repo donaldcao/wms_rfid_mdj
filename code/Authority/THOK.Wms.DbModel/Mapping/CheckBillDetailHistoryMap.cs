@@ -87,7 +87,6 @@ namespace THOK.Wms.DbModel.Mapping
                 .WithMany(t => t.CheckBillDetailHistorys)
                 .HasForeignKey(d => d.BillNo)
                 .WillCascadeOnDelete(false);
-
         }
     }
 }

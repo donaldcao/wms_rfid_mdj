@@ -11,7 +11,7 @@ namespace THOK.Wms.Repository
     {
         static AuthorizeContext()
         {
-            Database.SetInitializer<AuthorizeContext>(new MigrateDatabaseToLatestVersion<AuthorizeContext, Configuration>());
+           Database.SetInitializer<AuthorizeContext>(new MigrateDatabaseToLatestVersion<AuthorizeContext, Configuration>());
         }
 
 		public AuthorizeContext()

@@ -57,11 +57,13 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.FatherNode)
                 .WithMany(t => t.HelpContents)
-                .HasForeignKey(d => d.FatherNodeID);
+                .HasForeignKey(d => d.FatherNodeID)
+                .WillCascadeOnDelete(false);
 
             this.HasRequired(t => t.Module)
                 .WithMany()
-                .HasForeignKey(d => d.ModuleID);
+                .HasForeignKey(d => d.ModuleID)
+                .WillCascadeOnDelete(false);
 
         }
     }

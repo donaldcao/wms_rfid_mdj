@@ -22,10 +22,12 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.Function)
                 .WithMany(t => t.RoleFunctions)
-                .HasForeignKey(d => d.Function_FunctionID);
+                .HasForeignKey(d => d.Function_FunctionID)
+                .WillCascadeOnDelete(false);
             this.HasRequired(t => t.RoleModule)
                 .WithMany(t => t.RoleFunctions)
-                .HasForeignKey(d => d.RoleModule_RoleModuleID);
+                .HasForeignKey(d => d.RoleModule_RoleModuleID)
+                .WillCascadeOnDelete(false);
 
         }
     }

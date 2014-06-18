@@ -23,13 +23,16 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.City)
                 .WithMany(t => t.UserSystems)
-                .HasForeignKey(d => d.City_CityID);
+                .HasForeignKey(d => d.City_CityID)
+                .WillCascadeOnDelete(false);
             this.HasRequired(t => t.System)
                 .WithMany(t => t.UserSystems)
-                .HasForeignKey(d => d.System_SystemID);
+                .HasForeignKey(d => d.System_SystemID)
+                .WillCascadeOnDelete(false);
             this.HasRequired(t => t.User)
                 .WithMany(t => t.UserSystems)
-                .HasForeignKey(d => d.User_UserID);
+                .HasForeignKey(d => d.User_UserID)
+                .WillCascadeOnDelete(false);
 
         }
     }

@@ -40,10 +40,12 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.ParentModule)
                 .WithMany(t => t.Modules)
-                .HasForeignKey(d => d.ParentModule_ModuleID);
+                .HasForeignKey(d => d.ParentModule_ModuleID)
+                .WillCascadeOnDelete(false);
             this.HasRequired(t => t.System)
                 .WithMany(t => t.Modules)
-                .HasForeignKey(d => d.System_SystemID);
+                .HasForeignKey(d => d.System_SystemID)
+                .WillCascadeOnDelete(false);
 
         }
     }

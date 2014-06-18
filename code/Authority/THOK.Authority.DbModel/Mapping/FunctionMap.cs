@@ -34,7 +34,8 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.Module)
                 .WithMany(t => t.Functions)
-                .HasForeignKey(d => d.Module_ModuleID);
+                .HasForeignKey(d => d.Module_ModuleID)
+                .WillCascadeOnDelete(false);
 
         }
     }

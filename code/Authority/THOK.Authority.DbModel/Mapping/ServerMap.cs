@@ -28,7 +28,8 @@ namespace THOK.Authority.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.City)
                 .WithMany(t => t.Servers)
-                .HasForeignKey(d => d.City_CityID);
+                .HasForeignKey(d => d.City_CityID)
+                .WillCascadeOnDelete(false);
 
         }
     }

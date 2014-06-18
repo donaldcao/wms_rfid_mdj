@@ -25,17 +25,22 @@ namespace Wms.Controllers.SMS
         public ISortOrderDownService SortOrderDownService { get; set; }
 
         [Dependency]
+        public IChannelOptimizeService channelOptimizeService { get; set; }
+
+        [Dependency]
+        public IOrderOptimizeService orderOptimizeService { get; set; }
+
+        [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
 
         [Dependency]
         public ISortOrderRepository SortOrderRepository { get; set; }
-        //
-        // GET: /SortAllot/
-
 
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
 
+
+        // GET: /SortAllot/
         public ActionResult Index(string moduleID)
         {
             ViewBag.hasSearch = true;
@@ -133,5 +138,42 @@ namespace Wms.Controllers.SMS
             string msg = bResult ? "分配成功" : "分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+        //烟道分配优化
+        public ActionResult ChannelAllot(string orderDate)
+        {
+            string strResult = string.Empty;
+            bool bResult = channelOptimizeService.ChannelAllotOptimize(orderDate ,out strResult);
+            string msg = bResult ? "审核成功" : "审核失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetBatchSort(int page, int rows, string orderDate)
+        {
+            if (orderDate == null)
+            {
+                return null;
+            }
+            var BatchSorts = channelOptimizeService.GetBatchSort(orderDate);
+            return Json(BatchSorts, "text", JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetChannelAllot(string batchSortId)
+        {
+            if (batchSortId == null)
+            {
+                return null;
+            }
+            var deliverLineDetail = channelOptimizeService.GetChannelAllot(batchSortId);
+            return Json(deliverLineDetail, "text", JsonRequestBehavior.AllowGet);
+        }
+
+        //订单分配优化
+        public ActionResult OrderAllot(string orderDate)
+        {
+            string strResult = string.Empty;
+            bool bResult = orderOptimizeService.OrderAllotOptimize(orderDate, out strResult);
+            string msg = bResult ? "优化成功" : "优化失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

@@ -48,11 +48,11 @@ namespace Wms.Controllers.SMS
         {
         
             //string BatchName = collection["BatchName"] ?? "";     
-            //string OrderDate = collection["OrderDate"] ?? "";
-            string OperateDate = collection["OperateDate"] ?? "";
+            string OrderDate = collection["OrderDate"] ?? "";
+            //string OperateDate = collection["OperateDate"] ?? "";
             string BatchNo = collection["BatchNo"] ?? "";
 
-            var srmDetail = BatchInfoService.GetDetails(page, rows, BatchNo, OperateDate);
+            var srmDetail = BatchInfoService.GetDetails(page, rows, BatchNo, OrderDate);
             return Json(srmDetail, "text", JsonRequestBehavior.AllowGet);
                
            

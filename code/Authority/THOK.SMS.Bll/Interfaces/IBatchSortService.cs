@@ -11,7 +11,7 @@ namespace THOK.SMS.Bll.Interfaces
         //object GetDetails(int page, int rows, BatchSort BatchSort);
 
 
-        object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OperateDate);
+        object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate);
 
         object GetBatch(int page, int rows, string queryString, string value);
 

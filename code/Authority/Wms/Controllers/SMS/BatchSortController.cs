@@ -48,9 +48,9 @@ namespace Wms.Controllers.SMS
             return View();
         }
 
-        public ActionResult Details(int page, int rows, string Status, string BatchNo, string BatchName,string OperateDate)
+        public ActionResult Details(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate)
         {
-            var srmDetail = BatchSortService.GetDetails(page, rows, Status, BatchNo, BatchName, OperateDate);
+            var srmDetail = BatchSortService.GetDetails(page, rows, Status, BatchNo, BatchName, OrderDate);
             return Json(srmDetail, "text", JsonRequestBehavior.AllowGet);
         }
 

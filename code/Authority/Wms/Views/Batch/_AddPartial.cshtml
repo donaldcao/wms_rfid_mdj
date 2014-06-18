@@ -1,28 +1,5 @@
 ﻿<script type="text/javascript">
     var url;
-
-    var d = new Date();
-    var vYear = d.getFullYear();
-    var vMon = d.getMonth() + 1;
-  
-    var h = d.getHours();
-    var m = d.getMinutes();
-
-
-    function getTime1() {
-
-        var vDay = d.getDate();
-        t = vYear + "-" + (vMon < 10 ? "0" + vMon : vMon) + "-" + (vDay < 10 ? "0" + vDay : vDay) + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
-        return t;
-    }
-
-    function getTime2() {
-
-        var vDay = d.getDate()+1;
-        t = vYear + "-" + (vMon < 10 ? "0" + vMon : vMon) + "-" + (vDay < 10 ? "0" + vDay : vDay) + " " + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
-        return t;
-    }
-
     function AddLoad() {
         $('#addOptimizeSchedule').combo({
             required: true,
@@ -39,12 +16,7 @@
     }
 
     function addClick() {
-
         AddLoad();
-
-        $('#OrderDate').attr("readonly", true);
-        $('#OperateDate').attr("readonly", true);
-
         $.getJSON("/StockInBill/GenInBillNo/", function (json) {
             if (json) {
                 $('#dlg').dialog('open').dialog('setTitle', '新增');
@@ -52,21 +24,14 @@
                 $('#fm').form('clear');
                 $('#addOperatePersonId').val(json.employeeID);
                 $('#OperatePersonID').val(json.employeeName);
-
-
                 $('#addVerifyPersonId').val(json.employeeID);
-                $('#VerifyPersonId').val(json.employeeName);
-
-
-                $('#OrderDate').val(getTime1());
-                $('#OperateDate').val(getTime2());
-                $('#fm.easyui-validatebox').validatebox({
-                    required: true
-                });
+                $('#VerifyPersonId').val(json.employeeName);             
                 $('form input').removeAttr("disabled");
                 $('form textarea').removeAttr("disabled");
 
-
+                $('#fm .easyui-validatebox').validatebox({                  
+                    required: true
+                });
 
                 $('#cc').combo({
                     hasDownArrow: true
@@ -122,21 +87,20 @@
             <td>
             </td>
         </tr>
-        <tr>
-            <td width="60">
-                订单日期:
-            </td>
-            <td width="168">
-                <input id="OrderDate" name="OrderDate" type="text" class="easyui-validatebox" readonly="readonly" />
-            </td>
-            <td width="60">
-                分拣日期:
-            </td>
-            <td width="168">
-                <input id="OperateDate" name="OperateDate" type="text" class="easyui-validatebox"
-                    readonly="readonly" />
-            </td>
-        </tr>
+        <tr>    
+             <td width="60">
+                    订单日期:
+                </td>
+                <td align="left">
+                    <input id="addOrderDate" type="text" class="easyui-datebox" name="OrderDate" style="width: 130px;" readonly="true" required="true" />
+                </td>
+                <td width="60">
+                    分拣日期:
+                </td>
+                <td align="left">
+                    <input id="addOperateDate" type="text" class="easyui-datebox" name="OperateDate" style="width: 130px;" readonly="true" required="true" />
+                </td>
+             </tr>
         <tr>
             <td width="60">
                 批次号:

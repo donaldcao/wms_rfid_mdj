@@ -79,27 +79,13 @@ namespace THOK.SMS.Bll.Service
         }
 
 
-        public object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OperateDate)
+        public object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate)
         {
 
-            IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
-            IQueryable<Batch> batchquery = BatchRepository.GetQueryable();
+            IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();       
             IQueryable<SortingLine> sortlingquery = SortingLineRepository.GetQueryable();
-          
-            var batchsort = batchsortquery.Join(batchquery, a => a.BatchId, u => u.BatchId, (a, u) => new
-            {
-                a.BatchId,
-                a.BatchSortId,
-                BatchName = u.BatchName,
-                BatchNo = u.BatchNo,
-                OperateDate = u.OperateDate,
 
-                a.SortingLineCode,
-                SortingLineName=sortlingquery.Where(b=>b.SortingLineCode==a.SortingLineCode).Select(b=>b.SortingLineName),
-                SortingLineType = sortlingquery.Where(b => b.SortingLineCode == a.SortingLineCode).Select(b => b.SortingLineType == "1" ? "半自动" : "全自动"),
-                a.Status
-
-            });
+            var batchsort = batchsortquery;
 
             if (BatchNo != "")
             {
@@ -107,26 +93,39 @@ namespace THOK.SMS.Bll.Service
                 int.TryParse(BatchNo, out batchNo);
                 if (batchNo > 0)
                 {
-                    batchsort = batchsort.Where(a => a.BatchNo == batchNo);
+                    batchsort = batchsortquery.Where(a => a.batch.BatchNo == batchNo);
                 }
             }
 
-            if (OperateDate != string.Empty && OperateDate != null)
+            if (OrderDate != string.Empty && OrderDate != null)
             {
-                DateTime opdate = Convert.ToDateTime(OperateDate);
-                batchsort = batchsort.Where(a => a.OperateDate >= opdate);
+                DateTime opdate = Convert.ToDateTime(OrderDate);
+                batchsort = batchsortquery.Where(a => a.batch.OrderDate == opdate);
             }
-
             if (Status != string.Empty && Status != null)
             {
-                batchsort = batchsort.Where(a => a.Status == Status);
+                batchsort = batchsortquery.Where(a => a.Status == Status);
             }
             if (BatchName != string.Empty && BatchName != null)
             {
-                batchsort = batchsort.Where(a => a.BatchName == BatchName);
+                batchsort = batchsort.Where(a => a.batch.BatchName==BatchName);
             }
 
-            var batch = batchsort.OrderByDescending(a => a.BatchSortId).ToArray()
+            var batchsorts = batchsort.OrderByDescending(a => a.BatchSortId).Select(a => new 
+            {
+                a.BatchSortId,
+                a.BatchId,
+                a.batch.BatchName,
+                a.batch.BatchNo,
+                a.Status,
+                a.batch.OrderDate,
+                a.SortingLineCode
+            });
+
+            int total = batchsorts.Count();
+            var batchsRow = batchsort.Skip((page - 1) * rows).Take(rows);
+
+            var batch = batchsorts.ToArray()
                  .Select(a =>
                  new
                  {
@@ -134,18 +133,13 @@ namespace THOK.SMS.Bll.Service
                      a.BatchId,
                      a.BatchName,
                      a.BatchNo,
-
                      Status = WhatStatus(a.Status),
-                     a.SortingLineCode,
-                     a.SortingLineName,
-                     SortingLineType = a.SortingLineType,
-                     OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
-
-
+                     a.SortingLineCode,                  
+                     SortingLineName =a.SortingLineCode==null? "":(sortlingquery.Where(b => b.SortingLineCode==a.SortingLineCode).FirstOrDefault().SortingLineName),            
+                     SortingLineType = a.SortingLineCode == null ? "" : (sortlingquery.Where(b => b.SortingLineCode == a.SortingLineCode).FirstOrDefault().SortingLineType),
+                     OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
                  });
-
-            int total = batch.Count();
-            var batchsRow = batch.Skip((page - 1) * rows).Take(rows);
+        
             return new { total, rows = batch.ToArray() };
         }
 
@@ -164,7 +158,6 @@ namespace THOK.SMS.Bll.Service
             IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
             var batchs = batchQuery.Where(e => e.BatchName.Contains(batchname));
 
-
             if (batchno != "")
             {
                 int batchNo = 0;
@@ -180,7 +173,7 @@ namespace THOK.SMS.Bll.Service
                 a.BatchId,
                 a.BatchName,
                 a.BatchNo,
-                OperateDate = a.OperateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
             });
 
             int total = batch.Count();

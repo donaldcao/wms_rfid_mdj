@@ -89,9 +89,11 @@
                  var cell = row.insertCell();        //创建一个单元
                  mydiv.style.width = "100px";
                  mydiv.style.height = "100px";
-                 mydiv.style.backgroundColor = "#40e0d0";
+                 mydiv.style.backgroundColor = "#40e0d0";                 
                  cell.appendChild(mydiv);
                  mydiv.innerHTML = data[s].cellName + '<br />' + data[s].productName + '<br />' + data[s].Quantity + data[s].unitName;
+                 mydiv.setAttribute("cellName", data[s].cellName);
+                 mydiv.setAttribute("unitName", data[s].unitName);
              }
 
              var row = table.insertRow();       //创建一行
@@ -112,8 +114,8 @@
          $('.itemdiv').droppable({
              onDrop: function (e, source) {
                  id = $(this).attr('id');
-                 var s = document.getElementById(id);
-                 var cellname = s.innerHTML.substring(0, 11);
+                 var cellname = $(this).attr('cellName');
+                 unitName = $(this).attr('unitName');
                  $.ajaxSender.send('/StockInBillAllot/AllotAdds/',
                                                                    {
                                                                        billNo: billNo,
@@ -122,8 +124,8 @@
                                                                        productname: productnames
                                                                    },
                                                                    function (data) {
-                                                                       s.innerHTML = cellname + '<br />' + productnames + '<br />' + data + UnitName;
-                                                                       s.style.backgroundColor = "red";
+                                                                       document.getElementById(id).innerHTML = cellname + '<br />' + productnames + '<br />' + data + UnitName;
+                                                                       document.getElementById(id).style.backgroundColor = "red";
                                                                    });
                  $('#inAllotBillDetail').datagrid('reload');
                  $('#inAllotBillDetails').datagrid('reload');

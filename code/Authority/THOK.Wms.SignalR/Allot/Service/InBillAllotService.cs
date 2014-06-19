@@ -13,6 +13,8 @@ using THOK.Common.Entity;
 using THOK.Authority;
 using THOK.Authority.Dal.Interfaces;
 using THOK.Authority.DbModel;
+using EntityFramework.Extensions;
+
 namespace THOK.Wms.SignalR.Allot.Service
 {
     public class InBillAllotService : Notifier<AllotStockInConnection>, IInBillAllotService
@@ -310,10 +312,10 @@ namespace THOK.Wms.SignalR.Allot.Service
                 ps.State = StateType.Warning;
                 ps.Errors.Add("分配未全部完成，没有储位可分配！");
                 NotifyConnection(ps.Clone());
-                
-                InBillMasterRepository.GetObjectSet()
-                    .UpdateEntity(i => i.BillNo == billno,
-                    i => new InBillMaster() { LockTag = ""});
+
+                InBillMasterRepository.GetQueryable()
+                    .Where(i => i.BillNo == billno)
+                    .Update(i => new InBillMaster() { LockTag = "" });
             }
             else
             {
@@ -342,9 +344,9 @@ namespace THOK.Wms.SignalR.Allot.Service
                 }
                 finally
                 {
-                    InBillMasterRepository.GetObjectSet()
-                        .UpdateEntity(i => i.BillNo == billno,
-                        i => new InBillMaster() { LockTag = "" });
+                    InBillMasterRepository.GetQueryable()
+                        .Where(i => i.BillNo == billno)
+                        .Update(i => new InBillMaster() { LockTag = "" });
                 }
             }
         }

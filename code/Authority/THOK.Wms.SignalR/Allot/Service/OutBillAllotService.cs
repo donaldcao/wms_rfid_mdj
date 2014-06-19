@@ -9,6 +9,7 @@ using THOK.Wms.DbModel;
 using System;
 using THOK.Common.Entity;
 using THOK.Authority.Dal.Interfaces;
+using EntityFramework.Extensions;
 
 namespace THOK.Wms.SignalR.Allot.Service
 {
@@ -193,9 +194,9 @@ namespace THOK.Wms.SignalR.Allot.Service
                 ps.Errors.Add("分配未全部完成，没有库存可分配！");
                 NotifyConnection(ps.Clone());
 
-                OutBillMasterRepository.GetObjectSet()
-                    .UpdateEntity(i => i.BillNo == billno,
-                    i => new OutBillMaster() { LockTag = "" });
+                OutBillMasterRepository.GetQueryable()
+                    .Where(i => i.BillNo == billno)
+                    .Update(i => new OutBillMaster() { LockTag = "" });
             }
             else
             {
@@ -224,9 +225,9 @@ namespace THOK.Wms.SignalR.Allot.Service
                 }
                 finally
                 {
-                    OutBillMasterRepository.GetObjectSet()
-                        .UpdateEntity(i => i.BillNo == billno,
-                        i => new OutBillMaster() { LockTag = "" });
+                    OutBillMasterRepository.GetQueryable()
+                        .Where(i => i.BillNo == billno)
+                        .Update(i => new OutBillMaster() { LockTag = "" });
                 }
             }
         }

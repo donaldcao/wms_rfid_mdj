@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="QueryableExtensions.cs" />
-    <Compile Include="TableMetadata.cs" />
     <Compile Include="ObjectContextExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

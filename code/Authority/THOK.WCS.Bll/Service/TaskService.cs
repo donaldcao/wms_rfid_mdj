@@ -15,6 +15,7 @@ using System.Configuration;
 using THOK.Wms.SignalR.Common;
 using THOK.Common.Entity;
 using System.Transactions;
+using EntityFramework.Extensions;
 
 namespace THOK.WCS.Bll.Service
 {
@@ -620,12 +621,14 @@ namespace THOK.WCS.Bll.Service
 
                     TaskHistoryRepository.SaveChanges();
 
-                    TaskRepository.GetObjectSet().DeleteEntity(t => t.State == "04"
+                    TaskRepository.GetQueryable()
+                        .Where(t => t.State == "04"
                             || (t.OrderType == "01" && t.CurrentPositionID == t.OriginPositionID && t.CurrentPositionState == "01")
                             || (t.OrderType != "01" && t.OrderType != "05"
                                 && t.OrderType != "06" && t.OrderType != "07"
                                 && t.OrderType != "08" && t.OrderType != "09"
-                                && t.CurrentPositionID == t.OriginPositionID && t.State == "01"));
+                                && t.CurrentPositionID == t.OriginPositionID && t.State == "01"))
+                        .Delete() ;
 
                     if (TaskRepository.GetQueryable().Count() == 0)
                     {
@@ -666,13 +669,15 @@ namespace THOK.WCS.Bll.Service
 
                     TaskHistoryRepository.SaveChanges();
 
-                    TaskRepository.GetObjectSet().DeleteEntity(t => t.OrderID == orderID
-                        && (t.State == "04"
-                            || (t.OrderType == "01" && t.CurrentPositionID == t.OriginPositionID && t.CurrentPositionState == "01")
-                            || (t.OrderType != "01" && t.OrderType != "05"
-                                && t.OrderType != "06" && t.OrderType != "07"
-                                && t.OrderType != "08" && t.OrderType != "09"
-                                && t.CurrentPositionID == t.OriginPositionID && t.State == "01")));
+                    TaskRepository.GetQueryable()
+                        .Where(t => t.OrderID == orderID
+                            && (t.State == "04"
+                                || (t.OrderType == "01" && t.CurrentPositionID == t.OriginPositionID && t.CurrentPositionState == "01")
+                                || (t.OrderType != "01" && t.OrderType != "05"
+                                    && t.OrderType != "06" && t.OrderType != "07"
+                                    && t.OrderType != "08" && t.OrderType != "09"
+                                    && t.CurrentPositionID == t.OriginPositionID && t.State == "01")))
+                        .Delete();
 
                     if (TaskRepository.GetQueryable().Where(t => t.OrderID == orderID).Count() != 0)
                     {

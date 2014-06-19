@@ -10,6 +10,7 @@ using THOK.Wms.SignalR.Common;
 using THOK.Common.Entity;
 using THOK.Authority.DbModel;
 using THOK.Authority.Dal.Interfaces;
+using EntityFramework.Extensions;
 
 namespace THOK.Wms.Allot.Service
 {
@@ -145,8 +146,9 @@ namespace THOK.Wms.Allot.Service
 
                             OutBillAllotRepository.SaveChanges();
 
-                            OutBillAllotRepository.GetObjectSet()
-                                .DeleteEntity(i => i.BillNo == ibm.BillNo);
+                            OutBillAllotRepository.GetQueryable()
+                                .Where(i => i.BillNo == ibm.BillNo)
+                                .Delete();
 
                             ibm.Status = "2";
                             ibm.UpdateTime = DateTime.Now;

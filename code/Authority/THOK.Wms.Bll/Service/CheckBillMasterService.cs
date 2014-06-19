@@ -856,7 +856,7 @@ namespace THOK.Wms.Bll.Service
                                     item.Storage.OutFrozenQuantity += Math.Abs(differQuantity);
                                 }
                                 ProfitLossBillDetailRepository.Add(pbd);
-                                item.Storage.LockTag = string.Empty;
+                                item.Storage.LockTag = null;
                             }
                         }
                     }

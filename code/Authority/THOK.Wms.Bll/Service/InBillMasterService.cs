@@ -380,7 +380,7 @@ namespace THOK.Wms.Bll.Service
                            i.RealQuantity += allotQuantity;
                            inStorage.ProductCode = i.ProductCode;
                            inStorage.Quantity += allotQuantity;
-                           inStorage.LockTag = string.Empty;
+                           inStorage.LockTag = null;
 
                            var billAllot = new InBillAllot()
                            {
@@ -491,7 +491,7 @@ namespace THOK.Wms.Bll.Service
                                     && i.Storage.InFrozenQuantity >= i.AllotQuantity)
                                 {
                                     i.Storage.InFrozenQuantity -= i.AllotQuantity;
-                                    i.Storage.LockTag = string.Empty;
+                                    i.Storage.LockTag = null;
                                 }
                                 else
                                 {

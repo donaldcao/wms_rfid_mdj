@@ -386,7 +386,7 @@ namespace THOK.Wms.Bll.Service
                });
 
                 result = true;
-                storages.AsParallel().ForAll(s => s.LockTag = string.Empty);
+                storages.AsParallel().ForAll(s => s.LockTag = null);
                 //出库结单
                 outBillMaster.Status = "6";
                 outBillMaster.VerifyDate = DateTime.Now;
@@ -492,8 +492,8 @@ namespace THOK.Wms.Bll.Service
                                     m.InStorage.ProductCode = null;
                                     m.InStorage.StorageSequence = 0;
                                     m.OutStorage.OutFrozenQuantity -= m.RealQuantity;
-                                    m.InStorage.LockTag = string.Empty;
-                                    m.OutStorage.LockTag = string.Empty;
+                                    m.InStorage.LockTag = null;
+                                    m.OutStorage.LockTag = null;
                                 }
                                 else
                                 {
@@ -510,7 +510,7 @@ namespace THOK.Wms.Bll.Service
                                     && o.Storage.OutFrozenQuantity >= o.AllotQuantity)
                                 {
                                     o.Storage.OutFrozenQuantity -= o.AllotQuantity;
-                                    o.Storage.LockTag = string.Empty;
+                                    o.Storage.LockTag = null;
                                 }
                                 else
                                 {

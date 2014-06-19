@@ -108,7 +108,7 @@ namespace THOK.Wms.Bll.Service
 
                         ProfitLossBillDetailRepository.Add(pbd);
                         ProfitLossBillDetailRepository.SaveChanges();
-                        storage.LockTag = string.Empty;
+                        storage.LockTag = null;
                         StorageRepository.SaveChanges();
                         result = true;
                     }
@@ -190,7 +190,7 @@ namespace THOK.Wms.Bll.Service
                         {
                             storage.OutFrozenQuantity -= Math.Abs(pbd.Quantity);
                         }
-                        storage.LockTag = string.Empty;
+                        storage.LockTag = null;
                         StorageRepository.SaveChanges();
                         ProfitLossBillDetailRepository.Delete(pbd);
                         ProfitLossBillDetailRepository.SaveChanges();

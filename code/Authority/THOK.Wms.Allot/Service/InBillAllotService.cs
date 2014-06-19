@@ -129,7 +129,7 @@ namespace THOK.Wms.Allot.Service
                                             i.InBillDetail.AllotQuantity -= i.AllotQuantity;
                                         }
                                         i.Storage.InFrozenQuantity -= i.AllotQuantity;
-                                        i.Storage.LockTag = string.Empty;
+                                        i.Storage.LockTag = null;
                                     }
                                     else
                                     {
@@ -187,7 +187,7 @@ namespace THOK.Wms.Allot.Service
                         {
                             allotDetail.InBillDetail.AllotQuantity -= allotDetail.AllotQuantity;
                             allotDetail.Storage.InFrozenQuantity -= allotDetail.AllotQuantity;
-                            allotDetail.Storage.LockTag = string.Empty;
+                            allotDetail.Storage.LockTag = null;
                             ibm.InBillAllots.Remove(allotDetail);
                             InBillAllotRepository.Delete(allotDetail);
                             if (ibm.InBillAllots.Count == 0)
@@ -245,7 +245,7 @@ namespace THOK.Wms.Allot.Service
                             storage = Locker.LockEmpty(cell);
                             if (storage != null && (storage.Quantity != 0 || storage.InFrozenQuantity != 0))
                             {
-                                storage.LockTag = string.Empty;
+                                storage.LockTag = null;
                                 StorageRepository.SaveChanges();
                                 storage = null;
                             }
@@ -263,7 +263,7 @@ namespace THOK.Wms.Allot.Service
                                     allotDetail.InBillDetail.AllotQuantity += q2;
                                     storage.ProductCode = allotDetail.ProductCode;
                                     storage.InFrozenQuantity += q2;
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     allotDetail.CellCode = storage.Cell.CellCode;
                                     allotDetail.StorageCode = storage.StorageCode;
                                     allotDetail.AllotQuantity = q2;
@@ -432,7 +432,7 @@ namespace THOK.Wms.Allot.Service
                                     storage.ProductCode = ibd.ProductCode;
                                     ibm.InBillAllots.Add(billAllot);
                                     ibm.Status = "3";
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     StorageRepository.SaveChanges();
                                     strResult = "手工分配成功！";
                                     result = true;
@@ -538,7 +538,7 @@ namespace THOK.Wms.Allot.Service
                     storage.ProductCode = ibd.ProductCode;
                     ibm.InBillAllots.Add(billAllot);
                     ibm.Status = "3";
-                    storage.LockTag = string.Empty;
+                    storage.LockTag = null;
                     StorageRepository.SaveChanges();
 
                     strResult = "保存修改成功！";

@@ -134,7 +134,7 @@ namespace THOK.Wms.Allot.Service
                                             o.OutBillDetail.AllotQuantity -= o.AllotQuantity;
                                         }
                                         o.Storage.OutFrozenQuantity -= o.AllotQuantity;
-                                        o.Storage.LockTag = string.Empty;
+                                        o.Storage.LockTag = null;
                                     }
                                     else
                                     {
@@ -214,7 +214,7 @@ namespace THOK.Wms.Allot.Service
                                 storage.OutFrozenQuantity += q2;
                                 ibm.OutBillAllots.Add(billAllot);
                                 ibm.Status = "3";
-                                storage.LockTag = string.Empty;
+                                storage.LockTag = null;
                                 StorageRepository.SaveChanges();
                                 strResult = "保存修改成功！";
                                 result = true;
@@ -313,7 +313,7 @@ namespace THOK.Wms.Allot.Service
                     storage.OutFrozenQuantity += allotQuantity;
                     obm.OutBillAllots.Add(billAllot);
                     obm.Status = "3";
-                    storage.LockTag = string.Empty;
+                    storage.LockTag = null;
                     StorageRepository.SaveChanges();                    
 
                     strResult = "保存修改成功！";
@@ -423,7 +423,7 @@ namespace THOK.Wms.Allot.Service
                                     allotDetail.OutBillDetail.AllotQuantity -= allotDetail.AllotQuantity;
                                     allotDetail.OutBillDetail.AllotQuantity += q2;
                                     storage.OutFrozenQuantity += q2;
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     allotDetail.CellCode = storage.Cell.CellCode;
                                     allotDetail.StorageCode = storage.StorageCode;
                                     allotDetail.AllotQuantity = q2;

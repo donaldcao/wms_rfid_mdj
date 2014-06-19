@@ -168,8 +168,8 @@ namespace THOK.Wms.Bll.Service
                             {
                                 m.InStorage.InFrozenQuantity -= m.RealQuantity;
                                 m.OutStorage.OutFrozenQuantity -= m.RealQuantity;
-                                m.InStorage.LockTag = string.Empty;
-                                m.OutStorage.LockTag = string.Empty;
+                                m.InStorage.LockTag = null;
+                                m.OutStorage.LockTag = null;
                             }
                             else
                             {
@@ -379,8 +379,8 @@ namespace THOK.Wms.Bll.Service
                                 {
                                     m.InStorage.InFrozenQuantity -= m.RealQuantity;
                                     m.OutStorage.OutFrozenQuantity -= m.RealQuantity;
-                                    m.InStorage.LockTag = string.Empty;
-                                    m.OutStorage.LockTag = string.Empty;
+                                    m.InStorage.LockTag = null;
+                                    m.OutStorage.LockTag = null;
                                 }
                                 else
                                 {
@@ -464,7 +464,7 @@ namespace THOK.Wms.Bll.Service
                             }
                         );
 
-                        storages.AsParallel().ForAll(s => s.LockTag = string.Empty);
+                        storages.AsParallel().ForAll(s => s.LockTag = null);
                     }
 
                     //出库结单

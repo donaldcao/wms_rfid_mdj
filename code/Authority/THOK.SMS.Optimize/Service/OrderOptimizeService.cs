@@ -60,15 +60,12 @@ namespace THOK.SMS.Optimize.Service
 
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
             IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
-            var batchsorts = batchsortquery.Where(a => a.batch.OrderDate == date).Select(b => b.BatchSortId).Distinct().ToArray();
-
+            var batchsorts = batchsortquery
+                .Where(a => a.batch.OrderDate == date)
+                .Select(b => b.BatchSortId)
+                .Distinct().ToArray();
             foreach (int batchSortCode in batchsorts)//遍历每条批次分拣线
             {
-                IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
-                //if (channelallotquery.Where(a => a.BatchSortId == batchSortCode).Count()>0)
-                //{
-                //    continue;
-                //}
                 var deliverLines = DeliverLineAllotRepository.GetQueryable()
                     .Where(a => a.BatchSortId == batchSortCode)
                     .Select(a => a.DeliverLineCode).ToArray();
@@ -79,10 +76,21 @@ namespace THOK.SMS.Optimize.Service
                     var beAllotOrders = sortorderquery
                         .Where(s => s.OrderDate == orderDate && deliverLines.Contains(s.DeliverLineCode))
                         .OrderBy(s => s.DeliverLine.DeliverOrder);
+                    IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
+                    var channelAllots = channelallotquery.Where(c => c.BatchSortId == batchSortCode);
+                    Dictionary<string, int> channelRemainquantity = new Dictionary<string, int>();
+                    foreach (var channelAllot in channelAllots)
+                    {
+                        channelRemainquantity.Add(channelAllot.ChannelAllotCode, channelAllot.RealQuantity);
+                    }
+                    //中间参数
                     int packNo = 0;
                     int customerOrder = 0;
                     int customerDeliverOrder = 0;
+                    int detailPackNo = 0;
+                    int tempBagOrder = 1;//当前第几包
                     string tempDeliverLine = "当前配送线路";
+                    string tempOrderId = "当前订单编号";
                     foreach (var singleOrder in beAllotOrders)
                     {
                         string deliverLineCode = singleOrder.DeliverLineCode;
@@ -91,8 +99,11 @@ namespace THOK.SMS.Optimize.Service
                             customerDeliverOrder += 1;
                             tempDeliverLine = deliverLineCode;
                         }
+                        customerOrder += 1;
                         IQueryable<SortOrderDetail> sortorderdetailquery = SortOrderDetailRepository.GetQueryable();
-                        var beAllotOrderDetails = sortorderdetailquery.Where(s => s.OrderID == singleOrder.OrderID).OrderByDescending(s => s.RealQuantity);
+                        var beAllotOrderDetails = sortorderdetailquery
+                            .Where(s => s.OrderID == singleOrder.OrderID)
+                            .OrderByDescending(s => s.RealQuantity);
                         int orderQuantity = Convert.ToInt32(beAllotOrderDetails.Sum(c => c.RealQuantity));
                         //主单拆包
                         Dictionary<int, int> BagQuantity = new Dictionary<int, int>();
@@ -135,16 +146,13 @@ namespace THOK.SMS.Optimize.Service
                         for (int i = 1; i <= bagCount; i++)
                         {
                             packNo += 1;
-                            customerOrder += 1;
                             SortOrderAllotMaster addSortOrderAllotMaster = new SortOrderAllotMaster();
                             addSortOrderAllotMaster.BatchSortId = batchSortCode;
-                            addSortOrderAllotMaster.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
                             addSortOrderAllotMaster.OrderId = singleOrder.OrderID;
                             addSortOrderAllotMaster.PackNo = packNo;
                             addSortOrderAllotMaster.CustomerOrder = customerOrder;
                             addSortOrderAllotMaster.CustomerDeliverOrder = customerDeliverOrder;
                             addSortOrderAllotMaster.ExportNo = 0;
-                            addSortOrderAllotMaster.OrderId = singleOrder.OrderID;
                             addSortOrderAllotMaster.Quantity = BagQuantity[i];
                             addSortOrderAllotMaster.StartTime = DateTime.Now;
                             addSortOrderAllotMaster.FinishTime = DateTime.Now;
@@ -152,22 +160,80 @@ namespace THOK.SMS.Optimize.Service
                             addSortOrderAllotMaster.OrderMasterCode = batchSortCode + "-" + packNo;
                             SortOrderAllotMasterRepository.Add(addSortOrderAllotMaster);
                         }
-
-                        ////明细拆包
-                        //foreach (var singleOrderDetail in beAllotOrderDetails)
-                        //{
-                        //    int middleQuantity = 0;
-                        //    int quantity = Convert.ToInt32(singleOrderDetail.RealQuantity);
-                        //    int bagQuantity = BagQuantity[BagQuantity.Min(b => b.Key)];
-                        //    if (true)
-                        //    {
-
-                        //    }
-                        //}
+                        //明细拆包
+                        foreach (var singleOrderDetail in beAllotOrderDetails)
+                        {
+                            int quantity = Convert.ToInt32(singleOrderDetail.RealQuantity);
+                            do
+                            {
+                                int allotQuantity = 0;
+                                int bagOrder = BagQuantity.Min(b => b.Key);
+                                if (tempOrderId != singleOrder.OrderID)
+                                {
+                                    detailPackNo += 1;
+                                    tempOrderId = singleOrder.OrderID;
+                                }
+                                else if (tempBagOrder != bagOrder)
+                                {
+                                    detailPackNo += 1;
+                                    tempBagOrder = bagOrder;
+                                }
+                                int bagQuantity = BagQuantity[BagQuantity.Min(b => b.Key)];
+                                allotQuantity = quantity > bagQuantity ? bagQuantity : quantity;
+                                BagQuantity[BagQuantity.Min(b => b.Key)] -= allotQuantity;
+                                quantity -= allotQuantity;
+                                if (BagQuantity[BagQuantity.Min(b => b.Key)] == 0)
+                                {
+                                    BagQuantity.Remove(BagQuantity.Min(b => b.Key));
+                                }
+                                string productCode = singleOrderDetail.ProductCode;
+                                do
+                                {
+                                    int realAllotQuantity = 0;
+                                    var channelAllotCodes = channelAllots
+                                        .Where(c => c.ProductCode.Equals(productCode))
+                                        .Select(c => c.ChannelAllotCode);
+                                    var productRemainquantity = channelRemainquantity
+                                        .Where(c => channelAllotCodes.Contains(c.Key))
+                                        .OrderByDescending(g => g.Value)
+                                        .ToDictionary(c=>c.Key,c=>c.Value);
+                                    var realAllotChannel = productRemainquantity
+                                        .Where(p => p.Value % 50 > 0);
+                                    string channelAllotCode;
+                                    int channelQuantity;
+                                    if (realAllotChannel.Count() > 0)
+                                    {
+                                        channelAllotCode = realAllotChannel.First().Key;
+                                        channelQuantity = realAllotChannel.First().Value;
+                                    }
+                                    else
+                                    {
+                                        channelAllotCode = productRemainquantity.First().Key;
+                                        channelQuantity = productRemainquantity.First().Value;
+                                    }
+                                    realAllotQuantity = channelQuantity > allotQuantity ? allotQuantity : channelQuantity;
+                                    allotQuantity -= realAllotQuantity;
+                                    channelRemainquantity[channelAllotCode] -= realAllotQuantity;
+                                    SortOrderAllotDetail addSortOrderAllotDetail = new SortOrderAllotDetail();
+                                    addSortOrderAllotDetail.ChannelCode = channelAllots
+                                        .Where(c => c.ChannelAllotCode == channelAllotCode)
+                                        .Select(c => c.ChannelCode).First();
+                                    addSortOrderAllotDetail.OrderMasterCode = batchSortCode + "-" + detailPackNo;
+                                    addSortOrderAllotDetail.ProductCode = productCode;
+                                    addSortOrderAllotDetail.ProductName = channelAllots
+                                        .Where(c => c.ChannelAllotCode == channelAllotCode)
+                                        .Select(c => c.ProductName).First();
+                                    addSortOrderAllotDetail.Quantity = realAllotQuantity;
+                                    addSortOrderAllotDetail.OrderDetailCode = batchSortCode + "-" + detailPackNo + "-" + productCode;
+                                    SortOrderAllotDetailRepository.Add(addSortOrderAllotDetail);
+                                } while (allotQuantity > 0);
+                            } while (quantity > 0); 
+                        }
                     }
                 }
             }
             SortOrderAllotMasterRepository.SaveChanges();
+            SortOrderAllotDetailRepository.SaveChanges();
             strResult = "false";
             return true;
         }

@@ -2,25 +2,21 @@
     function optimizeClick() {
         var row = $('#master').datagrid('getSelected');
         if (row) {
-            $.ajax({
-                url: "/SortAllot/OrderAllot/",
-                type: "GET",
-                dataType: "text",
-                data: { 'orderDate': row.OrderDate },
-                success: function (responseText) {
-                    var result = $.evalJSON(responseText);
-                    if (result.success) {
-                        $('#dlg-channeloptimize').dialog('open').dialog('setTitle', "审核");
-                        $('#deliverline').datagrid({ url: '/SortAllot/GetBatchSort/?orderDate=' + row.OrderDate, singleSelect: true });
-                        $('#fm-sortOrderInfo').form('load', row);
-                        $('#btnEditDeliverLine').css('display', 'none');
-                        $('#btnRemoveDeliverLineAllot').css('display', 'none');
-                        $('#btnDeliverLineAllot').removeAttr("style");
-
-                    }
-                    else {
-                        $.messager.alert(g_MsgBoxTitle, result.msg, "info");
-                    }
+            $.ajaxSender.send('/SortAllot/OrderAllot/',
+            {
+                'orderDate': row.OrderDate
+            },
+            function (result) {
+                if (result.success) {
+                    $('#dlg-channeloptimize').dialog('open').dialog('setTitle', "审核");
+                    $('#deliverline').datagrid({ url: '/SortAllot/GetBatchSort/?orderDate=' + row.OrderDate, singleSelect: true });
+                    $('#fm-sortOrderInfo').form('load', row);
+                    $('#btnEditDeliverLine').css('display', 'none');
+                    $('#btnRemoveDeliverLineAllot').css('display', 'none');
+                    $('#btnDeliverLineAllot').removeAttr("style");
+                }
+                else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
                 }
             });
         }

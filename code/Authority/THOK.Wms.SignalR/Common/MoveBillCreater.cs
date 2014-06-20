@@ -170,7 +170,7 @@ namespace THOK.Wms.SignalR.Common
 
                     if (targetStorage != null)
                     {
-                        targetStorage.LockTag = string.Empty;
+                        targetStorage.LockTag = null;
                     }
                 }
             }
@@ -193,7 +193,7 @@ namespace THOK.Wms.SignalR.Common
                     }
                     if (targetStorage != null)
                     {
-                        targetStorage.LockTag = string.Empty;
+                        targetStorage.LockTag = null;
                     }
                 }
             }
@@ -231,7 +231,7 @@ namespace THOK.Wms.SignalR.Common
 
                     if (targetStorage != null)
                     {
-                        targetStorage.LockTag = string.Empty;
+                        targetStorage.LockTag = null;
                     }
                 }
             }
@@ -264,7 +264,7 @@ namespace THOK.Wms.SignalR.Common
                     }
                     if (targetStorage != null)
                     {
-                        targetStorage.LockTag = string.Empty;
+                        targetStorage.LockTag = null;
                     }
                 }
             }
@@ -318,8 +318,8 @@ namespace THOK.Wms.SignalR.Common
                             {
                                 m.InStorage.InFrozenQuantity -= m.RealQuantity;
                                 m.OutStorage.OutFrozenQuantity -= m.RealQuantity;
-                                m.InStorage.LockTag = string.Empty;
-                                m.OutStorage.LockTag = string.Empty;
+                                m.InStorage.LockTag = null;
+                                m.OutStorage.LockTag = null;
                             }
                             else
                             {

@@ -49,7 +49,6 @@ namespace THOK.Wms.Allot.Service
             get { return this.GetType(); }
         }
 
-        #region IOutBillAllotService 成员
         public string WhatStatus(string status)
         {
             string statusStr = "";
@@ -135,7 +134,7 @@ namespace THOK.Wms.Allot.Service
                                             o.OutBillDetail.AllotQuantity -= o.AllotQuantity;
                                         }
                                         o.Storage.OutFrozenQuantity -= o.AllotQuantity;
-                                        o.Storage.LockTag = string.Empty;
+                                        o.Storage.LockTag = null;
                                     }
                                     else
                                     {
@@ -215,7 +214,7 @@ namespace THOK.Wms.Allot.Service
                                 storage.OutFrozenQuantity += q2;
                                 ibm.OutBillAllots.Add(billAllot);
                                 ibm.Status = "3";
-                                storage.LockTag = string.Empty;
+                                storage.LockTag = null;
                                 StorageRepository.SaveChanges();
                                 strResult = "保存修改成功！";
                                 result = true;
@@ -246,118 +245,93 @@ namespace THOK.Wms.Allot.Service
             }
             return result;
         }
+        
         #region 手动分配出库
-        public bool AllotAdd(string billNo, long id, string cellCode, string productName, out string strResult, out decimal allotQuantity)
+
+        public bool AllotAdd(string billNo, long id, string storageCode, string productName, out string strResult, out decimal allotQuantity)
         {
-            bool result = false;
-            var ibm = OutBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo);
-            var cell = CellRepository.GetQueryable().Single(c => c.CellCode == cellCode);
-            var obm = OutBillDetailRepository.GetQueryable().FirstOrDefault(o => o.ID == id);
-            var stor=StorageRepository.GetQueryable().Single(c=>c.CellCode==cellCode);
-            decimal q1 = obm.BillQuantity - obm.AllotQuantity;
             allotQuantity = 0;
-            if (ibm != null)
+
+            try
             {
-                if (string.IsNullOrEmpty(ibm.LockTag))
+                using (var scope = new TransactionScope())
                 {
-                    Storage storage = Locker.LockNoEmpty(cell, obm.Product);
-                    if (storage != null)
+                    var obm = OutBillMasterRepository.GetQueryable().Single(i => i.BillNo == billNo);
+                    var obd = OutBillDetailRepository.GetQueryable().Single(o => o.ID == id);
+                    var cell = CellRepository.GetQueryable().Single(c => c.Storages.Any(s => s.StorageCode == storageCode));
+
+                    if (obm == null)
                     {
-                        if (stor.Product.ProductName == productName)
-                        {
-                            if (q1 > 0)
-                            {
-                                OutBillAllot billAllot = null;
-                                decimal q3 = storage.Quantity - storage.OutFrozenQuantity;
-                                if (q1 <= q3)
-                                {
-                                    try
-                                    {
-                                        billAllot = new OutBillAllot()
-                                        {
-                                            BillNo = billNo,
-                                            OutBillDetailId = obm.ID,
-                                            ProductCode = obm.ProductCode,
-                                            CellCode = storage.CellCode,
-                                            StorageCode = storage.StorageCode,
-                                            UnitCode = obm.UnitCode,
-                                            AllotQuantity = q1,
-                                            RealQuantity = 0,
-                                            Status = "0"
-                                        };
-                                        allotQuantity = (q3 - q1) / storage.Product.Unit.Count;
-                                        obm.AllotQuantity += q1;
-                                        storage.OutFrozenQuantity += q1;
-                                        ibm.OutBillAllots.Add(billAllot);
-                                        ibm.Status = "3";
-                                        storage.LockTag = string.Empty;
-                                        StorageRepository.SaveChanges();
-                                        strResult = "保存修改成功！";
-                                        result = true;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        strResult = "保存添加失败，订单或储位其他人正在操作！";
-                                    }
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        billAllot = new OutBillAllot()
-                                        {
-                                            BillNo = billNo,
-                                            OutBillDetailId = obm.ID,
-                                            ProductCode = obm.ProductCode,
-                                            CellCode = storage.CellCode,
-                                            StorageCode = storage.StorageCode,
-                                            UnitCode = obm.UnitCode,
-                                            AllotQuantity = q3,
-                                            RealQuantity = 0,
-                                            Status = "0"
-                                        };
-                                        obm.AllotQuantity += q3;
-                                        storage.OutFrozenQuantity += q3;
-                                        ibm.OutBillAllots.Add(billAllot);
-                                        ibm.Status = "3";
-                                        storage.LockTag = string.Empty;
-                                        StorageRepository.SaveChanges();
-                                        strResult = "保存修改成功！";
-                                        result = true;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        strResult = "保存添加失败，订单或储位其他人正在操作！";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                strResult = "该产品已无分配任务！";
-                            }
-                        }
-                        else
-                        {
-                            strResult = "该卷烟没有出库任务！";
-                        }
+                        strResult = "当前订单状态不是已分配，或当前订单不存在！";
+                        return false;
                     }
-                    else
+                    if (!string.IsNullOrEmpty(obm.LockTag))
+                    {
+                        strResult = "当前订单其他人正在操作，请稍候重试！";
+                        return false;
+                    }
+
+                    Storage storage = Locker.LockNoEmpty(cell, obd.Product);
+                    if (storage == null)
                     {
                         strResult = "当前选择的储位不可用，其他人正在操作或没有库存！";
+                        return false;
                     }
-                }
-                else
-                {
-                    strResult = "当前订单其他人正在操作，请稍候重试！";
+
+                    if (storage.StorageCode != storageCode)
+                    {
+                        strResult = "当前选择的储位不可用，由于存储顺序原因当前不能出库！";
+                        return false;
+                    }
+
+                    decimal q1 = obd.BillQuantity - obd.AllotQuantity;
+                    if (q1 <= 0)
+                    {
+                        strResult = "该产品已无分配任务(分配完成)！";
+                        return false;
+                    }
+
+                    OutBillAllot billAllot = null;
+                    decimal q2 = storage.Quantity - storage.OutFrozenQuantity;
+                    allotQuantity = q2 < q1 ? q2 : q1;
+
+
+                    billAllot = new OutBillAllot()
+                    {
+                        BillNo = billNo,
+                        OutBillDetailId = obd.ID,
+                        ProductCode = obd.ProductCode,
+                        CellCode = storage.CellCode,
+                        StorageCode = storage.StorageCode,
+                        UnitCode = obd.UnitCode,
+                        AllotQuantity = allotQuantity,
+                        RealQuantity = 0,
+                        Status = "0"
+                    };
+
+                    obd.AllotQuantity += allotQuantity;
+                    storage.OutFrozenQuantity += allotQuantity;
+                    obm.OutBillAllots.Add(billAllot);
+                    obm.Status = "3";
+                    storage.LockTag = null;
+                    StorageRepository.SaveChanges();                    
+
+                    strResult = "保存修改成功！";
+                    allotQuantity = (storage.Quantity - storage.OutFrozenQuantity) / storage.Product.Unit.Count;
+                    scope.Complete();
+
+                    return true;
                 }
             }
-            else
+            catch (Exception e)
             {
-                strResult = "当前订单状态不是已分配，或当前订单不存在！";
-            }
-            return result;
+                strResult = "保存添加失败，订单或储位其他人正在操作！" + e.Message;
+                return false;
+            }            
         }
+        
         #endregion
+
         public bool AllotDelete(string billNo, long id, out string strResult)
         {
             bool result = false;
@@ -449,7 +423,7 @@ namespace THOK.Wms.Allot.Service
                                     allotDetail.OutBillDetail.AllotQuantity -= allotDetail.AllotQuantity;
                                     allotDetail.OutBillDetail.AllotQuantity += q2;
                                     storage.OutFrozenQuantity += q2;
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     allotDetail.CellCode = storage.Cell.CellCode;
                                     allotDetail.StorageCode = storage.StorageCode;
                                     allotDetail.AllotQuantity = q2;
@@ -605,9 +579,7 @@ namespace THOK.Wms.Allot.Service
             }
             return result;
         }
-        #endregion
 
-        #region IOutBillAllotService 成员
         public System.Data.DataTable AllotSearch(int page, int rows, string billNo)
         {
             System.Data.DataTable dt = null;
@@ -665,7 +637,6 @@ namespace THOK.Wms.Allot.Service
             }
             return dt;
         }
-        #endregion
 
         #region 车载系统
         public object GetOutBillMaster()

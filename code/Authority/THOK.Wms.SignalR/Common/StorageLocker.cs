@@ -295,7 +295,7 @@ namespace THOK.Wms.SignalR.Common
         {
             try
             {
-                storages.AsParallel().ForAll(s => s.LockTag = string.Empty);
+                storages.AsParallel().ForAll(s => s.LockTag = null);
                 StorageRepository.SaveChanges();
             }
             catch (Exception)
@@ -434,7 +434,7 @@ namespace THOK.Wms.SignalR.Common
         {
             if (storage.LockTag == this.LockKey)
             {
-                storage.LockTag = string.Empty;
+                storage.LockTag = null;
             }
         }
 

@@ -129,7 +129,7 @@ namespace THOK.Wms.Allot.Service
                                             i.InBillDetail.AllotQuantity -= i.AllotQuantity;
                                         }
                                         i.Storage.InFrozenQuantity -= i.AllotQuantity;
-                                        i.Storage.LockTag = string.Empty;
+                                        i.Storage.LockTag = null;
                                     }
                                     else
                                     {
@@ -187,7 +187,7 @@ namespace THOK.Wms.Allot.Service
                         {
                             allotDetail.InBillDetail.AllotQuantity -= allotDetail.AllotQuantity;
                             allotDetail.Storage.InFrozenQuantity -= allotDetail.AllotQuantity;
-                            allotDetail.Storage.LockTag = string.Empty;
+                            allotDetail.Storage.LockTag = null;
                             ibm.InBillAllots.Remove(allotDetail);
                             InBillAllotRepository.Delete(allotDetail);
                             if (ibm.InBillAllots.Count == 0)
@@ -245,7 +245,7 @@ namespace THOK.Wms.Allot.Service
                             storage = Locker.LockEmpty(cell);
                             if (storage != null && (storage.Quantity != 0 || storage.InFrozenQuantity != 0))
                             {
-                                storage.LockTag = string.Empty;
+                                storage.LockTag = null;
                                 StorageRepository.SaveChanges();
                                 storage = null;
                             }
@@ -263,7 +263,7 @@ namespace THOK.Wms.Allot.Service
                                     allotDetail.InBillDetail.AllotQuantity += q2;
                                     storage.ProductCode = allotDetail.ProductCode;
                                     storage.InFrozenQuantity += q2;
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     allotDetail.CellCode = storage.Cell.CellCode;
                                     allotDetail.StorageCode = storage.StorageCode;
                                     allotDetail.AllotQuantity = q2;
@@ -432,7 +432,7 @@ namespace THOK.Wms.Allot.Service
                                     storage.ProductCode = ibd.ProductCode;
                                     ibm.InBillAllots.Add(billAllot);
                                     ibm.Status = "3";
-                                    storage.LockTag = string.Empty;
+                                    storage.LockTag = null;
                                     StorageRepository.SaveChanges();
                                     strResult = "手工分配成功！";
                                     result = true;
@@ -471,130 +471,91 @@ namespace THOK.Wms.Allot.Service
 	#endregion
 
         #region 手动分配入库单
-        public bool AllotAdd(string billNo, long id, string cellCode, string productname, out string strResult,out decimal allotQuantity)
-        {
-            bool result = false;
-            decimal quantity=0;
-            allotQuantity = 0;
-            var ibm = InBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo);
-            var cell = CellRepository.GetQueryable().Single(c => c.CellCode == cellCode);
-            var cell0 = CellRepository.GetQueryable();
-            var storages0 = StorageRepository.GetQueryable();
-            var cellstorage = cell0.Join(storages0, c => c.CellCode, s => s.CellCode, (c, s) => new { cell0 = c, storages0 = s });
-            var cellstorages = cellstorage.Where(c => c.cell0.CellCode == cellCode).Select(c => new {product=c.storages0.Product.ProductName }).ToArray();
-            var storages = StorageRepository.GetQueryable().FirstOrDefault(s => s.CellCode == cellCode);
-            if (storages != null)
-            {
-                quantity = storages.Quantity ;
-            }
-            var ibd = InBillDetailRepository.GetQueryable().FirstOrDefault(i => i.ID == id);
-            if (ibm != null)
-            {
-                if (string.IsNullOrEmpty(ibm.LockTag))
-                {
-                    Storage storage = Locker.LockStorage(cell);
-                    if (storage != null)
-                    {
-                        if (productname == cellstorages[0].product|| quantity == 0)
-                        {
-                            decimal q2 = ibd.BillQuantity - ibd.AllotQuantity;
-                            if (q2 > 0)
-                            {
-                                InBillAllot billAllot = null;
-                                decimal q1 = (cell.MaxQuantity >= ibd.Product.CellMaxProductQuantity ? ibd.Product.CellMaxProductQuantity : cell.MaxQuantity) * ibd.Product.Unit.Count - (storage.Quantity + storage.InFrozenQuantity);
-                                if (q2 <= q1)
-                                {
-                                    try
-                                    {
-                                        billAllot = new InBillAllot()
-                                        {
-                                            BillNo = billNo,
-                                            InBillDetailId = ibd.ID,
-                                            ProductCode = ibd.ProductCode,
-                                            CellCode = storage.CellCode,
-                                            StorageCode = storage.StorageCode,
-                                            UnitCode = ibd.UnitCode,
-                                            AllotQuantity = q2,
-                                            RealQuantity = 0,
-                                            Status = "0"
-                                        };
-                                        allotQuantity = q2 /ibd.Unit.Count;
-                                        ibd.AllotQuantity += q2;
-                                        storage.InFrozenQuantity += q2;
-                                        storage.ProductCode = ibd.ProductCode;
-                                        ibm.InBillAllots.Add(billAllot);
-                                        ibm.Status = "3";
-                                        storage.LockTag = string.Empty;
-                                        StorageRepository.SaveChanges();
-                                        strResult = "";
-                                        result = true;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        strResult = "保存添加失败，订单或储位其他人正在操作！";
-                                        allotQuantity =0;
-                                    }
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        billAllot = new InBillAllot()
-                                        {
-                                            BillNo = billNo,
-                                            InBillDetailId = ibd.ID,
-                                            ProductCode = ibd.ProductCode,
-                                            CellCode = storage.CellCode,
-                                            StorageCode = storage.StorageCode,
-                                            UnitCode = ibd.UnitCode,
-                                            AllotQuantity = q1,
-                                            RealQuantity = 0,
-                                            Status = "0"
-                                        };
-                                        allotQuantity = q1 / ibd.Unit.Count;
-                                        ibd.AllotQuantity += q1;
-                                        storage.InFrozenQuantity += q1;
-                                        storage.ProductCode = ibd.ProductCode;
-                                        ibm.InBillAllots.Add(billAllot);
-                                        ibm.Status = "3";
-                                        storage.LockTag = string.Empty;
-                                        StorageRepository.SaveChanges();
-                                        strResult = "";
-                                        result = true;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        strResult = "保存添加失败，订单或储位其他人正在操作！";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                strResult = "分配数量必须大于0！";
-                            }
-                        }
-                        else
-                        {
-                            strResult = "该货位已存在其他产品，不能放入该产品！";
-                        }
 
+        public bool AllotAdd(string billNo, long id, string storageCode, string productname, out string strResult, out decimal allotQuantity)
+        {
+            allotQuantity = 0;
+
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    var ibm = InBillMasterRepository.GetQueryable().Single(i => i.BillNo == billNo);
+                    var ibd = InBillDetailRepository.GetQueryable().Single(i => i.ID == id);
+                    var cell = CellRepository.GetQueryable().Single(c => c.Storages.Any(s => s.StorageCode == storageCode));
+                    var storage = StorageRepository.GetQueryable().Single(s => s.StorageCode == storageCode);
+
+                    if (ibm == null)
+                    {
+                        strResult = "当前订单状态不是已分配，或当前订单不存在！";
+                        return false;
                     }
-                    else
+
+                    if (!string.IsNullOrEmpty(ibm.LockTag))
+                    {
+                        strResult = "当前订单其他人正在操作，请稍候重试！";
+                        return false;
+                    }
+
+                    if (!(storage != null && string.IsNullOrEmpty(storage.Cell.LockTag) && string.IsNullOrEmpty(storage.LockTag)))
                     {
                         strResult = "当前选择的储位不可用，或者分配数量超过最大托盘数，其他人正在操作！";
+                        return false;
+                    }   
+
+                    if (cell.IsMultiBrand != "1" && cell.Storages.Any(s => s.Quantity > 0 && s.ProductCode != productname))
+                    {
+                        strResult = "该货位是单一品牌货位，已存在其他产品，不能放入该产品！";
+                        return false;
                     }
-                }
-                else
-                {
-                    strResult = "当前订单其他人正在操作，请稍候重试！";
+
+                    decimal q1 = ibd.BillQuantity - ibd.AllotQuantity;
+                    if (q1 <= 0)
+                    {
+                        strResult = "该产品已无分配任务(分配完成)！";
+                        return false;
+                    }
+
+                    InBillAllot billAllot = null;
+                    decimal q2 = (cell.MaxQuantity >= ibd.Product.CellMaxProductQuantity ? ibd.Product.CellMaxProductQuantity : cell.MaxQuantity) * ibd.Product.Unit.Count - (storage.Quantity + storage.InFrozenQuantity);
+                    allotQuantity = q2 < q1 ? q2 : q1;
+
+                    billAllot = new InBillAllot()
+                    {
+                        BillNo = billNo,
+                        InBillDetailId = ibd.ID,
+                        ProductCode = ibd.ProductCode,
+                        CellCode = storage.CellCode,
+                        StorageCode = storage.StorageCode,
+                        UnitCode = ibd.UnitCode,
+                        AllotQuantity = allotQuantity,
+                        RealQuantity = 0,
+                        Status = "0"
+                    };
+                    
+                    ibd.AllotQuantity += allotQuantity;
+                    storage.InFrozenQuantity += allotQuantity;
+                    storage.ProductCode = ibd.ProductCode;
+                    ibm.InBillAllots.Add(billAllot);
+                    ibm.Status = "3";
+                    storage.LockTag = null;
+                    StorageRepository.SaveChanges();
+
+                    strResult = "保存修改成功！";
+                    allotQuantity = (storage.Quantity + storage.InFrozenQuantity) / storage.Product.Unit.Count;
+                    scope.Complete();
+
+                    return true;
                 }
             }
-            else
+            catch (Exception e)
             {
-                strResult = "当前订单状态不是已分配，或当前订单不存在！";
+                strResult = "保存添加失败，订单或储位其他人正在操作！" + e.Message;
+                allotQuantity = 0;
+                return false;
             }
-            return result;
         }
+        
         #endregion
 
         #region 打印

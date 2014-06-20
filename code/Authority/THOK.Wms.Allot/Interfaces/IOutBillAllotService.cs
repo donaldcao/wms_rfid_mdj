@@ -21,7 +21,7 @@ namespace THOK.Wms.Allot.Interfaces
 
         bool AllotAdd(string billNo, long id,string productCode,string cellCode, decimal allotQuantity, out string strResult,string storageCode);
 
-        bool AllotAdd(string billNo, long id, string cellCode, string productName, out string strResult,out decimal allotQuantity);
+        bool AllotAdd(string billNo, long id, string storageCode, string productName, out string strResult, out decimal allotQuantity);
 
         bool AllotCancel(string billNo,out string strResult);
 

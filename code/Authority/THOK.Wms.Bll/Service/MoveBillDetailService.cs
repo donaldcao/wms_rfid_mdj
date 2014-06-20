@@ -171,8 +171,8 @@ namespace THOK.Wms.Bll.Service
                             inStorage.ProductCode = moveBillDetail.ProductCode;
                             inStorage.InFrozenQuantity += moveBillDetail.RealQuantity * unit.Count;
                             mbd.Status = "0";
-                            inStorage.LockTag = string.Empty;
-                            outStorage.LockTag = string.Empty;
+                            inStorage.LockTag = null;
+                            outStorage.LockTag = null;
                             MoveBillDetailRepository.Add(mbd);
                             MoveBillDetailRepository.SaveChanges();
                             result = true;
@@ -363,8 +363,8 @@ namespace THOK.Wms.Bll.Service
                     mbd.UnitCode = moveBillDetail.UnitCode;
                     mbd.RealQuantity = moveBillDetail.RealQuantity * unit.Count;
                     mbd.Status = "0";
-                    outStorage.LockTag = string.Empty;
-                    inStorage.LockTag = string.Empty;
+                    outStorage.LockTag = null;
+                    inStorage.LockTag = null;
                     inStorage.ProductCode = product.ProductCode;
                     MoveBillDetailRepository.SaveChanges();
                     result = true;

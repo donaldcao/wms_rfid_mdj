@@ -143,23 +143,26 @@ namespace THOK.SMS.Optimize.Service
                                 BagQuantity.Add(bagCount, orderQuantity % 25 + (splitQuantity == 20 ? 5 : 0));
                             }
                         }
-                        for (int i = 1; i <= bagCount; i++)
-                        {
-                            packNo += 1;
-                            SortOrderAllotMaster addSortOrderAllotMaster = new SortOrderAllotMaster();
-                            addSortOrderAllotMaster.BatchSortId = batchSortCode;
-                            addSortOrderAllotMaster.OrderId = singleOrder.OrderID;
-                            addSortOrderAllotMaster.PackNo = packNo;
-                            addSortOrderAllotMaster.CustomerOrder = customerOrder;
-                            addSortOrderAllotMaster.CustomerDeliverOrder = customerDeliverOrder;
-                            addSortOrderAllotMaster.ExportNo = 0;
-                            addSortOrderAllotMaster.Quantity = BagQuantity[i];
-                            addSortOrderAllotMaster.StartTime = DateTime.Now;
-                            addSortOrderAllotMaster.FinishTime = DateTime.Now;
-                            addSortOrderAllotMaster.Status = "01";
-                            addSortOrderAllotMaster.OrderMasterCode = batchSortCode + "-" + packNo;
-                            SortOrderAllotMasterRepository.Add(addSortOrderAllotMaster);
-                        }
+                        #region 遍历插入主表
+                        //for (int i = 1; i <= bagCount; i++)
+                        //{
+                        //    packNo += 1;
+                        //    SortOrderAllotMaster addSortOrderAllotMaster = new SortOrderAllotMaster();
+                        //    addSortOrderAllotMaster.BatchSortId = batchSortCode;
+                        //    addSortOrderAllotMaster.OrderId = singleOrder.OrderID;
+                        //    addSortOrderAllotMaster.PackNo = packNo;
+                        //    addSortOrderAllotMaster.CustomerOrder = customerOrder;
+                        //    addSortOrderAllotMaster.CustomerDeliverOrder = customerDeliverOrder;
+                        //    addSortOrderAllotMaster.ExportNo = 0;
+                        //    addSortOrderAllotMaster.Quantity = BagQuantity[i];
+                        //    addSortOrderAllotMaster.StartTime = DateTime.Now;
+                        //    addSortOrderAllotMaster.FinishTime = DateTime.Now;
+                        //    addSortOrderAllotMaster.Status = "01";
+                        //    addSortOrderAllotMaster.OrderMasterCode = batchSortCode + "-" + packNo;
+                        //    SortOrderAllotMasterRepository.Add(addSortOrderAllotMaster);
+                        //}
+                        #endregion
+                        
                         //明细拆包
                         foreach (var singleOrderDetail in beAllotOrderDetails)
                         {
@@ -196,7 +199,7 @@ namespace THOK.SMS.Optimize.Service
                                     var productRemainquantity = channelRemainquantity
                                         .Where(c => channelAllotCodes.Contains(c.Key))
                                         .OrderByDescending(g => g.Value)
-                                        .ToDictionary(c=>c.Key,c=>c.Value);
+                                        .ToDictionary(c => c.Key, c => c.Value);
                                     var realAllotChannel = productRemainquantity
                                         .Where(p => p.Value % 50 > 0);
                                     string channelAllotCode;
@@ -227,12 +230,12 @@ namespace THOK.SMS.Optimize.Service
                                     addSortOrderAllotDetail.OrderDetailCode = batchSortCode + "-" + detailPackNo + "-" + productCode;
                                     SortOrderAllotDetailRepository.Add(addSortOrderAllotDetail);
                                 } while (allotQuantity > 0);
-                            } while (quantity > 0); 
+                            } while (quantity > 0);
                         }
                     }
                 }
             }
-            SortOrderAllotMasterRepository.SaveChanges();
+            //SortOrderAllotMasterRepository.SaveChanges();
             SortOrderAllotDetailRepository.SaveChanges();
             strResult = "false";
             return true;

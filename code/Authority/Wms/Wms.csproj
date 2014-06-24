@@ -294,6 +294,11 @@
     <Content Include="Content\Images\login_bg.jpg" />
     <Content Include="Content\Images\login_bg02.jpg" />
     <Content Include="Content\Images\noscript.gif" />
+    <Content Include="Content\Images\仓储管理系统\banner.jpg" />
+    <Content Include="Content\Images\分拣管理系统\banner.jpg" />
+    <Content Include="Content\Images\分拣管理信息系统\banner.jpg" />
+    <Content Include="Content\Images\权限管理系统\banner.jpg" />
+    <Content Include="Content\Images\自动化仓储管理系统\banner.jpg" />
     <Content Include="Content\Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Content\Scripts\ckeditor\ckeditor.js" />
     <Content Include="Content\Scripts\ckeditor\config.js" />

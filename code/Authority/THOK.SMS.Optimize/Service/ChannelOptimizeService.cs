@@ -52,15 +52,19 @@ namespace THOK.SMS.Optimize.Service
         public bool ChannelAllotOptimize(string orderDate ,out string strResult)
         {
             DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-            IQueryable<BatchSort> batchsortquery = BatchSortRepository.GetQueryable();
-            var batchsorts = batchsortquery.Where(a => a.batch.OrderDate == date).Select(b => b.BatchSortId).Distinct().ToArray();
-            IQueryable<SystemParameter> systemParameterQuery = SystemParameterRepository.GetQueryable();
+            var batchSortQuery = BatchSortRepository.GetQueryable();
+            var systemParameterQuery = SystemParameterRepository.GetQueryable();
+            var channelQuery = ChannelRepository.GetQueryable().ToArray();
+            var channelAllotQuery = ChannelAllotRepository.GetQueryable();
+            var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable().Where(s=>s.Product.IsAbnormity=="0").ToArray();
+            var batchSorts = batchSortQuery.Where(a => a.batch.OrderDate == date).Select(b => b.BatchSortId).Distinct();
+
             //大小品种烟道划分比例
             double ChannelAllotScale = Convert.ToDouble(systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("ChannelAllotScale")).ParameterValue);
-            foreach (int batchSortCode in batchsorts)//遍历每条批次分拣线
+            //遍历每条批次分拣线
+            foreach (int batchSortCode in batchSorts)
             {
-                IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
-                if (channelallotquery.Where(a => a.BatchSortId == batchSortCode).Count()>0)
+                if (channelAllotQuery.Where(a => a.BatchSortId == batchSortCode).Count()>0)
                 {
                     continue;
                 }
@@ -69,9 +73,8 @@ namespace THOK.SMS.Optimize.Service
                     .Select(a=>a.DeliverLineCode).ToArray();
                 if (deliverLines.Count() > 0)
                 {
-                    IQueryable<SortOrderDetail> sortorderdetailquery = SortOrderDetailRepository.GetQueryable();
                     //分拣线分拣品牌及数量集
-                    var beAllotProducts = sortorderdetailquery
+                    var beAllotProducts = sortOrderDetailQuery
                         .Where(a => deliverLines.Contains(a.SortOrder.DeliverLineCode))
                         .GroupBy(a => new { a.ProductCode, a.ProductName })
                         .Select(s => new
@@ -111,11 +114,11 @@ namespace THOK.SMS.Optimize.Service
                         bigQuantitys.Add(item.Key, item.Value);
                     }
 
-                    string sortLineCode = batchsortquery.Where(b => b.BatchSortId == batchSortCode).Select(b => b.SortingLineCode).FirstOrDefault();
-                    IQueryable<Channel> channelquery = ChannelRepository.GetQueryable();
-                    var canAllotBigChannels = channelquery.Where(c => (c.ChannelType == "3" || c.ChannelType == "4") && c.SortingLineCode.Equals(sortLineCode) && c.Status=="1")
+                    string sortLineCode = batchSortQuery.Where(b => b.BatchSortId == batchSortCode).Select(b => b.SortingLineCode).FirstOrDefault();
+                    var canAllotBigChannels = channelQuery.Where(c => (c.ChannelType == "3" || c.ChannelType == "4") && c.SortingLineCode.Equals(sortLineCode) && c.Status=="1")
                         .OrderBy(c => c.OrderNo);
                     int canAllotBigChannelCount = canAllotBigChannels.Count();
+
                     //按可用大品牌烟道进行二次划分
                     if (canAllotBigChannelCount < bigCount)
                     {
@@ -159,10 +162,11 @@ namespace THOK.SMS.Optimize.Service
                             tempChannelCount += bigs[productCode];
                         }
                     }
-                    if (tempChannelCount == canAllotBigChannelCount)//验证分配是否正确  是则继续进行大品种单品牌多烟道数量拆分
+                    //验证分配是否正确  是则继续进行大品种单品牌多烟道数量拆分
+                    if (tempChannelCount == canAllotBigChannelCount)
                     {
                         //大品种烟道优化（New）   采用大品种烟道组A,B(C...)平均分配原则
-                        var channelGroups = channelquery.Where(c => c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
+                        var channelGroups = channelQuery.Where(c => c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
                             .Select(c => c.GroupNo).Distinct();
                         Dictionary<int, int> groupQuantity = new Dictionary<int, int>();
                         Dictionary<int, int> groupCount = new Dictionary<int, int>();
@@ -206,8 +210,8 @@ namespace THOK.SMS.Optimize.Service
                             ChannelAllot addChannelAllot = new ChannelAllot();
                             addChannelAllot.BatchSortId = batchSortCode;
                             addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
-                            addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
-                            addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotBigChannel.ChannelCode).FirstOrDefault();
+                            addChannelAllot.batchSort = batchSortQuery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                            addChannelAllot.channel = channelQuery.Where(c => c.ChannelCode == beAllotBigChannel.ChannelCode).FirstOrDefault();
                             addChannelAllot.InQuantity = 0;
                             addChannelAllot.OutQuantity = 0;
                             addChannelAllot.RemainQuantity = 0;
@@ -222,6 +226,7 @@ namespace THOK.SMS.Optimize.Service
                             groupQuantity[groupNo] += quantity;
                             groupCount[groupNo] += 1;
                         }
+
                         #region 大品种优化old   注释不采用  适合单烟道组
                         //foreach (var beAllotBigChannel in canAllotBigChannels)
                         //{
@@ -265,6 +270,7 @@ namespace THOK.SMS.Optimize.Service
                         //    ChannelAllotRepository.SaveChanges();
                         //}
                         #endregion
+
                         //小品种增加大品种零烟
                         foreach (var item in bigQuantitys)
                         {
@@ -281,10 +287,10 @@ namespace THOK.SMS.Optimize.Service
                             smallProductCodeArray[itemCount - 1] = item.Key;
                         }
                         //按划分系数划分大小品牌
-                        var canAllotMixChannels = channelquery.Where(c => (c.ChannelType == "5") && c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
+                        var canAllotMixChannels = channelQuery.Where(c => (c.ChannelType == "5") && c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
                         .OrderBy(c => c.OrderNo);
                         int canAllotMixChannelCount = canAllotMixChannels.Count();
-                        var canAllotSingleSmallChannels = channelquery.Where(c => (c.ChannelType == "2") && c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
+                        var canAllotSingleSmallChannels = channelQuery.Where(c => (c.ChannelType == "2") && c.SortingLineCode.Equals(sortLineCode) && c.Status == "1")
                         .OrderBy(c => c.OrderNo);
                         int canAllotSmallChannelCount = canAllotSingleSmallChannels.Count();
                         if (canAllotMixChannelCount == 0 && canAllotSmallChannelCount < smallCount)
@@ -306,8 +312,8 @@ namespace THOK.SMS.Optimize.Service
                             ChannelAllot addChannelAllot = new ChannelAllot();
                             addChannelAllot.BatchSortId = batchSortCode;
                             addChannelAllot.ChannelCode = beAllotSingleChannel.ChannelCode;
-                            addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
-                            addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == beAllotSingleChannel.ChannelCode).FirstOrDefault();
+                            addChannelAllot.batchSort = batchSortQuery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                            addChannelAllot.channel = channelQuery.Where(c => c.ChannelCode == beAllotSingleChannel.ChannelCode).FirstOrDefault();
                             addChannelAllot.InQuantity = 0;
                             addChannelAllot.OutQuantity = 0;
                             addChannelAllot.RemainQuantity = 0;
@@ -343,8 +349,8 @@ namespace THOK.SMS.Optimize.Service
                                         ChannelAllot addChannelAllot = new ChannelAllot();
                                         addChannelAllot.BatchSortId = batchSortCode;
                                         addChannelAllot.ChannelCode = channelCode;
-                                        addChannelAllot.batchSort = batchsortquery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
-                                        addChannelAllot.channel = channelquery.Where(c => c.ChannelCode == channelCode).FirstOrDefault();
+                                        addChannelAllot.batchSort = batchSortQuery.Where(b => b.BatchSortId == batchSortCode).FirstOrDefault();
+                                        addChannelAllot.channel = channelQuery.Where(c => c.ChannelCode == channelCode).FirstOrDefault();
                                         addChannelAllot.InQuantity = 0;
                                         addChannelAllot.OutQuantity = 0;
                                         addChannelAllot.RemainQuantity = 0;
@@ -370,6 +376,7 @@ namespace THOK.SMS.Optimize.Service
             strResult = "false";
             return true;
         }
+
         /// <summary>
         /// 获取日期批次下的分拣线信息  
         /// </summary>
@@ -408,10 +415,10 @@ namespace THOK.SMS.Optimize.Service
 
         public object GetChannelAllot(string batchSortId)
         {
-            IQueryable<ChannelAllot> channelallotquery = ChannelAllotRepository.GetQueryable();
+            var channelAllotQuery = ChannelAllotRepository.GetQueryable();
             int bSortId=Convert.ToInt32(batchSortId);
-            var channelallots = channelallotquery.Where(c => c.BatchSortId == bSortId).OrderBy(c=>c.channel.Address).ToArray();
-            return channelallots;
+            var channelAllots = channelAllotQuery.Where(c => c.BatchSortId == bSortId).OrderBy(c=>c.channel.Address).ToArray();
+            return channelAllots;
         }
     }
 }

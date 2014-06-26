@@ -2,7 +2,7 @@
     function deleteClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            url = '/BatchSort/Delete/?BatchSortId=' + row.ID;
+            url = '/SortBatch/Delete/?SortBatchId=' + row.ID;
             showDialog('删除');
             deleteKey = true;
             addDialog.dialog('open');

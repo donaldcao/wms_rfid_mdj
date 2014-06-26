@@ -7,7 +7,7 @@
     function select() {
         var queryParams = $('#master').datagrid('options').queryParams;
         queryParams.SortLineAllotCode = $("#search-SortLineAllotCode").val();
-        queryParams.BatchSortId = $("#search-BatchSortId").val();
+        queryParams.SortBatchId = $("#search-SortBatchId").val();
         queryParams.DeliverLineCode = $("#search-DeliverLineCode").val();
         queryParams.Status = $("#search-Status").combo('getValue');
         $('#master').datagrid('options').queryParams = queryParams;
@@ -28,7 +28,7 @@
                 </tr>
 @*                <tr>
                     <td width="100">批次分拣编号：</td>
-                    <td><input id="search-BatchSortId" /></td>
+                    <td><input id="search-SortBatchId" /></td>
                 </tr>*@
                 <tr>
                     <td width="100">送货线路编码：</td>

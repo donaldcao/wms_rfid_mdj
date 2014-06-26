@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using THOK.Common.Ef.MappingStrategy;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace THOK.SMS.DbModel.Mapping
 {
@@ -13,15 +13,13 @@ namespace THOK.SMS.DbModel.Mapping
             : base("Sms")
         {
             // Primary Key
-            this.HasKey(t => t.OrderDetailCode);
+            this.HasKey(t => t.Id);
 
             // Properties
-            this.Property(t => t.OrderDetailCode)
-                .IsRequired()
-                .HasMaxLength(50);
-            this.Property(t => t.OrderMasterCode)
-                .IsRequired()
-                .HasMaxLength(50);
+            this.Property(t => t.Id)
+                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            this.Property(t => t.MasterId)
+                .IsRequired();
             this.Property(t => t.ChannelCode)
                 .IsRequired()
                 .HasMaxLength(20);
@@ -35,8 +33,8 @@ namespace THOK.SMS.DbModel.Mapping
                 .IsRequired();
 
             // Table & Column Mappings
-            this.Property(t => t.OrderDetailCode).HasColumnName(ColumnMap.Value.To("OrderDetailCode"));
-            this.Property(t => t.OrderMasterCode).HasColumnName(ColumnMap.Value.To("OrderMasterCode"));
+            this.Property(t => t.Id).HasColumnName(ColumnMap.Value.To("Id"));
+            this.Property(t => t.MasterId).HasColumnName(ColumnMap.Value.To("MasterId"));
             this.Property(t => t.ChannelCode).HasColumnName(ColumnMap.Value.To("ChannelCode"));
             this.Property(t => t.ProductCode).HasColumnName(ColumnMap.Value.To("ProductCode"));
             this.Property(t => t.ProductName).HasColumnName(ColumnMap.Value.To("ProductName"));
@@ -45,7 +43,7 @@ namespace THOK.SMS.DbModel.Mapping
             // Relationships
             this.HasRequired(t => t.sortOrderAllotMaster)
                 .WithMany(t => t.SortOrderAllotDetails)
-                .HasForeignKey(d => d.OrderMasterCode)
+                .HasForeignKey(d => d.MasterId)
                 .WillCascadeOnDelete(false);
             this.HasRequired(t => t.channel)
                 .WithMany(t => t.SortOrderAllotDetails)

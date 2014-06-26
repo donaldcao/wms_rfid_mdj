@@ -18,9 +18,6 @@ namespace THOK.SMS.Bll.Service
         public IChannelRepository ChannelRepository { get; set; }
 
         [Dependency]
-        public ILedRepository LedRepository { get; set; }
-
-        [Dependency]
         public IProductRepository ProductRepository { get; set; }
 
         [Dependency]
@@ -40,40 +37,40 @@ namespace THOK.SMS.Bll.Service
         /// <returns></returns>
         public object GetDetails(int page, int rows, Channel channel)
         {
-            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            IQueryable<Led> ledQuery = LedRepository.GetQueryable();
-            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+            return null;
+            //IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
+            //IQueryable<Product> productQuery = ProductRepository.GetQueryable();
+            //IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
 
-            var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channel.ChannelName)
-                && a.ChannelType.Contains(channel.ChannelType) && a.Status.Contains(channel.Status));
-            if (channel.GroupNo != 0)
-            {
-                channelDetails = channelDetails.Where(a => a.GroupNo == channel.GroupNo);
-            }
-            int total = channelDetails.Count();
-            var channelArray = channelDetails.OrderBy(a => a.ChannelCode).Skip((page - 1) * rows).Take(rows)
-                .Select(c => new
-                {
-                    c.ChannelCode,
-                    c.SortingLineCode,
-                    SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
-                    c.ChannelName,
-                    ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
-                    c.LedCode,
-                    LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
-                    c.DefaultProductCode,
-                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
-                    c.RemainQuantity,
-                    c.MiddleQuantity,
-                    c.MaxQuantity,
-                    GroupNo = c.GroupNo == 1 ? "A线" : "B线",
-                    c.OrderNo,
-                    c.Address,
-                    c.CellCode,
-                    Status = c.Status == "1" ? "可用" : "不可用"
-                });
-            return new { total, rows = channelArray.ToArray() };
+            //var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channel.ChannelName)
+            //    && a.ChannelType.Contains(channel.ChannelType) && a.Status.Contains(channel.Status));
+            //if (channel.GroupNo != 0)
+            //{
+            //    channelDetails = channelDetails.Where(a => a.GroupNo == channel.GroupNo);
+            //}
+            //int total = channelDetails.Count();
+            //var channelArray = channelDetails.OrderBy(a => a.ChannelCode).Skip((page - 1) * rows).Take(rows)
+            //    .Select(c => new
+            //    {
+            //        c.ChannelCode,
+            //        c.SortingLineCode,
+            //        SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
+            //        c.ChannelName,
+            //        ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
+            //        c.LedCode,
+            //        LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
+            //        c.DefaultProductCode,
+            //        DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
+            //        c.RemainQuantity,
+            //        c.MiddleQuantity,
+            //        c.MaxQuantity,
+            //        GroupNo = c.GroupNo == 1 ? "A线" : "B线",
+            //        c.OrderNo,
+            //        c.Address,
+            //        c.CellCode,
+            //        Status = c.Status == "1" ? "可用" : "不可用"
+            //    });
+            //return new { total, rows = channelArray.ToArray() };
         }
 
         /// <summary>
@@ -125,16 +122,16 @@ namespace THOK.SMS.Bll.Service
                     newChannel.ChannelName = channel.ChannelName;
                     newChannel.ChannelType = channel.ChannelType;
                     newChannel.SortingLineCode = channel.SortingLineCode;
-                    newChannel.LedCode = channel.LedCode;
-                    newChannel.DefaultProductCode = channel.DefaultProductCode;
-                    newChannel.RemainQuantity = channel.RemainQuantity;
-                    newChannel.MiddleQuantity = channel.MiddleQuantity;
-                    newChannel.MaxQuantity = channel.MaxQuantity;
-                    newChannel.GroupNo = channel.GroupNo;
-                    newChannel.OrderNo = channel.OrderNo;
-                    newChannel.Address = channel.Address;
-                    newChannel.CellCode = channel.CellCode;
-                    newChannel.Status = channel.Status;
+                    //newChannel.LedCode = channel.LedCode;
+                    //newChannel.DefaultProductCode = channel.DefaultProductCode;
+                    //newChannel.RemainQuantity = channel.RemainQuantity;
+                    //newChannel.MiddleQuantity = channel.MiddleQuantity;
+                    //newChannel.MaxQuantity = channel.MaxQuantity;
+                    //newChannel.GroupNo = channel.GroupNo;
+                    //newChannel.OrderNo = channel.OrderNo;
+                    //newChannel.Address = channel.Address;
+                    //newChannel.CellCode = channel.CellCode;
+                    //newChannel.Status = channel.Status;
 
                     ChannelRepository.SaveChanges();
                     result = true;
@@ -184,37 +181,36 @@ namespace THOK.SMS.Bll.Service
 
         public DataTable GetChannel(string channelName,string channelType,string status,string groupNo)
         {
-            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            IQueryable<Led> ledQuery = LedRepository.GetQueryable();
-            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
-            var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channelName)
-                && a.ChannelType.Contains(channelType) && a.Status.Contains(status));
-            if (groupNo != "")
-            {
-                int no;
-                Int32.TryParse(groupNo, out no);
-                if (no != 0)
-                {
-                    channelDetails = channelDetails.Where(a => a.GroupNo == no);
-                }
-            }
-            var channelArray = channelDetails.OrderBy(c=>c.ChannelCode).Select(c => new
-                {
-                    c.ChannelCode,
-                    SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
-                    c.ChannelName,
-                    ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
-                    LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
-                    c.DefaultProductCode,
-                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
-                    c.RemainQuantity,
-                    c.MiddleQuantity,
-                    c.MaxQuantity,
-                    GroupNo = c.GroupNo == 1 ? "A线" : "B线",
-                    c.OrderNo,
-                    Status = c.Status == "1" ? "可用" : "不可用"
-                }).ToArray();
+            //IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
+            //IQueryable<Product> productQuery = ProductRepository.GetQueryable();
+            //IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+            //var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channelName)
+            //    && a.ChannelType.Contains(channelType) && a.Status.Contains(status));
+            //if (groupNo != "")
+            //{
+            //    int no;
+            //    Int32.TryParse(groupNo, out no);
+            //    if (no != 0)
+            //    {
+            //        channelDetails = channelDetails.Where(a => a.GroupNo == no);
+            //    }
+            //}
+            //var channelArray = channelDetails.OrderBy(c=>c.ChannelCode).Select(c => new
+            //    {
+            //        c.ChannelCode,
+            //        SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
+            //        c.ChannelName,
+            //        ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
+            //        LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
+            //        c.DefaultProductCode,
+            //        DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
+            //        c.RemainQuantity,
+            //        c.MiddleQuantity,
+            //        c.MaxQuantity,
+            //        GroupNo = c.GroupNo == 1 ? "A线" : "B线",
+            //        c.OrderNo,
+            //        Status = c.Status == "1" ? "可用" : "不可用"
+            //    }).ToArray();
             DataTable dt = new DataTable();
             dt.Columns.Add("烟道代码", typeof(string));
             dt.Columns.Add("烟道名称", typeof(string));
@@ -229,26 +225,26 @@ namespace THOK.SMS.Bll.Service
             dt.Columns.Add("组号", typeof(string));
             dt.Columns.Add("顺序号", typeof(string));
             dt.Columns.Add("状态", typeof(string));
-            foreach (var item in channelArray)
-            {
-                dt.Rows.Add
-                    (
-                        item.ChannelCode,
-                        item.ChannelName,
-                        item.ChannelType,
-                        item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],
-                        item.LedName.ToArray().Length <= 0 ? "" : item.LedName.ToArray()[0],
-                        item.DefaultProductCode,
-                        item.DefaultProductName.ToArray().Length <= 0 ? "" : item.DefaultProductName.ToArray()[0],
-                        item.RemainQuantity,
-                        item.MiddleQuantity,
-                        item.MaxQuantity,
-                        item.GroupNo,
-                        item.OrderNo,
-                        item.Status
-                    );
+            //foreach (var item in channelArray)
+            //{
+            //    dt.Rows.Add
+            //        (
+            //            item.ChannelCode,
+            //            item.ChannelName,
+            //            item.ChannelType,
+            //            item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],
+            //            item.LedName.ToArray().Length <= 0 ? "" : item.LedName.ToArray()[0],
+            //            item.DefaultProductCode,
+            //            item.DefaultProductName.ToArray().Length <= 0 ? "" : item.DefaultProductName.ToArray()[0],
+            //            item.RemainQuantity,
+            //            item.MiddleQuantity,
+            //            item.MaxQuantity,
+            //            item.GroupNo,
+            //            item.OrderNo,
+            //            item.Status
+            //        );
 
-            }
+            //}
             return dt;
         }
     }

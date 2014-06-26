@@ -3,7 +3,7 @@ using THOK.SMS.DbModel;
 
 namespace THOK.SMS.Dal.Interfaces
 {
-    public interface IBatchSortRepository : IRepository<BatchSort>
+    public interface IHandSupplyRepository : IRepository<HandSupply>
     {
 
     }

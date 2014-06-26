@@ -5,22 +5,23 @@ using System.Text;
 
 namespace THOK.SMS.DbModel
 {
-    public class SortSupply
+    public class HandSupply
     {
-        public string SortSupplyCode { get; set; }
-        public int BatchSortId { get; set; }
+        public int Id { get; set; }
+        public int SortBatchId { get; set; }
         public int SupplyId { get; set; }
+        public int SupplyBatch { get; set; }
         public int PackNo { get; set; }
         public string ChannelCode { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
+        public int Quantity { get; set; }
 
-        public BatchSort batchSort { get; set; }
+        public SortBatch sortBatch { get; set; }
         public Channel channel { get; set; }
 
     }
 }
-
 
 
 

@@ -5,25 +5,24 @@ using System.Text;
 
 namespace THOK.SMS.DbModel
 {
-    public class BatchSort
+    public class SortBatch
     {
-        public BatchSort()
+        public SortBatch()
         {
-            this.DeliverLineAllots = new List<DeliverLineAllot>();
             this.ChannelAllots = new List<ChannelAllot>();
-            this.SortSupplys = new List<SortSupply>();
+            this.HandSupplys = new List<HandSupply>();
             this.SortOrderAllotMasters = new List<SortOrderAllotMaster>();
         }
-        public int BatchSortId { get; set; }
-        public int BatchId { get; set; }
+        public int Id { get; set; }
+        public DateTime OrderDate { get; set; }
+        public int BatchNo { get; set; }
         public string SortingLineCode { get; set; }
+        public int NoOneBatchNo { get; set; }
+        public DateTime SortDate { get; set; }
         public string Status { get; set; }
 
-        public Batch batch { get; set; }
-
-        public virtual ICollection<DeliverLineAllot> DeliverLineAllots { get; set; }
         public virtual ICollection<ChannelAllot> ChannelAllots { get; set; }
-        public virtual ICollection<SortSupply> SortSupplys { get; set; }
+        public virtual ICollection<HandSupply> HandSupplys { get; set; }
         public virtual ICollection<SortOrderAllotMaster> SortOrderAllotMasters { get; set; }
 
     }

@@ -4,7 +4,7 @@ using THOK.SMS.Dal.Interfaces;
 
 namespace THOK.SMS.Dal.EntityRepository
 {
-    public class LedRepository : RepositoryBase<Led>, ILedRepository
+    public class HandSupplyRepository : RepositoryBase<HandSupply>, IHandSupplyRepository
     {
 
     }

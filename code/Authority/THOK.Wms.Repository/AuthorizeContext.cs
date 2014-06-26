@@ -147,15 +147,15 @@ namespace THOK.Wms.Repository
             #endregion
 
             #region sms
-            modelBuilder.Configurations.Add(new BatchMap());
-            modelBuilder.Configurations.Add(new BatchSortMap());
-            modelBuilder.Configurations.Add(new ChannelMap());
-            modelBuilder.Configurations.Add(new ChannelAllotMap());
-            modelBuilder.Configurations.Add(new LedMap());
-            modelBuilder.Configurations.Add(new DeliverLineAllotMap());
-            modelBuilder.Configurations.Add(new SortOrderAllotMasterMap());
-            modelBuilder.Configurations.Add(new SortOrderAllotDetailMap());
-            modelBuilder.Configurations.Add(new SortSupplyMap());
+            //modelBuilder.Configurations.Add(new BatchMap());
+            //modelBuilder.Configurations.Add(new SortBatchMap());
+            //modelBuilder.Configurations.Add(new ChannelMap());
+            //modelBuilder.Configurations.Add(new ChannelAllotMap());
+            //modelBuilder.Configurations.Add(new LedMap());
+            //modelBuilder.Configurations.Add(new DeliverLineAllotMap());
+            //modelBuilder.Configurations.Add(new SortOrderAllotMasterMap());
+            //modelBuilder.Configurations.Add(new SortOrderAllotDetailMap());
+            //modelBuilder.Configurations.Add(new SortSupplyMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

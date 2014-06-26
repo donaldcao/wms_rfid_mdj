@@ -4913,7 +4913,7 @@ namespace THOK.Wms.Repository.Migrations
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
                         ModuleName = "分拣作业调度",
                         ShowOrder = 3,
-                        ModuleURL = "/BatchSortDispatch/",
+                        ModuleURL = "/SortBatchDispatch/",
                         IndicateImage = "icon-son_SortWork",
                         DeskTopImage = "image-son_SortWork",
                         System = system,

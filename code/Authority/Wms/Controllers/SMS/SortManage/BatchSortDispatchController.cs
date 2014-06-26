@@ -6,10 +6,10 @@ using System.Web.Mvc;
 
 namespace Wms.Controllers.SMS.SortManage
 {
-    public class BatchSortDispatchController : Controller
+    public class SortBatchDispatchController : Controller
     {
         //
-        // GET: /BatchSortDispatch/
+        // GET: /SortBatchDispatch/
 
         public ActionResult Index()
         {

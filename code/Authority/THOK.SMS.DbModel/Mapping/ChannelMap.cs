@@ -19,34 +19,37 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.ChannelCode)
                 .IsRequired()
                 .HasMaxLength(20);
-            this.Property(t => t.SortingLineCode)
-                .IsRequired()
-                .HasMaxLength(20);
-            this.Property(t => t.ChannelName)
-                .IsRequired()
-                .HasMaxLength(100);
             this.Property(t => t.ChannelType)
                 .IsRequired()
                 .IsFixedLength()
                 .HasMaxLength(1);
-            this.Property(t => t.LedCode)
+            this.Property(t => t.ChannelName)
+                .IsRequired()
+                .HasMaxLength(100);
+            this.Property(t => t.SortingLineCode)
+                .IsRequired()
                 .HasMaxLength(20);
+            this.Property(t => t.LedNo);
+            this.Property(t => t.X);
+            this.Property(t => t.Y);
+            this.Property(t => t.Width);
+            this.Property(t => t.Height);
             this.Property(t => t.DefaultProductCode)
                 .HasMaxLength(20);
+            this.Property(t => t.DefaultProductName)
+                .HasMaxLength(50);
             this.Property(t => t.RemainQuantity)
                 .IsRequired();
-            this.Property(t => t.MiddleQuantity)
-                .IsRequired();
-            this.Property(t => t.MaxQuantity)
+            this.Property(t => t.ChannelCapacity)
                 .IsRequired();
             this.Property(t => t.GroupNo)
                 .IsRequired();
             this.Property(t => t.OrderNo)
                 .IsRequired();
-            this.Property(t => t.Address)
+            this.Property(t => t.SortAddress)
                 .IsRequired();
-            this.Property(t => t.CellCode)
-                .HasMaxLength(20);
+            this.Property(t => t.SupplyAddress)
+                .IsRequired();
             this.Property(t => t.Status)
                 .IsRequired()
                 .IsFixedLength()
@@ -54,25 +57,23 @@ namespace THOK.SMS.DbModel.Mapping
 
             // Table & Column Mappings
             this.Property(t => t.ChannelCode).HasColumnName(ColumnMap.Value.To("ChannelCode"));
-            this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
-            this.Property(t => t.ChannelName).HasColumnName(ColumnMap.Value.To("ChannelName"));
             this.Property(t => t.ChannelType).HasColumnName(ColumnMap.Value.To("ChannelType"));
-            this.Property(t => t.LedCode).HasColumnName(ColumnMap.Value.To("LedCode"));
+            this.Property(t => t.ChannelName).HasColumnName(ColumnMap.Value.To("ChannelName"));
+            this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
+            this.Property(t => t.LedNo).HasColumnName(ColumnMap.Value.To("LedNo"));
+            this.Property(t => t.X).HasColumnName(ColumnMap.Value.To("X"));
+            this.Property(t => t.Y).HasColumnName(ColumnMap.Value.To("Y"));
+            this.Property(t => t.Width).HasColumnName(ColumnMap.Value.To("Width"));
+            this.Property(t => t.Height).HasColumnName(ColumnMap.Value.To("Height"));
             this.Property(t => t.DefaultProductCode).HasColumnName(ColumnMap.Value.To("DefaultProductCode"));
+            this.Property(t => t.DefaultProductName).HasColumnName(ColumnMap.Value.To("DefaultProductName"));
             this.Property(t => t.RemainQuantity).HasColumnName(ColumnMap.Value.To("RemainQuantity"));
-            this.Property(t => t.MiddleQuantity).HasColumnName(ColumnMap.Value.To("MiddleQuantity"));
-            this.Property(t => t.MaxQuantity).HasColumnName(ColumnMap.Value.To("MaxQuantity"));
+            this.Property(t => t.ChannelCapacity).HasColumnName(ColumnMap.Value.To("ChannelCapacity"));
             this.Property(t => t.GroupNo).HasColumnName(ColumnMap.Value.To("GroupNo"));
             this.Property(t => t.OrderNo).HasColumnName(ColumnMap.Value.To("OrderNo"));
-            this.Property(t => t.Address).HasColumnName(ColumnMap.Value.To("Address"));
-            this.Property(t => t.CellCode).HasColumnName(ColumnMap.Value.To("CellCode"));
+            this.Property(t => t.SortAddress).HasColumnName(ColumnMap.Value.To("SortAddress"));
+            this.Property(t => t.SupplyAddress).HasColumnName(ColumnMap.Value.To("SupplyAddress"));
             this.Property(t => t.Status).HasColumnName(ColumnMap.Value.To("Status"));
-
-            // Relationships
-            this.HasRequired(t => t.led)
-                .WithMany(t => t.Channels)
-                .HasForeignKey(d => d.LedCode)
-                .WillCascadeOnDelete(false);
 
         }
     }

@@ -33,40 +33,40 @@ namespace Wms.Controllers.SMS
         {
             ChannelAllot channelAllot = new ChannelAllot();
 
-            channelAllot.ChannelAllotCode = collection["ChannelAllotCode"] ?? "";
-            channelAllot.ChannelCode = collection["ChannelCode"] ?? "";
-            channelAllot.ProductCode = collection["ProductCode"] ?? "";
-            channelAllot.ProductName = collection["ProductName"] ?? "";
+            //channelAllot.ChannelAllotCode = collection["ChannelAllotCode"] ?? "";
+            //channelAllot.ChannelCode = collection["ChannelCode"] ?? "";
+            //channelAllot.ProductCode = collection["ProductCode"] ?? "";
+            //channelAllot.ProductName = collection["ProductName"] ?? "";
 
-            string BatchSortId = collection["BatchSortId"] ?? "";
-            if (BatchSortId != "" && BatchSortId != null)
-            {
-                channelAllot.BatchSortId = Convert.ToInt32(BatchSortId);
-            }
+            //string SortBatchId = collection["SortBatchId"] ?? "";
+            //if (SortBatchId != "" && SortBatchId != null)
+            //{
+            //    channelAllot.SortBatchId = Convert.ToInt32(SortBatchId);
+            //}
 
-            string InQuantity = collection["InQuantity"] ?? "";
-            if (InQuantity != "" && InQuantity != null)
-            {
-                channelAllot.InQuantity = Convert.ToInt32(InQuantity);
-            }
+            //string InQuantity = collection["InQuantity"] ?? "";
+            //if (InQuantity != "" && InQuantity != null)
+            //{
+            //    channelAllot.InQuantity = Convert.ToInt32(InQuantity);
+            //}
 
-            string OutQuantity = collection["OutQuantity"] ?? "";
-            if (OutQuantity != "" && OutQuantity != null)
-            {
-                channelAllot.OutQuantity = Convert.ToInt32(OutQuantity);
-            }
+            //string OutQuantity = collection["OutQuantity"] ?? "";
+            //if (OutQuantity != "" && OutQuantity != null)
+            //{
+            //    channelAllot.OutQuantity = Convert.ToInt32(OutQuantity);
+            //}
 
-            string RealQuantity = collection["RealQuantity"] ?? "";
-            if (RealQuantity != "" && RealQuantity != null)
-            {
-                channelAllot.RealQuantity = Convert.ToInt32(RealQuantity);
-            }
+            //string RealQuantity = collection["RealQuantity"] ?? "";
+            //if (RealQuantity != "" && RealQuantity != null)
+            //{
+            //    channelAllot.RealQuantity = Convert.ToInt32(RealQuantity);
+            //}
 
-            string RemainQuantity = collection["RemainQuantity"] ?? "";
-            if (RemainQuantity != "" && RemainQuantity != null)
-            {
-                channelAllot.RemainQuantity = Convert.ToInt32(RemainQuantity);
-            }
+            //string RemainQuantity = collection["RemainQuantity"] ?? "";
+            //if (RemainQuantity != "" && RemainQuantity != null)
+            //{
+            //    channelAllot.RemainQuantity = Convert.ToInt32(RemainQuantity);
+            //}
 
             var channelAllotDetail = ChannelAllotServer.GetDetails(page, rows, channelAllot);
             return Json(channelAllotDetail, "text", JsonRequestBehavior.AllowGet);
@@ -84,7 +84,7 @@ namespace Wms.Controllers.SMS
             int page = 0, rows = 0;
 
             string ChannelAllotCode = Request.QueryString["ChannelAllotCode"] ?? "";
-            int BatchSortId = Convert.ToInt32(Request.QueryString["BatchSortId"] ?? "");
+            int SortBatchId = Convert.ToInt32(Request.QueryString["SortBatchId"] ?? "");
             string ChannelCode = Request.QueryString["ChannelCode"] ?? "";
             string ProductCode = Request.QueryString["ProductCode"] ?? "";
             string ProductName = Request.QueryString["ProductName"] ?? "";
@@ -95,15 +95,15 @@ namespace Wms.Controllers.SMS
 
 
             ChannelAllot channelAllot = new ChannelAllot();
-            channelAllot.ChannelAllotCode = ChannelAllotCode;
-            channelAllot.BatchSortId = BatchSortId;
+            //channelAllot.ChannelAllotCode = ChannelAllotCode;
+            channelAllot.SortBatchId = SortBatchId;
             channelAllot.ChannelCode = ChannelCode;
             channelAllot.ProductCode = ProductCode;
             channelAllot.ProductName = ProductName;
-            channelAllot.InQuantity = InQuantity;
-            channelAllot.OutQuantity = OutQuantity;
-            channelAllot.RealQuantity = RealQuantity;
-            channelAllot.RemainQuantity = RemainQuantity;
+            //channelAllot.InQuantity = InQuantity;
+            //channelAllot.OutQuantity = OutQuantity;
+            //channelAllot.RealQuantity = RealQuantity;
+            //channelAllot.RemainQuantity = RemainQuantity;
 
             ExportParam ep = new ExportParam();
             ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, channelAllot);

@@ -55,8 +55,12 @@
       <DependentUpon>201406180636307_update_ef_to_6_1_1_beta_1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201406250801030_delete_old_sms_table.cs" />
-    <Compile Include="Migrations\201406250801030_delete_old_sms_table.Designer.cs">
+    <Compile Include="Migrations\201406250801030_delete_old_sms_table.designer.cs">
       <DependentUpon>201406250801030_delete_old_sms_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406260632510_add_new_sms_table.cs" />
+    <Compile Include="Migrations\201406260632510_add_new_sms_table.Designer.cs">
+      <DependentUpon>201406260632510_add_new_sms_table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406250801030_delete_old_sms_table.resx">
       <DependentUpon>201406250801030_delete_old_sms_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406260632510_add_new_sms_table.resx">
+      <DependentUpon>201406260632510_add_new_sms_table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

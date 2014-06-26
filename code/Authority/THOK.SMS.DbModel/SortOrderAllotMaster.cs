@@ -11,7 +11,7 @@ namespace THOK.SMS.DbModel
         {
             this.SortOrderAllotDetails = new List<SortOrderAllotDetail>();
         }
-        public string Id { get; set; }
+        public int Id { get; set; }
         public int SortBatchId { get; set; }
         public int PackNo { get; set; }
         public string OrderId { get; set; }

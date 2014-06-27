@@ -28,6 +28,33 @@ namespace THOK.SMS.Bll.Service
             get { return this.GetType(); }
         }
 
+        //烟道类型判断
+        public string whatChannelType(string channelType)
+        {
+
+            string str = "";
+            switch (channelType)
+            {
+
+                case "2":
+                    str = "立式机";
+                    break;
+                case "3":
+                    str = "通道机";
+                    break;
+                case "4":
+                    str = "卧式机";
+                    break;
+                case "5":
+                    str = "混合烟道";
+                    break;
+            }
+
+            return str;
+        }
+
+
+
         /// <summary>
         /// 获取烟道信息
         /// </summary>
@@ -37,40 +64,59 @@ namespace THOK.SMS.Bll.Service
         /// <returns></returns>
         public object GetDetails(int page, int rows, Channel channel)
         {
-            return null;
-            //IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            //IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            //IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
 
-            //var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channel.ChannelName)
-            //    && a.ChannelType.Contains(channel.ChannelType) && a.Status.Contains(channel.Status));
-            //if (channel.GroupNo != 0)
-            //{
-            //    channelDetails = channelDetails.Where(a => a.GroupNo == channel.GroupNo);
-            //}
-            //int total = channelDetails.Count();
-            //var channelArray = channelDetails.OrderBy(a => a.ChannelCode).Skip((page - 1) * rows).Take(rows)
-            //    .Select(c => new
-            //    {
-            //        c.ChannelCode,
-            //        c.SortingLineCode,
-            //        SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
-            //        c.ChannelName,
-            //        ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
-            //        c.LedCode,
-            //        LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
-            //        c.DefaultProductCode,
-            //        DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
-            //        c.RemainQuantity,
-            //        c.MiddleQuantity,
-            //        c.MaxQuantity,
-            //        GroupNo = c.GroupNo == 1 ? "A线" : "B线",
-            //        c.OrderNo,
-            //        c.Address,
-            //        c.CellCode,
-            //        Status = c.Status == "1" ? "可用" : "不可用"
-            //    });
-            //return new { total, rows = channelArray.ToArray() };
+            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
+            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
+            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+
+            var channelDetails = channelQuery.Where(a => a.Status.Contains(channel.Status));
+            //烟道组
+           
+            if (channel.GroupNo>0)
+            {
+                channelDetails = channelDetails.Where(a => a.GroupNo == channel.GroupNo);
+            }
+            //烟道类型
+
+            if (channel.ChannelType != null&&channel.ChannelType!=string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.ChannelType == channel.ChannelType);
+            }
+            //分拣线
+            if (channel.SortingLineCode != null && channel.SortingLineCode != string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.SortingLineCode == channel.SortingLineCode);
+            }
+            //卷烟
+            if (channel.DefaultProductCode != null&& channel.DefaultProductCode!= string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.DefaultProductCode == channel.DefaultProductCode);
+            }
+            int total = channelDetails.Count();
+            var channelArray = channelDetails.OrderBy(a => a.ChannelCode).ToArray().Skip((page - 1) * rows).Take(rows)
+                .Select(c => new
+                {
+                    c.ChannelCode,
+                    c.SortingLineCode,
+                    SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
+                    c.ChannelName,                 
+                    ChannelType = whatChannelType(c.ChannelType),
+                    c.LedNo,
+                    c.DefaultProductCode,
+                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
+                    c.RemainQuantity,
+                    c.X,
+                    c.Y,
+                    c.Width,
+                    c.Height,
+                    c.ChannelCapacity,
+                    c.SupplyAddress,
+                    c.SortAddress,
+                    GroupNo = c.GroupNo == 1 ? "A线" : "B线",
+                    c.OrderNo,
+                    Status = c.Status == "01" ? "可用":"不可用"
+                });
+            return new { total, rows = channelArray.ToArray() };
         }
 
         /// <summary>
@@ -92,7 +138,7 @@ namespace THOK.SMS.Bll.Service
                     ChannelRepository.SaveChanges();
                     result = true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     strResult = "原因：" + ex.InnerException;
                 }
@@ -119,20 +165,25 @@ namespace THOK.SMS.Bll.Service
             {
                 try
                 {
-                    newChannel.ChannelName = channel.ChannelName;
+                
                     newChannel.ChannelType = channel.ChannelType;
                     newChannel.SortingLineCode = channel.SortingLineCode;
-                    //newChannel.LedCode = channel.LedCode;
-                    //newChannel.DefaultProductCode = channel.DefaultProductCode;
-                    //newChannel.RemainQuantity = channel.RemainQuantity;
-                    //newChannel.MiddleQuantity = channel.MiddleQuantity;
-                    //newChannel.MaxQuantity = channel.MaxQuantity;
-                    //newChannel.GroupNo = channel.GroupNo;
-                    //newChannel.OrderNo = channel.OrderNo;
-                    //newChannel.Address = channel.Address;
-                    //newChannel.CellCode = channel.CellCode;
-                    //newChannel.Status = channel.Status;
-
+                    newChannel.ChannelCapacity = channel.ChannelCapacity;
+                    newChannel.ChannelCode = channel.ChannelCode;
+                    newChannel.ChannelName = channel.ChannelName;
+                    newChannel.DefaultProductCode = channel.DefaultProductCode;
+                    newChannel.DefaultProductName = channel.DefaultProductName;
+                    newChannel.GroupNo = channel.GroupNo;
+                    newChannel.Height = channel.Height;
+                    newChannel.LedNo = channel.LedNo;
+                    newChannel.OrderNo = channel.OrderNo;
+                    newChannel.RemainQuantity = channel.RemainQuantity;
+                    newChannel.SortAddress = channel.SortAddress;
+                    newChannel.Status = channel.Status;
+                    newChannel.SupplyAddress = channel.SupplyAddress;
+                    newChannel.Width = channel.Width;
+                    newChannel.X = channel.X;
+                    newChannel.Y = channel.Y;
                     ChannelRepository.SaveChanges();
                     result = true;
                 }
@@ -179,7 +230,7 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public DataTable GetChannel(string channelName,string channelType,string status,string groupNo)
+        public DataTable GetChannel(string channelName, string channelType, string status, string groupNo)
         {
             //IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
             //IQueryable<Product> productQuery = ProductRepository.GetQueryable();

@@ -35,7 +35,8 @@ namespace Wms.Controllers.SMS.BaseInfo
 
         public JsonResult Details(int page, int rows,Channel channel)
         {
-            channel.ChannelName = channel.ChannelName ?? "";
+            channel.DefaultProductCode = channel.DefaultProductCode ?? "";
+            channel.SortingLineCode = channel.SortingLineCode ?? "";
             channel.ChannelType = channel.ChannelType ?? "";
             channel.Status = channel.Status ?? "";
             var channelDetails = ChannelService.GetDetails(page, rows, channel);

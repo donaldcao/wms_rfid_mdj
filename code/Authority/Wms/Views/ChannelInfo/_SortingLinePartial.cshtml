@@ -17,11 +17,9 @@
                 $('#details-SortingLineName').val(selectedRow.SortingLineName);
 
 
-                //LED信息赋值
-                $('#addSortingLineCode').val(selectedRow.SortingLineCode);
-                $('#addSortingLineName').val(selectedRow.SortingLineName);
-                $('#detailSortingLineCode').val(selectedRow.SortingLineCode);
-                $('#detailSortingLineName').val(selectedRow.SortingLineName);
+                //查询赋值
+                $('#searchSortingLineCode').val(selectedRow.SortingLineCode);
+                $('#searchSortingLineName').val(selectedRow.SortingLineName);
 
 
 
@@ -45,7 +43,6 @@
         } else if ($("#querySortingLineType").combo("getValue") == "SortingLineName") {
             queryParams.SortingLineName = $("#SortingLineInfo").val();
         }
-        alert(queryParams.SortingLineCode + "  " + queryParams.SortingLineName);
         $('#SortingLineDetails').datagrid('options').queryParams = queryParams;
         $('#SortingLineDetails').datagrid({
             pageNumber: 1

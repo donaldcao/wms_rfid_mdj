@@ -168,7 +168,6 @@
     <Compile Include="Controllers\SMS\BaseInfo\ProductInfoController.cs" />
     <Compile Include="Controllers\SMS\BatchSortController.cs" />
     <Compile Include="Controllers\SMS\ChannelAllotController.cs" />
-    <Compile Include="Controllers\SMS\ChannelController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\BatchCigaretteSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\ChannelAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
@@ -2036,14 +2035,6 @@
     <Content Include="Views\BatchSort\Index.cshtml" />
     <Content Include="Views\BatchSort\_BatchPartial.cshtml" />
     <Content Include="Views\BatchSort\AddPage.cshtml" />
-    <Content Include="Views\Channel\_AddPartial.cshtml" />
-    <Content Include="Views\Channel\Index.cshtml" />
-    <Content Include="Views\Channel\_SearchPartial.cshtml" />
-    <Content Include="Views\Channel\_ProductPartial.cshtml" />
-    <Content Include="Views\Channel\_SortingLinePartial.cshtml" />
-    <Content Include="Views\Channel\_EditPartial.cshtml" />
-    <Content Include="Views\Channel\_DeletePartial.cshtml" />
-    <Content Include="Views\Channel\_PrintPartial.cshtml" />
     <Content Include="Views\BatchSort\_PrintPartial.cshtml" />
     <Content Include="Views\Customer\_PrintPartial.cshtml" />
     <Content Include="Views\DeliverLine\_PrintPartial.cshtml" />

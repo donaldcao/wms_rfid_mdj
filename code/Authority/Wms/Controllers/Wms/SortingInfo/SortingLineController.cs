@@ -39,9 +39,10 @@ namespace Authority.Controllers.Wms.SortingInfo
             string sortingLineCode = collection["sortingLineCode"] ?? "";
             string sortingLineName = collection["sortingLineName"] ?? "";
             string SortingLineType = collection["SortingLineType"] ?? "";
+            string productType = collection["ProductType"] ?? "";
             string IsActive = collection["IsActive"] ?? "";
-            var sortOrder = SortingLineService.GetDetails(page, rows, sortingLineCode, sortingLineName, SortingLineType, IsActive);
-            return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+            var sortingLine = SortingLineService.GetDetails(page, rows, sortingLineCode, sortingLineName, productType, SortingLineType, IsActive);
+            return Json(sortingLine, "text", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetDetailsForSort(int page, int rows)

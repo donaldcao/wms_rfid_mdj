@@ -8,14 +8,17 @@
         $('#searchdlg').dialog('open').dialog('setTitle', '查询');
         searchKey = true;
         $('#searchfm').form('clear');
-
         $('#IsActive').combo({
             editable: false,
-            panelHeight: 45
+            panelHeight: 65
         });
         $('#SortingLineType').combo({
             editable: false,
-            panelHeight: 45
+            panelHeight: 65
+        });
+        $('#ProductType').combo({
+            editable: false,
+            panelHeight: 105
         });
     };
 
@@ -24,17 +27,19 @@
         queryParams.sortingLineCode = $('#SortingLineCode').val();
         queryParams.sortingLineName = $('#SortingLineName').val();
         queryParams.SortingLineType = $('#SortingLineType').combo('getValue');
+        queryParams.ProductType = $('#ProductType').combo('getValue');
         queryParams.IsActive = $('#IsActive').combo('getValue');
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1,
             pageSize: 50
-        }); 
+        });
         $("#details").datagrid('reload');
-        $('#searchdlg').dialog('close'); 
+        $('#searchdlg').dialog('close');
     }
 </script>
-<script src="../../Scripts/mykeyboardshortcuts.js" type="text/javascript"></script>
+<script src="../../Scripts/mykeyboardshortcuts.js" type="text/javascript">
+</script>
     <div id="searchdlg" class="easyui-dialog" modal="true"  style="width:300px;height:220px;"
         closed="true" buttons="#dlg-buttons">
 		<div class="easyui-layout" fit="true">
@@ -50,8 +55,20 @@
                         <td width="160"><input id="SortingLineName" class="easyui-validatebox" /></td>
                       </tr>
                       <tr>
+                        <td width="80" style="text-align:right">产品类型：</td>
+                         <td><select id="ProductType" class="easyui-combobox" style="width: 80px">
+                                <option value="">请选择</option>
+		                        <option value="1">正常</option>
+		                        <option value="2">异型</option>
+                                <option value="3">整件</option>
+		                        <option value="4">手工</option>
+	                        </select>
+	                    </td>
+                      </tr>
+                      <tr>
                         <td width="80" style="text-align:right">分拣线类型：</td>
                          <td><select id="SortingLineType" class="easyui-combobox" style="width: 130px">
+                                <option value="">请选择</option>
 		                        <option value="1">半自动分拣线</option>
 		                        <option value="2">全自动分拣线</option>
 	                        </select>

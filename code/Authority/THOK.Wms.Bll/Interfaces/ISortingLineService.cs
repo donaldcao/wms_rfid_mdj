@@ -8,7 +8,7 @@ namespace THOK.Wms.Bll.Interfaces
 {
     public interface ISortingLineService : IService<SortingLine>
     {
-       object GetDetails(int page, int rows, string sortingLineCode, string sortingLineName, string SortingLineType, string IsActive);
+        object GetDetails(int page, int rows, string sortingLineCode, string sortingLineName, string productType, string SortingLineType, string IsActive);
 
        object GetDetailsForSort(int page, int rows);
 

@@ -3,14 +3,11 @@
         var selectedRow = $('#details').datagrid('getSelected');
         if (selectedRow) {
             $("#dlg-details").dialog("open").dialog("setTitle", "编辑");
-            url = '/Channel/Edit/';
+            url = '/ChannelInfo/Edit/';
             $('#fm').form('load', selectedRow);
             $('form input').removeAttr("disabled");
             $('#details-ChannelCode').attr('readonly', 'true');
             switch (selectedRow.ChannelType) {
-                case "叠垛机":
-                    $('#details-ChannelType').combo('setValue', 1).combo('setText', selectedRow.ChannelType);
-                    break;
                 case "立式机":
                     $('#details-ChannelType').combo('setValue', 2).combo('setText', selectedRow.ChannelType);
                     break;

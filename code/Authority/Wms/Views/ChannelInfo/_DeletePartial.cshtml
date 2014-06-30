@@ -2,7 +2,7 @@
     function deleteClick() { 
         var selectedRow = $('#details').datagrid('getSelected');
         if (selectedRow) {
-            url = '/Channel/Delete/?channelCode=' + selectedRow.ChannelCode;
+            url = '/ChannelInfo/Delete/?channelCode=' + selectedRow.ChannelCode;
             $("#dlg-details").dialog("open").dialog("setTitle", "删除");
             $('#fm').form('load', selectedRow);
             $('form input').attr("disabled", "disabled");

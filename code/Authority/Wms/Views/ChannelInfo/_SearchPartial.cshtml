@@ -6,60 +6,129 @@
 
     function select() {
         var queryParams = $('#details').datagrid('options').queryParams;
-        queryParams.ChannelName = $("#search-ChannelName").val();
+       
+        queryParams.DefaultProductCode = $("#searchDefaultProductCode").val();
+        queryParams.SortingLineCode = $("#searchSortingLineCode").val();
         queryParams.ChannelType = $("#search-ChannelType").combo('getValue');
-        queryParams.GroupNo = $("#search-GroupNo").combo('getValue');
+        queryParams.GroupNo = $("#searchGroupNo").combo('getValue');
         queryParams.Status = $("#search-Status").combo('getValue');
+
+
+    
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1
         });
-       // $('#details').datagrid("reload");
+         $('#details').datagrid("reload");
         $('#dlg-search').dialog("close");
     }
-</script>
 
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width:280px;height:210px;padding:2px 2px"
-		closed="true" buttons="#dlg-buttons-search">
+
+    //卷烟查询
+    function DefaultProductNameSearchClick() {
+        $('#productData').dialog('open').dialog('setTitle', '选择卷烟信息');
+        $('#productDetail').datagrid({ url: '/DefaultProductSet/LoadProduct/' });
+        $("#productDetail").datagrid('load');
+    }
+    //分拣线查询
+    function SortingLineNameSearchClick() {
+        $('#dlg-SortingLine').dialog('open').dialog('setTitle', '选择分拣线');
+        $('#SortingLineDetails').datagrid({ url: '/SortingLine/Details/' });
+        $("#SortingLineDetails").datagrid('load');
+    }
+</script>
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width: 300px; height: 300px;
+    padding: 2px 2px" closed="true" buttons="#dlg-buttons-search">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; ">
-            <table width ="250">
+        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
+            border: 1px solid #ccc;">
+            <table width="250">
                 <tr>
-                    <td width="60">烟道名称：</td>
-                    <td><input id="search-ChannelName" /></td>
-                </tr>
-                <tr>
-                    <td width="60">烟道类型：</td>
-                    <td><select id="search-ChannelType" class="easyui-combobox" style="width:130px" editable="false" panelHeight="125">
-                        <option value="">　</option>
-                        <option value="1">叠垛机</option>
-                        <option value="2">立式机</option>
-                        <option value="3">通道机</option>
-                        <option value="4">卧式机</option>
-                        <option value="5">混合烟道</option>
-                    </select></td>
-                </tr>
-                <tr>
-                    <td width="60">组　　号：</td>
-                    <td><select id="search-GroupNo" class="easyui-combobox" style="width:130px" editable="false" panelHeight="65">
-                        <option value="">　</option>
-                        <option value="1">A线</option>
-                        <option value="2">B线</option>
-                    </select></td>
-                </tr>
-                <tr>
-                    <td width="60">状　　态：</td>
-                    <td><select id="search-Status" class="easyui-combobox" style="width:130px" editable="false" panelHeight="65">
-                        <option value="">　</option>
-                        <option value="1">可　用</option>
-                        <option value="2">不可用</option>
-                    </select></td>
-                </tr>
+                    <td style="text-align: right">
+                        卷烟代码:
+                    </td>
+                    <td align="left" style="width: 170px;">
+                        <input id="DefaultProductCode" name="DefaultProductCode" style="display: none;" />
+                        <input id="searchDefaultProductCode" name="DefaultProductCode" class="easyui-validatebox"
+                            readonly="readonly" required="true" />
+                        <a href="#" id="SortingLineNameSearch" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true" onclick="DefaultProductNameSearchClick()"></a>
+                    </td>
+                    <tr>
+                        <td style="text-align: right">
+                            卷烟名称:
+                        </td>
+                        <td align="left">
+                            <input type="text" name="DefaultProductName" class="easyui-validatebox" required="true"
+                                id="searchDefaultProductName" readonly="true" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">
+                            烟道类型:
+                        </td>
+                        <td>
+                            <select id="search-ChannelType" class="easyui-combobox" style="width: 130px" editable="false"
+                                panelheight="125">
+                                <option value=""></option>
+                                <option value="2">立式机</option>
+                                <option value="3">通道机</option>
+                                <option value="4">卧式机</option>
+                                <option value="5">混合烟道</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">
+                            分拣线代码:
+                        </td>
+                        <td align="left" style="width: 170px;">
+                            <input id="searchSortingLineCode" name="SortingLineCode" class="easyui-validatebox"
+                                readonly="readonly" required="true" />
+                            <a href="#" id="SortingLineCodeSearch" class="easyui-linkbutton" iconcls="icon-search"
+                                plain="true" onclick="SortingLineNameSearchClick()"></a>
+                        </td>
+                        <tr>
+                            <td style="text-align: right">
+                                分拣线名称:
+                            </td>
+                            <td align="left">
+                                <input type="text" name="SortingLineName" class="easyui-validatebox" required="true"
+                                    id="searchSortingLineName" readonly="true" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right">
+                                烟道组:
+                            </td>
+                            <td>
+                                <select id="searchGroupNo" class="easyui-combobox" style="width: 130px" editable="false"
+                                    panelheight="65">
+                                    <option value=""></option>
+                                    <option value="1">A线</option>
+                                    <option value="2">B线</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right">
+                                状 态:
+                            </td>
+                            <td>
+                                <select id="search-Status" class="easyui-combobox" style="width: 130px" editable="false"
+                                    panelheight="65">
+                                    <option value=""></option>
+                                    <option value="01">可 用</option>
+                                    <option value="02">不可用</option>
+                                </select>
+                            </td>
+                        </tr>
             </table>
         </div>
     </div>
 </div>
 <div id="dlg-buttons-search">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">查询</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="select()">查询</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+        取消</a>
 </div>

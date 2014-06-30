@@ -7,7 +7,6 @@ namespace THOK.Wms.Repository.Migrations
     {
         public override void Up()
         {
-            RenameColumn(table: "dbo.wms_sorting_line", name: "sorting_line_type", newName: "product_type");
             CreateTable(
                 "dbo.sms_sort_batch",
                 c => new
@@ -125,11 +124,12 @@ namespace THOK.Wms.Repository.Migrations
                 .ForeignKey("dbo.sms_sort_batch", t => t.sort_batch_id)
                 .Index(t => t.sort_batch_id);
             
-            AddColumn("dbo.wms_sorting_line", "ProductType", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
+            AddColumn("dbo.wms_sorting_line", "product_type", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
             AddColumn("dbo.wms_sort_order_dispatch", "batch_sort_id", c => c.Int(nullable: false));
             AddColumn("dbo.wms_sort_order_dispatch", "deliver_line_no", c => c.Int(nullable: false));
             AddColumn("dbo.wms_sort_order_dispatch", "sort_status", c => c.String(maxLength: 1, fixedLength: true));
-            AlterColumn("dbo.wms_sorting_line", "product_type", c => c.String(maxLength: 1, fixedLength: true));
+            AddColumn("dbo.wms_deliver_dist", "deliver_order", c => c.Int(nullable: false));
+            AlterColumn("dbo.wms_sorting_line", "sorting_line_type", c => c.String(maxLength: 1, fixedLength: true));
         }
         
         public override void Down()
@@ -148,18 +148,18 @@ namespace THOK.Wms.Repository.Migrations
             DropIndex("dbo.sms_hand_supply", new[] { "sort_batch_id" });
             DropIndex("dbo.sms_channel_allot", new[] { "channel_code" });
             DropIndex("dbo.sms_channel_allot", new[] { "sort_batch_id" });
-            AlterColumn("dbo.wms_sorting_line", "product_type", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
+            AlterColumn("dbo.wms_sorting_line", "sorting_line_type", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
+            DropColumn("dbo.wms_deliver_dist", "deliver_order");
             DropColumn("dbo.wms_sort_order_dispatch", "sort_status");
             DropColumn("dbo.wms_sort_order_dispatch", "deliver_line_no");
             DropColumn("dbo.wms_sort_order_dispatch", "batch_sort_id");
-            DropColumn("dbo.wms_sorting_line", "ProductType");
+            DropColumn("dbo.wms_sorting_line", "product_type");
             DropTable("dbo.sms_sort_order_allot_master");
             DropTable("dbo.sms_sort_order_allot_detail");
             DropTable("dbo.sms_hand_supply");
             DropTable("dbo.sms_channel");
             DropTable("dbo.sms_channel_allot");
             DropTable("dbo.sms_sort_batch");
-            RenameColumn(table: "dbo.wms_sorting_line", name: "product_type", newName: "sorting_line_type");
         }
     }
 }

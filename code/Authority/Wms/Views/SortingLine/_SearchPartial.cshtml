@@ -10,15 +10,15 @@
         $('#searchfm').form('clear');
         $('#IsActive').combo({
             editable: false,
-            panelHeight: 65
+            panelHeight: 50
         });
         $('#SortingLineType').combo({
             editable: false,
-            panelHeight: 65
+            panelHeight: 50
         });
         $('#ProductType').combo({
             editable: false,
-            panelHeight: 105
+            panelHeight: 90
         });
     };
 
@@ -55,9 +55,9 @@
                         <td width="160"><input id="SortingLineName" class="easyui-validatebox" /></td>
                       </tr>
                       <tr>
-                        <td width="80" style="text-align:right">产品类型：</td>
-                         <td><select id="ProductType" class="easyui-combobox" style="width: 80px">
-                                <option value="">请选择</option>
+                        <td width="100" style="text-align:right">分拣产品类型：</td>
+                         <td><select id="ProductType" class="easyui-combobox" style="width: 130px">
+                                <option value=""></option>
 		                        <option value="1">正常</option>
 		                        <option value="2">异型</option>
                                 <option value="3">整件</option>
@@ -68,7 +68,7 @@
                       <tr>
                         <td width="80" style="text-align:right">分拣线类型：</td>
                          <td><select id="SortingLineType" class="easyui-combobox" style="width: 130px">
-                                <option value="">请选择</option>
+                                <option value=""></option>
 		                        <option value="1">半自动分拣线</option>
 		                        <option value="2">全自动分拣线</option>
 	                        </select>
@@ -76,8 +76,8 @@
                       </tr>
                       <tr>
                         <td width="80" style="text-align:right">是否启用：</td>
-                        <td><select  id="IsActive" class="easyui-combobox" style="width:80px">
-                                <option value="">请选择</option>
+                        <td><select  id="IsActive" class="easyui-combobox" style="width:130px">
+                                <option value=""></option>
 		                        <option value="1">可用</option>
 		                        <option value="0">不可用</option>
 	                        </select>

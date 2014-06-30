@@ -13,6 +13,7 @@ namespace THOK.Wms.DbModel
         public string DistCenterCode { get; set; }
         public string CompanyCode { get; set; }
         public string UniformCode { get; set; }
+        public int DeliverOrder { get; set; }
         public string Description { get; set; }
         public string IsActive { get; set; }
         public DateTime UpdateTime { get; set; }

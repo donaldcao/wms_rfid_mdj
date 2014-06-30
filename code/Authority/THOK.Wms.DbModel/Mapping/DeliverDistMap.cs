@@ -35,6 +35,9 @@ namespace THOK.Wms.DbModel.Mapping
                 .IsRequired()
                 .HasMaxLength(50);
 
+            this.Property(t => t.DeliverOrder)
+                .IsRequired();
+
             this.Property(t => t.Description)
                 .HasMaxLength(100);
 
@@ -54,6 +57,7 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.DistCenterCode).HasColumnName(ColumnMap.Value.To("DistCenterCode"));
             this.Property(t => t.CompanyCode).HasColumnName(ColumnMap.Value.To("CompanyCode"));
             this.Property(t => t.UniformCode).HasColumnName(ColumnMap.Value.To("UniformCode"));
+            this.Property(t => t.DeliverOrder).HasColumnName(ColumnMap.Value.To("DeliverOrder"));
             this.Property(t => t.Description).HasColumnName(ColumnMap.Value.To("Description"));
             this.Property(t => t.IsActive).HasColumnName(ColumnMap.Value.To("IsActive"));
             this.Property(t => t.UpdateTime).HasColumnName(ColumnMap.Value.To("UpdateTime"));

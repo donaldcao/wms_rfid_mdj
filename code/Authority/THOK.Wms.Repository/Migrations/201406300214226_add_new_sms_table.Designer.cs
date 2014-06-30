@@ -13,7 +13,7 @@ namespace THOK.Wms.Repository.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201406260632510_add_new_sms_table"; }
+            get { return "201406300214226_add_new_sms_table"; }
         }
         
         string IMigrationMetadata.Source

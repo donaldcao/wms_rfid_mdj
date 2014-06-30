@@ -55,7 +55,7 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
             this.Property(t => t.SortingLineName).HasColumnName(ColumnMap.Value.To("SortingLineName"));
             this.Property(t => t.SortingLineType).HasColumnName(ColumnMap.Value.To("SortingLineType"));
-            this.Property(t => t.SortingLineType).HasColumnName(ColumnMap.Value.To("ProductType"));
+            this.Property(t => t.ProductType).HasColumnName(ColumnMap.Value.To("ProductType"));
             this.Property(t => t.OutBillTypeCode).HasColumnName(ColumnMap.Value.To("OutBillTypeCode"));
             this.Property(t => t.MoveBillTypeCode).HasColumnName(ColumnMap.Value.To("MoveBillTypeCode"));
             this.Property(t => t.CellCode).HasColumnName(ColumnMap.Value.To("CellCode"));

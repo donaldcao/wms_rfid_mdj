@@ -33,11 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DBRabbit">
-      <HintPath>..\packages\DBRabbit.1.0.3\lib\DBRabbit.dll</HintPath>
+    <Reference Include="DBRabbit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DBRabbit.1.0.4\lib\net20\DBRabbit.dll</HintPath>
     </Reference>
-    <Reference Include="ESBasic">
-      <HintPath>..\packages\DBRabbit.1.0.3\lib\ESBasic.dll</HintPath>
+    <Reference Include="ESBasic, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DBRabbit.1.0.4\lib\net20\ESBasic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\Libraries\Microsoft.Practices.Unity.dll</HintPath>

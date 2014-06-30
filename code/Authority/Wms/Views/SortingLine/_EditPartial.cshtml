@@ -25,8 +25,21 @@ function editClick() {
         } else {
             $('#isSortingLineType').combo('setValue', 2).combo('setText', row.SortingLineType);
         }
+        if (row.ProductType == '正常') {
+            $('#theProductType').combo('setValue', 1).combo('setText', row.ProductType);
+        }
+        else if (row.ProductType == '异型') {
+            $('#theProductType').combo('setValue', 2).combo('setText', row.ProductType);
+        }
+        else if (row.ProductType == '整件') {
+            $('#theProductType').combo('setValue', 3).combo('setText', row.ProductType);
+        }
+        else {
+            $('#theProductType').combo('setValue', 4).combo('setText', row.ProductType);
+        }
         $('form input').removeAttr("disabled");
-        $('form textarea').removeAttr("disabled");        
+        $('form textarea').removeAttr("disabled");
+        $('#theSortingLineCode').attr("readonly", true);      
         url = '/SortingLine/Edit/';
     } else {
         $.messager.alert('错误', '没有选择行！');

@@ -15,9 +15,9 @@
         });
     })
     $(function () {
-        $('#SortWorkState').combo({
+        $('#WorkState').combo({
             editable: false,
-            panelHeight: 25
+            panelHeight: 45
         });
     })
 
@@ -47,8 +47,8 @@
     function select() {
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.SortingLineCode = $('#SortingLineCode').combogrid('getValue');
-        queryParams.OrderDate = $('#searchOrderDate').datebox('getValue');
-        queryParams.WorkStatus = $('#SortWorkState').combo('getValue'); ;
+        queryParams.OrderDate = $('#SearchOrderDate').datebox('getValue');
+        queryParams.WorkStatus = $('#WorkState').combo('getValue'); ;
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1,
@@ -72,12 +72,18 @@
                       <tr>
                         <td width="80" style="text-align:right">订单日期：</td>
                         <td>
-                        <input id="searchOrderDate" class="easyui-datebox" type="text" style="width: 130px"/>
+                        <input id="SearchOrderDate" class="easyui-datebox" type="text" style="width: 130px"/>
 	                    </td>
+                      </tr>
+                      <tr>
+                        <td width="80" style="text-align:right">分拣状态：</td><td>
+                         <select id="SortState" style="width: 130px;" class="easyui-combobox">
+                            <option selected="selected" value="2">已分拣</option>
+                        </select></td>
                       </tr>
                        <tr>
                         <td width="80" style="text-align:right">作业状态：</td><td>
-                         <select id="SortWorkState" style="width: 130px;" class="easyui-combobox">
+                         <select id="WorkState" style="width: 130px;" class="easyui-combobox">
                             <option selected="selected" value="2">已作业</option>
                         </select></td>
                       </tr>

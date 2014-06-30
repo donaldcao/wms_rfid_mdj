@@ -16,14 +16,14 @@ using THOK.Common.NPOI.Service;
 namespace Wms.Controllers.SMS
 {
      [TokenAclAuthorize]
-    public class BatchSortController : Controller
+    public class SortBatchController : Controller
     {
         //
-        // GET: /BatchSort/
+        // GET: /SortBatch/
 
         [Dependency]
 
-        public IBatchSortService BatchSortService { get; set; }
+        public ISortBatchService SortBatchService { get; set; }
 
         public ActionResult Index(string moduleID)
         {
@@ -50,7 +50,7 @@ namespace Wms.Controllers.SMS
 
         public ActionResult Details(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate)
         {
-            var srmDetail = BatchSortService.GetDetails(page, rows, Status, BatchNo, BatchName, OrderDate);
+            var srmDetail = SortBatchService.GetDetails(page, rows, Status, BatchNo, BatchName, OrderDate);
             return Json(srmDetail, "text", JsonRequestBehavior.AllowGet);
         }
 
@@ -65,30 +65,30 @@ namespace Wms.Controllers.SMS
             {
                 value = "";
             }
-            var batch =BatchSortService.GetBatch(page, rows, queryString, value);
+            var batch =SortBatchService.GetBatch(page, rows, queryString, value);
             return Json(batch, "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Create(BatchSort BatchSort)
+        public ActionResult Create(SortBatch SortBatch)
         {
             string strResult = string.Empty;
-            bool bResult = BatchSortService.Add(BatchSort, out strResult);
+            bool bResult = SortBatchService.Add(SortBatch, out strResult);
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Edit(BatchSort BatchSort)
+        public ActionResult Edit(SortBatch SortBatch)
         {
             string strResult = string.Empty;
-            bool bResult = BatchSortService.Save(BatchSort, out strResult);
+            bool bResult = SortBatchService.Save(SortBatch, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Delete(int BatchSortId)
+        public ActionResult Delete(int SortBatchId)
         {
             string strResult = string.Empty;
-            bool bResult = BatchSortService.Delete(BatchSortId, out strResult);
+            bool bResult = SortBatchService.Delete(SortBatchId, out strResult);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -96,11 +96,11 @@ namespace Wms.Controllers.SMS
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            string BatchSortId = Request.QueryString["BatchSortId"];
-          //  int BatchSortId = Convert.ToInt16(Id);
+            string SortBatchId = Request.QueryString["SortBatchId"];
+          //  int SortBatchId = Convert.ToInt16(Id);
            
             ExportParam ep = new ExportParam();
-            ep.DT1 = BatchSortService.GetBatchSort(page, rows, BatchSortId);
+            ep.DT1 = SortBatchService.GetSortBatch(page, rows, SortBatchId);
             ep.HeadTitle1 = "分拣状态";
            
             return PrintService.Print(ep);

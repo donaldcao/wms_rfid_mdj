@@ -7,8 +7,8 @@ namespace THOK.SMS.DbModel
 {
     public class SortOrderAllotDetail
     {
-        public string OrderDetailCode { get; set; }
-        public string OrderMasterCode { get; set; }
+        public int Id { get; set; }
+        public int MasterId { get; set; }
         public string ChannelCode { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
@@ -19,8 +19,3 @@ namespace THOK.SMS.DbModel
 
     }
 }
-
-
-
-
-

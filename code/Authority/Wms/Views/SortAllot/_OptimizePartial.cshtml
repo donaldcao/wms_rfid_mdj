@@ -9,7 +9,7 @@
             function (result) {
                 if (result.success) {
                     $('#dlg-channeloptimize').dialog('open').dialog('setTitle', "审核");
-                    $('#deliverline').datagrid({ url: '/SortAllot/GetBatchSort/?orderDate=' + row.OrderDate, singleSelect: true });
+                    $('#deliverline').datagrid({ url: '/SortAllot/GetSortBatch/?orderDate=' + row.OrderDate, singleSelect: true });
                     $('#fm-sortOrderInfo').form('load', row);
                     $('#btnEditDeliverLine').css('display', 'none');
                     $('#btnRemoveDeliverLineAllot').css('display', 'none');
@@ -30,7 +30,7 @@
             onClickRow: function () {
                 var row = $('#deliverline').datagrid('getSelected');
                 if (row) {
-                    $('#allotBillDetails').datagrid({ url: '/SortAllot/GetChannelAllot/?batchSortId=' + row.BatchSortId });
+                    $('#allotBillDetails').datagrid({ url: '/SortAllot/GetChannelAllot/?sortBatchId=' + row.SortBatchId });
 
                 } else {
                     $.messager.show({ title: '提示', msg: '失败!请检查原因！' });
@@ -48,7 +48,7 @@
                 fit="true" fitColumns="true"  pagination="true" rownumbers="true" pageSize="50">
                 <thead>
                     <tr>
-                        <th field="BatchSortId" width="80" hidden="true">批次分拣编号</th>
+                        <th field="SortBatchId" width="80" hidden="true">批次分拣编号</th>
                         <th field="BatchId" width="80" hidden="true">批次编号</th>
                         <th field="OrderDate" width="100" id="operatedate">订单日期</th>
                         <th field="BatchNo" width="100" id="batchno">批次号</th>
@@ -66,7 +66,7 @@
                 <thead>
                     <tr>
                         <th field="ChannelAllotCode" width="100" hidden="true">烟道分配代码</th>
-                        <th field="BatchSortId" width="80" hidden="true">批次分拣编号</th>
+                        <th field="SortBatchId" width="80" hidden="true">批次分拣编号</th>
                         <th field="ChannelCode" width="80">烟道代码</th>
                         <th field="ProductCode" width="80">商品代码</th>
                         <th field="ProductName" width="120">商品名称</th>

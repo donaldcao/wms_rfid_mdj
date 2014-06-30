@@ -147,22 +147,22 @@ namespace Wms.Controllers.SMS
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetBatchSort(int page, int rows, string orderDate)
+        public ActionResult GetSortBatch(int page, int rows, string orderDate)
         {
             if (orderDate == null)
             {
                 return null;
             }
-            var BatchSorts = channelOptimizeService.GetBatchSort(orderDate);
-            return Json(BatchSorts, "text", JsonRequestBehavior.AllowGet);
+            var SortBatchs = channelOptimizeService.GetSortBatch(orderDate);
+            return Json(SortBatchs, "text", JsonRequestBehavior.AllowGet);
         }
-        public ActionResult GetChannelAllot(string batchSortId)
+        public ActionResult GetChannelAllot(string sortBatchId)
         {
-            if (batchSortId == null)
+            if (sortBatchId == null)
             {
                 return null;
             }
-            var deliverLineDetail = channelOptimizeService.GetChannelAllot(batchSortId);
+            var deliverLineDetail = channelOptimizeService.GetChannelAllot(sortBatchId);
             return Json(deliverLineDetail, "text", JsonRequestBehavior.AllowGet);
         }
 

@@ -1,14 +1,14 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var sortLineAllotCode = null, batchSortId = null, deliverLineCode = null, deliverQuantity = null, status = null;
+        var sortLineAllotCode = null, sortBatchId = null, deliverLineCode = null, deliverQuantity = null, status = null;
         if ($('#SortLineAllotCode').val() == null) { sortLineAllotCode = ""; } else { sortLineAllotCode = $('#SortLineAllotCode').val() }
-        if ($('#BatchSortId').val() == null) { batchSortId = ""; } else { batchSortId = $('#BatchSortId').val() }
+        if ($('#SortBatchId').val() == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').val() }
         if ($('#DeliverLineCode').val() == null) { deliverLineCode = ""; } else { deliverLineCode = $('#DeliverLineCode').val() }
         if ($('#Status').val() == null) { status = ""; } else { status = $('#Status').val() }
         if ($('#DeliverQuantity').val() == null) { deliverQuantity = ""; } else { deliverQuantity = $('#DeliverQuantity').val() }
         window.location.href = "/SortLineAllot/CreateExcelToClient/"
                                 + "?sortLineAllotCode=" + sortLineAllotCode
-                                + "&batchSortId=" + batchSortId
+                                + "&sortBatchId=" + sortBatchId
                                 + "&deliverLineCode=" + deliverLineCode
                                 + "&status=" + status
                                 + "&deliverQuantity=" + deliverQuantity;

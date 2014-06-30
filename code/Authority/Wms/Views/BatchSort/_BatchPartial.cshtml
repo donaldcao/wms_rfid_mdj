@@ -36,7 +36,7 @@
     //根据条件查询
     function batchQueryClick() {
         $("#batchDetail").datagrid({
-            url: '/BatchSort/GetBatch/?queryString=' + $('#queryBatch').combogrid('getValue') + '&value=' + $('#batchInfo').val()
+            url: '/SortBatch/GetBatch/?queryString=' + $('#queryBatch').combogrid('getValue') + '&value=' + $('#batchInfo').val()
 
         });    
         $("#batchDetail").datagrid('reload');

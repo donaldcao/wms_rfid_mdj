@@ -5,6 +5,7 @@
         $('#dlg').dialog('open').dialog('setTitle', '新增');
         addKey = true;
         $('#sortingLinefm').form('clear');
+        $('#theSortingLineCode').attr("readonly", false);
         $('#sortingLinefm .easyui-validatebox').validatebox({
             required: true
         });
@@ -14,6 +15,9 @@
             hasDownArrow: true
         });
         $('#isSortingLineType').combo({
+            hasDownArrow: true
+        });
+        $('#theProductType').combo({
             hasDownArrow: true
         });
         url = '/SortingLine/Create/';
@@ -30,6 +34,12 @@
             editable: false,
             panelHeight: 45
         });
+        $('#theProductType').combo({
+            required: true,
+            editable: false,
+            panelHeight: 85
+        });
+
 
         //获取单据类型单据类别BillClass=0003为移库单IsActive=1为可用
         $('#moveBillTypeCode').combogrid({
@@ -104,7 +114,7 @@
                         分拣线编码：
                     </td>
                     <td width="160">
-                        <input name="SortingLineCode" class="easyui-validatebox" />
+                        <input id="theSortingLineCode" name="SortingLineCode" class="easyui-validatebox"/>
                     </td>
                 </tr>
                <tr>
@@ -115,7 +125,20 @@
                         <input name="SortingLineName" class="easyui-validatebox" />
                     </td>
                 </tr>
-                 <tr>
+                <tr>
+                    <td width="100" style="text-align: right">
+                        分拣产品类型：
+                    </td>
+                    <td>
+                        <select id="theProductType" name="ProductType" class="easyui-combobox" style="width: 130px">
+                            <option value="1">正常</option>
+                            <option value="2">异型</option>
+                            <option value="3">整件</option>
+                            <option value="4">手工</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <td width="80" style="text-align: right">
                         分拣线类型：
                     </td>
@@ -165,7 +188,7 @@
                         是否启用：
                     </td>
                     <td>
-                        <select id="IsActivecc" name="IsActive" class="easyui-combobox" style="width: 80px">
+                        <select id="IsActivecc" name="IsActive" class="easyui-combobox" style="width: 130px">
                             <option value="1">可用</option>
                             <option value="0">不可用</option>
                         </select>

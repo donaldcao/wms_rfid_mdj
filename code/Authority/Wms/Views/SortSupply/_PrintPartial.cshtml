@@ -1,10 +1,10 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var sortSupplyCode = null, batchSortId = null, supplyId = null, packNo = null,
+        var sortSupplyCode = null, sortBatchId = null, supplyId = null, packNo = null,
             channelCode = null; productCode = null; productName = null;
 
         if ($('#SortSupplyCode').val() == null) { sortSupplyCode = ""; } else { sortSupplyCode = $('#SortSupplyCode').val() }
-        if ($('#BatchSortId').val() == null) { batchSortId = ""; } else { batchSortId = $('#BatchSortId').val() }
+        if ($('#SortBatchId').val() == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').val() }
         if ($('#SupplyId').val() == null) { supplyId = ""; } else { supplyId = $('#SupplyId').val() }
         if ($('#PackNo').val() == null) { packNo = ""; } else { packNo = $('#PackNo').val() }
         if ($('#ChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#ChannelCode').val() }
@@ -13,7 +13,7 @@
 
         window.location.href = "/SortSupply/CreateExcelToClient/"
                                 + "?sortSupplyCode=" + sortSupplyCode
-                                + "&batchSortId=" + batchSortId
+                                + "&sortBatchId=" + sortBatchId
                                 + "&supplyId=" + supplyId
                                 + "&channelCode=" + channelCode
                                 + "&packNo=" + packNo;

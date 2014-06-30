@@ -1,10 +1,10 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var channelAllotCode = null, batchSortId = null, channelCode = null, productCode = null, productName = null, inQuantity = null,
+        var channelAllotCode = null, sortBatchId = null, channelCode = null, productCode = null, productName = null, inQuantity = null,
             outQuantity = null, realQuantity = null, remainQuantity = null;
 
         if ($('#ChannelAllotCode').val() == null) { channelAllotCode = ""; } else { channelAllotCode = $('#ChannelAllotCode').val() }
-        if ($('#BatchSortId').val() == null) { batchSortId = ""; } else { batchSortId = $('#BatchSortId').val() }
+        if ($('#SortBatchId').val() == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').val() }
         if ($('#ChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#ChannelCode').val() }
         if ($('#ProductCode').val() == null) { productCode = ""; } else { productCode = $('#ProductCode').val() }
         if ($('#ProductName').val() == null) { productName = ""; } else { productName = $('#ProductName').val() }
@@ -15,7 +15,7 @@
 
         window.location.href = "/SortSupply/CreateExcelToClient/"
                                 + "?channelAllotCode=" + channelAllotCode
-                                + "&batchSortId=" + batchSortId
+                                + "&sortBatchId=" + sortBatchId
                                 + "&channelCode=" + channelCode
                                 + "&productCode=" + productCode
                                 + "&productName=" + productName

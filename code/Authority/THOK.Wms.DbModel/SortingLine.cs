@@ -16,6 +16,7 @@ namespace THOK.Wms.DbModel
        public string SortingLineCode { get; set; }
        public string SortingLineName { get; set; }
        public string SortingLineType { get; set; }
+       public string ProductType { get; set; }
        public string OutBillTypeCode { get; set; }
        public string MoveBillTypeCode { get; set; }
        public string CellCode { get; set; }

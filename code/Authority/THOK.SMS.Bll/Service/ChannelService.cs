@@ -232,11 +232,11 @@ namespace THOK.SMS.Bll.Service
 
         public DataTable GetChannel(string channelName, string channelType, string status, string groupNo)
         {
-            //IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            //IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            //IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
-            //var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channelName)
-            //    && a.ChannelType.Contains(channelType) && a.Status.Contains(status));
+            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
+            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
+            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+            var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channelName)
+                && a.ChannelType.Contains(channelType) && a.Status.Contains(status));
             //if (groupNo != "")
             //{
             //    int no;
@@ -246,56 +246,56 @@ namespace THOK.SMS.Bll.Service
             //        channelDetails = channelDetails.Where(a => a.GroupNo == no);
             //    }
             //}
-            //var channelArray = channelDetails.OrderBy(c=>c.ChannelCode).Select(c => new
-            //    {
-            //        c.ChannelCode,
-            //        SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
-            //        c.ChannelName,
-            //        ChannelType = c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
-            //        LedName = ledQuery.Where(s => s.LedCode == c.LedCode).Select(s => s.LedName),
-            //        c.DefaultProductCode,
-            //        DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
-            //        c.RemainQuantity,
-            //        c.MiddleQuantity,
-            //        c.MaxQuantity,
-            //        GroupNo = c.GroupNo == 1 ? "A线" : "B线",
-            //        c.OrderNo,
-            //        Status = c.Status == "1" ? "可用" : "不可用"
-            //    }).ToArray();
+            var channelArray = channelDetails.OrderBy(c => c.ChannelCode).ToArray().Select(c => new
+                {
+                    c.ChannelCode,
+                    SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
+                    c.ChannelName,
+                    ChannelType = whatChannelType(c.ChannelType),
+                    //c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
+                    c.DefaultProductCode,
+                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
+                    c.RemainQuantity,
+                    c.ChannelCapacity,                  
+                    GroupNo = c.GroupNo == 1 ? "A线" : "B线",
+                    c.OrderNo,
+                    c.SortAddress,
+                    c.SupplyAddress,
+                    Status = c.Status == "01" ? "可用" : "不可用"
+                }).ToArray();
             DataTable dt = new DataTable();
             dt.Columns.Add("烟道代码", typeof(string));
             dt.Columns.Add("烟道名称", typeof(string));
             dt.Columns.Add("烟道类型", typeof(string));
-            dt.Columns.Add("分拣线名称", typeof(string));
-            dt.Columns.Add("Led屏名称", typeof(string));
+            dt.Columns.Add("分拣线名称", typeof(string));      
             dt.Columns.Add("预设卷烟编码", typeof(string));
             dt.Columns.Add("预设卷烟名称", typeof(string));
-            dt.Columns.Add("提前量", typeof(string));
-            dt.Columns.Add("补货中间量", typeof(string));
-            dt.Columns.Add("最大缓存量", typeof(string));
+            dt.Columns.Add("剩余数量", typeof(int));
+            dt.Columns.Add("烟道最大容量", typeof(int));
             dt.Columns.Add("组号", typeof(string));
-            dt.Columns.Add("顺序号", typeof(string));
+            dt.Columns.Add("顺序号", typeof(int));
+            dt.Columns.Add("分拣地址", typeof(int));
+            dt.Columns.Add("补货地址", typeof(int));
             dt.Columns.Add("状态", typeof(string));
-            //foreach (var item in channelArray)
-            //{
-            //    dt.Rows.Add
-            //        (
-            //            item.ChannelCode,
-            //            item.ChannelName,
-            //            item.ChannelType,
-            //            item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],
-            //            item.LedName.ToArray().Length <= 0 ? "" : item.LedName.ToArray()[0],
-            //            item.DefaultProductCode,
-            //            item.DefaultProductName.ToArray().Length <= 0 ? "" : item.DefaultProductName.ToArray()[0],
-            //            item.RemainQuantity,
-            //            item.MiddleQuantity,
-            //            item.MaxQuantity,
-            //            item.GroupNo,
-            //            item.OrderNo,
-            //            item.Status
-            //        );
-
-            //}
+            foreach (var item in channelArray)
+            {
+                dt.Rows.Add
+                    (
+                        item.ChannelCode,                   
+                        item.ChannelName,
+                        item.ChannelType,
+                        item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],                    
+                        item.DefaultProductCode,
+                        item.DefaultProductName.ToArray().Length <= 0 ? "" : item.DefaultProductName.ToArray()[0],
+                        item.RemainQuantity,
+                        item.ChannelCapacity,
+                        item.GroupNo,
+                        item.OrderNo,
+                        item.SortAddress,
+                        item.SupplyAddress,
+                        item.Status
+                    );
+            }
             return dt;
         }
     }

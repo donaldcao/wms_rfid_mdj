@@ -26,10 +26,8 @@ namespace Wms.Controllers.Wms.DeliveryInfo
 
         public ActionResult Index(string moduleID)
         {
-            ViewBag.hasSearch = true;
-            ViewBag.hasAdd = true;
-            ViewBag.hasEdit = true;
-            ViewBag.hasDelete = true;
+            ViewBag.hasSearch = true;          
+            ViewBag.hasEdit = true;      
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
@@ -45,7 +43,7 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             string CompanyCode = collection["CompanyCode"] ?? "";
             string UniformCode = collection["UniformCode"] ?? "";
             string IsActive = collection["IsActive"] ?? ""; ;
-            var users = DeliverDistService.GetDetails(page, rows, DistCode, CustomCode, DistName, CompanyCode, UniformCode, IsActive);
+            var users = DeliverDistService.GetDetails(page, rows, DistCode, CustomCode, DistName,IsActive);
             return Json(users, "text", JsonRequestBehavior.AllowGet);
         }
         //
@@ -75,10 +73,10 @@ namespace Wms.Controllers.Wms.DeliveryInfo
         }
         // POST: /DeliverDis/Edit/
         [HttpPost]
-        public ActionResult Edit(string DistCode, string CustomCode, string DistName, string DistCenterCode, string CompanyCode, string UniformCode, string Description,string IsActive)
+        public ActionResult Edit(string DistCode, string DeliverOrder)  //string DistCode, string CustomCode, string DistName, string DistCenterCode, string CompanyCode, string UniformCode, string Description
         {
             string strResult = string.Empty;
-            bool bResult = DeliverDistService.Save(DistCode, CustomCode, DistName, DistCenterCode, CompanyCode, UniformCode, Description, IsActive, out strResult);
+            bool bResult = DeliverDistService.Save(DistCode, DeliverOrder, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }

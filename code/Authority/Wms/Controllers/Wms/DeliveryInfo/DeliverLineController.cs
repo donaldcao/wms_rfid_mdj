@@ -11,6 +11,7 @@ using THOK.Security;
 
 using THOK.Common.NPOI.Service;
 using THOK.Common.NPOI.Models;
+using THOK.Authority.DbModel;
 
 namespace Wms.Controllers.Wms.InterfaceInfo
 {
@@ -24,10 +25,8 @@ namespace Wms.Controllers.Wms.InterfaceInfo
         // GET: /DeliverLine/
         public ActionResult Index(string moduleID)
         {
-            ViewBag.hasSearch = true;
-            ViewBag.hasAdd = true;
+            ViewBag.hasSearch = true;        
             ViewBag.hasEdit = true;
-            ViewBag.hasDelete = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
@@ -53,7 +52,10 @@ namespace Wms.Controllers.Wms.InterfaceInfo
             string DeliverLineName = collection["DeliverLineName"] ?? "";
             string DistCode = collection["DistCode"] ?? "";
             string DeliverOrder = collection["DeliverOrder"] ?? "";
-            string IsActive = collection["IsActive"] ?? ""; ;
+            string IsActive = collection["IsActive"] ?? "";
+
+            string cityname = collection["City"] ?? "";
+
             var users = DeliverLineService.GetDetails(page, rows, DeliverLineCode, CustomCode, DeliverLineName, DistCode, DeliverOrder, IsActive);
             return Json(users, "text", JsonRequestBehavior.AllowGet);
         }
@@ -84,10 +86,10 @@ namespace Wms.Controllers.Wms.InterfaceInfo
         }
         // POST: /DeliverLine/Edit/
         [HttpPost]
-        public ActionResult Edit(DeliverLine deliverLine)
+        public ActionResult Edit(string DeliverLineCode, string DeliverOrder)
         {
             string strResult = string.Empty;
-            bool bResult = DeliverLineService.Edit(deliverLine, out strResult);
+            bool bResult = DeliverLineService.Edit(DeliverLineCode, DeliverOrder, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }

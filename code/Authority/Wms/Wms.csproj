@@ -1975,9 +1975,7 @@
     <Content Include="Views\Employee\_AddPartial.cshtml" />
     <Content Include="Views\HelpEdit\Index.cshtml" />
     <Content Include="Views\DeliverDist\Index.cshtml" />
-    <Content Include="Views\DeliverDist\_AddPartial.cshtml" />
     <Content Include="Views\DeliverDist\_SearchPartial.cshtml" />
-    <Content Include="Views\DeliverDist\_deliverPartial1.cshtml" />
     <Content Include="Views\DeliverDist\_EditPartial.cshtml" />
     <Content Include="Views\DeliverDist\_DeletePartial.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
@@ -2043,10 +2041,6 @@
     <Content Include="Views\DeliverAllot\Index.cshtml" />
     <Content Include="Views\DeliverAllot\_SearchPartial.cshtml" />
     <Content Include="Views\DeliverAllot\_PrintPartial.cshtml" />
-    <Content Include="Views\ChannelAllot\Index.cshtml" />
-    <Content Include="Views\ChannelAllot\_PrintPartial.cshtml" />
-    <Content Include="Views\ChannelAllot\_ProductPartial.cshtml" />
-    <Content Include="Views\ChannelAllot\_SearchPartial.cshtml" />
     <Content Include="Views\ChannelInfo\Index.cshtml" />
     <Content Include="Views\ChannelInfo\_AddPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_DeletePartial.cshtml" />
@@ -2055,6 +2049,11 @@
     <Content Include="Views\ChannelInfo\_ProductPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_SearchPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_SortingLinePartial.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\Index.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\_SearchPartial.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\_PrintPartial.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\_ProductPartial.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\_SortingLinePartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />

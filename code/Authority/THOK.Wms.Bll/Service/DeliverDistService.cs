@@ -6,6 +6,8 @@ using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
+using THOK.Authority.DbModel;
+using THOK.Authority.Dal.Interfaces;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -13,6 +15,14 @@ namespace THOK.Wms.Bll.Service
     {
         [Dependency]
         public IDeliverDistRepository DeliverDistRepository { get; set; }
+        [Dependency]
+        public ICompanyRepository CompanyRepository { get; set; }
+
+        [Dependency]
+        public ICompanyRepository CompanysRepository { get; set; }
+
+        [Dependency]
+        public ICityRepository CityRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -21,36 +31,36 @@ namespace THOK.Wms.Bll.Service
 
         #region IDeliverDistService 成员
 
-        public object GetDetails(int page, int rows, string DistCode, string CustomCode, string DistName, string CompanyCode, string UniformCode, string IsActive)
+        public object GetDetails(int page, int rows, string DistCode, string CustomCode, string DistName, string IsActive)
         {
             IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
+            IQueryable<Company> companyQuery = CompanyRepository.GetQueryable();
+            IQueryable<City> cityQuery = CityRepository.GetQueryable();
+
             var DeliverDist = DeliverDistQuery.Where(c => c.DistCode.Contains(DistCode) &&
                                                           c.DistName.Contains(DistName) &&
                                                           c.IsActive.Contains(IsActive) &&
-                                                          c.UniformCode.Contains(UniformCode));
-            if (!CustomCode.Equals(string.Empty))
-            {
-                DeliverDist = DeliverDist.Where(d => d.CustomCode == CustomCode);
-            }
-            if (!CompanyCode.Equals(string.Empty))
-            {
-                DeliverDist = DeliverDist.Where(d => d.DistCenterCode == CompanyCode);
-            }
-            DeliverDist = DeliverDist.OrderBy(h => h.DistCode);
+                                                          c.CustomCode.Contains(CustomCode));
+
+            DeliverDist = DeliverDist.OrderBy(h => h.DeliverOrder);
             int total = DeliverDist.Count();
             DeliverDist = DeliverDist.Skip((page - 1) * rows).Take(rows);
+            var cityDetail = cityQuery.FirstOrDefault().CityName;
 
             var temp = DeliverDist.ToArray().Select(c => new
             {
                 DistCode = c.DistCode,
                 CustomCode = c.CustomCode,
-                DistName=c.DistName,
-                DistCenterCode=c.DistCenterCode,
-                CompanyCode = c.CompanyCode,
-                UniformCode=c.UniformCode,
-                Description=c.Description,
+                c.DistName,
+                c.DistCenterCode,
+                DistCenterName = companyQuery.FirstOrDefault(a => a.CompanyCode == c.DistCenterCode) != null ? companyQuery.FirstOrDefault(a => a.CompanyCode == c.DistCenterCode).CompanyName : cityDetail + "烟草物流配送中心",
+                c.CompanyCode,
+                CompanyName = companyQuery.FirstOrDefault(a => a.CompanyCode == c.CompanyCode) != null ? companyQuery.FirstOrDefault(a => a.CompanyCode == c.CompanyCode).CompanyName : cityDetail + "烟草公司",
+                UniformCode = c.UniformCode,
+                Description = c.Description,
+                c.DeliverOrder,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
-                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd")
             });
             return new { total, rows = temp.ToArray() };
         }
@@ -78,7 +88,6 @@ namespace THOK.Wms.Bll.Service
                     deliver.Description = deliverDist.Description;
                     deliver.IsActive = deliverDist.IsActive;
                     deliver.UpdateTime = DateTime.Now;
-
                     DeliverDistRepository.Add(deliver);
                     DeliverDistRepository.SaveChanges();
                     result = true;
@@ -136,22 +145,15 @@ namespace THOK.Wms.Bll.Service
         #region IDeliverDistService 成员
 
 
-        public bool Save(string DistCode, string CustomCode, string DistName, string DistCenterCode, string CompanyCode, string UniformCode, string Description, string IsActive, out string strResult)
+        public bool Save(string DistCode, string DeliverOrder, out string strResult)
         {
             strResult = string.Empty;
             try
             {
                 var deliver = DeliverDistRepository.GetQueryable()
                     .FirstOrDefault(i => i.DistCode == DistCode);
-                deliver.CustomCode = CustomCode;
-                deliver.DistName = DistName;
-                deliver.DistCenterCode = DistCenterCode;
-                deliver.CompanyCode = CompanyCode;
-                deliver.UniformCode = UniformCode;
-                deliver.Description = Description;
-                deliver.IsActive = IsActive;
+                deliver.DeliverOrder = Convert.ToInt32(DeliverOrder);
                 DeliverDistRepository.SaveChanges();
-
             }
             catch (Exception ex)
             {
@@ -186,43 +188,48 @@ namespace THOK.Wms.Bll.Service
         public System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
-          
-                IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
 
-                var DeliverDistinfo = DeliverDistQuery.OrderBy(a => a.DistCode).Select(a => new
-                {
-                    //a.DistCode,
-                    a.CustomCode,
-                    a.DistName,
-                    a.DistCenterCode,
-                    a.CompanyCode,
-                    a.UpdateTime,
-                    IsActive = a.IsActive == "1" ? "可用" : "不可用"
+            IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
+            IQueryable<Company> companyQuery = CompanyRepository.GetQueryable();
+            IQueryable<City> cityQuery = CityRepository.GetQueryable();
+            var cityDetail = cityQuery.FirstOrDefault().CityName;
 
-                });
+            var DeliverDistinfo = DeliverDistQuery.OrderBy(a => a.DistCode).ToArray().Select(a => new
+            {
+                //a.DistCode,
+                a.CustomCode,
+                a.DistName,
+                a.DistCenterCode,
+                DistCenterName = companyQuery.FirstOrDefault(c => c.CompanyCode == a.DistCenterCode) != null ? companyQuery.FirstOrDefault(c => c.CompanyCode == a.DistCenterCode).CompanyName : cityDetail + "烟草物流配送中心",
+                a.CompanyCode,
+                CompanyName = companyQuery.FirstOrDefault(c => c.CompanyCode == a.CompanyCode) != null ? companyQuery.FirstOrDefault(c => c.CompanyCode == a.CompanyCode).CompanyName : cityDetail + "烟草公司",
+                a.UpdateTime,
+                IsActive = a.IsActive == "1" ? "可用" : "不可用"
 
-                //dt.Columns.Add("配送区域编码", typeof(string));
-                dt.Columns.Add("自定义编码", typeof(string));
-                dt.Columns.Add("配送区域名称", typeof(string));
-                dt.Columns.Add("配送中心编码", typeof(string));
-                dt.Columns.Add("所属单位编码", typeof(string));
-                dt.Columns.Add("更新时间", typeof(string));
-                dt.Columns.Add("是否可用", typeof(string));
+            });
 
-                foreach (var item in DeliverDistinfo)
-                {
-                    dt.Rows.Add
-                        (
+            //dt.Columns.Add("配送区域编码", typeof(string));
+            dt.Columns.Add("配送区域名称", typeof(string));
+            dt.Columns.Add("自定义编码", typeof(string));
+            dt.Columns.Add("配送中心", typeof(string));
+            dt.Columns.Add("所属单位", typeof(string));
+            dt.Columns.Add("更新时间", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
+
+            foreach (var item in DeliverDistinfo)
+            {
+                dt.Rows.Add
+                    (
                     //item.DistCode,
-                    item.CustomCode,
-                    item.DistName,
-                    item.DistCenterCode,
-                    item.CompanyCode,
-                    item.UpdateTime,
-                    item.IsActive
-                        );
-                }
-            
+                item.DistName,
+                item.CustomCode,
+                item.DistCenterName,
+                item.CompanyName,
+                item.UpdateTime,
+                item.IsActive
+                    );
+            }
+
             return dt;
         }
     }

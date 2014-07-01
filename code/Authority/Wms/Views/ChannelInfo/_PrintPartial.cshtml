@@ -1,9 +1,9 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        window.location.href = "/Channel/CreateExcelToClient/"
-                                + "?channelName=" + $('#search-ChannelName').val()
-                                + "&channelType=" + $('#search-ChannelType').combo('getValue')
+        window.location.href = "/ChannelInfo/CreateExcelToClient/"
+                             
+                                + "?channelType=" + $('#search-ChannelType').combo('getValue')
                                 + "&status=" + $('#search-Status').combo('getValue')
-                                + "&groupNo=" + $('#search-GroupNo').combo('getValue')
+                                + "&groupNo=" + $('#searchGroupNo').combo('getValue')
     }
 </script>

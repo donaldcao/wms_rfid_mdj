@@ -7,6 +7,8 @@ using THOK.Wms.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.Download.Interfaces;
+using THOK.Authority.Dal.Interfaces;
+using THOK.Authority.DbModel;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -22,6 +24,8 @@ namespace THOK.Wms.Bll.Service
         [Dependency]
         public IDeliverDistRepository DeliverDistRepository { get; set; }
 
+        [Dependency]
+        public ICityRepository CityRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -71,9 +75,10 @@ namespace THOK.Wms.Bll.Service
         public object GetDetails(int page, int rows, string DeliverLineCode, string CustomCode, string DeliverLineName, string DistCode, string DeliverOrder, string IsActive)
         {
             IQueryable<DeliverLine> deliverLineQuery = DeliverLineRepository.GetQueryable();
+            IQueryable<DeliverDist> deliverDistQuery = DeliverDistRepository.GetQueryable();
+            IQueryable<City> cityQuery = CityRepository.GetQueryable();
             var deliverLine = deliverLineQuery.Where(c => c.DeliverLineCode.Contains(DeliverLineCode) &&
                                                           c.DeliverLineName.Contains(DeliverLineName) &&
-                                                          c.IsActive.Contains(IsActive) &&
                                                           c.IsActive.Contains(IsActive));
             if (!CustomCode.Equals(string.Empty))
             {
@@ -83,16 +88,16 @@ namespace THOK.Wms.Bll.Service
             {
                 deliverLine = deliverLine.Where(d => d.DistCode == DistCode);
             }
-            deliverLine = deliverLine.OrderBy(h => h.DeliverLineCode);
             int total = deliverLine.Count();
-            deliverLine = deliverLine.Skip((page - 1) * rows).Take(rows);
 
-            var temp = deliverLine.ToArray().Select(c => new
+            var cityDetail = cityQuery.FirstOrDefault().CityName;
+            var temp = deliverLine.OrderBy(d => d.DeliverOrder).ToArray().Skip((page - 1) * rows).Take(rows).Select(c => new
             {
                 DeliverLineCode = c.DeliverLineCode,
                 CustomCode = c.CustomCode,
                 DeliverLineName = c.DeliverLineName,
-                DistCode = c.DistCode,
+                c.DistCode,
+                DistName = deliverDistQuery.FirstOrDefault(a => a.DistCode == c.DistCode) != null ? deliverDistQuery.FirstOrDefault(a => a.DistCode == c.DistCode).DistName : cityDetail,
                 DeliverOrder = c.DeliverOrder,
                 Description = c.Description,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
@@ -181,20 +186,14 @@ namespace THOK.Wms.Bll.Service
 
         #region IDeliverLineService 成员
 
-        public bool Edit(DeliverLine deliverLine, out string strResult)
+        public bool Edit(string DeliverLineCode, string DeliverOrder, out string strResult)
         {
             strResult = string.Empty;
             try
             {
-                var deliver_line = DeliverLineRepository.GetQueryable().FirstOrDefault(i => i.DeliverLineCode == deliverLine.DeliverLineCode);
-                deliver_line.DeliverLineCode = deliverLine.DeliverLineCode;
-                deliver_line.CustomCode = deliverLine.CustomCode;
-                deliver_line.DeliverLineName = deliverLine.DeliverLineName;
-                deliver_line.DistCode = deliverLine.DistCode;
-                deliver_line.DeliverOrder = deliverLine.DeliverOrder;
-                deliver_line.Description = deliverLine.Description;
-                deliver_line.IsActive = deliverLine.IsActive;
-                deliver_line.UpdateTime = DateTime.Now;
+                var deliver_line = DeliverLineRepository.GetQueryable().FirstOrDefault(i => i.DeliverLineCode == DeliverLineCode);
+                deliver_line.DeliverOrder = Convert.ToInt32(DeliverOrder);
+
                 DeliverLineRepository.SaveChanges();
                 return true;
             }
@@ -231,44 +230,45 @@ namespace THOK.Wms.Bll.Service
         public System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode)
         {
             System.Data.DataTable dt = new System.Data.DataTable();
-          
-                IQueryable<DeliverLine> DeliverLineQuery = DeliverLineRepository.GetQueryable();
 
-               // var DeliverLine = DeliverLineQuery.Where(a => a.DeliverLineCode.Contains(DeliverLineCode));
+            IQueryable<DeliverLine> DeliverLineQuery = DeliverLineRepository.GetQueryable();
+            IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
+            IQueryable<City> cityQuery = CityRepository.GetQueryable();
+            var cityDetail = cityQuery.FirstOrDefault().CityName;
+            var DeliverLineinfo = DeliverLineQuery.OrderBy(a => a.DeliverLineCode).Select(a => new
+            {
+                a.DeliverLineCode,
+                a.CustomCode,
+                a.DeliverLineName,
+                a.DistCode,
+                DistName = DeliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode) != null ? DeliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode).DistName : cityDetail + "烟草配送中心",
+                a.DeliverOrder,
+                a.UpdateTime,
+                IsActive = a.IsActive == "1" ? "可用" : "不可用"
 
-                var DeliverLineinfo = DeliverLineQuery.OrderBy(a => a.DeliverLineCode).Select(a => new
-                {
-                    a.DeliverLineCode,
-                    a.CustomCode,
-                    a.DeliverLineName,
-                    a.DistCode,
-                    a.DeliverOrder,                
-                    a.UpdateTime,
-                    IsActive=a.IsActive=="1"?"可用":"不可用"
+            });
 
-                });
+            dt.Columns.Add("送货线路编码", typeof(string));
+            dt.Columns.Add("送货线路名称", typeof(string));
+            dt.Columns.Add("配送区域名称", typeof(string));
+            dt.Columns.Add("自定义编码", typeof(string));
+            dt.Columns.Add("送货线路顺序", typeof(string));
+            dt.Columns.Add("更新时间", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
 
-                dt.Columns.Add("送货线路编码", typeof(string));
-                dt.Columns.Add("自定义编码", typeof(string));
-                dt.Columns.Add("送货线路名称", typeof(string));
-                dt.Columns.Add("配送区域编码", typeof(string));
-                dt.Columns.Add("送货线路顺序", typeof(string));                   
-                dt.Columns.Add("更新时间", typeof(string));
-                dt.Columns.Add("是否可用", typeof(string));
-
-                foreach (var item in DeliverLineinfo)
-                {
-                    dt.Rows.Add
-                        (
-                    item.DeliverLineCode,
-                    item.CustomCode,
-                    item.DeliverLineName,
-                    item.DistCode,
-                    item.DeliverOrder,                                 
-                    item.UpdateTime,
-                    item.IsActive
-                        );
-                }           
+            foreach (var item in DeliverLineinfo)
+            {
+                dt.Rows.Add
+                    (
+                item.DeliverLineCode,
+                item.DeliverLineName,
+                item.DistName,
+                item.CustomCode,
+                item.DeliverOrder,
+                item.UpdateTime,
+                item.IsActive
+                    );
+            }
             return dt;
         }
 

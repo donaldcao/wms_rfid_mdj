@@ -1,28 +1,140 @@
 ﻿<script type="text/javascript">
+    var url;
+    url = "/DeliverLine/Edit";
     function editClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            $('#dlg').dialog('open').dialog('setTitle', '编辑配送线路信息');
-            editKey = true;
-            $('#deliverlinefm').form('load', row);
-            $('#deliverlinefm　.easyui-validatebox').validatebox({
-                required: true
-            });
-            $('form input').removeAttr("disabled");
-            $('form textarea').removeAttr("disabled");
-            $('#deliverLineCode1').attr("readonly", true);
-            $('#L_isActive').combo({
-                hasDownArrow: true
-            });
-            if (row.IsActive == "可用") {
-                $('#L_isActive').combo('setValue', 1).combo('setText', row.IsActive);
-            } else {
-                $('#L_isActive').combo('setValue', 0).combo('setText', row.IsActive);
-            }
-            url = '/DeliverLine/Edit/';
+            $('#dlg').dialog('open').dialog('setTitle', '编辑');
 
-        } else {
-            $.messager.confirm('错误', '没有选择行！');
+            //文本赋值&下拉框赋值
+            $('#deliverlinefm').form('load', row);
+            $('#editdeliverLineCode').attr('readonly', 'true');
+            $('#editdeliverLineName').attr('readonly', 'true');
+        }
+        else {
+            $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
+    //保存
+    function save() {
+        $('#deliverlinefm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    $('#dlg').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
+
+    //    function editClick() {
+    //        var row = $('#details').datagrid('getSelected');
+    //        if (row) {
+    //            $('#dlg').dialog('open').dialog('setTitle', '编辑配送线路信息');
+    //            editKey = true;
+    //            $('#deliverlinefm').form('load', row);
+    //            $('#deliverlinefm　.easyui-validatebox').validatebox({
+    //                required: true
+    //            });
+    //            $('form input').removeAttr("disabled");
+    //            $('form textarea').removeAttr("disabled");
+    //            $('#deliverLineCode1').attr("readonly", true);
+    //            $('#L_isActive').combo({
+    //                hasDownArrow: true
+    //            });
+    //            if (row.IsActive == "可用") {
+    //                $('#L_isActive').combo('setValue', 1).combo('setText', row.IsActive);
+    //            } else {
+    //                $('#L_isActive').combo('setValue', 0).combo('setText', row.IsActive);
+    //            }
+    //            url = '/DeliverLine/Edit/';
+
+    //        } else {
+    //            $.messager.confirm('错误', '没有选择行！');
+    //        }
+    //    }
 </script>
+<div id="dlg" class="easyui-dialog" modal="true" style="width: 300px; height: 230px;
+    padding: 2px 2px" closed="true" buttons="#deliver-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
+            border: 1px solid #ccc;">
+            <form id="deliverlinefm" method="post">
+            <table width="260">
+                <tr>
+                    <td style="text-align: right; width: 110px;">
+                        送货线路编码:
+                    </td>
+                    <td width="168">
+                        <input name="DeliverLineCode" id="editdeliverLineCode" class="easyui-validatebox" />
+                    </td>
+                    @*      <td width="80">
+                        自定义编码:
+                    </td>
+                    <td width="168">
+                        <input name="CustomCode" id="customCode"  validtype="maxLength[50]"
+                            required="true" />
+                    </td>*@
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 110px;">
+                        送货线路名称:
+                    </td>
+                    <td width="168">
+                        <input name="DeliverLineName" id="editdeliverLineName" class="easyui-validatebox" />
+                    </td>
+                    @*      <td width="80">
+                       配送区域编码:
+                    </td>
+                     <td width="168">
+                        <input name="DistCode" id="distCode"  validtype="maxLength[50]" required="true" />
+                    </td>
+                    </tr>
+                    <tr>*@
+                </tr>
+                <tr>
+                   <td style="text-align: right; width: 110px;">
+                        送货线路顺序:
+                    </td>
+                    <td width="168">
+                        <input name="DeliverOrder" id="DeliverOrder" class="easyui-validatebox" />
+                    </td>
+                </tr>
+                @*  <td width="60">
+                       描述:
+                    </td>
+                     <td width="168">
+                        <input name="Description" id="description"  validtype="maxLength[100]" required="true" />     
+                       </td> 
+                       </tr>
+                    <tr>
+                    <td>
+                        状态:
+                    </td>
+                       <td>
+                        <select id="L_isActive"  name="IsActive" class="easyui-combobox"  class="easyui-validatebox"  required="true"
+                            style="width: 129px">
+                            <option value="1">可用</option>
+                            <option value="0">不可用</option>
+                        </select>
+                      </td>
+                    </tr>*@
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="deliver-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">
+        取消</a>
+</div>

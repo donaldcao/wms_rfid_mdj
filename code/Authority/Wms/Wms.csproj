@@ -1970,9 +1970,7 @@
     <Content Include="Views\Employee\_AddPartial.cshtml" />
     <Content Include="Views\HelpEdit\Index.cshtml" />
     <Content Include="Views\DeliverDist\Index.cshtml" />
-    <Content Include="Views\DeliverDist\_AddPartial.cshtml" />
     <Content Include="Views\DeliverDist\_SearchPartial.cshtml" />
-    <Content Include="Views\DeliverDist\_deliverPartial1.cshtml" />
     <Content Include="Views\DeliverDist\_EditPartial.cshtml" />
     <Content Include="Views\DeliverDist\_DeletePartial.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />

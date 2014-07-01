@@ -38,45 +38,56 @@
             border: 1px solid #ccc;">
             <table width="280">
                 <tr>
-                <td width="80"> 送货线路编码:</td>
-                <td><input name="DeliverLineCode" id="deliverLineCode" type="text">
-                </td>
-                </tr>
-                <tr>
-                <td width="80"> 自定义编码:</td>
-                <td><input name="CustomCode" id="customCode" type="text">
-                </td>
-                </tr>
-                <tr>
-                <td width="80"> 送货线路名称:</td>
-                <td><input name="DeliverLineName" id="deliverLineName" type="text">
-                </td>
-                </tr>
-                <tr>
-                <td width="80"> 配送区域编码:</td>
-                <td><input name="DistCode" id="distCode" type="text">
-                  <a href="#" id="deliverLine_Search" class="easyui-linkbutton" iconcls="icon-search"
-                        plain="true" onclick="deliverLine_Select()"></a>
-                </td>
-                <tr>
-                    <td>
-                        是否可用：
+                    <td style="text-align: right; width: 80px;">
+                        送货线路编码:
                     </td>
                     <td>
-                        <select id="d_status" class="easyui-combobox">
-                            <option value="">请选择</option>
-                            <option value="1">可用</option>
-                            <option value="0">不可用</option>
-                        </select>
+                        <input name="DeliverLineCode" id="deliverLineCode" type="text">
                     </td>
                 </tr>
+                <tr>
+                    <td style="text-align: right; width: 80px;">
+                        自定义编码:
+                    </td>
+                    <td>
+                        <input name="CustomCode" id="customCode" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 80px;">
+                        送货线路名称:
+                    </td>
+                    <td>
+                        <input name="DeliverLineName" id="deliverLineName" type="text">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 80px;">
+                        配送区域编码:
+                    </td>
+                    <td>
+                        <input name="DistCode" id="distCode" type="text">
+                        <a href="#" id="deliverLine_Search" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true" onclick="deliverLine_Select()"></a>
+                    </td>
+                    <tr>
+                        <td style="text-align: right; width: 80px;">
+                            是否可用:
+                        </td>
+                        <td>
+                            <select id="d_status" class="easyui-combobox">
+                                <option value="1">可用</option>
+                                <option value="0">不可用</option>
+                            </select>
+                        </td>
+                    </tr>
             </table>
         </div>
     </div>
 </div>
 <div id="dlg-buttons-research">
-    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="deliverLine_select()">查询</a>
-    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
-        取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="deliverLine_select()">
+        查询</a> <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+            取消</a>
 </div>
-@Html.Partial("_DistCode") 
+@Html.Partial("_DistCode")

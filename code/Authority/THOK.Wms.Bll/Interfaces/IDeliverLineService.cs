@@ -18,7 +18,7 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool Delete(string DeliverLineCode);
 
-        bool Edit(DeliverLine deliverLine, out string strResult);
+        bool Edit(string DeliverLineCode,string DeliverOrder, out string strResult);
 
         System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode);
     }

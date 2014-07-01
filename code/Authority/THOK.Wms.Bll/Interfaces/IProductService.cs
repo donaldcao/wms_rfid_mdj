@@ -29,5 +29,9 @@ namespace THOK.Wms.Bll.Interfaces
         object GetProductBy(int page, int rows, string QueryString, string Value);
 
         System.Data.DataTable GetProduct(int page, int rows, string ProductName, string ProductCode, string CustomCode, string BrandCode, string UniformCode, string AbcTypeCode, string ShortCode, string PriceLevelCode, string SupplierCode);
+
+        object GetDetails(int page, int rows, string productCode, string productName, string barBarcode, string isAbnormity);
+
+        bool Change(string productCode, string barBarcode, string isAbnormity);
     }
 }

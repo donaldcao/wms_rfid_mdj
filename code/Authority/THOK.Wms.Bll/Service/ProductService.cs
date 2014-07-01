@@ -121,6 +121,7 @@ namespace THOK.Wms.Bll.Service
             });
             return new { total, rows = temp.ToArray() };
         }
+        
         public bool Add(Product product)
         {
             var prod = new Product();
@@ -182,6 +183,7 @@ namespace THOK.Wms.Bll.Service
                 return false;
             return true;
         }
+      
         public bool Save(Product product)
         {
             var prod = ProductRepository.GetQueryable().FirstOrDefault(b => b.ProductCode == product.ProductCode);
@@ -591,5 +593,57 @@ namespace THOK.Wms.Bll.Service
             }
             return dt;
         }
+        #region 分拣管理信息系统用  查询修改版
+        public object GetDetails(int page, int rows, string productCode, string ProductName, string barCode, string isAbnormity)
+        {
+            var ProductQuery = ProductRepository.GetQueryable();
+            if (barCode != "" && barCode != null)
+            {
+                ProductQuery = ProductQuery.Where(p => p.PieceBarcode.Contains(barCode));
+            }
+            var product = ProductQuery.Where(c => c.ProductCode.Contains(productCode)
+                && c.ProductName.Contains(ProductName)
+                && c.IsAbnormity.Contains(isAbnormity))
+                .OrderBy(c => c.ProductCode)
+                .Select(c => c);
+            int total = product.Count();
+            product = product.Skip((page - 1) * rows).Take(rows);
+            var productArray = product.ToArray().Select(c => new
+            {
+                c.ProductCode,
+                c.ProductName,
+                c.PieceBarcode,
+                IsAbnormity = c.IsAbnormity == "1" ? "是" : "不是",
+                IsActive = c.IsActive == "1" ? "可用" : "不可用",
+                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+            return new { total, rows = productArray.ToArray() };
+        }
+
+        public bool Change(string productCode, string barBarcode, string isAbnormity)
+        {
+            var product = ProductRepository.GetQueryable().FirstOrDefault(b => b.ProductCode == productCode);
+            if (product.PieceBarcode != barBarcode)
+            {
+                product.PieceBarcode = barBarcode;
+                product.UpdateTime = DateTime.Now;
+            }
+            if (isAbnormity=="是")
+            {
+                isAbnormity = "1";
+            }
+            else if (isAbnormity=="不是")
+            {
+                isAbnormity = "0";
+            }
+            if (product.IsAbnormity != isAbnormity)
+            {
+                product.IsAbnormity = isAbnormity;
+                product.UpdateTime = DateTime.Now;
+            }
+            ProductRepository.SaveChanges();
+            return true;
+        }
+        #endregion
     }
 }

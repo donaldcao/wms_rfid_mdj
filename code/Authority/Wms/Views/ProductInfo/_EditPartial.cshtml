@@ -12,8 +12,6 @@
             }
             //文本赋值&下拉框赋值
             $('#editproductfm').form('load', row);
-            $('#ProductCode').attr('readonly', 'true');
-            $('#ProductName').attr('readonly', 'true');
         }
         else {
             $.messager.alert('错误', '没有选择行！', 'info');
@@ -49,11 +47,11 @@
             <table width="260">
                <tr>
                 <td>商品编码：</td>
-                <td><input id="ProductCode" name="ProductCode" type="text"></td>
+                <td><input id="ProductCode" readonly="true" name="ProductCode" type="text"></td>
                 </tr>
                 <tr>
                 <td>商品名称：</td>
-                <td><input id="ProductName" name="ProductName" type="text"></td>
+                <td><input id="ProductName" readonly="true" name="ProductName" type="text"></td>
                 </tr>
                 <tr>
                 <td>件烟条形码：</td>

@@ -22,6 +22,6 @@ namespace THOK.Wms.Bll.Interfaces
 
         System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode);
 
-     
+        object GetDetails(int page, int rows, string customerCode, string customerName, string deliverLineCode);
     }
 }

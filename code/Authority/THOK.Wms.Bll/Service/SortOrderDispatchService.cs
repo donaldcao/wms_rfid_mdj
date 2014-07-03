@@ -15,6 +15,9 @@ namespace THOK.Wms.Bll.Service
         public ISortOrderDispatchRepository SortOrderDispatchRepository { get; set; }
 
         [Dependency]
+        public ISortingLineRepository SortingLineRepository { get; set; }
+
+        [Dependency]
         public ISortOrderRepository SortOrderRepository { get; set; }
         protected override Type LogPrefix
         {
@@ -58,6 +61,63 @@ namespace THOK.Wms.Bll.Service
             return new { total, rows = temp.ToArray() };
         }
 
+        public bool Add(string DeliverLineCodes, string orderDate)
+        {
+            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            bool bResult = false;
+            if (orderDate == string.Empty || orderDate == null)
+            {
+                return bResult;
+            }
+            else
+            {
+                orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
+            }
+            var sortOder = SortOrderRepository.GetQueryable().Where(s => s.OrderDate == orderDate)
+                                              .GroupBy(s => new { s.DeliverLineCode, s.OrderDate })
+                                              .Select(s => new { DeliverLineCode = s.Key.DeliverLineCode, OrderDate = s.Key.OrderDate ,Quantity=s.Sum(a=>a.QuantitySum)})
+                                              .OrderByDescending(a=>a.Quantity);
+            try
+            {
+                var sortingLineArray = sortingLineQuery.Where(a => a.ProductType.Equals("1") && a.IsActive.Equals("1"));
+                foreach (var item in sortOder.Where(s=>DeliverLineCodes.Contains(s.DeliverLineCode)).OrderByDescending(s=>s.Quantity).ToArray())
+                {
+                    var sortDispatchArray=sortDispatchQuery.Where(b => b.OrderDate.Equals(orderDate) && b.SortStatus.Equals("1") && b.IsActive.Equals("1"))
+                                .Join(sortOder,
+                                so => so.DeliverLineCode,
+                                sd => sd.DeliverLineCode,
+                                (so, sd) => new {so.OrderDate,so.SortingLineCode,so.SortStatus,so.IsActive,sd.Quantity })
+                                .GroupBy(b => new { b.OrderDate, b.SortingLineCode, b.SortStatus, b.IsActive })
+                                .Select(b => new { b.Key.SortingLineCode, Quantity = b.Sum(s=>s.Quantity) });
+                    var sortingLineCode = sortingLineArray.Select(a => new
+                    {
+                        a.SortingLineCode,
+                        Quantity = sortDispatchArray.FirstOrDefault(b => b.SortingLineCode.Equals(a.SortingLineCode))==null ? 0 : sortDispatchArray.FirstOrDefault(b => b.SortingLineCode.Equals(a.SortingLineCode)).Quantity
+                    }).OrderBy(a => a.Quantity).ToArray();
+                    if (sortingLineCode.Count() <= 0)
+                    {
+                        return bResult;
+                    }
+                    var sortOrderDispatch = new SortOrderDispatch();
+                    sortOrderDispatch.SortingLineCode = sortingLineCode[0].SortingLineCode;
+                    sortOrderDispatch.DeliverLineCode = item.DeliverLineCode;
+                    sortOrderDispatch.WorkStatus = "1";
+                    sortOrderDispatch.OrderDate = orderDate;
+                    sortOrderDispatch.IsActive = "1";
+                    sortOrderDispatch.UpdateTime = DateTime.Now;
+                    sortOrderDispatch.SortStatus = "1";
+
+                    SortOrderDispatchRepository.Add(sortOrderDispatch);
+                    SortOrderDispatchRepository.SaveChanges();
+                }
+                bResult = true;
+            }
+            catch
+            { }
+            return bResult;
+        }
+
         public new bool Add(string SortingLineCode, string DeliverLineCodes, string orderDate)
         {
             if (orderDate == string.Empty || orderDate == null)
@@ -81,6 +141,7 @@ namespace THOK.Wms.Bll.Service
                 sortOrderDispatch.OrderDate = item.OrderDate;
                 sortOrderDispatch.IsActive = "1";
                 sortOrderDispatch.UpdateTime = DateTime.Now;
+                sortOrderDispatch.SortStatus = "1";
 
                 SortOrderDispatchRepository.Add(sortOrderDispatch);
             }

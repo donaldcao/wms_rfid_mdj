@@ -34,41 +34,49 @@
     }
 
     function save() {
-        var sortlineCode = $('#lineCode').combobox('getValue'), deliverLineCode = "";
-        var sortDate = $('#orderDate').datebox('getValue');
-        if (sortlineCode != "" && sortlineCode != null) {
-            var rows = $('#sortingOrderAllot').datagrid('getSelections');
-            if (rows.length > 0) {
-                for (var i = 0; i < rows.length; i++) {
-                    deliverLineCode += rows[i].DeliverLineCode + ",";
-                }
-                $.getJSON('/SortOrderDispatch/Create/', { SortingLineCode: sortlineCode, DeliverLineCodes: deliverLineCode, orderDate: sortDate }, function (result) {
-                    if (result) {
-                        if (result.success) {
-                            $.messager.alert(g_MsgBoxTitle, result.msg, "info");
-                            addKey = false;
-                            editKey = false;
-                            $('#dlg').dialog('close');
-                            $('#details').datagrid('reload');
-                        } else {
-                            $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
-                            addKey = false;
-                            editKey = false;
-                            $('#dlg').dialog('close');
-                            $('#details').datagrid('reload');
-                        }
+        var rows = $('#sortingOrderAllot').datagrid('getSelections');
+        if (rows.length > 0) {
+            var sortlineCode = $('#lineCode').combobox('getValue'), deliverLineCode = "";
+            var sortDate = $('#orderDate').datebox('getValue');
+            for (var i = 0; i < rows.length; i++) {
+                deliverLineCode += rows[i].DeliverLineCode + ",";
+            }
+            if (sortlineCode != "" && sortlineCode != null) {
+                Request(sortlineCode, deliverLineCode, sortDate, '0')
+            } else {
+                $.messager.confirm('询问', '没有选择分拣线，是否自动分配？', function (r) {
+                    if (r) {
+                        Request(sortlineCode, deliverLineCode, sortDate, '1')
                     }
                 });
-            } else {
-                $.messager.alert('错误', '请选择需要分配的线路！');
                 addKey = false;
                 editKey = false;
             }
         } else {
-            $.messager.alert('错误', '请选择分拣线！');
+            $.messager.alert('错误', '请选择需要分配的线路！');
             addKey = false;
             editKey = false;
         }
+    }
+
+    function Request(sortlineCode, deliverLineCode, sortDate, isauto) {
+        $.getJSON('/SortOrderDispatch/Create/', { SortingLineCode: sortlineCode, DeliverLineCodes: deliverLineCode, orderDate: sortDate,IsAuto:isauto }, function (result) {
+            if (result) {
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    addKey = false;
+                    editKey = false;
+                    $('#dlg').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    addKey = false;
+                    editKey = false;
+                    $('#dlg').dialog('close');
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
     }
 
     function SelectQuantity() {
@@ -135,8 +143,8 @@
 </div>
 
 <div id="bar" style="width: auto; height: auto; background-color: #FFFFFF;padding:1px 10px;" >时间:
-    <input id="orderDate" class="easyui-datebox" type="text" style="width: 140px"/>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="allot()">查询</a>
+    <input id="orderDate" class="easyui-datebox" type="text" style="width: 140px" editable="false"/>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="allot()">查询</a>
     分拣线：<input class="easyui-combobox" name="language" url="" id="lineCode"
             valueField="SortingLineCode" textField="SortingLineName" 
              panelHeight="auto" />

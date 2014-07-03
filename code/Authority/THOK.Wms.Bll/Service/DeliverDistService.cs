@@ -185,16 +185,29 @@ namespace THOK.Wms.Bll.Service
 
 
 
-        public System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode)
-        {
-            System.Data.DataTable dt = new System.Data.DataTable();
-
-            IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
-            IQueryable<Company> companyQuery = CompanyRepository.GetQueryable();
-            IQueryable<City> cityQuery = CityRepository.GetQueryable();
+        public System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode, string CustomCode, string DistName, string IsActive)
+        {          
+            var DeliverDistQuery = DeliverDistRepository.GetQueryable();
+            var companyQuery = CompanyRepository.GetQueryable();
+            var cityQuery = CityRepository.GetQueryable();
             var cityDetail = cityQuery.FirstOrDefault().CityName;
 
-            var DeliverDistinfo = DeliverDistQuery.OrderBy(a => a.DistCode).ToArray().Select(a => new
+            var dist = DeliverDistQuery.Where(a => a.DistCode.Contains(DistCode)).OrderBy(a => a.DeliverOrder).Select(a => a);
+
+            if (!DistName.Equals(string.Empty))
+            {
+                dist=dist.Where(a => a.DistName.Contains(DistName));
+            }
+            if (!CustomCode.Equals(string.Empty))
+            {
+                dist=dist.Where(a => a.CustomCode.Contains(CustomCode));
+            }
+            if (!IsActive.Equals(string.Empty))
+            {
+                dist = dist.Where(a => a.IsActive.Contains(IsActive));
+            }
+
+            var DeliverDistinfo = dist.ToArray().Select(a => new
             {
                 //a.DistCode,
                 a.CustomCode,
@@ -207,7 +220,7 @@ namespace THOK.Wms.Bll.Service
                 IsActive = a.IsActive == "1" ? "可用" : "不可用"
 
             });
-
+            System.Data.DataTable dt = new System.Data.DataTable();
             //dt.Columns.Add("配送区域编码", typeof(string));
             dt.Columns.Add("配送区域名称", typeof(string));
             dt.Columns.Add("自定义编码", typeof(string));
@@ -218,18 +231,15 @@ namespace THOK.Wms.Bll.Service
 
             foreach (var item in DeliverDistinfo)
             {
-                dt.Rows.Add
-                    (
+                dt.Rows.Add(
                     //item.DistCode,
                 item.DistName,
                 item.CustomCode,
                 item.DistCenterName,
                 item.CompanyName,
                 item.UpdateTime,
-                item.IsActive
-                    );
+                item.IsActive);
             }
-
             return dt;
         }
     }

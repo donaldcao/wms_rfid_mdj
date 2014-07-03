@@ -1,37 +1,20 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var sortingLineCode = null
-          , sortingLineName = null
-          , sortingLineType = null
-          , isActive = null;
+        var sortingLineCode = null,
+        sortingLineName = null,
+        productType = null,
+        sortingLineType = null,
+        isActive = null;
 
-        if ($('#SortingLineCode').val() == null) {
-            sortingLineCode = "";
-        }
-        else {
-            sortingLineCode = $('#SortingLineCode').val();
-        }
-        if ($('#SortingLineName').val() == null) {
-            sortingLineName = "";
-        }
-        else {
-            sortingLineName = $('#SortingLineName').val();
-        }
-        if (document.getElementById('SortingLineType') == null) {
-            sortingLineType = "";
-        }
-        else {
-            sortingLineType = $('#SortingLineType').combo('getValue');
-        }
-        if (document.getElementById('IsActive') == null) {
-            isActive = "";
-        }
-        else {
-            isActive = $('#IsActive').combo('getValue');
-        }
+        if ($('#SortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#SortingLineCode').val(); }
+        if ($('#SortingLineName').val() == null) { sortingLineName = ""; } else { sortingLineName = $('#SortingLineName').val(); }
+        if (document.getElementById('ProductType') == null) { productType = ""; } else { productType = $('#ProductType').combo('getValue'); }
+        if (document.getElementById('SortingLineType') == null) { sortingLineType = ""; } else { sortingLineType = $('#SortingLineType').combo('getValue'); }
+        if (document.getElementById('IsActive') == null) { isActive = ""; } else { isActive = $('#IsActive').combo('getValue'); }
         window.location.href = "/SortingLine/CreateExcelToClient/"
                                 + "?sortingLineCode=" + sortingLineCode
                                 + "&sortingLineName=" + sortingLineName
+                                + "&productType=" + productType
                                 + "&sortingLineType=" + sortingLineType
                                 + "&isActive=" + isActive;
     }

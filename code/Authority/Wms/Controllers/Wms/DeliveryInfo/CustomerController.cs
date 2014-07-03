@@ -71,7 +71,7 @@ namespace Wms.Controllers.Wms.DeliveryInfo
         public ActionResult Edit(Customer customer)
         {
             string strResult = string.Empty;
-            bool bResult = CustomerService.Save(customer,out strResult);
+            bool bResult = CustomerService.Save(customer, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }
@@ -91,11 +91,13 @@ namespace Wms.Controllers.Wms.DeliveryInfo
         {
             int page = 0, rows = 0;
             string CustomerCode = Request.QueryString["CustomerCode"];
+            string CustomerName = Request.QueryString["CustomerName"];
+            string DeliverLineCode = Request.QueryString["DeliverLineCode"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CustomerService.GetCustomerInfo(page, rows, CustomerCode);      
+            ep.DT1 = CustomerService.GetCustomerInfo(page, rows, CustomerCode, CustomerName, DeliverLineCode);
             ep.HeadTitle1 = "客户信息";
-         
+
             return PrintService.Print(ep);
         }
     }

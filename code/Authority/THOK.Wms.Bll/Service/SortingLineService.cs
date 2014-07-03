@@ -168,11 +168,11 @@ namespace THOK.Wms.Bll.Service
 
         #endregion
 
-        public System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode)
+        public System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode, string sortingLineName, string productType, string sortingLineType, string IsActive)
         {
-            IQueryable<SortingLine> sortLineQuery = SortingLineRepository.GetQueryable();
-
-            var temp = sortLineQuery.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
+            var sortLineQuery = SortingLineRepository.GetQueryable();
+            var sortingLine = sortLineQuery.Where(a => a.SortingLineCode.Contains(sortingLineCode)&&a.SortingLineName.Contains(sortingLineName)&&a.ProductType.Contains(productType)&&a.SortingLineType.Contains(sortingLineType)&&a.IsActive.Contains(IsActive)).OrderBy(a => a.SortingLineCode).Select(a => a);                        
+            var temp = sortingLine.ToArray().Select(b => new
             {
                 b.SortingLineCode,
                 b.SortingLineName,
@@ -194,16 +194,14 @@ namespace THOK.Wms.Bll.Service
             dt.Columns.Add("是否可用", typeof(string));
             foreach (var item in temp)
             {
-                dt.Rows.Add
-                    (
+                dt.Rows.Add(
                         item.SortingLineCode,
                         item.SortingLineName,
                         item.ProductType,
                         item.SortingLineType,
                         item.OutBillTypeCode,
                         item.MoveBillTypeCode,
-                        item.IsActive
-                    );
+                        item.IsActive );
             }
             return dt;
         }

@@ -97,9 +97,14 @@ namespace Wms.Controllers.Wms.DeliveryInfo
         {
             int page = 0, rows = 0;
             string DistCode = Request.QueryString["DistCode"];
+            string CustomCode = Request.QueryString["CustomCode"];
+            string DistName = Request.QueryString["DistName"];
+            string IsActive = Request.QueryString["IsActive"];
+      
+
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = DeliverDistService.GetDeliverDistInfo(page, rows, DistCode);
+            ep.DT1 = DeliverDistService.GetDeliverDistInfo(page, rows,DistCode,CustomCode,DistName,IsActive);
             ep.HeadTitle1 = "区域信息";
 
             return PrintService.Print(ep);

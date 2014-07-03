@@ -20,7 +20,7 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool Edit(string DeliverLineCode,string DeliverOrder, out string strResult);
 
-        System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode);
+        System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode, string DistCode, string CustomCode, string IsActive, string DeliverLinename);
 
         object C_Details(int page, int rows, string QueryString, string Value);
     }

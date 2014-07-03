@@ -17,7 +17,8 @@
     
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
-            pageNumber: 1
+            pageNumber: 1,
+            pageSize: 50
         });
          $('#details').datagrid("reload");
         $('#dlg-search').dialog("close");

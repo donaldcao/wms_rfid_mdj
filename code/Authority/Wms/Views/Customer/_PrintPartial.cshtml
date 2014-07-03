@@ -1,9 +1,16 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var dptCode = null
+        var customerCode = null,
+            customerName = null,
+            deliverLineCode = null;
 
-        if ($('#CustomerCode').val() == null) { dptCode = ""; } else { dptCode = $('#CustomerCode').val(); }
-        window.location.href = "/Customer/CreateExcelToClient/?CustomerCode=" + dptCode;
+
+        if ($('#customerCode').val() == null) { customerCode = ""; } else { customerCode = $('#customerCode').val(); }
+        if ($('#customerName').val() == null) { customerName = ""; } else { customerName = $('#customerName').val(); }
+        if ($('#deliverLineCode').val() == null) { deliverLineCode = ""; } else { deliverLineCode = $('#deliverLineCode').val(); }
+        window.location.href = "/Customer/CreateExcelToClient?CustomerCode=" + customerCode
+                                                                              + "&CustomerName=" + customerName
+                                                                              + "&DeliverLineCode=" + deliverLineCode
 
     }
 </script>

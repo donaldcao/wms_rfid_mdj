@@ -18,6 +18,6 @@ namespace THOK.Wms.Bll.Interfaces
 
        bool Delete(string DistCode);
 
-       System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode);
+       System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode,string CustomCode,string DistName,string IsActive);
     }
 }

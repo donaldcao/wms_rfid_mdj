@@ -1,9 +1,17 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var dptCode = null
+        var distCode = null,
+            customCode = null,
+            distName = null,
+            isActive = null;
 
-        if ($('#DistCode').val() == null) { dptCode = ""; } else { dptCode = $('#DistCode').val(); }
-        window.location.href = "/DeliverDist/CreateExcelToClient/?DistCode=" + dptCode;
-
+        if ($('#searchDistCode').val() == null) { distCode = ""; } else { distCode = $('#searchDistCode').val(); }
+        if ($('#searchCustomCode').val() == null) { customCode = ""; } else { customCode = $('#searchCustomCode').val(); }
+        if ($('#searchDistName').val() == null) { distName = ""; } else { distName = $('#searchDistName').val(); }
+        if (document.getElementById('status') == null) { isActive = ""; } else { isActive = $('#status').combo('getValue'); }
+        window.location.href = "/DeliverDist/CreateExcelToClient?distCode=" + distCode
+                                + "&CustomCode=" + customCode
+                                + "&DistName=" + distName
+                                + "&IsActive=" + isActive;
     }
 </script>

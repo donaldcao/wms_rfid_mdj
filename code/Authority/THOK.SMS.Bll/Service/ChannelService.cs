@@ -230,29 +230,28 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public DataTable GetChannel(string channelName, string channelType, string status, string groupNo)
+        public DataTable GetChannel(int page, int rows, string DefaultProductCode, string SortingLineCode, string ChannelType, string GroupNo, string Status)
         {
             IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
             IQueryable<Product> productQuery = ProductRepository.GetQueryable();
             IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
-            var channelDetails = channelQuery.Where(a => a.ChannelName.Contains(channelName)
-                && a.ChannelType.Contains(channelType) && a.Status.Contains(status));
-            //if (groupNo != "")
-            //{
-            //    int no;
-            //    Int32.TryParse(groupNo, out no);
-            //    if (no != 0)
-            //    {
-            //        channelDetails = channelDetails.Where(a => a.GroupNo == no);
-            //    }
-            //}
-            var channelArray = channelDetails.OrderBy(c => c.ChannelCode).ToArray().Select(c => new
+            var channelDetails = channelQuery.Where(a => a.DefaultProductCode.Contains(DefaultProductCode) && a.SortingLineCode.Contains(SortingLineCode) && a.ChannelType.Contains(ChannelType)&&a.Status.Contains(Status)).OrderBy(a => a.ChannelCode).Select(a=>a);
+        
+            if (GroupNo != "")
+            {
+                int no;
+                Int32.TryParse(GroupNo, out no);
+                if (no != 0)
+                {
+                    channelDetails = channelDetails.Where(a => a.GroupNo == no);
+                }
+            }
+            var channelArray = channelDetails.ToArray().Select(c => new
                 {
                     c.ChannelCode,
                     SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
                     c.ChannelName,
-                    ChannelType = whatChannelType(c.ChannelType),
-                    //c.ChannelType == "1" ? "叠垛机" : c.ChannelType == "2" ? "立式机" : c.ChannelType == "3" ? "通道机" : c.ChannelType == "4" ? "卧式机" : "混合烟道",
+                    ChannelType = whatChannelType(c.ChannelType),                 
                     c.DefaultProductCode,
                     DefaultProductName = productQuery.Where(p => p.ProductCode == c.DefaultProductCode).Select(p => p.ProductName),
                     c.RemainQuantity,

@@ -144,7 +144,34 @@ namespace THOK.Wms.Bll.Service
         #endregion
 
         #region IDeliverLineService 成员
+        public object C_Details(int page, int rows, string QueryString, string Value)
+        {
+            string DeliverLineCode = "";
+            string DeliverLineName = "";
+            if (QueryString == "DeliverLineCode")
+            {
+                DeliverLineCode = Value;
+            }
+            else
+            {
+                DeliverLineName = Value;
+            }
+            var deliverLineQuery = DeliverLineRepository.GetQueryable();
+            var deliverLine = deliverLineQuery.Where(c => c.DeliverLineCode.Contains(DeliverLineCode) && c.DeliverLineName.Contains(DeliverLineName))
+                .OrderBy(c => c.DistCode)
+                .Select(c => c);
+            int total = deliverLine.Count();
+            deliverLine = deliverLine.Skip((page - 1) * rows).Take(rows);
 
+            var temp = deliverLine.ToArray().Select(c => new
+            {
+                c.DeliverLineCode,
+                c.DeliverLineName,
+                c.DeliverOrder,
+                IsActive = c.IsActive == "1" ? "可用" : "不可用"
+            });
+            return new { total, rows = temp.ToArray() };
+        }
 
         public object D_Details(int page, int rows, string QueryString, string Value)
         {

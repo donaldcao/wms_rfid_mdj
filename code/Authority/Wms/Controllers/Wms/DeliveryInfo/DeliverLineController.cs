@@ -71,6 +71,19 @@ namespace Wms.Controllers.Wms.InterfaceInfo
         //
         // GET: /DeliverLine/D_Details/
 
+        public ActionResult C_Details(int page, int rows, string QueryString, string Value)
+        {
+            if (QueryString == null)
+            {
+                QueryString = "DeliverLineCode";
+            }
+            if (Value == null)
+            {
+                Value = "";
+            }
+            var msg = DeliverLineService.C_Details(page, rows, QueryString, Value);
+            return Json(msg, "text", JsonRequestBehavior.AllowGet);
+        }
         public ActionResult D_Details(int page, int rows, string QueryString, string Value)
         {
             if (QueryString == null)
@@ -84,6 +97,7 @@ namespace Wms.Controllers.Wms.InterfaceInfo
             var msg = DeliverLineService.D_Details(page, rows, QueryString, Value);
             return Json(msg, "text", JsonRequestBehavior.AllowGet);
         }
+
         // POST: /DeliverLine/Edit/
         [HttpPost]
         public ActionResult Edit(string DeliverLineCode, string DeliverOrder)

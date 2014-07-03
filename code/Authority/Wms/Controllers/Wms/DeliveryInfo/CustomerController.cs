@@ -26,9 +26,6 @@ namespace Wms.Controllers.Wms.DeliveryInfo
         public ActionResult Index(string moduleID)
         {
             ViewBag.hasSearch = true;
-            ViewBag.hasAdd = true;
-            ViewBag.hasEdit = true;
-            ViewBag.hasDelete = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
@@ -38,15 +35,10 @@ namespace Wms.Controllers.Wms.DeliveryInfo
 
         public ActionResult Details(int page, int rows, FormCollection collection)
         {
-            string CustomerCode = collection["CustomerCode"] ?? "";
-            string CustomerName = collection["CustomerName"] ?? "";
-            string CompanyCode = collection["CompanyCode"] ?? "";
-            string SaleRegionCode = collection["SaleRegionCode"] ?? "";
-            string CustomerType = collection["CustomerType"] ?? "";
-            string CityOrCountryside = collection["CityOrCountryside "] ?? "";
-            string LicenseCode = collection["LicenseCode"] ?? "";
-            string IsActive = collection["IsActive"] ?? "";
-            var users = CustomerService.GetDetails(page, rows, CustomerCode,CustomerName, CompanyCode, SaleRegionCode, CustomerType, CityOrCountryside, LicenseCode,IsActive);
+            string customerCode = collection["CustomerCode"] ?? "";
+            string customerName = collection["CustomerName"] ?? "";
+            string deliverLineCode = collection["DeliverLineCode"] ?? "";
+            var users = CustomerService.GetDetails(page, rows, customerCode, customerName, deliverLineCode);
             return Json(users, "text", JsonRequestBehavior.AllowGet);
         }
         // POST: /Customer/Create

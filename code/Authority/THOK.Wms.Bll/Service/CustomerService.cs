@@ -18,6 +18,9 @@ namespace THOK.Wms.Bll.Service
         public ICustomerRepository CustomerRepository { get; set; }
 
         [Dependency]
+        public IDeliverLineRepository DeliverLineRepository { get; set; }
+
+        [Dependency]
         public ICustomerDownService CustomerDownService { get; set; }
 
         DownCustomerBll Customer = new DownCustomerBll();
@@ -429,5 +432,49 @@ namespace THOK.Wms.Bll.Service
             return dt;
         }
 
+        public object GetDetails(int page, int rows, string customerCode, string customerName, string deliverLineCode)
+        {
+            var customerQuery = CustomerRepository.GetQueryable();
+            var deliverLineQuery =DeliverLineRepository.GetQueryable();
+            if (customerCode!="")
+            {
+                customerQuery = customerQuery.Where(c => c.CustomCode == customerCode);
+            }
+            if (customerName != "")
+            {
+                customerQuery = customerQuery.Where(c => c.CustomerName == customerName);
+            }
+            if (deliverLineCode != "")
+            {
+                customerQuery = customerQuery.Where(c => c.DeliverLineCode == deliverLineCode);
+            }
+            var customer = customerQuery.Select(c => new 
+            {
+                c.CustomerCode,
+                c.CustomerName,
+                c.DeliverOrder,
+                c.DeliverLineCode,
+                DeliverLineName = deliverLineQuery.Where(d => d.DeliverLineCode == deliverLineCode).FirstOrDefault().DeliverLineName,
+                c.Address,
+                c.IsActive,
+                c.UpdateTime
+            });
+            customer=customer.OrderBy(c => c.CustomerCode);
+            int total = customer.Count();
+            customer = customer.Skip((page - 1) * rows).Take(rows);
+
+            var customerArray = customer.ToArray().Select(c => new
+            {
+                c.CustomerCode,
+                c.CustomerName,
+                c.DeliverOrder,
+                c.DeliverLineCode,
+                c.DeliverLineName,
+                c.Address,
+                IsActive = c.IsActive == "1" ? "可用" : "不可用",
+                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
+            });
+            return new { total, rows = customerArray.ToArray() };
+        }
     }
 }

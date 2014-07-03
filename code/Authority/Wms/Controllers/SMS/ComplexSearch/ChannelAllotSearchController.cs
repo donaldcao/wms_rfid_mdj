@@ -40,11 +40,6 @@ namespace Wms.Controllers.SMS.ComplexSearch
 
         }
 
-        public ActionResult SearchPage()
-        {
-            return View();
-        }
-
         //////打印
         ////public FileStreamResult CreateExcelToClient()
         ////{

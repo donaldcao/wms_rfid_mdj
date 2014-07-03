@@ -9,7 +9,7 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface ISortOrderAllotDetailService : IService<SortOrderAllotDetail>
     {
-        object GetDetails(int page, int rows, string orderMasterCode);
+        object GetDetails(int page, int rows, int orderMasterCode);
 
         DataTable GetDetailsByOrderMasterCode(string orderMasterCode);
     }

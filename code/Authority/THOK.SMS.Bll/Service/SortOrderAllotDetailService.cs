@@ -21,23 +21,23 @@ namespace THOK.SMS.Bll.Service
         }
 
 
-        public object GetDetails(int page, int rows, string orderMasterCode)
+        public object GetDetails(int page, int rows, int masterId)
         {
-            return null;
-            //IQueryable<SortOrderAllotDetail> sortOrderAllotDetailsQuery = SortOrderAllotDetailRepository.GetQueryable();
-            //var sortOrderAllotDetails = sortOrderAllotDetailsQuery.Where(s => s.OrderMasterCode == orderMasterCode);
-            //int total = sortOrderAllotDetails.Count();
-            //var sortOrderAllotDetailsArray = sortOrderAllotDetails.OrderBy(s=>s.OrderDetailCode).Skip((page - 1) * rows).Take(rows)
-            //    .Select(s => new
-            //{
-            //    s.OrderDetailCode,
-            //    s.OrderMasterCode,
-            //    s.ProductCode,
-            //    s.ProductName,
-            //    s.ChannelCode,
-            //    s.Quantity
-            //}).ToArray();
-            //return new { total, rows = sortOrderAllotDetailsArray };
+            var sortOrderAllotDetailsQuery = SortOrderAllotDetailRepository.GetQueryable();
+            var sortOrderAllotDetails = sortOrderAllotDetailsQuery.Where(s => s.MasterId == masterId);
+            int total = sortOrderAllotDetails.Count();
+            var sortOrderAllotDetailsArray = sortOrderAllotDetails.OrderBy(s => s.Id).Skip((page - 1) * rows).Take(rows)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.MasterId,
+                    s.ProductCode,
+                    s.ProductName,
+                    s.ChannelCode,
+                    s.channel.ChannelName,
+                    s.Quantity
+                }).ToArray();
+            return new { total, rows = sortOrderAllotDetailsArray };
         }
 
         public DataTable GetDetailsByOrderMasterCode(string orderMasterCode)

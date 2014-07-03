@@ -24,7 +24,7 @@ namespace THOK.Authority.Bll.Service
         {
             IQueryable<LoginLog> loginLogquery = LoginLogRepository.GetQueryable();
             IQueryable<User> userLogquery = UserRepository.GetQueryable();
-            IQueryable<THOK.Authority.DbModel.System> systemLogquery = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> systemLogquery = SystemRepository.GetQueryable();
             var loginlog = loginLogquery.Join(userLogquery,
                     lo => lo.User_UserID,
                     u => u.UserID,
@@ -86,7 +86,7 @@ namespace THOK.Authority.Bll.Service
         {
             IQueryable<LoginLog> loginLogquery = LoginLogRepository.GetQueryable();
             IQueryable<User> userLogquery = UserRepository.GetQueryable();
-            IQueryable<THOK.Authority.DbModel.System> systemLogquery = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> systemLogquery = SystemRepository.GetQueryable();
             var loginlog = loginLogquery.Join(userLogquery,
                     lo => lo.User_UserID,
                     u => u.UserID,

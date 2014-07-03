@@ -89,7 +89,7 @@ namespace Authority.Controllers.Authority
                 isactiveIsNull=false;
                 isactive = bool.Parse(Request.QueryString["isactive"]);
             }
-            THOK.Authority.DbModel.System system = new THOK.Authority.DbModel.System();
+            THOK.Authority.DbModel.SystemInfo system = new THOK.Authority.DbModel.SystemInfo();
             system.SystemName = systemName;
             system.Description = description;
             system.Status = isactive;

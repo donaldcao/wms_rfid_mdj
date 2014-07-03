@@ -18,6 +18,6 @@ namespace THOK.Authority.DbModel
         public string UserName { get; set; }
         public Guid? SystemID { get; set; }
 
-        public virtual System System { get; set; }
+        public virtual SystemInfo System { get; set; }
     }
 }

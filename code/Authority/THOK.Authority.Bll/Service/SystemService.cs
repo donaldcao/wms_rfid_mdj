@@ -6,7 +6,7 @@ using THOK.Authority.Dal.Interfaces;
 
 namespace THOK.Authority.Bll.Service
 {
-    public class SystemService : ServiceBase<THOK.Authority.DbModel.System>, ISystemService
+    public class SystemService : ServiceBase<THOK.Authority.DbModel.SystemInfo>, ISystemService
     {
         [Dependency]
         public ISystemRepository SystemRepository { get; set; }
@@ -31,7 +31,7 @@ namespace THOK.Authority.Bll.Service
 
         public object GetDetails(int page, int rows, string systemName, string description, string status)
         {
-            IQueryable<THOK.Authority.DbModel.System> query = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> query = SystemRepository.GetQueryable();
             var systems = query.Where(i => i.SystemName.Contains(systemName) && i.Description.Contains(description))
                 .OrderBy(i => i.SystemID)
                 .Select(i => new { i.SystemID, i.SystemName, i.Description, Status = i.Status ? "启用" : "禁用" });
@@ -49,7 +49,7 @@ namespace THOK.Authority.Bll.Service
 
         public bool Add(string systemName, string description, bool status)
         {
-            var system = new THOK.Authority.DbModel.System()
+            var system = new THOK.Authority.DbModel.SystemInfo()
             {
                 SystemID = Guid.NewGuid(),
                 SystemName = systemName,
@@ -113,9 +113,9 @@ namespace THOK.Authority.Bll.Service
             return userSystem.ToArray();
         }
 
-        public System.Data.DataTable GetSystem(int page, int rows, DbModel.System system, bool isactiveIsNull)
+        public System.Data.DataTable GetSystem(int page, int rows, DbModel.SystemInfo system, bool isactiveIsNull)
         {
-            IQueryable<THOK.Authority.DbModel.System> systemQuery = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> systemQuery = SystemRepository.GetQueryable();
 
             var systemDetail = systemQuery.Where(s =>
                 s.SystemName.Contains(system.SystemName)

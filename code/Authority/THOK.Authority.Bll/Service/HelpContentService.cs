@@ -191,7 +191,7 @@ namespace THOK.Authority.Bll.Service
         }
         public object GetHelpContentTree(string sysId)
         {
-            IQueryable<THOK.Authority.DbModel.System> querySystem = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> querySystem = SystemRepository.GetQueryable();
             IQueryable<THOK.Authority.DbModel.Module> queryModule = ModuleRepository.GetQueryable();
             IQueryable<THOK.Authority.DbModel.HelpContent> queryHelpContent = HelpContentRepository.GetQueryable();
             var systems = querySystem.AsEnumerable();

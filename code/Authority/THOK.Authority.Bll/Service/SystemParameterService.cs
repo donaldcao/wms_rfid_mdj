@@ -22,7 +22,7 @@ namespace THOK.Authority.Bll.Service
         public object GetSystemParameter(int page, int rows, string parameterName, string parameterValue, string remark, string userName, string SystemID)
         {
             IQueryable<SystemParameter> systemParameterQuery = SystemParameterRepository.GetQueryable();
-            IQueryable<THOK.Authority.DbModel.System> systemQuery = SystemRepository.GetQueryable();
+            IQueryable<THOK.Authority.DbModel.SystemInfo> systemQuery = SystemRepository.GetQueryable();
 
             var systemParameter = systemParameterQuery.Join(systemQuery,
                                          s => s.SystemID,

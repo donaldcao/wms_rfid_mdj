@@ -12,7 +12,7 @@
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.ProductCode = $('#ProductCode').val();
         queryParams.ProductName = $('#ProductName').val();
-        queryParams.BarCode = $('#PieceBarcode').val();
+        queryParams.PieceBarcode = $('#PieceBarcode').val();
         queryParams.IsAbnormity = $('#IsAbnormity').combo('getValue');
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
@@ -22,40 +22,55 @@
         $("#details").datagrid('reload');
         $('#dlg-search').dialog('close');
     }
-    </script>        
-<div id="dlg-search" class="easyui-dialog" modal="true" 
-        style="width:260px;height:200px;padding:2px 2px"
-        closed="true" buttons="#dlg-search-buttons">
-	<div class="easyui-layout" fit="true">
-		<div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; " >     
-            <table >
+</script>
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width: 260px; height: 200px;
+    padding: 2px 2px" closed="true" buttons="#dlg-search-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
+            border: 1px solid #ccc;">
+            <table>
                 <tr>
-                <td>商品编码：</td>
-                <td><input id="ProductCode" type="text"></td>
+                    <td>
+                        商品编码：
+                    </td>
+                    <td>
+                        <input id="ProductCode" type="text" />
+                    </td>
                 </tr>
                 <tr>
-                <td>商品名称：</td>
-                <td><input id="ProductName" type="text"></td>
+                    <td>
+                        商品名称：
+                    </td>
+                    <td>
+                        <input id="ProductName" type="text" />
+                    </td>
                 </tr>
                 <tr>
-                <td>件烟条形码：</td>
-                <td><input id="PieceBarcode" type="text"></td>
+                    <td>
+                        件烟条形码：
+                    </td>
+                    <td>
+                        <input id="PieceBarcode" type="text" />
+                    </td>
                 </tr>
                 <tr>
-                <td>是否异型烟：</td>
-                <td>
-                    <select  class="easyui-combobox" editable="false" id="IsAbnormity">
-		                <option value=""></option>
-                        <option value="1">是</option>
-		                <option value="0">不是</option>
-                    </select>
-                </td>
+                    <td>
+                        是否异型烟：
+                    </td>
+                    <td>
+                        <select class="easyui-combobox" editable="false" id="IsAbnormity">
+                            <option value=""></option>
+                            <option value="1">是</option>
+                            <option value="0">不是</option>
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
 <div id="dlg-search-buttons">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">确定</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="select()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+        取消</a>
 </div>

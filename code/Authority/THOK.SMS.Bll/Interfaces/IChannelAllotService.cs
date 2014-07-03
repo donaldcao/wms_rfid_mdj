@@ -11,5 +11,8 @@ namespace THOK.SMS.Bll.Interfaces
         System.Data.DataTable GetChannelAllot(int page, int rows, ChannelAllot channelAllot);
 
         object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string productCode);
+
+        object Details(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string productCode);
+
     }
 }

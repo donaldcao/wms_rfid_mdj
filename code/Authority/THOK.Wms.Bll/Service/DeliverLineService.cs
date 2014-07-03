@@ -254,27 +254,46 @@ namespace THOK.Wms.Bll.Service
         #endregion
 
 
-        public System.Data.DataTable GetDeliverLineInfo(int page, int rows, string DeliverLineCode)
+        public System.Data.DataTable GetDeliverLineInfo(int page, int rows,string DeliverLineCode,string DistCode,string CustomCode,string IsActive,string DeliverLinename)
         {
-            System.Data.DataTable dt = new System.Data.DataTable();
+          
 
-            IQueryable<DeliverLine> DeliverLineQuery = DeliverLineRepository.GetQueryable();
-            IQueryable<DeliverDist> DeliverDistQuery = DeliverDistRepository.GetQueryable();
-            IQueryable<City> cityQuery = CityRepository.GetQueryable();
+            var deliverLineQuery = DeliverLineRepository.GetQueryable();
+            var deliverDistQuery = DeliverDistRepository.GetQueryable();
+            var cityQuery = CityRepository.GetQueryable();
             var cityDetail = cityQuery.FirstOrDefault().CityName;
-            var DeliverLineinfo = DeliverLineQuery.OrderBy(a => a.DeliverLineCode).Select(a => new
+
+            var deliverLine = deliverLineQuery.Where(a => a.DeliverLineCode.Contains(DeliverLineCode) && a.DistCode.Contains(DistCode)).OrderBy(a => a.DeliverLineCode).Select(a => a);
+           
+            //if (!DistCode.Equals(string.Empty))
+            //{
+            //    deliverLineInfo = deliverLineInfo.Where(a => a.DistCode.Contains(DistCode));
+            //}
+            if (!CustomCode.Equals(string.Empty))
+            {
+                deliverLine = deliverLine.Where(a => a.CustomCode.Contains(CustomCode));
+            }
+            if (!IsActive.Equals(string.Empty))
+            {
+                deliverLine = deliverLine.Where(a => a.IsActive.Contains(IsActive));
+            }
+            if (!DeliverLinename.Equals(string.Empty))
+            {
+                deliverLine = deliverLine.Where(a => a.DeliverLineName.Contains(DeliverLinename));
+            }
+            var DeliverLineInfoDetail = deliverLine.ToArray().Select(a => new
             {
                 a.DeliverLineCode,
                 a.CustomCode,
                 a.DeliverLineName,
                 a.DistCode,
-                DistName = DeliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode) != null ? DeliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode).DistName : cityDetail + "烟草配送中心",
+                DistName = deliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode) != null ? deliverDistQuery.FirstOrDefault(b => b.DistCode == a.DistCode).DistName : cityDetail + "烟草配送中心",
                 a.DeliverOrder,
                 a.UpdateTime,
                 IsActive = a.IsActive == "1" ? "可用" : "不可用"
 
             });
-
+            System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("送货线路编码", typeof(string));
             dt.Columns.Add("送货线路名称", typeof(string));
             dt.Columns.Add("配送区域名称", typeof(string));
@@ -283,21 +302,18 @@ namespace THOK.Wms.Bll.Service
             dt.Columns.Add("更新时间", typeof(string));
             dt.Columns.Add("是否可用", typeof(string));
 
-            foreach (var item in DeliverLineinfo)
+            foreach (var item in DeliverLineInfoDetail)
             {
-                dt.Rows.Add
-                    (
+                dt.Rows.Add(
                 item.DeliverLineCode,
                 item.DeliverLineName,
                 item.DistName,
                 item.CustomCode,
                 item.DeliverOrder,
                 item.UpdateTime,
-                item.IsActive
-                    );
+                item.IsActive );
             }
             return dt;
         }
-
     }
 }

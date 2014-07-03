@@ -1,9 +1,22 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var dptCode = null
+        var deliverLineCode = null,
+        customCode = null,
+        deliverLineName = null,
+        distCode = null,
+        isActive = null;
 
-        if ($('#DeliverLineCode').val() == null) { dptCode = ""; } else { dptCode = $('#DeliverLineCode').val(); }
-        window.location.href = "/DeliverLine/CreateExcelToClient/?DeliverLineCode=" + dptCode;
+        if ($('#deliverLineCode').val() == null) { deliverLineCode = ""; } else { deliverLineCode = $('#deliverLineCode').val(); }
+        if ($('#customCode').val() == null) { customCode = ""; } else { customCode = $('#customCode').val(); }
+        if ($('#deliverLineName').val() == null) { deliverLineName = ""; } else { deliverLineName = $('#deliverLineName').val(); }
+        if ($('#distCode').val() == null) { distCode = ""; } else { distCode = $('#distCode').val(); }
+        if (document.getElementById('d_status') == null) { isActive = ""; } else { isActive = $('#d_status').combo('getValue'); }
+
+        window.location.href = "/DeliverLine/CreateExcelToClient?DeliverLineCode=" + deliverLineCode
+        + "&DistCode=" + distCode
+        + "&CustomCode=" + customCode
+        + "&Isactive=" + isActive
+        + "&DeliverLineName=" + deliverLineName
 
     }
 </script>

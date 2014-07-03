@@ -645,5 +645,82 @@ namespace THOK.Wms.Bll.Service
             return true;
         }
         #endregion
+
+        #region  分拣系统打印模块
+
+        public System.Data.DataTable GetProductDetails(int page, int rows, string ProductName, string ProductCode, string barBarcode, string isAbnormity)
+        {
+            IQueryable<Product> ProductQuery = ProductRepository.GetQueryable();
+            var product = ProductQuery.Where(c => c.ProductName.Contains(ProductName)
+                && c.ProductCode.Contains(ProductCode)
+                && c.PieceBarcode.Contains(barBarcode)
+                && c.IsAbnormity.Contains(isAbnormity))
+                .OrderBy(c => c.ProductCode)
+                .Select(c => c);
+
+            if (!ProductName.Equals(string.Empty))
+            {
+                product = product.Where(p => p.ProductName.Contains(ProductName));
+            }
+            if (!ProductCode.Equals(string.Empty))
+            {
+                product = product.Where(p => p.ProductCode.Contains(ProductCode));
+            }
+            if (!barBarcode.Equals(string.Empty))
+            {
+                product = product.Where(p => p.PieceBarcode.Contains(barBarcode));
+            }
+            if (!isAbnormity.Equals(string.Empty))
+            {
+                product = product.Where(p => p.IsAbnormity.Contains(isAbnormity));
+            }
+
+            var temp = product.ToArray().Select(c => new
+            {
+                c.BrandCode,
+                IsAbnormity = c.IsAbnormity == "1" ? "是" : "不是",
+                IsActive = c.IsActive == "1" ? "可用" : "不可用",
+                c.ProductCode,
+                c.ProductName,
+                c.ProductTypeCode,
+                c.RetailPrice,
+                c.SupplierCode,
+                c.UniformCode,
+                c.UnitCode,
+                c.Unit.UnitName,
+                c.UnitListCode,
+                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss")
+            });
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("商品编码", typeof(string));
+            dt.Columns.Add("商品名称", typeof(string));
+            dt.Columns.Add("统一编码", typeof(string));
+            dt.Columns.Add("计量单位系列", typeof(string));
+            dt.Columns.Add("缺省计量单位", typeof(string));
+            dt.Columns.Add("厂商", typeof(string));
+            dt.Columns.Add("商品品牌", typeof(string));
+            dt.Columns.Add("异形烟", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
+            dt.Columns.Add("更新时间", typeof(string));
+            foreach (var item in temp)
+            {
+                dt.Rows.Add
+                    (
+                        item.ProductCode,
+                        item.ProductName,
+                        item.UniformCode,
+                        item.UnitListCode,
+                        item.UnitCode,
+                        item.SupplierCode,
+                        item.BrandCode,
+                        item.IsAbnormity,
+                        item.IsActive,
+                        item.UpdateTime
+                    );
+            }
+            return dt;
+        }
+
+        #endregion
     }
 }

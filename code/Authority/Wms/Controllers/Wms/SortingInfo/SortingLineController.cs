@@ -89,13 +89,15 @@ namespace Authority.Controllers.Wms.SortingInfo
         #region /SortingLine/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
-            int page = 0, rows = 0;
-            string sortingLineCode = Request.QueryString["sortingLineCode"];
-     
-            string isActive = Request.QueryString["IsActive"];
-            
+            int page = 0, rows = 0;          
+            string sortingLineCode = Request.QueryString["sortingLineCode"] ?? "";
+            string sortingLineName = Request.QueryString["sortingLineName"] ?? "";
+            string SortingLineType = Request.QueryString["SortingLineType"] ?? "";
+            string productType = Request.QueryString["ProductType"] ?? "";
+            string IsActive = Request.QueryString["IsActive"] ?? "";
+
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode);
+            ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode, sortingLineName, productType, SortingLineType, IsActive);
             ep.HeadTitle1 = "分拣线信息设置";
             return PrintService.Print(ep);
         }

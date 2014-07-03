@@ -75,6 +75,67 @@ namespace THOK.SMS.Bll.Service
             });
             return new { total, rows = channelAllotArray.ToArray() };
         }
+
+        public object Details(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string productCode)
+        {
+            var channelAllotQuery = ChannelAllotRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
+            if (orderDate != string.Empty && orderDate != null)
+            {
+                DateTime date = Convert.ToDateTime(orderDate);
+                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.OrderDate.Equals(date));
+            }
+            if (batchNo != "")
+            {
+                int batch = Convert.ToInt32(batchNo);
+                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.BatchNo.Equals(batch));
+            }
+            if (sortingLineCode != "")
+            {
+                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.SortingLineCode.Equals(sortingLineCode));
+            }
+            if (productCode != "")
+            {
+                channelAllotQuery = channelAllotQuery.Where(c => c.ProductCode.Equals(productCode));
+            }
+            var channelAllot = channelAllotQuery.Select(c => new
+            {
+                c.SortBatchId,
+                c.sortBatch.OrderDate,
+                c.sortBatch.BatchNo,
+                c.sortBatch.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.sortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
+                c.ChannelCode,
+                c.channel.ChannelName,
+                c.ProductCode,
+                c.ProductName,
+                c.Quantity
+
+            }).GroupBy(c => new { c.OrderDate, c.BatchNo, c.SortingLineCode, c.SortingLineName, c.ProductCode, c.ProductName }).Select(c => new
+            {
+                c.Key.OrderDate,
+                c.Key.BatchNo,
+                c.Key.SortingLineCode,
+                c.Key.SortingLineName,
+                c.Key.ProductCode,
+                c.Key.ProductName,
+                Quantity = c.Sum(g => g.Quantity)
+            }).OrderByDescending(c => c.OrderDate).ThenByDescending(c => c.BatchNo).ThenBy(c => c.SortingLineCode).ThenByDescending(c => c.Quantity);
+            int total = channelAllot.Count();
+            var channelAllotDetail = channelAllot.Skip((page - 1) * rows).Take(rows);
+            var channelAllotArray = channelAllotDetail.ToArray().Select(c => new
+            {
+                OrderDate = c.OrderDate.ToString("yyyy-MM-dd"),
+                c.BatchNo,
+                c.SortingLineCode,
+                c.SortingLineName,
+                c.ProductCode,
+                c.ProductName,
+                c.Quantity
+            });
+            return new { total, rows = channelAllotArray.ToArray() };
+        }
+
         public System.Data.DataTable GetChannelAllot(int page, int rows, ChannelAllot channelAllot)
         {
             //IQueryable<ChannelAllot> channelAllotQuery = ChannelAllotRepository.GetQueryable();

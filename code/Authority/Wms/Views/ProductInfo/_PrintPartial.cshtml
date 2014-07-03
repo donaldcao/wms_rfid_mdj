@@ -1,0 +1,19 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var productCode = null
+          , PieceBarcode = null
+          , productName = null
+          , IsAbnormity = null
+       
+        if ($('#ProductCode').val() == null) { productCode = ""; } else { productCode = $('#ProductCode').val(); }
+        if ($('#PieceBarcode').val() == null) { PieceBarcode = ""; } else { PieceBarcode = $('#PieceBarcode').val(); }
+        if ($('#ProductName').val() == null) { productName = ""; } else { productName = $('#ProductName').val(); }
+        if (document.getElementById('#IsAbnormity') == null) { IsAbnormity = ""; } else { IsAbnormity = $('#IsAbnormity').combo('getValue'); }
+
+        window.location.href = "/ProductInfo/CreateExcelToClient/"
+                                + "?ProductCode=" + $('#ProductCode').val()
+                                + "&ProductName=" + $('#ProductName').val()
+                                + "&PieceBarcode=" + $('#PieceBarcode').val()
+                                + "&IsAbnormity=" + $('#IsAbnormity').combo('getValue');
+    }
+</script>

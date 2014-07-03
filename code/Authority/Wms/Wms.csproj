@@ -171,7 +171,6 @@
     <Compile Include="Controllers\SMS\SortManage\BatchSortDispatchController.cs" />
     <Compile Include="Controllers\SMS\SortManage\SortOrderInfoController.cs" />
     <Compile Include="Controllers\SMS\SortManage\SortRouteDispatchController.cs" />
-    <Compile Include="Controllers\SMS\SortOrderAllotController.cs" />
     <Compile Include="Controllers\SMS\HandSupplyController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
@@ -2055,6 +2054,10 @@
     <Content Include="Views\Customer\_DeliverLinePartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\Index.cshtml" />
     <Content Include="Views\DeliverOrderSearch\Index.cshtml" />
+    <Content Include="Views\BatchCigaretteSearch\_PrintPartial.cshtml" />
+    <Content Include="Views\BatchCigaretteSearch\_ProductPartial.cshtml" />
+    <Content Include="Views\BatchCigaretteSearch\_SearchPartial.cshtml" />
+    <Content Include="Views\BatchCigaretteSearch\_SortingLinePartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />
@@ -2521,6 +2524,7 @@
     <Content Include="Views\SortBatchDispatch\Index.cshtml" />
     <Content Include="Views\SortOrderInfo\Index.cshtml" />
     <Content Include="Views\SortRouteDispatch\Index.cshtml" />
+    <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

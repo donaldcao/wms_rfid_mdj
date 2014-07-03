@@ -7,6 +7,8 @@ using THOK.Security;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Common.WebUtil;
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
 
 namespace Wms.Controllers.SMS.BaseInfo
 {
@@ -31,7 +33,7 @@ namespace Wms.Controllers.SMS.BaseInfo
         {
             string productName = collection["ProductName"] ?? "";
             string productCode = collection["ProductCode"] ?? "";
-            string barCode = collection["BarCode"] ?? "";
+            string barCode = collection["PieceBarcode"] ?? "";
             string isAbnormity = collection["IsAbnormity"] ?? "";
             var users = ProductService.GetDetails(page, rows, productCode, productName, barCode, isAbnormity);
             return Json(users, "text", JsonRequestBehavior.AllowGet);
@@ -47,22 +49,16 @@ namespace Wms.Controllers.SMS.BaseInfo
      
         public FileStreamResult CreateExcelToClient()
         {
-            //int page = 0, rows = 0;
-            //string productName = Request.QueryString["productName"];
-            //string productCode = Request.QueryString["productCode"];
-            //string customCode = Request.QueryString["customCode"];
-            //string brandCode = Request.QueryString["brandCode"];
-            //string uniformCode = Request.QueryString["uniformCode"];
-            //string abcTypeCode = Request.QueryString["abcTypeCode"];
-            //string shortCode = Request.QueryString["shortCode"];
-            //string priceLevelCode = Request.QueryString["priceLevelCode"];
-            //string supplierCode = Request.QueryString["supplierCode"];
-
-            //ExportParam ep = new ExportParam();
-            //ep.DT1 = ProductService.GetProduct(page, rows, productName, productCode, customCode, brandCode, uniformCode, abcTypeCode, shortCode, priceLevelCode, supplierCode);
-            //ep.HeadTitle1 = "卷烟信息";
-            //return PrintService.Print(ep);
-            return null;
+            int page = 0, rows = 0;
+            string productName = Request.QueryString["productName"];
+            string productCode = Request.QueryString["productCode"];
+            string barBarcode = Request.QueryString["PieceBarcode"];
+            string isAbnormity = Request.QueryString["IsAbnormity"];
+       
+            ExportParam ep = new ExportParam();
+            ep.DT1 = ProductService.GetProductDetails(page, rows, productName, productCode, barBarcode, isAbnormity);
+            ep.HeadTitle1 = "卷烟信息";
+            return PrintService.Print(ep);
         }
     }
 }

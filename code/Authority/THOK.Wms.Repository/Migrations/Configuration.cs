@@ -4770,8 +4770,8 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
-                        ModuleName = "批次补货查询",
-                        ShowOrder = 2,
+                        ModuleName = "分拣备货查询",
+                        ShowOrder = 3,
                         ModuleURL = "/BatchCigaretteSearch/",
                         IndicateImage = "icon-Menu_StockInto",
                         DeskTopImage = "image-Menu_StockInto",
@@ -4782,8 +4782,8 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0303"),
-                        ModuleName = "烟道分配查询",
-                        ShowOrder = 3,
+                        ModuleName = "分拣烟道查询",
+                        ShowOrder = 4,
                         ModuleURL = "/ChannelAllotSearch/",
                         IndicateImage = "icon-Menu_StockDiffer",
                         DeskTopImage = "image-Menu_StockDiffer",
@@ -4795,7 +4795,7 @@ namespace THOK.Wms.Repository.Migrations
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
                         ModuleName = "分拣订单查询",
-                        ShowOrder = 4,
+                        ShowOrder = 2,
                         ModuleURL = "/SortOrderAllotSearch/",
                         IndicateImage = "icon-Menu_StockInto",
                         DeskTopImage = "image-Menu_StockInto",
@@ -4806,7 +4806,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0305"),
-                        ModuleName = "配送线送货单",
+                        ModuleName = "分拣配送查询",
                         ShowOrder = 5,
                         ModuleURL = "/DeliverOrderSearch/",
                         IndicateImage = "icon-son_CigaretteSupplier",

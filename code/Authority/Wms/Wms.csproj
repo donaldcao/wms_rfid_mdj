@@ -2516,6 +2516,7 @@
     <Content Include="Views\SortBatchDispatch\Index.cshtml" />
     <Content Include="Views\SortOrderInfo\Index.cshtml" />
     <Content Include="Views\SortRouteDispatch\Index.cshtml" />
+    <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

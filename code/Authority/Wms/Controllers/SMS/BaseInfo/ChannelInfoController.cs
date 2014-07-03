@@ -78,13 +78,18 @@ namespace Wms.Controllers.SMS.BaseInfo
         //打印
         public FileStreamResult CreateExcelToClient()
         {
-            string channelName = Request.QueryString["channelName"] ?? "";
-            string channelType = Request.QueryString["channelType"] ?? "";
-            string status = Request.QueryString["status"] ?? "";
-            string groupNo = Request.QueryString["groupNo"] ?? "";
+
+            int page=0,rows=0;
+            string DefaultProductCode = Request.QueryString["DefaultProductCode"];
+            string SortingLineCode = Request.QueryString["SortingLineCode"];
+            string ChannelType = Request.QueryString["ChannelType"];
+            string GroupNo = Request.QueryString["GroupNo"];
+            string Status = Request.QueryString["Status"];
+
+
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ChannelService.GetChannel(channelName,channelType,status,groupNo);
+            ep.DT1 = ChannelService.GetChannel(page, rows, DefaultProductCode, SortingLineCode, ChannelType, GroupNo, Status);
             ep.HeadTitle1 = "烟道信息";
             return PrintService.Print(ep);
         }

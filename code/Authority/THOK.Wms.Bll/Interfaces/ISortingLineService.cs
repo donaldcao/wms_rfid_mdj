@@ -20,6 +20,6 @@ namespace THOK.Wms.Bll.Interfaces
 
         object GetSortLine();
 
-        System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode);
+        System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode, string sortingLineName, string productType, string SortingLineType, string IsActive);
     }
 }

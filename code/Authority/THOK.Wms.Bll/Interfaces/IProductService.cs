@@ -32,6 +32,8 @@ namespace THOK.Wms.Bll.Interfaces
 
         object GetDetails(int page, int rows, string productCode, string productName, string barBarcode, string isAbnormity);
 
+        System.Data.DataTable GetProductDetails(int page, int rows, string ProductName, string ProductCode, string barBarcode, string isAbnormity);
+
         bool Change(string productCode, string barBarcode, string isAbnormity);
     }
 }

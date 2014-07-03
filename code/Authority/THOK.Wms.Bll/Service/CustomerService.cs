@@ -384,71 +384,80 @@ namespace THOK.Wms.Bll.Service
         #endregion
 
 
-        public System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode)
+        #region
+        //分拣系统客户信息打印模块
+        public System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode, string CustomerName, string DeliverLineCode)
         {
-            
-               System.Data.DataTable dt = new System.Data.DataTable();
-           
-                IQueryable<Customer> customerQuery = CustomerRepository.GetQueryable();
-                var customerinfo = customerQuery.OrderBy(a => a.CustomerCode).Select(a => new
-                {
-                    a.CustomerCode,
-                    a.CustomerName,
-                    a.CompanyCode,
-                    a.SaleRegionCode,
-                    a.CustomerType,
-                    a.CityOrCountryside,
-                    a.DeliverOrder,
-                    a.Address,
-                    IsActive=a.IsActive=="1"?"可用":"不可用"
 
-                });
+            var customerQuery = CustomerRepository.GetQueryable();
+            var deliverQuery = DeliverLineRepository.GetQueryable();
 
-                dt.Columns.Add("客户编码", typeof(string));
-                dt.Columns.Add("客户名称", typeof(string));
-                dt.Columns.Add("所属单位编码", typeof(string));
-                dt.Columns.Add("营销部编码", typeof(string));
-                dt.Columns.Add("客户类型", typeof(string));
-                dt.Columns.Add("商品类型编码", typeof(string));
-                dt.Columns.Add("送货顺序", typeof(string));
-                dt.Columns.Add("送货地址", typeof(string));
-                dt.Columns.Add("是否可用", typeof(string));
+            var customer = customerQuery.Where(a => a.CustomCode.Contains(CustomerCode) && a.CustomerName.Contains(CustomerName)).OrderBy(a => a.CustomerCode).Select(a => a);
 
-                foreach (var item in customerinfo)
-                {
-                    dt.Rows.Add
-                        (
-                    item.CustomerCode,
-                    item.CustomerName,
-                    item.CompanyCode,
-                    item.SaleRegionCode,
-                    item.CustomerType,
-                    item.CityOrCountryside,
-                    item.DeliverOrder,
-                    item.Address,
-                    item.IsActive
-                        );
-                }
+            if (!DeliverLineCode.Equals(string.Empty)) {
+                customer = customer.Where(a => a.DeliverLineCode.Contains(DeliverLineCode));            
+            }
+
+            var customerinfo = customer.ToArray().Select(c => new
+            {
+                c.CustomerCode,
+                c.CustomerName,
+                c.DeliverLineCode,
+                DeliverLineName = deliverQuery.FirstOrDefault(b => b.DeliverLineCode == c.DeliverLineCode).DeliverLineName,
+                c.DeliverOrder,
+                c.Address,
+                IsActive = c.IsActive == "1" ? "可用" : "不可用",
+                c.UpdateTime
+
+            });
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("客户编码", typeof(string));
+            dt.Columns.Add("客户名称", typeof(string));
+            dt.Columns.Add("线路编码", typeof(string));
+            dt.Columns.Add("线路名称", typeof(string));
+            dt.Columns.Add("送货顺序", typeof(string));
+            dt.Columns.Add("送货地址", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
+            dt.Columns.Add("更新时间", typeof(string));
+
+            foreach (var item in customerinfo)
+            {
+                dt.Rows.Add(
+                item.CustomerCode,
+                item.CustomerName,
+                item.DeliverLineCode,
+                item.DeliverLineName,
+                item.DeliverOrder,
+                item.Address,
+                item.IsActive,
+                item.UpdateTime);
+            }
             return dt;
         }
 
+
+        #endregion
+
+
+        //分拣查询客户信息
         public object GetDetails(int page, int rows, string customerCode, string customerName, string deliverLineCode)
         {
             var customerQuery = CustomerRepository.GetQueryable();
-            var deliverLineQuery =DeliverLineRepository.GetQueryable();
-            if (customerCode!="")
+            var deliverLineQuery = DeliverLineRepository.GetQueryable();
+           
+            if (customerCode != "")
             {
-                customerQuery = customerQuery.Where(c => c.CustomCode == customerCode);
+                customerQuery = customerQuery.Where(c => c.CustomCode.Contains(customerCode));
             }
             if (customerName != "")
             {
-                customerQuery = customerQuery.Where(c => c.CustomerName == customerName);
+                customerQuery = customerQuery.Where(c => c.CustomerName.Contains(customerName));
             }
             if (deliverLineCode != "")
             {
                 customerQuery = customerQuery.Where(c => c.DeliverLineCode == deliverLineCode);
             }
-            var customer = customerQuery.Select(c => new 
+            var customer = customerQuery.Select(c => new
             {
                 c.CustomerCode,
                 c.CustomerName,
@@ -459,7 +468,7 @@ namespace THOK.Wms.Bll.Service
                 c.IsActive,
                 c.UpdateTime
             });
-            customer=customer.OrderBy(c => c.CustomerCode);
+            customer = customer.OrderBy(c => c.CustomerCode);
             int total = customer.Count();
             customer = customer.Skip((page - 1) * rows).Take(rows);
 

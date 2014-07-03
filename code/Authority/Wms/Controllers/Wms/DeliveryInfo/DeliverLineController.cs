@@ -121,14 +121,16 @@ namespace Wms.Controllers.Wms.InterfaceInfo
 
 
         public FileStreamResult CreateExcelToClient()
-        {
-
-            
+        {            
             int page = 0, rows = 0;
             string DeliverLineCode = Request.QueryString["DeliverLineCode"];
+            string DistCode = Request.QueryString["DistCode"];
+            string CustomCode = Request.QueryString["CustomCode"];
+            string IsActive = Request.QueryString["IsActive"];
+            string DeliverLinename = Request.QueryString["DeliverLinename"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = DeliverLineService.GetDeliverLineInfo(page, rows, DeliverLineCode);
+            ep.DT1 = DeliverLineService.GetDeliverLineInfo(page, rows, DeliverLineCode, DistCode, CustomCode, IsActive, DeliverLinename);
             ep.HeadTitle1 = "线路信息";
 
             return PrintService.Print(ep);

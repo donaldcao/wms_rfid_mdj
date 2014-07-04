@@ -34,10 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.1-beta1\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.1-beta1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -66,7 +66,7 @@
     <Compile Include="Mapping\RoleSystemMap.cs" />
     <Compile Include="Mapping\ServerMap.cs" />
     <Compile Include="Mapping\SystemEventLogMap.cs" />
-    <Compile Include="Mapping\SystemMap.cs" />
+    <Compile Include="Mapping\SystemInfoMap.cs" />
     <Compile Include="Mapping\SystemParameterMap.cs" />
     <Compile Include="Mapping\UserFunctionMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="RoleModule.cs" />
     <Compile Include="RoleSystem.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="System.cs" />
+    <Compile Include="SystemInfo.cs" />
     <Compile Include="SystemEventLog.cs" />
     <Compile Include="SystemParameter.cs" />
     <Compile Include="User.cs" />

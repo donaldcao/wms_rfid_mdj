@@ -34,10 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.1-beta1\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.1-beta1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -61,6 +61,10 @@
     <Compile Include="Migrations\201406300214226_add_new_sms_table.cs" />
     <Compile Include="Migrations\201406300214226_add_new_sms_table.Designer.cs">
       <DependentUpon>201406300214226_add_new_sms_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407030250357_rename_system_to_systeminfo.cs" />
+    <Compile Include="Migrations\201407030250357_rename_system_to_systeminfo.Designer.cs">
+      <DependentUpon>201407030250357_rename_system_to_systeminfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406300214226_add_new_sms_table.resx">
       <DependentUpon>201406300214226_add_new_sms_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407030250357_rename_system_to_systeminfo.resx">
+      <DependentUpon>201407030250357_rename_system_to_systeminfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

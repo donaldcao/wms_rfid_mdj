@@ -53,9 +53,17 @@ namespace Wms.Controllers.Wms.SortingInfo
 
         //新增线路调度
         // POST: /SortOrderDispatch/Create/
-        public ActionResult Create(string SortingLineCode, string DeliverLineCodes,string orderDate)
+        public ActionResult Create(string SortingLineCode, string DeliverLineCodes,string orderDate,string IsAuto)
         {
-            bool bResult = SortOrderDispatchService.Add(SortingLineCode, DeliverLineCodes, orderDate);
+            bool bResult;
+            if (IsAuto == "1") 
+            {
+                bResult = SortOrderDispatchService.Add(DeliverLineCodes, orderDate);
+            }
+            else
+            {
+                bResult = SortOrderDispatchService.Add(SortingLineCode, DeliverLineCodes, orderDate);
+            }
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }

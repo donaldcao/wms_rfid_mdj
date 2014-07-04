@@ -4,9 +4,9 @@ using THOK.Common.Ef.MappingStrategy;
 
 namespace THOK.Authority.DbModel.Mapping
 {
-    public class SystemMap : EntityMappingBase<System>
+    public class SystemInfoMap : EntityMappingBase<SystemInfo>
     {
-        public SystemMap()
+        public SystemInfoMap()
             : base("Auth")
         {
             // Primary Key

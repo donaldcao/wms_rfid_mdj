@@ -2,7 +2,7 @@
 
 namespace THOK.Authority.Bll.Interfaces
 {
-    public interface ISystemService : IService<THOK.Authority.DbModel.System>
+    public interface ISystemService : IService<THOK.Authority.DbModel.SystemInfo>
     {
         object GetDetails(int page, int rows, string systemName, string description, string status);
 
@@ -16,6 +16,6 @@ namespace THOK.Authority.Bll.Interfaces
 
         object GetDetails(string userName, string systemID, string cityID);
 
-        System.Data.DataTable GetSystem(int page, int rows, DbModel.System system,bool isactiveIsNull);
+        System.Data.DataTable GetSystem(int page, int rows, DbModel.SystemInfo system,bool isactiveIsNull);
     }
 }

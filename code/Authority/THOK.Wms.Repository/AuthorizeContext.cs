@@ -33,7 +33,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new RoleModuleMap());
             modelBuilder.Configurations.Add(new RoleSystemMap());
             modelBuilder.Configurations.Add(new ServerMap());
-            modelBuilder.Configurations.Add(new SystemMap());
+            modelBuilder.Configurations.Add(new SystemInfoMap());
             modelBuilder.Configurations.Add(new SystemEventLogMap());
             modelBuilder.Configurations.Add(new UserMap());
             modelBuilder.Configurations.Add(new UserFunctionMap());

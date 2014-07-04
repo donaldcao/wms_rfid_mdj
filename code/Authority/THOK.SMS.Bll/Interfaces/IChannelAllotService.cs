@@ -8,7 +8,7 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface IChannelAllotService : IService<ChannelAllot>
     {
-        System.Data.DataTable GetChannelAllot(int page, int rows, ChannelAllot channelAllot);
+        System.Data.DataTable GetChannelAllot(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string productCode,string text);
 
         object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string productCode);
 

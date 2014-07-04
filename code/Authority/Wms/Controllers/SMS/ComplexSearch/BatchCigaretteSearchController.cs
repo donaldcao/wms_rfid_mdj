@@ -41,16 +41,18 @@ namespace Wms.Controllers.SMS.ComplexSearch
 
         }
 
-        //打印  未完成
+        //打印
         public FileStreamResult CreateExcelToClient()
         {
-            //int page = 0, rows = 0;
-            string ProductCode = Request.QueryString["ProductCode"] ?? "";
-            string ProductName = Request.QueryString["ProductName"] ?? "";
-
+            int page = 0, rows = 0;
+            string orderDate = Request.QueryString["OrderDate"] ?? "";
+            string batchNo = Request.QueryString["BatchNo"] ?? "";
+            string sortingLineCode = Request.QueryString["SortingLineCode"] ?? "";
+            string productCode = Request.QueryString["ProductCode"] ?? "";
+            string text = "分拣备货";
             ExportParam ep = new ExportParam();
-            //ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows)
-            //ep.HeadTitle1 = "烟道分配";
+            ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode,text);
+            ep.HeadTitle1 = "分拣备货";
             return PrintService.Print(ep);
         }
     }

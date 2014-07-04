@@ -50,6 +50,7 @@ namespace THOK.Wms.Bll.Service
                b.SortingLine.SortingLineName,
                b.OrderDate,
                b.DeliverLineCode,
+               SortStatus=b.SortStatus=="1"?"未分拣":"已分拣",
                WorkStatus = b.WorkStatus == "1" ? "未作业" : "已作业",
                b.DeliverLine.DeliverLineName,
                IsActive = b.IsActive == "1" ? "可用" : "不可用",

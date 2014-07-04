@@ -18,10 +18,10 @@
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.OrderID = $('#OrderID').val();
         queryParams.OrderDate = $('#OrderDate').datebox('getValue');
-//        queryParams.OrderType = $('#OrderType').val();
+        //        queryParams.OrderType = $('#OrderType').val();
         queryParams.CustomerCode = $('#CustomerCode').val();
-        queryParams.CustomerName = $('#CustomerName').val(); 
-        queryParams.DeliverLineCode = $('#DeliverLineCode').val();
+        queryParams.CustomerName = $('#CustomerName').val();
+        queryParams.DeliverLineCode = $('#searchDeliverLineCode').val();
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1,
@@ -31,22 +31,38 @@
         $("#infoDetails").datagrid('reload');
         $('#dlg-search').dialog('close');
     }
+
+    function DeliverLine_Select() {
+        $('#DeliverLineCode_Search').dialog('open').dialog('setTitle', '配送线路');
+        $('#deliverLineDetail').datagrid({ url: '/DeliverLine/C_Details/' });
+        $("#deliverLineDetail").datagrid('reload');
+    }
+
 </script>
 <script src="../../Scripts/mykeyboardshortcuts.js" type="text/javascript"></script>
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width:300px;height:240px;padding:2px 2px"
-		closed="true" buttons="#dlg-buttons-search">
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width: 300px; height: 240px;
+    padding: 2px 2px" closed="true" buttons="#dlg-buttons-search">
     <div class="easyui-layout" fit="true">
-		<div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; " >   
+        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
+            border: 1px solid #ccc;">
             <table align="left" width="250">
-              <tr>
-                <td width="60">订单单号:</td>
-                <td><input id="OrderID" type="text" style="width: 140px"></td>
-              </tr>
-              <tr>
-                <td width="60">订单日期:</td>
-                <td><input id="OrderDate" type="text" style="width: 140px " class="easyui-datebox"></td>
-              </tr>
-@*              <tr>
+                <tr>
+                    <td width="60">
+                        订单单号:
+                    </td>
+                    <td>
+                        <input id="OrderID" type="text" style="width: 140px">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="60">
+                        订单日期:
+                    </td>
+                    <td>
+                        <input id="OrderDate" type="text" style="width: 140px" class="easyui-datebox" readonly="true">
+                    </td>
+                </tr>
+                @*              <tr>
                 <td width="60">订单类型:</td>
                 <td><select id="OrderType" class="easyui-combobox" style="width: 140px" editable="false">
                             <option value="">请选择</option>                      
@@ -54,23 +70,41 @@
                             <option value="2">大客户</option>
                         </select></td>
               </tr>*@
-              <tr>
-                <td width="60">客户编号:</td>
-                <td><input id="CustomerCode" type="text" style="width: 140px"></td>
-              </tr>
-              <tr>
-                <td width="60">客户名称:</td>
-                <td><input id="CustomerName" type="text" style="width: 140px"></td>                
-              </tr>
-              <tr>
-                <td width="60">送货路线:</td>
-                <td><input id="DeliverLineCode" type="text" style="width: 140px"></td>
-              </tr>
+                <tr>
+                    <td width="60">
+                        客户编号:
+                    </td>
+                    <td>
+                        <input id="CustomerCode" type="text" style="width: 140px">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="60">
+                        客户名称:
+                    </td>
+                    <td>
+                        <input id="CustomerName" type="text" style="width: 140px">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="60">
+                        送货路线:
+                    </td>
+                    <td>
+                        <input name="DeliverLineCode" id="searchDeliverLineCode" style="display: none;">
+                        <input name="DeliverLineName" id="searchDeliverLineName" type="text" style="width: 140px"
+                            readonly="true">
+                        <a href="#" id="searchDeliverLineCode_Search" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true" onclick="DeliverLine_Select()"></a>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
 </div>
 <div id="dlg-buttons-search">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">查询</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="select()">查询</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+        取消</a>
 </div>
+@Html.Partial("_DeliverLine")

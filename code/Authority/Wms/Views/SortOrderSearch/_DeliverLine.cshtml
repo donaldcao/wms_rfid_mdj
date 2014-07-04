@@ -1,0 +1,68 @@
+﻿<script type="text/javascript">
+
+    function deliverLine_QueryClick() {
+        $('#deliverLineDetail').datagrid({ url: '/DeliverLine/C_Details/?QueryString=' + $('#queryType').combobox('getValue') + '&Value=' + $('#deliverLineInfo').val() });
+        $("#deliverLineDetail").datagrid('reload');
+    };
+
+    function deliver_Save() {
+        var deliverLineRow = $('#deliverLineDetail').datagrid('getSelected');
+        if (deliverLineRow) {
+            $('#searchDeliverLineCode').val(deliverLineRow.DeliverLineCode);
+            $('#searchDeliverLineName').val(deliverLineRow.DeliverLineName);
+            $('#DeliverLineCode_Search').dialog('close');
+        }
+    }
+
+    $(function () {
+        $('#queryType').combo({
+            required: true,
+            editable: false,
+            panelHeight: 45,
+            panelWidth: 100
+        });
+        $('#deliverLineDetail').datagrid({
+            onDblClickRow: function () {
+                deliver_Save();
+            }
+        })
+    });
+</script>
+<div id="DeliverLineCode_Search" class="easyui-dialog" modal="true" style="width: 520px; height: 500px; padding: 0px 0px" closed="true" buttons="#dlg_deliverLine_buttons">
+    <div split="true" border="false" style="width: 500px; height: 430px">
+        <table id="deliverLineDetail" class="easyui-datagrid" border="false" toolbar="#btn-query" pageSize="50"
+            singleselect="true" fit="true" fitcolumns="true" pagination="true" rownumbers="true">
+            <thead>
+                <tr>
+                    <th field="DeliverLineCode" width="120">
+                        线路编码
+                    </th>
+                    <th field="DeliverLineName" width="120">
+                        线路名称
+                    </th>
+                    <th field="DeliverOrder" width="120">
+                     送货顺序
+                    </th>                
+                    <th field="IsActive" width="60">
+                        是否可用
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="dlg_deliverLine_buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="deliver_Save()">确定</a> 
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#DeliverLineCode_Search').dialog('close')">
+        取消</a>
+</div>
+<div id="btn-query">
+<select id="queryType" name="QueryString" class="easyui-combobox" style="width: 100px;" readonly="true">
+		                <option value="DeliverLineCode">配送线路编码</option>
+                        <option value="DeliverLineName">配送线路名称</option>
+	                </select>
+                    <input id="deliverLineInfo">
+ <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="deliverLine_QueryClick()" id="deliverLineQuery">查询</a>
+</div>
+
+

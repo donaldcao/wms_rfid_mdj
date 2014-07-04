@@ -4724,7 +4724,7 @@ namespace THOK.Wms.Repository.Migrations
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
                         ModuleName = "分拣线路调度",
                         ShowOrder = 2,
-                        ModuleURL = "/SortRouteDispatch/",
+                        ModuleURL = "/SortOrderDispatch/",
                         IndicateImage = "icon-son_SortOrderc",
                         DeskTopImage = "image-son_SortOrderc",
                         System = system,

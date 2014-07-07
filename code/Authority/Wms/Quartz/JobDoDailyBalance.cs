@@ -14,7 +14,7 @@ namespace Wms.Quartz
         {
             string errorInfo = string.Empty;
             ServiceFactory ServiceFactory = new ServiceFactory();
-            ServiceFactory.GetService<IDailyBalanceService>().DoDailyBalance(null, System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), ref errorInfo);
+            ServiceFactory.GetService<IDailyBalanceService>().DoDailyBalance(null, System.DateTime.Now.ToString("yyyy-MM-dd"), ref errorInfo);
         }
     }
 }

@@ -392,6 +392,7 @@ namespace THOK.Wms.Bll.Service
                                UnitCode = i.UnitCode,
                                AllotQuantity = allotQuantity,
                                RealQuantity = allotQuantity,
+                               FinishTime = DateTime.Now,
                                Status = "2"
                            };
 

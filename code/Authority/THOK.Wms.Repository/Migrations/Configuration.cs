@@ -14,6 +14,7 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
+            Clear(context);
             context.Set<City>().AddOrUpdate(
                 new City()
                 {
@@ -90,6 +91,17 @@ namespace THOK.Wms.Repository.Migrations
             CreateSystemParameter(context);
             
             CreateSortSystemInfo(context);
+        }
+
+        private void Clear(THOK.Wms.Repository.AuthorizeContext context)
+        {
+           string sql = @"delete [dbo].[auth_role_function]
+                          delete [dbo].[auth_role_module]
+                          delete [dbo].[auth_user_function]
+                          delete [dbo].[auth_user_module]
+                          delete [dbo].[auth_function]
+                          delete [dbo].[auth_module]";
+           context.Database.ExecuteSqlCommand(sql);
         }
 
         private void CreateServer(AuthorizeContext context)

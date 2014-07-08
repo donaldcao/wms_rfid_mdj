@@ -1,5 +1,19 @@
-﻿@{
-    ViewBag.Title = "未完成";
-}
+﻿<div region="center" split="true" border="false">    
+    <table id="details" class="easyui-datagrid" border="false" singleSelect="true" url='/DeliverOrderSearch/Details/'
+        fit="true"  pagination="true" rownumbers="true" pageSize="50">
+        <thead>
+            <tr>
+                <th field="OrderDate" width="100" >订单日期</th>
+                <th field="BatchNo" width="100" >批次号</th>
+                <th field="SortingLineCode" width="120" >分拣线编码</th>
+                <th field="SortingLineName" width="160" >分拣线名称</th>
+                <th field="DeliverLineCode" width="120" >送货线路编码</th>
+                <th field="DeliverLineName" width="160" >送货线路名称</th>
+                <th field="DeliverLineNo" width="100" >送货顺序</th>
+                <th field="SortStatus" width="80" >分拣状态</th>
+                <th field="IsActive" width="80">是否可用</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
-<h2>Index</h2>

@@ -2058,6 +2058,9 @@
     <Content Include="Views\BatchCigaretteSearch\_ProductPartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\_SearchPartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\_SortingLinePartial.cshtml" />
+    <Content Include="Views\DeliverOrderSearch\_SearchPartial.cshtml" />
+    <Content Include="Views\DeliverOrderSearch\_SortingLinePartial.cshtml" />
+    <Content Include="Views\DeliverOrderSearch\_PrintPartial.cshtml" />
     <None Include="Views\Home\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\_LogonPartial.cshtml" />
     <Content Include="Views\Home\_MenuPartial.cshtml" />
@@ -2526,7 +2529,6 @@
     <Content Include="Views\SortRouteDispatch\Index.cshtml" />
     <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_AddPartial.cshtml" />
-
     <Content Include="Views\SortOrderAllotSearch\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_DeliverLinePartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_SortingLinePartial.cshtml" />

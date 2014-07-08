@@ -34,6 +34,44 @@ namespace THOK.SMS.Bll.Service
             get { return this.GetType(); }
         }
 
+        public object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode)
+        {
+            var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(s => s.BatchSortId > 0);
+            var sortBatchQuery = SortBatchRepository.GetQueryable();
+            var sortDispatch = sortDispatchQuery.Where(s => s.ID == s.ID);
+            if (orderDate != string.Empty && orderDate != null)
+            {
+                orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
+                sortDispatch = sortDispatch.Where(s => s.OrderDate == orderDate);
+            }
+            if (batchNo != string.Empty && batchNo != null)
+            {
+                int TheBatchNo = Convert.ToInt32(batchNo);
+                var sortBatchIds = sortBatchQuery.Where(s => s.BatchNo == TheBatchNo).Select(s => s.Id);
+                sortDispatch = sortDispatch.Where(b => sortBatchIds.Contains(b.BatchSortId));
+            }
+            if (sortingLineCode != string.Empty && sortingLineCode != null)
+            {
+                sortDispatch = sortDispatch.Where(s => s.SortingLineCode == sortingLineCode);
+            }
+            var temp = sortDispatch.OrderByDescending(b=>b.BatchSortId).ThenBy(b=>b.DeliverLineNo).AsEnumerable().Select(b => new
+            {
+                b.SortingLineCode,
+                b.SortingLine.SortingLineName,
+                OrderDate = sortBatchQuery.Where(s => s.Id == b.BatchSortId).FirstOrDefault().OrderDate.ToString("yyyy-MM-dd"),
+                BatchNo = sortBatchQuery.Where(s => s.Id == b.BatchSortId).FirstOrDefault().BatchNo.ToString(),
+                b.DeliverLineCode,
+                b.DeliverLineNo,
+                SortStatus = b.SortStatus == "1" ? "未分拣" : "已分拣",
+                b.DeliverLine.DeliverLineName,
+                IsActive = b.IsActive == "1" ? "可用" : "不可用"
+            });
+
+            int total = temp.Count();
+            temp = temp.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = temp.ToArray() };
+        }
+
         public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName, string sortingLineType)
         {
             var sortBatchQuery = SortBatchRepository.GetQueryable();

@@ -14,5 +14,7 @@ namespace THOK.SMS.Bll.Interfaces
         bool Save(SortBatch SortBatch, out string strResult);
         bool Delete(int SortBatchId, out string strResult);
         System.Data.DataTable GetSortBatch(int page, int rows, string SortBatchId);
+
+        object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);
     }
 }

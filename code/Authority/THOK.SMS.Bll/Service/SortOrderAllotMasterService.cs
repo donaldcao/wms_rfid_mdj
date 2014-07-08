@@ -50,6 +50,10 @@ namespace THOK.SMS.Bll.Service
             {
                 sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.sortBatch.SortingLineCode.Equals(sortingLineCode));
             }
+            if (deliverLineCode != "")
+            {
+                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.DeliverLineCode.Equals(deliverLineCode));
+            }
             if (customerCode != "")
             {
                 sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.CustomerCode.Equals(customerCode));

@@ -222,7 +222,7 @@ namespace THOK.Wms.Bll.Service
             IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
 
-            var temp = sortDispatchQuery.Where(s => s.BatchSortId.Equals(0)&&s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+            var temp = sortDispatchQuery.Where(s => s.SortBatchId.Equals(0)&&s.SortStatus.Equals("1")).ToArray().AsEnumerable()
                                            .Join(sortOrderQuery,
                                                 dp => new { dp.OrderDate, dp.DeliverLineCode },
                                                 om => new { om.OrderDate, om.DeliverLineCode },

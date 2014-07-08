@@ -34,9 +34,9 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.Y);
             this.Property(t => t.Width);
             this.Property(t => t.Height);
-            this.Property(t => t.DefaultProductCode)
+            this.Property(t => t.ProductCode)
                 .HasMaxLength(20);
-            this.Property(t => t.DefaultProductName)
+            this.Property(t => t.ProductName)
                 .HasMaxLength(50);
             this.Property(t => t.RemainQuantity)
                 .IsRequired();
@@ -50,10 +50,12 @@ namespace THOK.SMS.DbModel.Mapping
                 .IsRequired();
             this.Property(t => t.SupplyAddress)
                 .IsRequired();
-            this.Property(t => t.Status)
+            this.Property(t => t.IsActive)
                 .IsRequired()
                 .IsFixedLength()
                 .HasMaxLength(2);
+            this.Property(t => t.UpdateTime)
+                .IsRequired();
 
             // Table & Column Mappings
             this.Property(t => t.ChannelCode).HasColumnName(ColumnMap.Value.To("ChannelCode"));
@@ -65,15 +67,16 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.Y).HasColumnName(ColumnMap.Value.To("Y"));
             this.Property(t => t.Width).HasColumnName(ColumnMap.Value.To("Width"));
             this.Property(t => t.Height).HasColumnName(ColumnMap.Value.To("Height"));
-            this.Property(t => t.DefaultProductCode).HasColumnName(ColumnMap.Value.To("DefaultProductCode"));
-            this.Property(t => t.DefaultProductName).HasColumnName(ColumnMap.Value.To("DefaultProductName"));
+            this.Property(t => t.ProductCode).HasColumnName(ColumnMap.Value.To("ProductCode"));
+            this.Property(t => t.ProductName).HasColumnName(ColumnMap.Value.To("ProductName"));
             this.Property(t => t.RemainQuantity).HasColumnName(ColumnMap.Value.To("RemainQuantity"));
             this.Property(t => t.ChannelCapacity).HasColumnName(ColumnMap.Value.To("ChannelCapacity"));
             this.Property(t => t.GroupNo).HasColumnName(ColumnMap.Value.To("GroupNo"));
             this.Property(t => t.OrderNo).HasColumnName(ColumnMap.Value.To("OrderNo"));
             this.Property(t => t.SortAddress).HasColumnName(ColumnMap.Value.To("SortAddress"));
             this.Property(t => t.SupplyAddress).HasColumnName(ColumnMap.Value.To("SupplyAddress"));
-            this.Property(t => t.Status).HasColumnName(ColumnMap.Value.To("Status"));
+            this.Property(t => t.IsActive).HasColumnName(ColumnMap.Value.To("IsActive"));
+            this.Property(t => t.UpdateTime).HasColumnName(ColumnMap.Value.To("UpdateTime"));
 
         }
     }

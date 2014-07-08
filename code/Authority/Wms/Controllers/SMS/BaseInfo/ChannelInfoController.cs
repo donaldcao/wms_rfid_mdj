@@ -35,10 +35,10 @@ namespace Wms.Controllers.SMS.BaseInfo
 
         public JsonResult Details(int page, int rows,Channel channel)
         {
-            channel.DefaultProductCode = channel.DefaultProductCode ?? "";
+            channel.ProductCode = channel.ProductCode ?? "";
             channel.SortingLineCode = channel.SortingLineCode ?? "";
             channel.ChannelType = channel.ChannelType ?? "";
-            channel.Status = channel.Status ?? "";
+            channel.IsActive = channel.IsActive ?? "";
             var channelDetails = ChannelService.GetDetails(page, rows, channel);
             return Json(channelDetails, "text", JsonRequestBehavior.AllowGet);
         }

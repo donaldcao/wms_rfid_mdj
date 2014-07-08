@@ -17,8 +17,8 @@ namespace THOK.SMS.DbModel
         public DateTime OrderDate { get; set; }
         public int BatchNo { get; set; }
         public string SortingLineCode { get; set; }
-        public int NoOneBatchNo { get; set; }
-        public DateTime SortDate { get; set; }
+        public int NoOneProjectBatchNo { get; set; }
+        public DateTime NoOneProjectSortDate { get; set; }
         public string Status { get; set; }
 
         public virtual ICollection<ChannelAllot> ChannelAllots { get; set; }

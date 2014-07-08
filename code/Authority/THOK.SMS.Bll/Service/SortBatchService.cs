@@ -36,7 +36,7 @@ namespace THOK.SMS.Bll.Service
 
         public object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode)
         {
-            var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(s => s.BatchSortId > 0);
+            var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(s => s.SortBatchId > 0);
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortDispatch = sortDispatchQuery.Where(s => s.ID == s.ID);
             if (orderDate != string.Empty && orderDate != null)
@@ -48,18 +48,18 @@ namespace THOK.SMS.Bll.Service
             {
                 int TheBatchNo = Convert.ToInt32(batchNo);
                 var sortBatchIds = sortBatchQuery.Where(s => s.BatchNo == TheBatchNo).Select(s => s.Id);
-                sortDispatch = sortDispatch.Where(b => sortBatchIds.Contains(b.BatchSortId));
+                sortDispatch = sortDispatch.Where(b => sortBatchIds.Contains(b.SortBatchId));
             }
             if (sortingLineCode != string.Empty && sortingLineCode != null)
             {
                 sortDispatch = sortDispatch.Where(s => s.SortingLineCode == sortingLineCode);
             }
-            var temp = sortDispatch.OrderByDescending(b=>b.BatchSortId).ThenBy(b=>b.DeliverLineNo).AsEnumerable().Select(b => new
+            var temp = sortDispatch.OrderByDescending(b=>b.SortBatchId).ThenBy(b=>b.DeliverLineNo).AsEnumerable().Select(b => new
             {
                 b.SortingLineCode,
                 b.SortingLine.SortingLineName,
-                OrderDate = sortBatchQuery.Where(s => s.Id == b.BatchSortId).FirstOrDefault().OrderDate.ToString("yyyy-MM-dd"),
-                BatchNo = sortBatchQuery.Where(s => s.Id == b.BatchSortId).FirstOrDefault().BatchNo.ToString(),
+                OrderDate = sortBatchQuery.Where(s => s.Id == b.SortBatchId).FirstOrDefault().OrderDate.ToString("yyyy-MM-dd"),
+                BatchNo = sortBatchQuery.Where(s => s.Id == b.SortBatchId).FirstOrDefault().BatchNo.ToString(),
                 b.DeliverLineCode,
                 b.DeliverLineNo,
                 SortStatus = b.SortStatus == "1" ? "未分拣" : "已分拣",
@@ -77,7 +77,7 @@ namespace THOK.SMS.Bll.Service
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
             var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery,batch => batch.SortingLineCode,line => line.SortingLineCode,
-                (batch, line) => new { batch.Id,batch.OrderDate,batch.BatchNo,batch.SortingLineCode,batch.NoOneBatchNo,batch.SortDate,batch.Status,line.SortingLineName,line.SortingLineType})
+                (batch, line) => new { batch.Id,batch.OrderDate,batch.BatchNo,batch.SortingLineCode,NoOneBatchNo = batch.NoOneProjectBatchNo,SortDate = batch.NoOneProjectSortDate,batch.Status,line.SortingLineName,line.SortingLineType})
                 .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName)&&a.SortingLineType.Contains(sortingLineType));
             if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
             {
@@ -128,7 +128,7 @@ namespace THOK.SMS.Bll.Service
                     {
                         SortBatch sortBatch = new SortBatch();
                         sortBatch.OrderDate = date;
-                        var batchNo = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.SortingLineCode.Equals(item)).Select(a => new { a.BatchNo, a.Status, a.NoOneBatchNo }).OrderByDescending(a => a.BatchNo).ToArray();
+                        var batchNo = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.SortingLineCode.Equals(item)).Select(a => new { a.BatchNo, a.Status, NoOneBatchNo = a.NoOneProjectBatchNo }).OrderByDescending(a => a.BatchNo).ToArray();
                         if (batchNo.Count() > 0)
                         {
                             if (batchNo[0].Status == "01")
@@ -136,16 +136,16 @@ namespace THOK.SMS.Bll.Service
                             else
                             {
                                 sortBatch.BatchNo = Convert.ToInt32(batchNo[0].BatchNo) + 1;
-                                sortBatch.NoOneBatchNo = Convert.ToInt32(batchNo[0].NoOneBatchNo) + 1;
+                                sortBatch.NoOneProjectBatchNo = Convert.ToInt32(batchNo[0].NoOneBatchNo) + 1;
                             }
                         }
                         else
                         {
                             sortBatch.BatchNo = 1;
-                            sortBatch.NoOneBatchNo = 1;
+                            sortBatch.NoOneProjectBatchNo = 1;
                         }
                         sortBatch.SortingLineCode = item;
-                        sortBatch.SortDate = DateTime.Today.AddDays(1);
+                        sortBatch.NoOneProjectSortDate = DateTime.Today.AddDays(1);
                         sortBatch.Status = "01";
                         SortBatchRepository.Add(sortBatch);
                     }
@@ -161,12 +161,12 @@ namespace THOK.SMS.Bll.Service
                         {
                             continue;
                         }
-                        sortOrderDispatch.BatchSortId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
+                        sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
                     }
                     SortOrderDispatchRepository.SaveChanges();
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
                     {
-                        var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode)&&a.BatchSortId>0)
+                        var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode)&&a.SortBatchId>0)
                             .Join(deliverLineQuery, dis => dis.DeliverLineCode, line => line.DeliverLineCode,
                             (dis, line) => new { dis.ID, DeliverLineOrder = line.DeliverOrder, line.DistCode })
                             .Join(deliverDistQuery, a => a.DistCode, dist => dist.DistCode,

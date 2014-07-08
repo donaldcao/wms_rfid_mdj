@@ -33,7 +33,7 @@ namespace THOK.Wms.DbModel.Mapping
                 .IsRequired()
                 .HasMaxLength(50);
 
-            this.Property(t => t.BatchSortId);
+            this.Property(t => t.SortBatchId);
 
             this.Property(t => t.DeliverLineNo);
 
@@ -60,7 +60,7 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
             this.Property(t => t.DeliverLineCode).HasColumnName(ColumnMap.Value.To("DeliverLineCode"));
             this.Property(t => t.SortWorkDispatchID).HasColumnName(ColumnMap.Value.To("SortWorkDispatchID"));
-            this.Property(t => t.BatchSortId).HasColumnName(ColumnMap.Value.To("BatchSortId"));
+            this.Property(t => t.SortBatchId).HasColumnName(ColumnMap.Value.To("SortBatchId"));
             this.Property(t => t.DeliverLineNo).HasColumnName(ColumnMap.Value.To("DeliverLineNo"));
             this.Property(t => t.SortStatus).HasColumnName(ColumnMap.Value.To("SortStatus"));
             this.Property(t => t.WorkStatus).HasColumnName(ColumnMap.Value.To("WorkStatus"));

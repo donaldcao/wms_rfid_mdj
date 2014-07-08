@@ -25,8 +25,8 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.SortingLineCode)
                 .IsRequired()
                 .HasMaxLength(20);
-            this.Property(t => t.NoOneBatchNo);
-            this.Property(t => t.SortDate)
+            this.Property(t => t.NoOneProjectBatchNo);
+            this.Property(t => t.NoOneProjectSortDate)
                 .IsRequired();
             this.Property(t => t.Status)
                 .IsRequired()
@@ -38,8 +38,8 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.OrderDate).HasColumnName(ColumnMap.Value.To("OrderDate"));
             this.Property(t => t.BatchNo).HasColumnName(ColumnMap.Value.To("BatchNo"));
             this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
-            this.Property(t => t.NoOneBatchNo).HasColumnName(ColumnMap.Value.To("NoOneBatchNo"));
-            this.Property(t => t.SortDate).HasColumnName(ColumnMap.Value.To("SortDate"));
+            this.Property(t => t.NoOneProjectBatchNo).HasColumnName(ColumnMap.Value.To("NoOneProjectBatchNo"));
+            this.Property(t => t.NoOneProjectSortDate).HasColumnName(ColumnMap.Value.To("NoOneProjectSortDate"));
             this.Property(t => t.Status).HasColumnName(ColumnMap.Value.To("Status"));
 
         }

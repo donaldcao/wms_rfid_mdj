@@ -12,6 +12,8 @@ namespace THOK.Wms.Bll.Interfaces
 
         object GetWorkStatus();
 
+        object GetBatchStatus();
+
         bool Add(string DeliverLineCodes, string orderDate);
 
         bool Add(string SortingLineCode, string DeliverLineCodes,string orderDate);

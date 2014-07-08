@@ -51,6 +51,14 @@ namespace Wms.Controllers.Wms.SortingInfo
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
+        //查询未分配批次的线路调度数据
+        // GET: /SortOrderDispatch/GetBatchStatus/
+        public ActionResult GetBatchStatus()
+        {
+            var sortOrder = SortOrderDispatchService.GetBatchStatus();
+            return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+        }
+
         //新增线路调度
         // POST: /SortOrderDispatch/Create/
         public ActionResult Create(string SortingLineCode, string DeliverLineCodes,string orderDate,string IsAuto)

@@ -18,199 +18,144 @@ namespace THOK.SMS.Bll.Service
         public ISortBatchRepository SortBatchRepository { get; set; }
 
         [Dependency]
-
         public ISortingLineRepository SortingLineRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderDispatchRepository SortOrderDispatchRepository { get; set; }
+
+        [Dependency]
+        public IDeliverLineRepository DeliverLineRepository { get; set; }
+
+        [Dependency]
+        public IDeliverDistRepository DeliverDistRepository { get; set; }
 
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
         }
 
-        //判断其状态
-        public string WhatStatus(string state)
+        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName, string sortingLineType)
         {
-            string statusStr = "";
-            switch (state)
+            var sortBatchQuery = SortBatchRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
+            var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery,batch => batch.SortingLineCode,line => line.SortingLineCode,
+                (batch, line) => new { batch.Id,batch.OrderDate,batch.BatchNo,batch.SortingLineCode,batch.NoOneBatchNo,batch.SortDate,batch.Status,line.SortingLineName,line.SortingLineType})
+                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName)&&a.SortingLineType.Contains(sortingLineType));
+            if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
             {
-                case "01":
-                    statusStr = "未下载";
-                    break;
-                case "02":
-                    statusStr = "已下载";
-                    break;
-                case "03":
-                    statusStr = "已挂起";
-                    break;
-                case "04":
-                    statusStr = "已结单";
-                    break;
-                case "05":
-                    statusStr = "";
-                    break;
+                sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
             }
-            return statusStr;
-        }
-
-
-
-        public string WhatState(string Status)
-        {
-            string optimizescheduleStr = "";
-            switch (Status)
+            if (sortBatch.BatchNo > 0)
             {
-                case "未下载":
-                    optimizescheduleStr = "01";
-                    break;
-                case "已下载":
-                    optimizescheduleStr = "02";
-                    break;
-                case "已挂起":
-                    optimizescheduleStr = "03";
-                    break;
-                case "已结单":
-                    optimizescheduleStr = "04";
-                    break;
-                case "":
-                    optimizescheduleStr = "";
-                    break;
+                sortBatchDetials = sortBatchDetials.Where(a => a.BatchNo.Equals(sortBatch.BatchNo));
             }
-            return optimizescheduleStr;
+            int total = sortBatchDetials.Count();
+            sortBatchDetials = sortBatchDetials.OrderBy(a=>a.Id).Skip((page - 1) * rows).Take(rows);
+            var sortBatchArray = sortBatchDetials.AsEnumerable().Select(a => new
+            {
+                a.Id,
+                OrderDate=a.OrderDate.ToShortDateString(),
+                a.BatchNo,
+                a.SortingLineCode,
+                a.SortingLineName,
+                a.SortingLineType,
+                a.NoOneBatchNo,
+                SortDate=a.SortDate.ToShortDateString(),
+                Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
+            }).ToArray();
+            return new { total, rows = sortBatchArray.ToArray() };
         }
 
-
-        public object GetDetails(int page, int rows, string Status, string BatchNo, string BatchName, string OrderDate)
+        public bool Add(string dispatchId, out string strResult)
         {
-            return null;
-            //IQueryable<SortBatch> batchsortquery = SortBatchRepository.GetQueryable();       
-            //IQueryable<SortingLine> sortlingquery = SortingLineRepository.GetQueryable();
-
-            //var batchsort = batchsortquery;
-
-            //if (BatchNo != "")
-            //{
-            //    int batchNo = 0;
-            //    int.TryParse(BatchNo, out batchNo);
-            //    if (batchNo > 0)
-            //    {
-            //        batchsort = batchsortquery.Where(a => a.BatchNo == batchNo);
-            //    }
-            //}
-
-            //if (OrderDate != string.Empty && OrderDate != null)
-            //{
-            //    DateTime opdate = Convert.ToDateTime(OrderDate);
-            //    batchsort = batchsortquery.Where(a => a.OrderDate == opdate);
-            //}
-            //if (Status != string.Empty && Status != null)
-            //{
-            //    batchsort = batchsortquery.Where(a => a.Status == Status);
-            //}
-            //if (BatchName != string.Empty && BatchName != null)
-            //{
-            //    batchsort = batchsort.Where(a => a.BatchName==BatchName);
-            //}
-
-            //var batchsorts = batchsort.OrderByDescending(a => a.BatchNo).Select(a => new 
-            //{
-
-            //    a.SortingLineCode
-            //});
-
-            //int total = batchsorts.Count();
-            //var batchsRow = batchsort.Skip((page - 1) * rows).Take(rows);
-
-            //var batch = batchsorts.ToArray()
-            //     .Select(a =>
-            //     new
-            //     {
-            //         a.SortBatchId,
-            //         a.BatchId,
-            //         a.BatchName,
-            //         a.BatchNo,
-            //         Status = WhatStatus(a.Status),
-            //         a.SortingLineCode,                  
-            //         SortingLineName =a.SortingLineCode==null? "":(sortlingquery.Where(b => b.SortingLineCode==a.SortingLineCode).FirstOrDefault().SortingLineName),            
-            //         SortingLineType = a.SortingLineCode == null ? "" : (sortlingquery.Where(b => b.SortingLineCode == a.SortingLineCode).FirstOrDefault().SortingLineType),
-            //         OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
-            //     });
-        
-            //return new { total, rows = batch.ToArray() };
-        }
-
-        public object GetBatch(int page, int rows, string queryString, string value)
-        {
-            return null;
-            //string batchno = "", batchname = "";
-
-            //if (queryString == "BatchNo")
-            //{
-            //    batchno = value;
-            //}
-            //else
-            //{
-            //    batchname = value;
-            //}
-            //IQueryable<Batch> batchQuery = BatchRepository.GetQueryable();
-            //var batchs = batchQuery.Where(e => e.BatchName.Contains(batchname));
-
-            //if (batchno != "")
-            //{
-            //    int batchNo = 0;
-            //    int.TryParse(batchno, out batchNo);
-            //    if (batchNo > 0)
-            //    {
-            //        batchs = batchs.Where(a => a.BatchNo == batchNo);
-            //    }
-            //}
-
-            //var batch = batchs.OrderByDescending(a => a.BatchId).OrderBy(e => e.BatchId).AsEnumerable().Select(a => new
-            //{
-            //    a.BatchId,
-            //    a.BatchName,
-            //    a.BatchNo,
-            //    OrderDate = a.OrderDate.ToString("yyyy-MM-dd")
-            //});
-
-            //int total = batch.Count();
-            //batch = batch.Skip((page - 1) * rows).Take(rows);
-            //return new { total, rows = batch.ToArray() };
-        }
-
-
-        public bool Add(SortBatch SortBatch, out string strResult)
-        {
-
             strResult = string.Empty;
             bool result = false;
-            //var al = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.SortBatchId == SortBatch.SortBatchId);
-            //if (al == null)
-            //{
-
-            //    SortBatch SortBatchs = new SortBatch();
-            //    try
-            //    {
-            //        //SortBatchs.BatchId = SortBatch.BatchId;
-            //        SortBatchs.SortingLineCode = SortBatch.SortingLineCode;
-            //        SortBatchs.Status = SortBatch.Status;
-            //        SortBatchRepository.Add(SortBatchs);
-            //        SortBatchRepository.SaveChanges();
-
-            //        result = true;
-            //    }
-            //    catch (Exception e)
-            //    {
-
-            //        strResult = "原因:" + e.Message;
-            //    }
-            //}
-            //else
-            //{
-            //    strResult = "原因:批次分拣已存在";
-            //}
+            var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            var dispatchIds = dispatchId.Substring(0, dispatchId.Length - 1).Split(',');
+            var sortOrderDispatchArray = sortOrderDispatchQuery.Where(a => dispatchIds.Contains(a.ID.ToString()))
+                .GroupBy(a => a.OrderDate)
+                .Select(a => a.Key).ToArray();
+            var sortBatchQuery = SortBatchRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
+            foreach (var orderDate in sortOrderDispatchArray)
+            {
+                try
+                {
+                    DateTime date = DateTime.ParseExact(orderDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+                    var sortingLineDetail = sortingLineQuery.Where(a => a.IsActive.Equals("1")
+                        && !sortBatchQuery.Where(b => b.OrderDate.Equals(date) && b.Status.Equals("01")).Select(b => b.SortingLineCode).Contains(a.SortingLineCode))
+                        .Select(a => a.SortingLineCode).ToArray();
+                    //更新批次分拣表
+                    foreach (var item in sortingLineDetail)
+                    {
+                        SortBatch sortBatch = new SortBatch();
+                        sortBatch.OrderDate = date;
+                        var batchNo = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.SortingLineCode.Equals(item)).Select(a => new { a.BatchNo, a.Status, a.NoOneBatchNo }).OrderByDescending(a => a.BatchNo).ToArray();
+                        if (batchNo.Count() > 0)
+                        {
+                            if (batchNo[0].Status == "01")
+                                continue;
+                            else
+                            {
+                                sortBatch.BatchNo = Convert.ToInt32(batchNo[0].BatchNo) + 1;
+                                sortBatch.NoOneBatchNo = Convert.ToInt32(batchNo[0].NoOneBatchNo) + 1;
+                            }
+                        }
+                        else
+                        {
+                            sortBatch.BatchNo = 1;
+                            sortBatch.NoOneBatchNo = 1;
+                        }
+                        sortBatch.SortingLineCode = item;
+                        sortBatch.SortDate = DateTime.Today.AddDays(1);
+                        sortBatch.Status = "01";
+                        SortBatchRepository.Add(sortBatch);
+                    }
+                    SortBatchRepository.SaveChanges();
+                    //更新分拣调度表
+                    var deliverDistQuery = DeliverDistRepository.GetQueryable();
+                    var deliverLineQuery = DeliverLineRepository.GetQueryable();
+                    foreach (var item in dispatchIds)
+                    {
+                        int id = Convert.ToInt32(item);
+                        var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id));
+                        if (sortOrderDispatch == null)
+                        {
+                            continue;
+                        }
+                        sortOrderDispatch.BatchSortId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                    foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
+                    {
+                        var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode)&&a.BatchSortId>0)
+                            .Join(deliverLineQuery, dis => dis.DeliverLineCode, line => line.DeliverLineCode,
+                            (dis, line) => new { dis.ID, DeliverLineOrder = line.DeliverOrder, line.DistCode })
+                            .Join(deliverDistQuery, a => a.DistCode, dist => dist.DistCode,
+                            (a, dist) => new { a.ID, a.DeliverLineOrder, DeliverDistOrder = dist.DeliverOrder })
+                            .OrderBy(a => new { a.DeliverDistOrder, a.DeliverLineOrder })
+                            .Select(a => new { a.ID, a.DeliverLineOrder,a.DeliverDistOrder}).ToArray();
+                        for (int i = 0; i < sortOrderDispatchDetail.Count(); i++)
+                        {
+                            int id = sortOrderDispatchDetail[i].ID;
+                            var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id));
+                            if (sortOrderDispatch != null)
+                            {
+                                sortOrderDispatch.DeliverLineNo = i + 1;
+                            }
+                        }
+                        
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                    result = true;
+                }
+                catch (Exception e)
+                {
+                    strResult = "原因：" + e.Message;
+                }
+            }
             return result;
         }
-
-
 
         public bool Save(SortBatch SortBatch, out string strResult)
         {

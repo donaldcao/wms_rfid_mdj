@@ -14,6 +14,7 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
+            Clear(context);
             context.Set<City>().AddOrUpdate(
                 new City()
                 {
@@ -90,6 +91,17 @@ namespace THOK.Wms.Repository.Migrations
             CreateSystemParameter(context);
             
             CreateSortSystemInfo(context);
+        }
+
+        private void Clear(THOK.Wms.Repository.AuthorizeContext context)
+        {
+           string sql = @"delete [dbo].[auth_role_function]
+                          delete [dbo].[auth_role_module]
+                          delete [dbo].[auth_user_function]
+                          delete [dbo].[auth_user_module]
+                          delete [dbo].[auth_function]
+                          delete [dbo].[auth_module]";
+           context.Database.ExecuteSqlCommand(sql);
         }
 
         private void CreateServer(AuthorizeContext context)
@@ -4724,7 +4736,7 @@ namespace THOK.Wms.Repository.Migrations
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0202"),
                         ModuleName = "分拣线路调度",
                         ShowOrder = 2,
-                        ModuleURL = "/SortRouteDispatch/",
+                        ModuleURL = "/SortOrderDispatch/",
                         IndicateImage = "icon-son_SortOrderc",
                         DeskTopImage = "image-son_SortOrderc",
                         System = system,

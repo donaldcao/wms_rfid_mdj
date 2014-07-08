@@ -5,16 +5,17 @@
     }
 
     function select() {
-        var queryParams = $('#details').datagrid('options').queryParams;
+        var queryParams = $('#master').datagrid('options').queryParams;
         queryParams.OrderDate = $('#OrderDate').datebox('getValue');
         queryParams.BatchNo = $('#BatchNo').val();
         queryParams.SortingLineCode = $("#searchSortingLineCode").val();
+        queryParams.DeliverLineCode = $('#deliverLineCode').val();
         queryParams.ProductCode = $("#searchProductCode").val();
-        $('#details').datagrid('options').queryParams = queryParams;
-        $('#details').datagrid({
+        $('#master').datagrid('options').queryParams = queryParams;
+        $('#master').datagrid({
             pageNumber: 1
         });
-        $('#details').datagrid("reload");
+        $('#master').datagrid("reload");
         $('#dlg-search').dialog("close");
     }
     //分拣线查询
@@ -23,6 +24,12 @@
         $('#SortingLineDetails').datagrid({ url: '/SortingLine/Details/' });
         $("#SortingLineDetails").datagrid('load');
     }
+    //配送线路查询
+    function deliverLine_Select() {
+        $('#deliverLine_Data').dialog('open').dialog('setTitle', '配送线路查询');
+        $('#deliverLine_Detail').datagrid({ url: '/DeliverLine/C_Details/' });
+        $("#deliverLine_Detail").datagrid('reload');
+    }
     //卷烟查询
     function ProductSearchClick() {
         $('#productData').dialog('open').dialog('setTitle', '选择卷烟信息');
@@ -30,7 +37,7 @@
         $("#productDetail").datagrid('load');
     }
 </script>
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width:300px;height:260px;padding:2px 2px"
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width:300px;height:450px;padding:2px 2px"
 		closed="true" buttons="#dlg-buttons-search">
     <div class="easyui-layout" fit="true">
         <div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; ">
@@ -39,7 +46,7 @@
                     <td style="text-align: right">
                         订单日期：
                     </td>
-                    <td><input id="OrderDate" type="text" style="width: 130px " class="easyui-datebox" readonly="true" ></td>
+                    <td><input id="OrderDate" type="text" style="width: 130px " class="easyui-datebox"></td>
                 </tr> 
                                          
                 <tr>
@@ -71,6 +78,24 @@
                     </td>
                 </tr>
                 <tr>
+                    <td style="text-align: right; width: 80px;">
+                        线路编码:
+                    </td>
+                    <td>
+                        <input name="DeliverLineCode" id="deliverLineCode" type="text" readonly="readonly">
+                        <a href="#" id="deliverLine_Search" class="easyui-linkbutton" iconcls="icon-search"
+                             readonly="true" plain="true" onclick="deliverLine_Select()"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 80px;">
+                        线路名称:
+                    </td>
+                    <td>
+                        <input name="DeliverLineName" id="deliverLineName" type="text" readonly="readonly">
+                    </td>
+                </tr>
+                <tr>
                     <td style="text-align: right">
                         卷烟代码:
                     </td>
@@ -99,5 +124,6 @@
 	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">查询</a>
 	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
 </div>
-@Html.Partial("_ProductPartial")
 @Html.Partial("_SortingLinePartial")
+@Html.Partial("_DeliverLinePartial")
+@Html.Partial("_ProductPartial")

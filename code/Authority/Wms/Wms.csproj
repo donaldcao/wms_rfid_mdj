@@ -2526,6 +2526,13 @@
     <Content Include="Views\SortRouteDispatch\Index.cshtml" />
     <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_AddPartial.cshtml" />
+
+    <Content Include="Views\SortOrderAllotSearch\_SearchPartial.cshtml" />
+    <Content Include="Views\SortOrderAllotSearch\_DeliverLinePartial.cshtml" />
+    <Content Include="Views\SortOrderAllotSearch\_SortingLinePartial.cshtml" />
+    <Content Include="Views\SortOrderAllotSearch\_ProductPartial.cshtml" />
+    <Content Include="Views\SortOrderAllotSearch\_PrintPartial.cshtml" />
+    <Content Include="Views\SortOrderSearch\_DeliverLine.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

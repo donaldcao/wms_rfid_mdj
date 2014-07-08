@@ -6,6 +6,7 @@ using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using System.Transactions;
 using THOK.Authority.Dal.Interfaces;
+using EntityFramework.Extensions;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -627,24 +628,14 @@ namespace THOK.Wms.Bll.Service
                 DateTime? dt3 = null;
                 if (dailyBalance != null) dt3 = dailyBalance.SettleDate;
 
-                var oldDailyBalance = dailyBalanceQuery.Where(d => (d.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                                                 && d.SettleDate >= dt1).ToArray();
-                DailyBalanceRepository.Delete(oldDailyBalance);
+                dailyBalanceQuery.Where(d => (d.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode)) && d.SettleDate >= dt1).Delete();
                 DailyBalanceRepository.SaveChanges();
 
-                //if (inQuery.Where(i => i.InBillMaster.BillDate >= dt1 && i.InBillMaster.BillDate < dt2 && i.InBillMaster.Status != "6").Any()
-                //    || outQuery.Where(i => i.OutBillMaster.BillDate >= dt1 && i.OutBillMaster.BillDate < dt2 && i.OutBillMaster.Status != "6").Any()
-                //    || moveQuery.Where(i => i.MoveBillMaster.BillDate >= dt1 && i.MoveBillMaster.BillDate < dt2 && i.MoveBillMaster.Status != "4").Any()
-                //    || profitLossQuery.Where(i => i.ProfitLossBillMaster.BillDate >= dt1 && i.ProfitLossBillMaster.BillDate < dt2 && i.ProfitLossBillMaster.Status != "2").Any())
-                //{
-                //    errorInfo = "选择日结日期还有订单未结单，不可以进行日结！";
-                //    return false;
-                //}
-
                 var query = inQuery.Where(a => (a.InBillMaster.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                              && a.FinishTime >= dt1 && a.FinishTime < dt2
-                                              && dt3 != null
-                                              && a.ProductCode != emptyPalletCode)
+                                              && ((a.FinishTime >= dt1 && a.FinishTime < dt2 && dt3 != null) || (dt3 == null && a.FinishTime >= dt2))
+                                              && a.ProductCode != emptyPalletCode
+                                              && a.FinishTime != null
+                                              && a.Status == "2")
                     .Select(a => new
                     {
                         BillDate = settleDate,
@@ -661,9 +652,10 @@ namespace THOK.Wms.Bll.Service
                     })
                 .Concat(
                     outQuery.Where(a => (a.OutBillMaster.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                            && a.FinishTime >= dt1 && a.FinishTime < dt2
-                                            && dt3 != null
-                                            && a.ProductCode != emptyPalletCode)
+                                            && ((a.FinishTime >= dt1 && a.FinishTime < dt2 && dt3 != null) || (dt3 == null && a.FinishTime >= dt2))
+                                            && a.ProductCode != emptyPalletCode
+                                            && a.FinishTime != null
+                                            && a.Status == "2")
                     .Select(a => new
                     {
                         BillDate = settleDate,
@@ -680,10 +672,10 @@ namespace THOK.Wms.Bll.Service
                     })
                 ).Concat(
                     moveQuery.Where(a => (a.MoveBillMaster.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                            && a.FinishTime >= dt1 && a.FinishTime < dt2
-                                            && a.Status == "2"
-                                            && dt3 != null
-                                            && a.ProductCode != emptyPalletCode)
+                                            && ((a.FinishTime >= dt1 && a.FinishTime < dt2 && dt3 != null) || (dt3 == null && a.FinishTime >= dt2))                                            
+                                            && a.ProductCode != emptyPalletCode
+                                            && a.FinishTime != null
+                                            && a.Status == "2")
                     .Select(a => new
                     {
                         BillDate = settleDate,
@@ -701,10 +693,10 @@ namespace THOK.Wms.Bll.Service
                 )
                 .Concat(
                     moveQuery.Where(a => (a.MoveBillMaster.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                            && a.FinishTime >= dt1 && a.FinishTime < dt2
-                                            && a.Status == "2"
-                                            && dt3 != null
-                                            && a.ProductCode != emptyPalletCode)
+                                            && ((a.FinishTime >= dt1 && a.FinishTime < dt2 && dt3 != null) || (dt3 == null && a.FinishTime >= dt2))
+                                            && a.ProductCode != emptyPalletCode
+                                            && a.FinishTime != null
+                                            && a.Status == "2")
                     .Select(a => new
                     {
                         BillDate = settleDate,
@@ -721,9 +713,11 @@ namespace THOK.Wms.Bll.Service
                     })
                 ).Concat(
                     profitLossQuery.Where(a => (a.ProfitLossBillMaster.WarehouseCode == warehouseCode || string.IsNullOrEmpty(warehouseCode))
-                                                    && a.ProfitLossBillMaster.VerifyDate >= dt1 && a.ProfitLossBillMaster.VerifyDate < dt2
-                                                    && dt3 != null
-                                                    && a.ProductCode != emptyPalletCode)
+                                                    && ((a.ProfitLossBillMaster.VerifyDate >= dt1 && a.ProfitLossBillMaster.VerifyDate < dt2
+                                                        && dt3 != null) || (dt3 == null && a.ProfitLossBillMaster.VerifyDate >= dt2))
+                                                    && a.ProductCode != emptyPalletCode
+                                                    && a.ProfitLossBillMaster.VerifyDate != null
+                                                    && a.ProfitLossBillMaster.Status == "3")
                     .Select(a => new
                     {
                         BillDate = settleDate,
@@ -786,13 +780,30 @@ namespace THOK.Wms.Bll.Service
                     AreaCode = a.Key.AreaCode,
                     ProductCode = a.Key.ProductCode,
                     UnitCode = a.Key.UnitCode,
-                    Beginning = a.Sum(d => d.Beginning),
-                    EntryAmount = a.Sum(d => d.EntryAmount),
-                    DeliveryAmount = a.Sum(d => d.DeliveryAmount),
-                    ProfitAmount = a.Sum(d => d.ProfitAmount),
-                    LossAmount = a.Sum(d => d.LossAmount),
-                    Ending = a.Sum(d => d.Beginning) + a.Sum(d => d.EntryAmount) - a.Sum(d => d.DeliveryAmount) + a.Sum(d => d.ProfitAmount) - a.Sum(d => d.LossAmount)
+                    Beginning = dt3 != null ? a.Sum(d => d.Beginning):0,
+                    EntryAmount = dt3 != null ? a.Sum(d => d.EntryAmount):0,
+                    DeliveryAmount = dt3 != null ? a.Sum(d => d.DeliveryAmount):0,
+                    ProfitAmount = dt3 != null ? a.Sum(d => d.ProfitAmount):0,
+                    LossAmount = dt3 != null ? a.Sum(d => d.LossAmount):0,
+                    Ending = a.Sum(d => d.Beginning)
+                        + (dt3 != null ? a.Sum(d => d.EntryAmount) : -a.Sum(d => d.EntryAmount))
+                        - (dt3 != null ? a.Sum(d => d.DeliveryAmount) : -a.Sum(d => d.DeliveryAmount))
+                        + (dt3 != null ? a.Sum(d => d.ProfitAmount) : -a.Sum(d => d.ProfitAmount))
+                        - (dt3 != null ? a.Sum(d => d.LossAmount) : -a.Sum(d => d.LossAmount))
                 }).ToArray();
+
+                if (dt1 >= DateTime.Now.Date && dt1<= DateTime.Now.AddDays(1).Date
+                    && newDailyBalance.Sum(d => d.Ending) != storageQuery.Sum(s=>s.Quantity))
+                {
+                    errorInfo = "日结时出现错误，详情：日结当前库存，结余却与当前库存不一致！";
+                    return false;
+                }
+
+                if (newDailyBalance.Any(d=>d.Ending < 0 ))
+                {
+                    errorInfo = "日结时出现错误，详情：结余出现负数，属于异常现象，请查明原因！";
+                    return false;
+                }
 
                 foreach (var item in newDailyBalance)
                 {

@@ -1,14 +1,14 @@
 ﻿<script type="text/javascript">
-
     function deliverLine_QueryClick() {
-        $('#deliverLine_Detail').datagrid({ url: '/DeliverLine/D_Details/?QueryString=' + $('#queryType').combobox('getValue') + '&Value=' + $('#deliverLineInfo').val() });
+        $('#deliverLine_Detail').datagrid({ url: '/DeliverLine/C_Details/?QueryString=' + $('#queryType').combobox('getValue') + '&Value=' + $('#deliverLineInfo').val() });
         $("#deliverLine_Detail").datagrid('reload');
     };
 
     function deliver_Save() {
         var deliverLineRow = $('#deliverLine_Detail').datagrid('getSelected');
         if (deliverLineRow) {
-            $('#distCode').val(deliverLineRow.DistCode);
+            $('#deliverLineCode').val(deliverLineRow.DeliverLineCode);
+            $('#deliverLineName').val(deliverLineRow.DeliverLineName);
             $('#deliverLine_Data').dialog('close');
         }
     }
@@ -31,21 +31,18 @@
     padding: 0px 0px" closed="true" buttons="#dlg_deliverLine_buttons">
     <div split="true" border="false" style="width: 500px; height: 430px">
         <table id="deliverLine_Detail" class="easyui-datagrid" border="false" 
-        toolbar="#btn-query" pageSize="50"
+            toolbar="#btn-query" pageSize="50"
             singleselect="true" fit="true" fitcolumns="true" pagination="true" rownumbers="true">
             <thead>
                 <tr>
-                    <th field="DistCode" width="120">
+                    <th field="DeliverLineCode" width="120">
                         配送区域编码
                     </th>
-                    <th field="DistName" width="120">
+                    <th field="DeliverLineName" width="140">
                         配送区域名称
                     </th>
-                    <th field="DistCenterCode" width="120">
-                       配送中心编码
-                    </th>
-                    <th field="CompanyCode" width="120">
-                       所属单位编码
+                    <th field="DeliverOrder" width="100">
+                        配送区域名称
                     </th>
                     <th field="IsActive" width="60">
                         是否可用
@@ -57,15 +54,14 @@
 </div>
 <div id="dlg_deliverLine_buttons">
     <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="deliverLine_Save()">确定</a> 
-    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#deliverLine_Data').dialog('close')">
-        取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#deliverLine_Data').dialog('close')">取消</a>
 </div>
 <div id="btn-query">
 <select id="queryType" name="QueryString" class="easyui-combobox" style="width: 100px;" readonly="true">
-		                <option value="DistCode">配送区域编码</option>
-                        <option value="DistName">配送区域名称</option>
+		                <option value="DeliverLineCode">送货线路编码</option>
+                        <option value="DeliverLineName">送货线路名称</option>
 	                </select>
-                    <input id="deliverLineInfo" />
+                    <input id="deliverLineInfo">
  <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="deliverLine_QueryClick()" id="deliverLineQuery">查询</a>
 </div>
 

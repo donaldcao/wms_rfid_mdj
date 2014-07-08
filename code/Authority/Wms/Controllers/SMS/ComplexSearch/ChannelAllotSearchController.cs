@@ -7,6 +7,8 @@ using THOK.SMS.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.SMS.Bll.Interfaces;
 using THOK.Security;
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
 
 namespace Wms.Controllers.SMS.ComplexSearch
 {
@@ -40,38 +42,21 @@ namespace Wms.Controllers.SMS.ComplexSearch
 
         }
 
-        //////打印
-        ////public FileStreamResult CreateExcelToClient()
-        ////{
-        ////    int page = 0, rows = 0;
+        //打印
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            string orderDate = Request.QueryString["OrderDate"] ?? "";
+            string batchNo = Request.QueryString["BatchNo"] ?? "";
+            string sortingLineCode = Request.QueryString["SortingLineCode"] ?? "";
+            string productCode = Request.QueryString["ProductCode"] ?? "";
+            string text = "分拣烟道";
 
-        ////    string ChannelAllotCode = Request.QueryString["ChannelAllotCode"] ?? "";
-        ////    int BatchSortId = Convert.ToInt32(Request.QueryString["BatchSortId"] ?? "");
-        ////    string ChannelCode = Request.QueryString["ChannelCode"] ?? "";
-        ////    string ProductCode = Request.QueryString["ProductCode"] ?? "";
-        ////    string ProductName = Request.QueryString["ProductName"] ?? "";
-        ////    int InQuantity = Convert.ToInt32(Request.QueryString["InQuantity"] ?? "");
-        ////    int OutQuantity = Convert.ToInt32(Request.QueryString["OutQuantity"] ?? "");
-        ////    int RealQuantity = Convert.ToInt32(Request.QueryString["RealQuantity"] ?? "");
-        ////    int RemainQuantity = Convert.ToInt32(Request.QueryString["RemainQuantity"] ?? "");
-
-
-        ////    ChannelAllot channelAllot = new ChannelAllot();
-        ////    channelAllot.ChannelAllotCode = ChannelAllotCode;
-        ////    channelAllot.BatchSortId = BatchSortId;
-        ////    channelAllot.ChannelCode = ChannelCode;
-        ////    channelAllot.ProductCode = ProductCode;
-        ////    channelAllot.ProductName = ProductName;
-        ////    channelAllot.InQuantity = InQuantity;
-        ////    channelAllot.OutQuantity = OutQuantity;
-        ////    channelAllot.RealQuantity = RealQuantity;
-        ////    channelAllot.RemainQuantity = RemainQuantity;
-
-        ////    ExportParam ep = new ExportParam();
-        ////    ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, channelAllot);
-        ////    ep.HeadTitle1 = "烟道分配";
-        ////    return PrintService.Print(ep);
-        ////}
+            ExportParam ep = new ExportParam();
+            ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode, text);
+            ep.HeadTitle1 = "分拣烟道查询";
+            return PrintService.Print(ep);
+        }
     }
 }
 

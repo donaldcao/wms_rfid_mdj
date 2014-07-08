@@ -1,0 +1,27 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var channelAllotCode = null, sortBatchId = null, channelCode = null, productCode = null, productName = null, inQuantity = null,
+            outQuantity = null, realQuantity = null, remainQuantity = null;
+
+        if ($('#ChannelAllotCode').val() == null) { channelAllotCode = ""; } else { channelAllotCode = $('#ChannelAllotCode').val() }
+        if ($('#SortBatchId').val() == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').val() }
+        if ($('#ChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#ChannelCode').val() }
+        if ($('#ProductCode').val() == null) { productCode = ""; } else { productCode = $('#ProductCode').val() }
+        if ($('#ProductName').val() == null) { productName = ""; } else { productName = $('#ProductName').val() }
+        if ($('#InQuantity').val() == null) { inQuantity = ""; } else { inQuantity = $('#InQuantity').val() }
+        if ($('#OutQuantity').val() == null) { outQuantity = ""; } else { outQuantity = $('#OutQuantity').val() }
+        if ($('#RealQuantity').val() == null) { realQuantity = ""; } else { realQuantity = $('#RealQuantity').val() }
+        if ($('#RemainQuantity').val() == null) { remainQuantity = ""; } else { remainQuantity = $('#RemainQuantity').val() }
+
+        window.location.href = "/SortSupply/CreateExcelToClient/"
+                                + "?channelAllotCode=" + channelAllotCode
+                                + "&sortBatchId=" + sortBatchId
+                                + "&channelCode=" + channelCode
+                                + "&productCode=" + productCode
+                                + "&productName=" + productName
+                                + "&outQuantity=" + outQuantity
+                                + "&inQuantity=" + inQuantity
+                                + "&realQuantity=" + realQuantity
+                                + "&remainQuantity=" + remainQuantity;
+    }
+</script>

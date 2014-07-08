@@ -2525,6 +2525,8 @@
     <Content Include="Views\SortOrderInfo\Index.cshtml" />
     <Content Include="Views\SortRouteDispatch\Index.cshtml" />
     <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
+    <Content Include="Views\SortBatchDispatch\_AddPartial.cshtml" />
+
     <Content Include="Views\SortOrderAllotSearch\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_DeliverLinePartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_SortingLinePartial.cshtml" />

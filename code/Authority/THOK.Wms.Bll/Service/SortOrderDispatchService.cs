@@ -217,6 +217,43 @@ namespace THOK.Wms.Bll.Service
             return temp.ToArray();
         }
 
+        public object GetBatchStatus()
+        {
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+
+            var temp = sortDispatchQuery.Where(s => s.BatchSortId.Equals(0)&&s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+                                           .Join(sortOrderQuery,
+                                                dp => new { dp.OrderDate, dp.DeliverLineCode },
+                                                om => new { om.OrderDate, om.DeliverLineCode },
+                                                (dp, om) => new
+                                                {
+                                                    dp.ID,
+                                                    dp.OrderDate,
+                                                    dp.SortingLine,
+                                                    dp.DeliverLine,
+                                                    dp.IsActive,
+                                                    dp.UpdateTime,
+                                                    dp.SortStatus,
+                                                    om.QuantitySum
+                                                }
+                                           ).GroupBy(g => new { g.ID, g.OrderDate, g.DeliverLine, g.SortingLine, g.IsActive, g.UpdateTime,g.SortStatus })
+                                            .Select(r => new
+                                            {
+                                                r.Key.ID,
+                                                r.Key.OrderDate,
+                                                r.Key.SortingLine.SortingLineCode,
+                                                r.Key.SortingLine.SortingLineName,
+                                                r.Key.DeliverLine.DeliverLineCode,
+                                                r.Key.DeliverLine.DeliverLineName,
+                                                IsActive = r.Key.IsActive == "1" ? "可用" : "不可用",
+                                                UpdateTime = r.Key.UpdateTime.ToString("yyyy-MM-dd"),
+                                                SortStatus = r.Key.SortStatus == "1" ? "未分拣" : "已分拣",
+                                                QuantitySum = r.Sum(q => q.QuantitySum)
+                                            });
+            return temp.ToArray();
+        }
+
         #endregion
 
         public System.Data.DataTable GetSortOrderDispatch(int page, int rows, string OrderDate, string SortingLineCode)

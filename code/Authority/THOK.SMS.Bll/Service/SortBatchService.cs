@@ -29,18 +29,30 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public IDeliverDistRepository DeliverDistRepository { get; set; }
 
+        [Dependency]
+        public ISortOrderAllotMasterRepository SortOrderAllotMasterRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderAllotDetailRepository SortOrderAllotDetailRepository { get; set; }
+
+        [Dependency]
+        public IHandSupplyRepository HandSupplyRepository { get; set; }
+
+        [Dependency]
+        public IChannelAllotRepository ChannelAllotRepository { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
         }
 
-        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName, string sortingLineType)
+        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName)
         {
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
             var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery,batch => batch.SortingLineCode,line => line.SortingLineCode,
                 (batch, line) => new { batch.Id,batch.OrderDate,batch.BatchNo,batch.SortingLineCode,batch.NoOneBatchNo,batch.SortDate,batch.Status,line.SortingLineName,line.SortingLineType})
-                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName)&&a.SortingLineType.Contains(sortingLineType));
+                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName));
             if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
             {
                 sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
@@ -58,7 +70,7 @@ namespace THOK.SMS.Bll.Service
                 a.BatchNo,
                 a.SortingLineCode,
                 a.SortingLineName,
-                a.SortingLineType,
+                SortingLineType = a.SortingLineType == "1" ? "半自动" : "全自动",
                 a.NoOneBatchNo,
                 SortDate=a.SortDate.ToShortDateString(),
                 Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
@@ -157,43 +169,90 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public bool Save(SortBatch SortBatch, out string strResult)
+        public bool Edit(SortBatch sortBatch, string IsRemoveOptimization, out string strResult)
         {
 
             strResult = string.Empty;
             bool result = false;
-            //var SortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.SortBatchId == SortBatch.SortBatchId);
-            //if (SortBatchs != null)
-            //{
-            //    //SortBatchs.BatchId = SortBatch.BatchId;
-            //    SortBatchs.SortingLineCode = SortBatch.SortingLineCode;
-            //    SortBatchs.Status = SortBatch.Status;
-            //    SortBatchRepository.SaveChanges();
-            //    result = true;
-            //}
-            //else
-            //{
-            //    strResult = "原因:找不到相应数据";
-            //}
+            var sortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id == sortBatch.Id);
+            if (sortBatchs != null)
+            {
+                if (IsRemoveOptimization == "1")
+                {
+                    //删除订单主表、细表
+                    var sortOrderAllotMasterQuery = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    var sortOrderAllotDetailQuery = SortOrderAllotDetailRepository.GetQueryable();
+                    foreach (var master in sortOrderAllotMasterQuery)
+                    {
+                        var sortOrderAllotDetail = sortOrderAllotDetailQuery.Where(a => a.MasterId.Equals(master.Id)).AsEnumerable();
+                        foreach (var detail in sortOrderAllotDetail)
+                        {
+                            SortOrderAllotDetailRepository.Delete(detail);
+                        }
+                        SortOrderAllotMasterRepository.Delete(master);
+                    }
+                    SortOrderAllotDetailRepository.SaveChanges();
+                    SortOrderAllotMasterRepository.SaveChanges();
+                    //删除手工补货表
+                    var handSupplyQuery = HandSupplyRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    foreach (var handSupply in handSupplyQuery)
+                    {
+                        HandSupplyRepository.Delete(handSupply);
+                    }
+                    HandSupplyRepository.SaveChanges();
+                    //更新调度表
+                    var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.BatchSortId.Equals(sortBatch.Id)).AsEnumerable();
+                    foreach (var sortOrderDispatch in sortOrderDispatchQuery)
+                    {
+                        sortOrderDispatch.BatchSortId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                }
+                sortBatchs.NoOneBatchNo = sortBatch.NoOneBatchNo;
+                sortBatchs.Status = sortBatch.Status;
+                sortBatchs.SortDate = sortBatch.SortDate;
+                SortBatchRepository.SaveChanges();
+                result = true;
+            }
+            else
+            {
+                strResult = "原因:找不到相应数据";
+            }
             return result;
         }
 
-        public bool Delete(int SortBatchId, out string strResult)
+        public bool Delete(string id, out string strResult)
         {
 
             strResult = string.Empty;
             bool result = false;
-            //var SortBatch = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.SortBatchId.Equals(SortBatchId));
-            //if (SortBatch != null)
-            //{
-            //    SortBatchRepository.Delete(SortBatch);
-            //    SortBatchRepository.SaveChanges();
-            //    result = true;
-            //}
-            //else
-            //{
-            //    strResult = "原因:没有找到相应数据";
-            //}
+            try
+            {
+                int batchId = Convert.ToInt32(id);
+                var SortBatch = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id.Equals(batchId));
+                if (SortBatch != null)
+                {
+                    var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.BatchSortId.Equals(batchId)).AsEnumerable();
+                    foreach (var sortOrderDispatch in sortOrderDispatchQuery)
+                    {
+                        sortOrderDispatch.BatchSortId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                    SortBatchRepository.Delete(SortBatch);
+                    SortBatchRepository.SaveChanges();
+                    result = true;
+                }
+                else
+                {
+                    strResult = "原因:没有找到相应数据";
+                }
+            }
+            catch(Exception e)
+            {
+                strResult = "原因：" + e.Message;
+            }
             return result;
         }
 

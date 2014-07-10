@@ -19,6 +19,7 @@ namespace THOK.Wms.DbModel
         public string UnitName { get; set; }
         public decimal DemandQuantity { get; set; }
         public decimal RealQuantity { get; set; }
+        public decimal SortQuantity { get; set; }
         public decimal Price { get; set; }
         public decimal Amount { get; set; }
         public decimal UnitQuantity { get; set; }

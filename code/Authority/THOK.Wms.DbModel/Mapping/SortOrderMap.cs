@@ -50,6 +50,10 @@ namespace THOK.Wms.DbModel.Mapping
                 .IsRequired()
                 .HasPrecision(18,4);
 
+            this.Property(t => t.SortQuantitySum)
+                .IsRequired()
+                .HasPrecision(18,4);
+
             this.Property(t => t.AmountSum)
                 .IsRequired()
                 .HasPrecision(18,4);
@@ -89,6 +93,7 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.CustomerName).HasColumnName(ColumnMap.Value.To("CustomerName"));
             this.Property(t => t.DeliverLineCode).HasColumnName(ColumnMap.Value.To("DeliverLineCode"));
             this.Property(t => t.QuantitySum).HasColumnName(ColumnMap.Value.To("QuantitySum"));
+            this.Property(t => t.SortQuantitySum).HasColumnName(ColumnMap.Value.To("SortQuantitySum"));
             this.Property(t => t.AmountSum).HasColumnName(ColumnMap.Value.To("AmountSum"));
             this.Property(t => t.DetailNum).HasColumnName(ColumnMap.Value.To("DetailNum"));
             this.Property(t => t.DeliverOrder).HasColumnName(ColumnMap.Value.To("DeliverOrder"));

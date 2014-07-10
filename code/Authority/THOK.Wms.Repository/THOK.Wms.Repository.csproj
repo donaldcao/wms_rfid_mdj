@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201407080959130_update_sms_rename_change.Designer.cs">
       <DependentUpon>201407080959130_update_sms_rename_change.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407100251001_add_sortorder_sortquantity_column.cs" />
+    <Compile Include="Migrations\201407100251001_add_sortorder_sortquantity_column.Designer.cs">
+      <DependentUpon>201407100251001_add_sortorder_sortquantity_column.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -121,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407080959130_update_sms_rename_change.resx">
       <DependentUpon>201407080959130_update_sms_rename_change.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407100251001_add_sortorder_sortquantity_column.resx">
+      <DependentUpon>201407100251001_add_sortorder_sortquantity_column.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -175,8 +175,6 @@
     <Compile Include="Controllers\SMS\ComplexSearch\SortOrderAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\SortAllotController.cs" />
     <Compile Include="Controllers\SMS\SortManage\BatchSortDispatchController.cs" />
-    <Compile Include="Controllers\SMS\SortManage\SortOrderInfoController.cs" />
-    <Compile Include="Controllers\SMS\SortManage\SortRouteDispatchController.cs" />
     <Compile Include="Controllers\SMS\HandSupplyController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
@@ -2527,8 +2525,6 @@
     <Content Include="Views\ProductInfo\_EditPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\Index.cshtml" />
     <Content Include="Views\SortBatchDispatch\Index.cshtml" />
-    <Content Include="Views\SortOrderInfo\Index.cshtml" />
-    <Content Include="Views\SortRouteDispatch\Index.cshtml" />
     <Content Include="Views\ProductInfo\_PrintPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_AddPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_SearchPartial.cshtml" />

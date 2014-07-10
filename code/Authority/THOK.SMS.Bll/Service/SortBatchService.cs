@@ -29,11 +29,22 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public IDeliverDistRepository DeliverDistRepository { get; set; }
 
+        [Dependency]
+        public ISortOrderAllotMasterRepository SortOrderAllotMasterRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderAllotDetailRepository SortOrderAllotDetailRepository { get; set; }
+
+        [Dependency]
+        public IHandSupplyRepository HandSupplyRepository { get; set; }
+
+        [Dependency]
+        public IChannelAllotRepository ChannelAllotRepository { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
         }
-
         public object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode)
         {
             var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(s => s.SortBatchId > 0);
@@ -54,7 +65,7 @@ namespace THOK.SMS.Bll.Service
             {
                 sortDispatch = sortDispatch.Where(s => s.SortingLineCode == sortingLineCode);
             }
-            var temp = sortDispatch.OrderByDescending(b=>b.SortBatchId).ThenBy(b=>b.DeliverLineNo).AsEnumerable().Select(b => new
+            var temp = sortDispatch.OrderByDescending(b => b.SortBatchId).ThenBy(b => b.DeliverLineNo).AsEnumerable().Select(b => new
             {
                 b.SortingLineCode,
                 b.SortingLine.SortingLineName,
@@ -76,9 +87,41 @@ namespace THOK.SMS.Bll.Service
         {
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
+            var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery, batch => batch.SortingLineCode, line => line.SortingLineCode,
+                (batch, line) => new { batch.Id, batch.OrderDate, batch.BatchNo, batch.SortingLineCode, NoOneBatchNo = batch.NoOneProjectBatchNo, SortDate = batch.NoOneProjectSortDate, batch.Status, line.SortingLineName, line.SortingLineType })
+                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status) && a.SortingLineName.Contains(sortingLineName) && a.SortingLineType.Contains(sortingLineType));
+            if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
+            {
+                sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
+            }
+            if (sortBatch.BatchNo > 0)
+            {
+                sortBatchDetials = sortBatchDetials.Where(a => a.BatchNo.Equals(sortBatch.BatchNo));
+            }
+            int total = sortBatchDetials.Count();
+            sortBatchDetials = sortBatchDetials.OrderBy(a => a.Id).Skip((page - 1) * rows).Take(rows);
+            var sortBatchArray = sortBatchDetials.AsEnumerable().Select(a => new
+            {
+                a.Id,
+                OrderDate = a.OrderDate.ToShortDateString(),
+                a.BatchNo,
+                a.SortingLineCode,
+                a.SortingLineName,
+                a.SortingLineType,
+                a.NoOneBatchNo,
+                SortDate = a.SortDate.ToShortDateString(),
+                Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
+            }).ToArray();
+            return new { total, rows = sortBatchArray.ToArray() };
+        }
+        
+        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName)
+        {
+            var sortBatchQuery = SortBatchRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
             var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery,batch => batch.SortingLineCode,line => line.SortingLineCode,
-                (batch, line) => new { batch.Id,batch.OrderDate,batch.BatchNo,batch.SortingLineCode,NoOneBatchNo = batch.NoOneProjectBatchNo,SortDate = batch.NoOneProjectSortDate,batch.Status,line.SortingLineName,line.SortingLineType})
-                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName)&&a.SortingLineType.Contains(sortingLineType));
+                (batch, line) => new { batch.Id, batch.OrderDate, batch.BatchNo, batch.SortingLineCode, batch.NoOneProjectBatchNo, batch.NoOneProjectSortDate, batch.Status, line.SortingLineName, line.SortingLineType })
+                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName));
             if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
             {
                 sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
@@ -96,9 +139,9 @@ namespace THOK.SMS.Bll.Service
                 a.BatchNo,
                 a.SortingLineCode,
                 a.SortingLineName,
-                a.SortingLineType,
-                a.NoOneBatchNo,
-                SortDate=a.SortDate.ToShortDateString(),
+                SortingLineType = a.SortingLineType == "1" ? "半自动" : "全自动",
+                a.NoOneProjectBatchNo,
+                SortDate=a.NoOneProjectSortDate.ToShortDateString(),
                 Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
             }).ToArray();
             return new { total, rows = sortBatchArray.ToArray() };
@@ -128,7 +171,7 @@ namespace THOK.SMS.Bll.Service
                     {
                         SortBatch sortBatch = new SortBatch();
                         sortBatch.OrderDate = date;
-                        var batchNo = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.SortingLineCode.Equals(item)).Select(a => new { a.BatchNo, a.Status, NoOneBatchNo = a.NoOneProjectBatchNo }).OrderByDescending(a => a.BatchNo).ToArray();
+                        var batchNo = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.SortingLineCode.Equals(item)).Select(a => new { a.BatchNo, a.Status, a.NoOneProjectBatchNo }).OrderByDescending(a => a.BatchNo).ToArray();
                         if (batchNo.Count() > 0)
                         {
                             if (batchNo[0].Status == "01")
@@ -136,7 +179,7 @@ namespace THOK.SMS.Bll.Service
                             else
                             {
                                 sortBatch.BatchNo = Convert.ToInt32(batchNo[0].BatchNo) + 1;
-                                sortBatch.NoOneProjectBatchNo = Convert.ToInt32(batchNo[0].NoOneBatchNo) + 1;
+                                sortBatch.NoOneProjectBatchNo = Convert.ToInt32(batchNo[0].NoOneProjectBatchNo) + 1;
                             }
                         }
                         else
@@ -166,7 +209,7 @@ namespace THOK.SMS.Bll.Service
                     SortOrderDispatchRepository.SaveChanges();
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
                     {
-                        var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode)&&a.SortBatchId>0)
+                        var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode) && a.SortBatchId > 0)
                             .Join(deliverLineQuery, dis => dis.DeliverLineCode, line => line.DeliverLineCode,
                             (dis, line) => new { dis.ID, DeliverLineOrder = line.DeliverOrder, line.DistCode })
                             .Join(deliverDistQuery, a => a.DistCode, dist => dist.DistCode,
@@ -195,43 +238,90 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public bool Save(SortBatch SortBatch, out string strResult)
+        public bool Edit(SortBatch sortBatch, string IsRemoveOptimization, out string strResult)
         {
 
             strResult = string.Empty;
             bool result = false;
-            //var SortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.SortBatchId == SortBatch.SortBatchId);
-            //if (SortBatchs != null)
-            //{
-            //    //SortBatchs.BatchId = SortBatch.BatchId;
-            //    SortBatchs.SortingLineCode = SortBatch.SortingLineCode;
-            //    SortBatchs.Status = SortBatch.Status;
-            //    SortBatchRepository.SaveChanges();
-            //    result = true;
-            //}
-            //else
-            //{
-            //    strResult = "原因:找不到相应数据";
-            //}
+            var sortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id == sortBatch.Id);
+            if (sortBatchs != null)
+            {
+                if (IsRemoveOptimization == "1")
+                {
+                    //删除订单主表、细表
+                    var sortOrderAllotMasterQuery = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    var sortOrderAllotDetailQuery = SortOrderAllotDetailRepository.GetQueryable();
+                    foreach (var master in sortOrderAllotMasterQuery)
+                    {
+                        var sortOrderAllotDetail = sortOrderAllotDetailQuery.Where(a => a.MasterId.Equals(master.Id)).AsEnumerable();
+                        foreach (var detail in sortOrderAllotDetail)
+                        {
+                            SortOrderAllotDetailRepository.Delete(detail);
+                        }
+                        SortOrderAllotMasterRepository.Delete(master);
+                    }
+                    SortOrderAllotDetailRepository.SaveChanges();
+                    SortOrderAllotMasterRepository.SaveChanges();
+                    //删除手工补货表
+                    var handSupplyQuery = HandSupplyRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    foreach (var handSupply in handSupplyQuery)
+                    {
+                        HandSupplyRepository.Delete(handSupply);
+                    }
+                    HandSupplyRepository.SaveChanges();
+                    //更新调度表
+                    var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    foreach (var sortOrderDispatch in sortOrderDispatchQuery)
+                    {
+                        sortOrderDispatch.SortBatchId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                }
+                sortBatchs.NoOneProjectBatchNo = sortBatch.NoOneProjectBatchNo;
+                sortBatchs.Status = sortBatch.Status;
+                sortBatchs.NoOneProjectSortDate = sortBatch.NoOneProjectSortDate;
+                SortBatchRepository.SaveChanges();
+                result = true;
+            }
+            else
+            {
+                strResult = "原因:找不到相应数据";
+            }
             return result;
         }
 
-        public bool Delete(int SortBatchId, out string strResult)
+        public bool Delete(string id, out string strResult)
         {
 
             strResult = string.Empty;
             bool result = false;
-            //var SortBatch = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.SortBatchId.Equals(SortBatchId));
-            //if (SortBatch != null)
-            //{
-            //    SortBatchRepository.Delete(SortBatch);
-            //    SortBatchRepository.SaveChanges();
-            //    result = true;
-            //}
-            //else
-            //{
-            //    strResult = "原因:没有找到相应数据";
-            //}
+            try
+            {
+                int batchId = Convert.ToInt32(id);
+                var SortBatch = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id.Equals(batchId));
+                if (SortBatch != null)
+                {
+                    var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchId.Equals(batchId)).AsEnumerable();
+                    foreach (var sortOrderDispatch in sortOrderDispatchQuery)
+                    {
+                        sortOrderDispatch.SortBatchId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    SortOrderDispatchRepository.SaveChanges();
+                    SortBatchRepository.Delete(SortBatch);
+                    SortBatchRepository.SaveChanges();
+                    result = true;
+                }
+                else
+                {
+                    strResult = "原因:没有找到相应数据";
+                }
+            }
+            catch(Exception e)
+            {
+                strResult = "原因：" + e.Message;
+            }
             return result;
         }
 

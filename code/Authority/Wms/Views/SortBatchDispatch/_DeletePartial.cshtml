@@ -1,0 +1,31 @@
+﻿<script type="text/javascript">
+    function deleteClick() {
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            if (row.Status == "未优化") {
+                $.messager.confirm('删除', '确认要删除该记录吗？', function (r) {
+                    if (r) {
+                        $.ajax({
+                            url: '/SortBatchDispatch/Delete/', type: "POST", dataType: "text",
+                            data: { 'id': row.Id },
+                            success: function (responseText) {
+                                var result = $.evalJSON(responseText);
+                                if (result.success) {
+                                    $.messager.alert("成功", result.msg, "info");
+                                    $('#details').datagrid('reload');
+                                } else {
+                                    $.messager.alert("错误", result.msg + '<br />' + result.data, "error");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                $.messager.alert("错误", "只有未优化的数据才能删除！", "error");
+            }
+        } else {
+            $.messager.alert('错误', '没有选择行！');
+        }
+    };
+</script>

@@ -1,0 +1,142 @@
+﻿<script type="text/javascript">
+    var url;
+    function editClick() {
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            $('#editdlg').dialog('open').dialog('setTitle', '编辑');
+            $('#fm').form('load', row);
+            switch (row.Status) {
+                case '未优化':
+                    $('#Status').combo('setValue', '01').combo('setText', row.Status);
+                    break;
+                case '已优化':
+                    $('#Status').combo('setValue', '02').combo('setText', row.Status);
+                    break;
+                case '已上传':
+                    $('#Status').combo('setValue', '03').combo('setText', row.Status);
+                    break;
+                case '已下载':
+                    $('#Status').combo('setValue', '04').combo('setText', row.Status);
+                    break;
+                case '已挂起':
+                    $('#Status').combo('setValue', '05').combo('setText', row.Status);
+                    break;
+                case '已完成':
+                    $('#Status').combo('setValue', '06').combo('setText', row.Status);
+                    break;
+            }
+            $('#NoOneBatchNo').removeAttr("disabled");
+            $('#SortDate').removeAttr("disabled");
+            $('#Status').removeAttr("disabled");
+        } else {
+            $.messager.alert('错误', '没有选择行！');
+        }
+    };
+
+    function editSave() {
+        var row = $('#details').datagrid('getSelected');
+        if (row.Status != "未优化" && $('#Status').combo("getText") == "未优化") {
+            $.messager.confirm("询问", "该操作将会删除优化，确定继续吗？", function (r) {
+                if (r) {
+                    url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=1";
+                    GetRequest();
+                }
+            })
+        }
+        else {
+            url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=0";
+            GetRequest();
+        }
+    }
+
+    function GetRequest() {
+        $('#fm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert("成功", result.msg, "info");
+                    $('#editdlg').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert("错误", result.msg + '<br />' + result.data, "error");
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
+</script>
+<div id="editdlg" class="easyui-dialog" modal="true" style="width: 300px; height: 260px;"
+    closed="true" buttons="#dlg-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" style="padding: 10px 10px; border: 1px solid #ccc;">
+            <form id="fm" method="post">
+            <table width="260" cellspacing="5">
+                <tr hidden="true">
+                    <td width="100" style="text-align: right">
+                        ID：
+                    </td>
+                    <td width="150">
+                        <input id="Id" name="Id" class="easyui-validatebox"/>
+                    </td>
+                </tr>
+               <tr>
+                    <td width="100" style="text-align: right">
+                        订单日期：
+                    </td>
+                    <td width="150">
+                        <input name="OrderDate" class="easyui-OrderDate" disabled="disabled"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" style="text-align: right">
+                        分拣线名称：
+                    </td>
+                    <td width="150">
+                        <input name="SortingLineName" id="SortingLineName"  disabled="disabled"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" style="text-align: right">
+                        一号工程批次号：
+                    </td>
+                    <td width="150">
+                        <input name="NoOneBatchNo" id="NoOneBatchNo"  class="easyui-numberbox" required="true"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" style="text-align: right">
+                        分拣日期：
+                    </td>
+                    <td align="left">
+                       <input id="SortDate" name="SortDate" class="easyui-datebox" editable="false" placeholder="只能为数字" required="true"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" style="text-align: right">
+                        状态：
+                    </td>
+                    <td>
+                        <select id="Status" name="Status" class="easyui-combobox" required="true" style="width: 130px" editable="false" panelHeight="130">
+                            <option value="01">未优化</option>
+		                    <option value="02">已优化</option>
+                            <option value="03">已上传</option>
+		                    <option value="04">已下载</option>
+                            <option value="05">已挂起</option>
+		                    <option value="06">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="editSave()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#editdlg').dialog('close')">
+        取消</a>
+</div>

@@ -8,11 +8,14 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface ISortBatchService : IService<SortBatch>
     {
-        object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName, string sortingLineType);
+        object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName);
 
         bool Add(string dispatchId, out string strResult);
-        bool Save(SortBatch SortBatch, out string strResult);
-        bool Delete(int SortBatchId, out string strResult);
+
+        bool Edit(SortBatch sortBatch, string IsRemoveOptimization, out string strResult);
+
+        bool Delete(string id, out string strResult);
+
         System.Data.DataTable GetSortBatch(int page, int rows, string SortBatchId);
 
         object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);

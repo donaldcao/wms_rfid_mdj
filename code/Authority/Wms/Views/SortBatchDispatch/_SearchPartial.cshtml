@@ -1,0 +1,52 @@
+﻿<script type="text/javascript">
+    function searchClick() {
+        $('input').attr('value', '');
+        $('#searchdlg').dialog('open').dialog('setTitle', '查询');
+    };
+    function select() {
+        var queryParams = $('#details').datagrid('options').queryParams;
+        queryParams.OrderDate = $('#searchOrderDate').combo('getValue');
+        queryParams.SortingLineName = $('#searchSortingLineName').val();
+        queryParams.Status = $('#searchStatus').combo('getValue');
+        $('#details').datagrid('options').queryParams = queryParams;
+        $('#details').datagrid({
+            pageNumber: 1,
+            pageSize: 50
+        });
+        $('#searchdlg').dialog('close');
+    }
+</script>
+    <div id="searchdlg" class="easyui-dialog" modal="true"  style="width:300px;height:220px;"
+        closed="true" buttons="#searchdlg-buttons">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="padding:10px 10px;border:1px solid #ccc; " > 
+                <table width="260" cellSpacing="10" cellPadding="0">
+                    <tr>
+                    <td width="80" style="text-align:right">订单日期：</td>
+                    <td width="160"><input id="searchOrderDate" class="easyui-datebox" editable="false"/></td>
+                    </tr>
+                    <tr>
+                    <td width="80" style="text-align:right">分拣线名称：</td>
+                    <td width="160"><input id="searchSortingLineName" /></td>
+                    </tr>
+                    <tr>
+                    <td width="100" style="text-align:right">状态：</td>
+                        <td><select id="searchStatus" class="easyui-combobox" style="width: 130px;" panelHeight="145" editable="false">
+                            <option value="">　</option>
+		                    <option value="01">未优化</option>
+		                    <option value="02">已优化</option>
+                            <option value="03">已上传</option>
+		                    <option value="04">已下载</option>
+                            <option value="05">已挂起</option>
+		                    <option value="06">已完成</option>
+	                    </select>
+	                </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+<div id="searchdlg-buttons">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">确定</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#searchdlg').dialog('close')">取消</a>
+</div>

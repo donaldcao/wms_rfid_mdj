@@ -11,6 +11,8 @@ using THOK.Common.Entity;
 using THOK.Wms.Dal.EntityRepository;
 using THOK.Wms.SignalR.Connection;
 using THOK.Authority.Dal.Interfaces;
+using THOK.WCS.Bll.Service;
+using THOK.WCS.Bll.Models;
 
 namespace THOK.Wms.AutomotiveSystems.Service
 {
@@ -635,6 +637,31 @@ namespace THOK.Wms.AutomotiveSystems.Service
                                             CancelOperateToLabelServer(inAllot.BillNo, inAllot.ID.ToString(), inAllot.Cell.CellName);
 
                                         result.IsSuccess = true;
+
+                                        #region 反馈给浪潮的xml入库数据信息
+                                        try
+                                        {
+                                            InspurService inspurService = new InspurService();
+                                            Inspur inspur = new Inspur();
+                                            inspur.Param = "";
+                                            inspur.User = inAllot.InBillMaster.OperatePerson.EmployeeName;
+                                            inspur.Time = inAllot.InBillMaster.UpdateTime.ToString();
+                                            inspur.BillNo = inAllot.BillNo;
+                                            inspur.ProductCode = inAllot.ProductCode;
+                                            inspur.RealQuantity = inAllot.InBillDetail.RealQuantity;
+
+                                            THOK.WCS.Bll.MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new THOK.WCS.Bll.MdjInspurWmsService.LwmWarehouseWorkServiceService();
+                                            LWWSS.lwmStroeInProgFeedback(inspurService.BillProgressFeedback(inspur, "in"));
+                                            if (inAllot.InBillDetail.RealQuantity == inAllot.InBillDetail.AllotQuantity)
+                                            {
+                                                LWWSS.lwmStoreInComplete(inspurService.BillFinished(inspur, "in"));
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            result.Message = "Into Storage progress feedback to Inspur Failed！" + ex.Message;
+                                        }
+                                        #endregion 反馈给浪潮的xml数据信息
                                     }
                                     else
                                     {
@@ -689,6 +716,32 @@ namespace THOK.Wms.AutomotiveSystems.Service
                                             CancelOperateToLabelServer(outAllot.BillNo, outAllot.ID.ToString(), outAllot.Cell.CellName);
 
                                         result.IsSuccess = true;
+
+                                        #region 反馈给浪潮的xml出库数据信息
+                                        try
+                                        {
+                                            InspurService inspurService = new InspurService();
+                                            Inspur inspur = new Inspur();
+                                            inspur.Param = "";
+                                            inspur.User = outAllot.OutBillMaster.OperatePerson.EmployeeName;
+                                            inspur.Time = outAllot.OutBillMaster.UpdateTime.ToString();
+                                            inspur.BillNo = outAllot.BillNo;
+                                            inspur.ProductCode = outAllot.ProductCode;
+                                            inspur.RealQuantity = outAllot.OutBillDetail.RealQuantity;
+
+                                            THOK.WCS.Bll.MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new THOK.WCS.Bll.MdjInspurWmsService.LwmWarehouseWorkServiceService();
+                                            LWWSS.lwmStoreOutProgFeedback(inspurService.BillProgressFeedback(inspur, "out"));
+                                            if (outAllot.OutBillDetail.RealQuantity == outAllot.OutBillDetail.AllotQuantity)
+                                            {
+                                                LWWSS.lwmStoreOutComplete(inspurService.BillFinished(inspur, "out"));
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            result.Message = "Out Storage progress feedback to Inspur Failed！" + ex.Message;
+                                        }
+
+                                        #endregion 反馈给浪潮的xml数据信息
                                     }
                                     else
                                     {

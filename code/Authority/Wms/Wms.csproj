@@ -17,6 +17,12 @@
     <UseIISExpress>false</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -249,14 +255,11 @@
     <Compile Include="Controllers\WMS\WarehouseInfo\AreaController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\CellController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\DefaultProductSetController.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcel2Controller.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcelController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\ShelfController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\SplitPalletCellController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageCellPreviewController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\Warehouse2Controller.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1886,7 +1889,6 @@
     <None Include="Content\Scripts\jquery-easyui-1.3\themes\gray\images\Thumbs.db" />
     <None Include="Content\Scripts\Jquery-zTree-v3.3\zTreeStyle\img\diy\Thumbs.db" />
     <None Include="Content\Scripts\Jquery-zTree-v3.3\zTreeStyle\img\Thumbs.db" />
-    <None Include="ExcelTemplate\DailyBalance.xls" />
     <Content Include="Views\Brand\Index.cshtml" />
     <Content Include="Views\Brand\_AddPartial.cshtml" />
     <Content Include="Views\Brand\_DeletePartial.cshtml" />

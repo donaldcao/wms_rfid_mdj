@@ -48,7 +48,7 @@
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.SortingLineCode = $('#SortingLineCode').combogrid('getValue');
         queryParams.OrderDate = $('#SearchOrderDate').datebox('getValue');
-        queryParams.WorkStatus = $('#WorkState').combo('getValue'); ;
+        queryParams.WorkStatus = $('#WorkState').combo('getValue');
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1,

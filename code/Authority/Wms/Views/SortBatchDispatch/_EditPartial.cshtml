@@ -25,8 +25,8 @@
                     $('#Status').combo('setValue', '06').combo('setText', row.Status);
                     break;
             }
-            $('#NoOneBatchNo').removeAttr("disabled");
-            $('#SortDate').removeAttr("disabled");
+            $('#NoOneProjectBatchNo').removeAttr("disabled");
+            $('#NoOneProjectSortDate').removeAttr("disabled");
             $('#Status').removeAttr("disabled");
         } else {
             $.messager.alert('错误', '没有选择行！');
@@ -104,7 +104,7 @@
                         一号工程批次号：
                     </td>
                     <td width="150">
-                        <input name="NoOneBatchNo" id="NoOneBatchNo"  class="easyui-numberbox" required="true"/>
+                        <input name="NoOneProjectBatchNo" id="NoOneProjectBatchNo"  class="easyui-numberbox" required="true"/>
                     </td>
                 </tr>
                 <tr>
@@ -112,7 +112,7 @@
                         分拣日期：
                     </td>
                     <td align="left">
-                       <input id="SortDate" name="SortDate" class="easyui-datebox" editable="false" placeholder="只能为数字" required="true"/>
+                       <input id="NoOneProjectSortDate" name="NoOneProjectSortDate" class="easyui-datebox" editable="false" placeholder="只能为数字" required="true"/>
                     </td>
                 </tr>
                 <tr>

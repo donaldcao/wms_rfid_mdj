@@ -3,10 +3,17 @@
         $('input').attr('value', '');
         $('#searchdlg').dialog('open').dialog('setTitle', '查询');
     };
+    //分拣线查询
+    function SortingLineSearchClick() {
+        $('#dlg-SortingLine').dialog('open').dialog('setTitle', '选择分拣线');
+        $('#SortingLineDetails').datagrid({ url: '/SortingLine/Details/' });
+        $("#SortingLineDetails").datagrid('load');
+    }
     function select() {
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.OrderDate = $('#searchOrderDate').combo('getValue');
-        queryParams.SortingLineName = $('#searchSortingLineName').val();
+        queryParams.BatchNo = $('#BatchNo').val();
+        queryParams.SortingLineCode = $('#searchSortingLineCode').val();
         queryParams.Status = $('#searchStatus').combo('getValue');
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
@@ -16,23 +23,46 @@
         $('#searchdlg').dialog('close');
     }
 </script>
-    <div id="searchdlg" class="easyui-dialog" modal="true"  style="width:300px;height:220px;"
+    <div id="searchdlg" class="easyui-dialog" modal="true"  style="width:300px;height:260px;"
         closed="true" buttons="#searchdlg-buttons">
 		<div class="easyui-layout" fit="true">
 			<div region="center" border="false" style="padding:10px 10px;border:1px solid #ccc; " > 
-                <table width="260" cellSpacing="10" cellPadding="0">
+                <table width="260">
                     <tr>
-                    <td width="80" style="text-align:right">订单日期：</td>
-                    <td width="160"><input id="searchOrderDate" class="easyui-datebox" editable="false"/></td>
+                    <td style="text-align:right">订单日期：</td>
+                    <td align="left"><input id="searchOrderDate" class="easyui-datebox" editable="false"/></td>
                     </tr>
                     <tr>
-                    <td width="80" style="text-align:right">分拣线名称：</td>
-                    <td width="160"><input id="searchSortingLineName" /></td>
-                    </tr>
                     <tr>
-                    <td width="100" style="text-align:right">状态：</td>
-                        <td><select id="searchStatus" class="easyui-combobox" style="width: 130px;" panelHeight="145" editable="false">
-                            <option value="">　</option>
+                        <td style="text-align: right">
+                            批次号：
+                        </td>
+                        <td>
+                            <input id="BatchNo" name="Batch" type="text" class="easyui-numberbox"/>
+                        </td>
+                   </tr>
+                    <td style="text-align: right">
+                        分拣线代码:
+                    </td>
+                    <td align="left"">
+                        <input id="searchSortingLineCode" name="SortingLineCode" class="easyui-validatebox" readonly="readonly"/>
+                        <a href="#" id="SortingLineSearch" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true" onclick="SortingLineSearchClick()"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right">
+                        分拣线名称:
+                    </td>
+                    <td align="left">
+                        <input type="text" name="SortingLineName" class="easyui-validatebox"
+                            id="searchSortingLineName" readonly="true" />
+                    </td>
+                </tr>
+                    <tr>
+                    <td style="text-align:right">状态：</td>
+                        <td><select id="searchStatus" class="easyui-combobox" style="width: 130px;" panelHeight="130" editable="false">
+                            <option value=""></option>
 		                    <option value="01">未优化</option>
 		                    <option value="02">已优化</option>
                             <option value="03">已上传</option>
@@ -50,3 +80,4 @@
 	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">确定</a>
 	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#searchdlg').dialog('close')">取消</a>
 </div>
+@Html.Partial("_SortingLinePartial")

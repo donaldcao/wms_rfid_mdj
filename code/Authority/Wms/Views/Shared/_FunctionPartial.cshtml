@@ -44,6 +44,8 @@
 {    @Html.Partial("_HelpPartial")}
 @if (ViewBag.hasUpload != null && ViewBag.hasUpload)
 {    @Html.Partial("_UploadPartial")}
+@if (ViewBag.hasReport != null && ViewBag.hasReport)
+{    @Html.Partial("_ReportPartial")}
 @if (ViewBag.hasApply != null && ViewBag.hasApply)
 {    @Html.Partial("_ApplyPartial")}
 @if (ViewBag.hasCancel != null && ViewBag.hasCancel)

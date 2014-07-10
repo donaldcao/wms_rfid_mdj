@@ -23,18 +23,19 @@ namespace Wms.Controllers.SMS.SortManage
             ViewBag.hasAdd = true;
             ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
+            ViewBag.hasOptimize = true;
+            ViewBag.hasUpload = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
             return View();
         }
 
-        public ActionResult Details(int page, int rows, SortBatch sortBatch,string sortingLineName)
+        public ActionResult Details(int page, int rows, SortBatch sortBatch)
         {
             sortBatch.SortingLineCode = sortBatch.SortingLineCode ?? "";
             sortBatch.Status = sortBatch.Status ?? "";
-            sortingLineName = sortingLineName ?? "";
-            var sortBatchDetails = SortBatchService.GetDetails(page, rows, sortBatch, sortingLineName);
+            var sortBatchDetails = SortBatchService.GetDetails(page, rows, sortBatch);
             return Json(sortBatchDetails, "text", JsonRequestBehavior.AllowGet);
         }
 

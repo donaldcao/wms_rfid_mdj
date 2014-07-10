@@ -8,7 +8,7 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface ISortBatchService : IService<SortBatch>
     {
-        object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName);
+        object GetDetails(int page, int rows, SortBatch sortBatch);
 
         bool Add(string dispatchId, out string strResult);
 

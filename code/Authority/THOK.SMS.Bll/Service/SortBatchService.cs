@@ -83,45 +83,23 @@ namespace THOK.SMS.Bll.Service
             return new { total, rows = temp.ToArray() };
         }
 
-        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName, string sortingLineType)
-        {
-            var sortBatchQuery = SortBatchRepository.GetQueryable();
-            var sortingLineQuery = SortingLineRepository.GetQueryable();
-            var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery, batch => batch.SortingLineCode, line => line.SortingLineCode,
-                (batch, line) => new { batch.Id, batch.OrderDate, batch.BatchNo, batch.SortingLineCode, NoOneBatchNo = batch.NoOneProjectBatchNo, SortDate = batch.NoOneProjectSortDate, batch.Status, line.SortingLineName, line.SortingLineType })
-                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status) && a.SortingLineName.Contains(sortingLineName) && a.SortingLineType.Contains(sortingLineType));
-            if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
-            {
-                sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
-            }
-            if (sortBatch.BatchNo > 0)
-            {
-                sortBatchDetials = sortBatchDetials.Where(a => a.BatchNo.Equals(sortBatch.BatchNo));
-            }
-            int total = sortBatchDetials.Count();
-            sortBatchDetials = sortBatchDetials.OrderBy(a => a.Id).Skip((page - 1) * rows).Take(rows);
-            var sortBatchArray = sortBatchDetials.AsEnumerable().Select(a => new
-            {
-                a.Id,
-                OrderDate = a.OrderDate.ToShortDateString(),
-                a.BatchNo,
-                a.SortingLineCode,
-                a.SortingLineName,
-                a.SortingLineType,
-                a.NoOneBatchNo,
-                SortDate = a.SortDate.ToShortDateString(),
-                Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
-            }).ToArray();
-            return new { total, rows = sortBatchArray.ToArray() };
-        }
-        
-        public object GetDetails(int page, int rows, SortBatch sortBatch, string sortingLineName)
+        public object GetDetails(int page, int rows, SortBatch sortBatch)
         {
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
             var sortBatchDetials = sortBatchQuery.Join(sortingLineQuery,batch => batch.SortingLineCode,line => line.SortingLineCode,
-                (batch, line) => new { batch.Id, batch.OrderDate, batch.BatchNo, batch.SortingLineCode, batch.NoOneProjectBatchNo, batch.NoOneProjectSortDate, batch.Status, line.SortingLineName, line.SortingLineType })
-                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status)&&a.SortingLineName.Contains(sortingLineName));
+                (batch, line) => new 
+                { 
+                    batch.Id, 
+                    batch.OrderDate, 
+                    batch.BatchNo, 
+                    batch.SortingLineCode, 
+                    batch.NoOneProjectBatchNo, 
+                    batch.NoOneProjectSortDate, 
+                    batch.Status, 
+                    line.SortingLineName, 
+                    line.SortingLineType })
+                .Where(a => a.SortingLineCode.Contains(sortBatch.SortingLineCode) && a.Status.Contains(sortBatch.Status));
             if (sortBatch.OrderDate.CompareTo(Convert.ToDateTime("1900-01-01")) > 0)
             {
                 sortBatchDetials = sortBatchDetials.Where(a => a.OrderDate.Equals(sortBatch.OrderDate));
@@ -135,13 +113,13 @@ namespace THOK.SMS.Bll.Service
             var sortBatchArray = sortBatchDetials.AsEnumerable().Select(a => new
             {
                 a.Id,
-                OrderDate=a.OrderDate.ToShortDateString(),
+                OrderDate = a.OrderDate.ToString("yyyy-MM-dd"),
                 a.BatchNo,
                 a.SortingLineCode,
                 a.SortingLineName,
                 SortingLineType = a.SortingLineType == "1" ? "半自动" : "全自动",
                 a.NoOneProjectBatchNo,
-                SortDate=a.NoOneProjectSortDate.ToShortDateString(),
+                NoOneProjectSortDate = a.NoOneProjectSortDate.ToString("yyyy-MM-dd"),
                 Status = a.Status == "01" ? "未优化" : a.Status == "02" ? "已优化" : a.Status == "03" ? "已上传" : a.Status == "04" ? "已下载" : a.Status == "05" ? "已挂起" : "已完成"
             }).ToArray();
             return new { total, rows = sortBatchArray.ToArray() };

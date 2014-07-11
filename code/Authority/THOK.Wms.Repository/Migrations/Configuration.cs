@@ -5180,23 +5180,23 @@ namespace THOK.Wms.Repository.Migrations
                   {
                       FunctionID = new Guid("05432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
                       FunctionName = "订单优化",
-                      ControlName = "settle",
+                      ControlName = "optimize",
                       IndicateImage = "icon-Menu_CheckBill",
                       Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
                   },
-                 new Function()
-                 {
-                     FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
-                     FunctionName = "清除优化",
-                     ControlName = "empty",
-                     IndicateImage = "icon-cancel",
-                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
-                 },
+                 //new Function()
+                 //{
+                 //    FunctionID = new Guid("06432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
+                 //    FunctionName = "清除优化",
+                 //    ControlName = "empty",
+                 //    IndicateImage = "icon-cancel",
+                 //    Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
+                 //},
                  new Function()
                  {
                      FunctionID = new Guid("07432F88-08AD-4FDA-8F45-EAD3B2AE0203"),
                      FunctionName = "数据上传",
-                     ControlName = "optimize",
+                     ControlName = "upload",
                      IndicateImage = "icon-apply",
                      Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0203")
                  },

@@ -53,10 +53,6 @@
     {<a id="channelcancel" href="#" class="easyui-linkbutton"  plain="true" fun="true">反审</a>}                                                                                                                                                                                     
     @if (ViewBag.hasOptimize != null && ViewBag.hasOptimize)
     {<a id="optimize" href="#" class="easyui-linkbutton" plain="true" fun="true">优化</a>}                                                                                                      
-    @if (ViewBag.hasPrint != null && ViewBag.hasPrint)
-    {<a id="print" href="#" class="easyui-linkbutton"  plain="true" fun="true">打印</a>}
-    @if (ViewBag.hasHelp != null && ViewBag.hasHelp)
-    {<a id="help" href="#" class="easyui-linkbutton"  plain="true" fun="true">帮助</a>}
     @if (ViewBag.hasUpload != null && ViewBag.hasUpload)
     {<a id="upload" href="#" class="easyui-linkbutton"  plain="true" fun="true">上传</a>}
     @if (ViewBag.hasReport != null && ViewBag.hasReport)
@@ -69,7 +65,8 @@
     {<a id="finish" href="#" class="easyui-linkbutton" plain="true" fun="true">完成</a>}
     @if (ViewBag.hasBatch != null && ViewBag.hasBatch)
     {<a id="batch" href="#" class="easyui-linkbutton" plain="true" fun="true">批量</a>}
-    
-    
-
+    @if (ViewBag.hasPrint != null && ViewBag.hasPrint)
+    {<a id="print" href="#" class="easyui-linkbutton"  plain="true" fun="true">打印</a>}
+    @if (ViewBag.hasHelp != null && ViewBag.hasHelp)
+    {<a id="help" href="#" class="easyui-linkbutton"  plain="true" fun="true">帮助</a>}
 </div>

@@ -53,7 +53,7 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.IsActive)
                 .IsRequired()
                 .IsFixedLength()
-                .HasMaxLength(2);
+                .HasMaxLength(1);
             this.Property(t => t.UpdateTime)
                 .IsRequired();
 

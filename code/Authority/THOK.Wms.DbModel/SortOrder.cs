@@ -20,7 +20,6 @@ namespace THOK.Wms.DbModel
         public string CustomerName { get; set; }
         public string DeliverLineCode { get; set; }
         public decimal QuantitySum { get; set; }
-        public decimal SortQuantitySum { get; set; }
         public decimal AmountSum { get; set; }
         public decimal DetailNum { get; set; }
         public int DeliverOrder { get; set; }

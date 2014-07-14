@@ -38,8 +38,6 @@ namespace THOK.SMS.Optimize.Service
         [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
 
-        //[Dependency]
-        //public IDeliverLineAllotRepository DeliverLineAllotRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -55,7 +53,7 @@ namespace THOK.SMS.Optimize.Service
             //var channelAllotQuery = ChannelAllotRepository.GetQueryable();
             //var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable().Where(s=>s.Product.IsAbnormity=="0").ToArray();
             //var sortBatchs = sortBatchQuery.Where(a => a.batch.OrderDate == date).Select(b => b.SortBatchId).Distinct();
-
+            //bool isUseWholePieceSortingLine = sortingLineQuery.Where(s => s.ProductType == "3").Count() > 0 ? true : false;
             ////大小品种烟道划分比例
             //double ChannelAllotScale = Convert.ToDouble(systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("ChannelAllotScale")).ParameterValue);
             ////遍历每条批次分拣线

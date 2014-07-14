@@ -14,7 +14,7 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
-            Clear(context);
+            //Clear(context);
             context.Set<City>().AddOrUpdate(
                 new City()
                 {

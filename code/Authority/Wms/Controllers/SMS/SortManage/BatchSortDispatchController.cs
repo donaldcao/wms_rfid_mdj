@@ -63,5 +63,13 @@ namespace Wms.Controllers.SMS.SortManage
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Optimize(string id)
+        {
+            string strResult = string.Empty;
+            bool bResult = SortBatchService.Optimize(id, out strResult);
+            string msg = bResult ? "优化成功" : "优化失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
     }
 }

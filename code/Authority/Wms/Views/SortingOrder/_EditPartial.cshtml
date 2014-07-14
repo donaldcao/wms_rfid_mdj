@@ -1,0 +1,225 @@
+﻿<script type="text/javascript">
+
+    var detailUrl;
+    function editClick() {
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            billno = row.OrderID;
+            if (row.IsActive != "可用") {
+                $.messager.confirm('错误', '不可用状态无法编辑！');
+            } else {
+                $('#dlg').dialog('open').dialog('setTitle', '编辑分拣订单管理');
+                editKey = true;
+                $('#fm').form('load', row);
+                $('#inBillDetail').datagrid({ url: '/SortingOrder/sortOrderDetails/?OrderID=' + row.OrderID });
+
+
+                $('form input').removeAttr("disabled");
+                $('form textarea').removeAttr("disabled");
+                $('#btnEditBillDetail').css('display', 'inline'); //设置修改明细按钮的可见性
+                url = '/SortingOrder/SortOrderEdit/';
+                detailUrl = '/SortingOrder/SortOrderDetailEdit/';
+            }
+        } else {
+            $.messager.alert('错误', '没有选择行！', 'info');
+        }
+    };
+
+
+    //保存主单
+    function save() {
+
+        $('#dlg').dialog('close');
+
+//            $('#fm').form('submit', {
+//                url: url,
+//                onSubmit: function () {
+//                    return $(this).form('validate');
+//                },
+//                   success: function (result) {
+//                    var result = eval('(' + result + ')');
+//                    if (result.success) {
+//                        url = '/SortingOrder/SortOrderEdit/';
+//                        $('#inBillDetail').datagrid('reload');
+//                    } else {
+//                        $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+//                        $('#inBillDetail').datagrid('reload');
+//                    }
+//                }
+//            });
+        }
+    
+
+    //保存细单
+    function DetailSave() {
+        $('#fm-inBillDetail').form('submit', {
+            url: detailUrl,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");                                 
+                    $('#dlg-AddBillDetail').dialog('close');
+                    $('#inBillDetail').datagrid({ url: '/SortingOrder/sortOrderDetails/?OrderID=' + $('#editOrderID').val() });                   
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");                  
+                    $('#inBillDetail').datagrid('reload');                 
+                }
+            }
+        });
+    }
+
+    //修改明细
+    function editBillDetailClick() {
+        var detailRow = $('#inBillDetail').datagrid('getSelected');
+        if (detailRow) {
+            $('#dlg-AddBillDetail').dialog('open').dialog('setTitle', '修改细表信息');
+            $('form input').removeAttr("disabled");
+            $('form textarea').removeAttr("disabled");     
+            $('#fm-inBillDetail').form('load', detailRow);
+            detailUrl = '/SortingOrder/SortOrderDetailEdit/?OrderDetailID=' + detailRow.OrderDetailID;          
+        } else {
+            $.messager.confirm('错误', '没有选择行！');
+        }
+    }
+
+
+
+</script>
+<div id="dlg" class="easyui-dialog" modal="true" style="width: 550px; height: 450px;
+    padding: 0px 0px" closed="true" buttons="#dlg-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false">
+            <table class="easyui-datagrid" border="false" toolbar="#dlg-detailButtons" width="700"
+                id="inBillDetail" fit="true" fitcolumns="false" singleselect="true" rownumbers="true"
+                pagination="true" url="">
+                <thead>
+                    <tr>
+                      @*  <th field="OrderID" width="120" style="display: none">
+                            订单编码
+                        </th>*@
+                        <th field="ProductCode" width="120">
+                            商品编码
+                        </th>
+                        <th field="ProductName" width="120">
+                            商品名称
+                        </th>
+                        <th field="UnitName" width="100">
+                            单位名称
+                        </th>
+                         <th field="RealQuantity" width="80">
+                            实际数量
+                        </th>
+                        <th field="SortQuantity" width="80">
+                            分拣数量
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="dlg-detailButtons" style="width: auto; height: auto; background-color: #FFFFFF;">
+    <div border="false" style="padding: 4px 4px;">
+        <form id="fm" method="post" novalidate>
+        <table height="100px">
+            <tr>
+                <td width="60">
+                    订单日期
+                </td>
+                <td width="160">
+                    <input name="OrderDate" id="editOrderDate" readonly="true">
+                </td>
+                <td width="60">
+                    订单编码
+                </td>
+                <td width="160">
+                    <input name="OrderID" id="editOrderID" readonly="true">
+                </td>
+            </tr>
+            <tr>
+                <td width="60">
+                    客户编码
+                </td>
+                <td width="160">
+                    <input name="CustomerCode" readonly="true" id="editCustomerCode">
+                </td>
+                <td width="60">
+                    客户名称
+                </td>
+                <td width="160">
+                    <input name="CustomerName" readonly="true" id="editCustomerName">
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+    <div border="false" style="padding: 4px 4px;">
+        <a href="#" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick="editBillDetailClick()"
+            id="btnEditBillDetail">修改明细</a>
+    </div>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">
+        取消</a>
+</div>
+<div id="dlg-AddBillDetail" class="easyui-dialog" modal="true" style="width: 270px;
+    height: 350px; padding: 0px 0px" closed="true" buttons="#dlg-AddBillDetailbuttons">
+    <form id="fm-inBillDetail" method="post" novalidate>
+    <table style="padding: 10px 10px 0px 5px">
+        <tr>
+            <td width="160">
+                <input name="OrderDetailID" id="dlgOrderId" style="display: none">
+            </td>
+        </tr>
+        <tr>
+            <td width="60">
+                商品编码
+            </td>
+            <td width="160">
+                <input name="ProductCode" id="dlgProductCode" readonly="true">
+            </td>
+        </tr>
+        <tr>
+            <td width="60">
+                商品名称
+            </td>
+            <td width="160">
+                <input name="ProductName" id="dlgProductName" readonly="true">
+            </td>
+        </tr>
+        <tr>
+            <td width="60">
+                单位名称
+            </td>
+            <td width="160">
+                <input name="UnitName" readonly="true" id="dlgUnitName">
+            </td>
+        </tr>
+         <tr>
+            <td width="60">
+                实际数量
+            </td>
+            <td width="160">
+                <input name="RealQuantity" id="dlgRealQuantity" readonly="true">
+            </td>
+        </tr>
+        <tr>
+            <td width="60">
+                分拣数量
+            </td>
+            <td width="160">
+                <input name="SortQuantity" id="dlgSortQuantity">
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<div id="dlg-AddBillDetailbuttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="DetailSave()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-AddBillDetail').dialog('close')">
+        取消</a>
+</div>

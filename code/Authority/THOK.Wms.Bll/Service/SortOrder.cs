@@ -46,14 +46,14 @@ namespace THOK.Wms.Bll.Service
             }
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
             IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
-            var sortOrderDetail = sortOrderDetailQuery.Where(s => s.OrderDetailID == s.OrderDetailID).Select(s => new {s.OrderID,s.Product,s.RealQuantity });
+            var sortOrderDetail = sortOrderDetailQuery.Where(s => s.OrderDetailID == s.OrderDetailID).Select(s => new { s.OrderID, s.Product, s.RealQuantity });
             if (productCode != string.Empty && productCode != null)
             {
                 sortOrderDetail = sortOrderDetail.Where(s => s.Product.ProductCode == productCode && s.RealQuantity > 0);
             }
 
-            var sortOrder = sortOrderQuery.Where(s => s.OrderDate == orderDate && sortOrderDetail.Any(d => d.OrderID == s.OrderID));           
-            
+            var sortOrder = sortOrderQuery.Where(s => s.OrderDate == orderDate && sortOrderDetail.Any(d => d.OrderID == s.OrderID));
+
             if (OrderID != string.Empty && OrderID != null)
             {
                 sortOrder = sortOrder.Where(s => s.OrderID == OrderID);
@@ -76,7 +76,8 @@ namespace THOK.Wms.Bll.Service
                 s.DeliverDate,
                 IsActive = s.IsActive == "1" ? "可用" : "不可用",
                 UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                s.Description
+                s.Description,
+                s.SortQuantitySum
             });
 
             int total = temp.Count();
@@ -103,7 +104,7 @@ namespace THOK.Wms.Bll.Service
                                           .Join(sortorderDetail,
                                           sm => new { sm.OrderID },
                                           sd => new { sd.OrderID },
-                                          (sm, sd) => new { sm.OrderDate, sm.DeliverLine, sm.DetailNum, sm.AmountSum,sd.Amount,sd.RealQuantity })
+                                          (sm, sd) => new { sm.OrderDate, sm.DeliverLine, sm.DetailNum, sm.AmountSum, sd.Amount, sd.RealQuantity })
                                           .GroupBy(s => new { s.OrderDate, s.DeliverLine })
                                           .Select(s => new
                                           {
@@ -116,7 +117,7 @@ namespace THOK.Wms.Bll.Service
                                               IsActive = "可用"
                                           });
 
-            return sortOrder.OrderBy(s=>s.DeliverLineName).ToArray();
+            return sortOrder.OrderBy(s => s.DeliverLineName).ToArray();
         }
 
         #endregion
@@ -129,8 +130,8 @@ namespace THOK.Wms.Bll.Service
             string sortOrderList = "";
             try
             {
-                var sortOrderIds = SortOrderRepository.GetQueryable().Where(s=>s.OrderID==s.OrderID).Select(s => new { s.OrderID }).ToArray();
-                
+                var sortOrderIds = SortOrderRepository.GetQueryable().Where(s => s.OrderID == s.OrderID).Select(s => new { s.OrderID }).ToArray();
+
                 for (int i = 0; i < sortOrderIds.Length; i++)
                 {
                     sortOrderStrs += sortOrderIds[i].OrderID + ",";
@@ -166,7 +167,7 @@ namespace THOK.Wms.Bll.Service
                     foreach (var detail in SortOrderDetails)
                     {
                         var sortOrderDetail = new SortOrderDetail();
-                        var product = ProductRepository.GetQueryable().FirstOrDefault(p => p.ProductCode == detail.ProductCode);                        
+                        var product = ProductRepository.GetQueryable().FirstOrDefault(p => p.ProductCode == detail.ProductCode);
                         sortOrderDetail.OrderDetailID = detail.OrderDetailID;
                         sortOrderDetail.OrderID = detail.OrderID;
                         sortOrderDetail.ProductCode = detail.ProductCode;
@@ -190,5 +191,58 @@ namespace THOK.Wms.Bll.Service
             }
             return result;
         }
+
+        //修改主单
+        public bool Save(SortOrder sortOrder, out string strResult)
+        {
+            strResult = string.Empty;
+            return true;
+            //var sort = SortOrderRepository.GetQueryable().FirstOrDefault(a => a.OrderID == sortOrder.OrderID);
+           
+            //var sortQuantity = SortOrderDetailRepository.GetQueryable().Where(b => b.OrderID == sortOrder.OrderID)
+            //    .GroupBy(s => s.OrderID).Select(c => new
+            //                              {
+            //                                  QuantitySum = c.Sum(p => p.SortQuantity)
+            //                              }).ToArray();
+
+
+            //if (sort != null && sortQuantity.Count() > 0)
+            //{
+            //    try
+            //    {
+            //      //  sort.CompanyCode = sort.CompanyCode;
+            //      //  sort.CustomerCode = sort.CustomerCode;
+            //      //  sort.CustomerName = sort.CustomerName;
+            //      //  sort.DeliverDate = sort.DeliverDate;
+            //      ////  sort.DeliverLine = sort.DeliverLine;
+            //      //  sort.DeliverLineCode = sort.DeliverLineCode;
+            //      //  sort.DeliverOrder = sort.DeliverOrder;
+            //      //  sort.Description = sort.Description;
+            //      //  sort.DetailNum = sort.DetailNum;
+            //      //  sort.IsActive = sort.IsActive;
+            //      //  sort.OrderDate = sort.OrderDate;
+            //      //  sort.OrderType = sort.OrderType;
+            //      //  sort.QuantitySum = sort.QuantitySum;
+            //      //  sort.SaleRegionCode = sort.SaleRegionCode;
+            //      //  sort.SortOrderDetails = sort.SortOrderDetails;
+            //      //  sort.Status = sort.Status;
+            //      //  sort.UpdateTime = sort.UpdateTime;
+            //        sort.SortQuantitySum = sortQuantity[0].QuantitySum;
+            //        SortOrderRepository.SaveChanges();
+            //        return true;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        strResult = "修改失败，原因：" + ex.Message;
+            //    }
+            //    return false;
+            //}
+            //else
+            //{
+            //    strResult = "保存失败，未找到该条数据！";
+            //    return false;
+            //}         
+        }
+
     }
 }

@@ -2536,6 +2536,7 @@
     <Content Include="Views\SortBatchDispatch\_SearchPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_EditPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_DeletePartial.cshtml" />
+    <Content Include="Views\SortingOrder\_EditPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

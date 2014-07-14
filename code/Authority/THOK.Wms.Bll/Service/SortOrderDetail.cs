@@ -13,6 +13,8 @@ namespace THOK.Wms.Bll.Service
     {
         [Dependency]
         public ISortOrderDetailRepository SortOrderDetailRepository { get; set; }
+        [Dependency]
+        public ISortOrderRepository SortOrderRepository { get; set; }
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -24,7 +26,7 @@ namespace THOK.Wms.Bll.Service
         {
             if (OrderID != string.Empty && OrderID != null)
             {
-                IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
+                var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
                 var outBillDetail = sortOrderDetailQuery.Where(i => i.OrderID.Contains(OrderID)).OrderBy(i => i.OrderID).AsEnumerable().Select(i => new
                 {
                     i.OrderDetailID,
@@ -37,7 +39,8 @@ namespace THOK.Wms.Bll.Service
                     i.RealQuantity,
                     i.Price,
                     i.Amount,
-                    i.UnitQuantity
+                    i.UnitQuantity,
+                    i.SortQuantity
                 });
                 int total = outBillDetail.Count();
                 outBillDetail = outBillDetail.Skip((page - 1) * rows).Take(rows);
@@ -52,7 +55,7 @@ namespace THOK.Wms.Bll.Service
         {
             if (OrderID != string.Empty && OrderID != null)
             {
-                IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
+                var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
                 var outBillDetail = sortOrderDetailQuery.Where(i => i.OrderID.Contains(OrderID)).OrderBy(i => i.OrderID).AsEnumerable().Select(i => new
                 {
                     i.OrderDetailID,
@@ -95,6 +98,36 @@ namespace THOK.Wms.Bll.Service
                 return dt;
             }
             return null;
+        }
+
+        public bool Save(SortOrderDetail sortOrderDetail, out string strResult)
+        {
+            strResult = string.Empty;        
+            var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable().FirstOrDefault(a => a.OrderDetailID == sortOrderDetail.OrderDetailID);
+           
+            int sum=Convert.ToInt32(sortOrderDetail.RealQuantity)-Convert.ToInt32(sortOrderDetail.SortQuantity);
+
+            if (sortOrderDetailQuery != null&&sum>=0)
+            {
+                try
+                {                    
+                        sortOrderDetailQuery.SortQuantity = sortOrderDetail.SortQuantity;
+                        SortOrderDetailRepository.SaveChanges();                
+                        return true;
+                }
+                catch (Exception ex)
+                {
+                   
+                    strResult = "修改失败，原因：" + ex.Message;
+                    return false;
+                }
+            }
+            else
+            {
+                strResult = "保存失败，分拣数量不能大于实际数量";
+                return false;
+            }
+          
         }
     }
 }

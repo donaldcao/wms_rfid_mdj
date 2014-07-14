@@ -12,6 +12,7 @@ using THOK.Authority.Bll.Interfaces;
 using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.Wms.DbModel;
 
 namespace Authority.Controllers.Wms.SortingInfo
 {
@@ -34,6 +35,7 @@ namespace Authority.Controllers.Wms.SortingInfo
         {
             ViewBag.hasSearch = true;
             ViewBag.hasDownload = true;
+            ViewBag.hasEdit = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
@@ -51,6 +53,16 @@ namespace Authority.Controllers.Wms.SortingInfo
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
+        //修改主单
+        [HttpPost]
+        public ActionResult SortOrderEdit(SortOrder sortOrder)
+        {
+            string strResult = string.Empty;
+            bool bResult = SortOrderService.Save(sortOrder, out strResult);
+            string msg = bResult ? "修改成功" : "修改失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
         //查询细单
         // GET: /SortingOrder/sortOrderDetails/
         public ActionResult sortOrderDetails(int page, int rows, string OrderID)
@@ -58,6 +70,16 @@ namespace Authority.Controllers.Wms.SortingInfo
             var SortOrderDetail = SortOrderDetailService.GetDetails(page, rows, OrderID);
             return Json(SortOrderDetail, "text", JsonRequestBehavior.AllowGet);
         }
+        //修改细单
+        [HttpPost]
+        public ActionResult SortOrderDetailEdit(SortOrderDetail sortOrderDetail)
+        {
+            string strResult = string.Empty;
+            bool bResult = SortOrderDetailService.Save(sortOrderDetail, out strResult);
+            string msg = bResult ? "修改成功" : "修改失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
 
         //根据时间分组查询主单
         // GET: /SortingOrder/GetOrderMaster/

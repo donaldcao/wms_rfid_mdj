@@ -276,11 +276,17 @@ namespace THOK.SMS.Bll.Service
                         }
                         SortOrderAllotMasterRepository.Delete(master);
                     }
-                    //删除手工补货表
+                    //删除烟道分配表
                     var handSupplyQuery = HandSupplyRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
                     foreach (var handSupply in handSupplyQuery)
                     {
                         HandSupplyRepository.Delete(handSupply);
+                    }
+                    //删除手工补货表
+                    var channelAllotQuery = ChannelAllotRepository.GetQueryable().Where(a => a.SortBatchId.Equals(sortBatch.Id)).AsEnumerable();
+                    foreach (var channelAllot in channelAllotQuery)
+                    {
+                        ChannelAllotRepository.Delete(channelAllot);
                     }
                     SortOrderDispatchRepository.SaveChanges();
                 }

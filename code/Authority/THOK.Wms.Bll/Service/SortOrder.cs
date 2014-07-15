@@ -76,8 +76,7 @@ namespace THOK.Wms.Bll.Service
                 s.DeliverDate,
                 IsActive = s.IsActive == "1" ? "可用" : "不可用",
                 UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                s.Description,
-                s.SortQuantitySum
+                s.Description
             });
 
             int total = temp.Count();

@@ -13,6 +13,7 @@ using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
 using THOK.Wms.DbModel;
+using THOK.SMS.Optimize.Interfaces;
 
 namespace Authority.Controllers.Wms.SortingInfo
 {
@@ -29,6 +30,9 @@ namespace Authority.Controllers.Wms.SortingInfo
         public ICustomerService CustomerService { get; set; }
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
+
+        [Dependency]
+        public ISortOrderDownService SortOrderDownService { get; set; }
         //
         // GET: /SortingOrder/
         public ActionResult Index(string moduleID)
@@ -88,6 +92,17 @@ namespace Authority.Controllers.Wms.SortingInfo
             var sortOrder = SortOrderService.GetDetails(orderDate);
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
+
+
+        //判断是否仓储分拣一体化
+        public ActionResult IsWareHouseSorting()
+        {
+            string strResult = string.Empty;
+            bool bResult = SortOrderService.IsWarehousSortIntegration(out strResult);
+            string msg = bResult ? "请从仓储自动化管理系统下载数据" : "";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
+
 
         //
         // POST: /SortingOrder/DownSortOrder/

@@ -188,13 +188,16 @@ namespace THOK.Wms.DownloadWms.Bll
                 masterrow["quantity_sum"] = Convert.ToDecimal(row["QuantitySum"].ToString());//总数量
                 masterrow["amount_sum"] = 0;
                 masterrow["detail_num"] = 0;
-                masterrow["deliver_order"] = row["DeliverOrder"];
+                masterrow["deliver_order"] = row["DeliverOrder"]; 
                 masterrow["DeliverDate"] = DateTime.Now.ToString("yyyyMMdd");
                 masterrow["description"] = "";
                 masterrow["is_active"] = "1";
                 masterrow["update_time"] = DateTime.Now;
                 masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();// row["DELIVERLINECODE"].ToString();// +"_" + row["DIST_BILL_ID"].ToString();
                 masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString();
+               
+                masterrow["status"] = 0; //未分拣
+                masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QuantitySum"].ToString());//分拣数量等于总数量
                 ds.Tables["WMS_SORT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
@@ -220,6 +223,8 @@ namespace THOK.Wms.DownloadWms.Bll
                     detailrow["price"] = Convert.ToDecimal(row["TRADE_PRICE"]);
                     detailrow["amount"] = Convert.ToDecimal(row["AMOUNT_PRICE"]);
                     detailrow["unit_quantity"] = row["QUANTITY01"].ToString();
+
+                    detailrow["sort_quantity"] = Convert.ToDecimal(row["RealQuantity"]); //分拣数量等于总数量
                     ds.Tables["WMS_SORT_ORDER_DETAIL"].Rows.Add(detailrow);
                 }
                 return ds;
@@ -245,6 +250,11 @@ namespace THOK.Wms.DownloadWms.Bll
                 disprow["update_time"] = DateTime.Now;//调度时间
                 disprow["sort_work_dispatch_id"] = null;//作业调度ID
                 disprow["work_status"] = "1";//调度状态
+
+
+                disprow["deliver_line_no"] = 0;//默认为0
+                disprow["sort_status"] = 1;//默认1 未分拣
+                disprow["sort_batch_id"] = "";//
                 ds.Tables["WMS_SORT_ORDER_DISPATCH"].Rows.Add(disprow);
             }
             return ds;
@@ -324,6 +334,8 @@ namespace THOK.Wms.DownloadWms.Bll
             mastertable.Columns.Add("update_time");
             mastertable.Columns.Add("deliver_line_code");
             mastertable.Columns.Add("dist_bill_id");
+            mastertable.Columns.Add("status");
+            mastertable.Columns.Add("sort_quantity_sum");
 
             DataTable detailtable = ds.Tables.Add("WMS_SORT_ORDER_DETAIL");
             detailtable.Columns.Add("order_detail_id");
@@ -337,6 +349,7 @@ namespace THOK.Wms.DownloadWms.Bll
             detailtable.Columns.Add("price");
             detailtable.Columns.Add("amount");
             detailtable.Columns.Add("unit_quantity");
+            detailtable.Columns.Add("sort_quantity");
 
             DataTable dispatchtable = ds.Tables.Add("WMS_SORT_ORDER_DISPATCH");
             dispatchtable.Columns.Add("id");
@@ -347,6 +360,9 @@ namespace THOK.Wms.DownloadWms.Bll
             dispatchtable.Columns.Add("update_time");
             dispatchtable.Columns.Add("sort_work_dispatch_id");
             dispatchtable.Columns.Add("work_status");
+            dispatchtable.Columns.Add("deliver_line_no");
+            dispatchtable.Columns.Add("sort_status");
+            dispatchtable.Columns.Add("sort_batch_id");
             return ds;
         }
     }

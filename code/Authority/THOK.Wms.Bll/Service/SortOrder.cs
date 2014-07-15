@@ -7,6 +7,7 @@ using THOK.Wms.Bll.Interfaces;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.Download.Interfaces;
+using THOK.Authority.Dal.Interfaces;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -26,6 +27,9 @@ namespace THOK.Wms.Bll.Service
 
         [Dependency]
         public ISortingDownService SortingDownService { get; set; }
+
+        [Dependency]
+        public ISystemParameterRepository SystemParameterRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -242,6 +246,22 @@ namespace THOK.Wms.Bll.Service
             //    strResult = "保存失败，未找到该条数据！";
             //    return false;
             //}         
+        }
+
+
+        //仓储分拣一体化
+        public bool IsWarehousSortIntegration(out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+
+            var systemParameterQuery = SystemParameterRepository.GetQueryable();
+            var parameterValue = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("IsWarehousSortIntegration")).ParameterValue;
+            if (parameterValue == "1") //仓储分拣一体化
+            {
+                result = true;
+            }
+            return result;
         }
 
     }

@@ -238,6 +238,8 @@ namespace THOK.WMS.DownloadWms.Bll
                 masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString().Trim(); //row["DELIVER_LINE_CODE"].ToString().Trim();// +"_" + row["DIST_BILL_ID"].ToString().Trim();//ËÍ»õË³Ðò±àÂë
                 masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString().Trim();//
                 masterrow["status"] = "0";//
+
+                masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QUANTITY_SUM"].ToString());
                 ds.Tables["DWV_OUT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
@@ -269,6 +271,8 @@ namespace THOK.WMS.DownloadWms.Bll
                 masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();
                 masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString();
                 masterrow["status"] = "0";
+
+                masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QUANTITY_SUM"].ToString());
                 ds.Tables["DWV_OUT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
@@ -304,6 +308,7 @@ namespace THOK.WMS.DownloadWms.Bll
                 masterrow["deliver_line_code"] = row["DELIVER_LINE_CODE"].ToString().Trim();// row["DIST_BILL_ID"].ToString().Trim(); //row["DELIVER_LINE_CODE"].ToString().Trim();// +"_" + row["DIST_BILL_ID"].ToString().Trim();//ËÍ»õË³Ðò±àÂë
                 masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString().Trim();//
                 masterrow["status"] = "";
+                masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QUANTITY_SUM"].ToString());
                 ds.Tables["DWV_OUT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
@@ -342,6 +347,8 @@ namespace THOK.WMS.DownloadWms.Bll
                     detailrow["price"] = Convert.ToDecimal(row["PRICE"]);
                     detailrow["amount"] = Convert.ToDecimal(row["AMOUNT"]);
                     detailrow["unit_quantity"] = 50;
+
+                    detailrow["sort_quantity"] = Convert.ToDecimal(row["QUANTITY"]);
                     ds.Tables["DWV_OUT_ORDER_DETAIL"].Rows.Add(detailrow);
                 }
                 return ds;
@@ -386,6 +393,7 @@ namespace THOK.WMS.DownloadWms.Bll
                     detailrow["price"] = Convert.ToDecimal(row["PRICE"]);
                     detailrow["amount"] = Convert.ToDecimal(row["AMOUNT"]);
                     detailrow["unit_quantity"] = Convert.ToDecimal(row["QTY_UNIT"]);
+                    detailrow["sort_quantity"] = Convert.ToDecimal(row["QUANTITY"]);
                     ds.Tables["DWV_OUT_ORDER_DETAIL"].Rows.Add(detailrow);
                 }
                 return ds;
@@ -426,6 +434,7 @@ namespace THOK.WMS.DownloadWms.Bll
                     detailrow["price"] = Convert.ToDecimal(row["PRICE"]);
                     detailrow["amount"] = Convert.ToDecimal(row["AMOUNT"]);
                     detailrow["unit_quantity"] = 50;
+                    detailrow["sort_quantity"] = Convert.ToDecimal(row["QUANTITY"]);
                     ds.Tables["DWV_OUT_ORDER_DETAIL"].Rows.Add(detailrow);
                 }
                 return ds;
@@ -484,6 +493,8 @@ namespace THOK.WMS.DownloadWms.Bll
             mastertable.Columns.Add("dist_bill_id");
             mastertable.Columns.Add("status");
 
+            mastertable.Columns.Add("sort_quantity_sum");
+
             DataTable detailtable = ds.Tables.Add("DWV_OUT_ORDER_DETAIL");
             detailtable.Columns.Add("order_detail_id");
             detailtable.Columns.Add("order_id");
@@ -496,6 +507,7 @@ namespace THOK.WMS.DownloadWms.Bll
             detailtable.Columns.Add("price");
             detailtable.Columns.Add("amount");
             detailtable.Columns.Add("unit_quantity");
+            detailtable.Columns.Add("sort_quantity");
             return ds;
         }
 

@@ -12,5 +12,7 @@ namespace THOK.Wms.Bll.Interfaces
         object GetDetails(string orderDate);
         bool Save(SortOrder sortOrder, out string strResult);
         bool DownSortOrder(string beginDate, string endDate, out string errorInfo);
+
+        bool IsWarehousSortIntegration(out string strResult);
     }
 }

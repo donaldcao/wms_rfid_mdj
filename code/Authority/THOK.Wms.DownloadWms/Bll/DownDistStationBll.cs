@@ -90,6 +90,7 @@ namespace THOK.Wms.DownloadWms.Bll
                routeDr["description"] = "";
                routeDr["is_active"] = row["ISACTIVE"];
                routeDr["update_time"] = DateTime.Now;
+               routeDr["deliver_order"] = 0;
                ds.Tables["WMS_DELIVER_DIST"].Rows.Add(routeDr);
            }
            return ds;
@@ -108,6 +109,7 @@ namespace THOK.Wms.DownloadWms.Bll
            routeDt.Columns.Add("description");
            routeDt.Columns.Add("is_active");
            routeDt.Columns.Add("update_time");
+           routeDt.Columns.Add("deliver_order");
            return ds;
        }
     }

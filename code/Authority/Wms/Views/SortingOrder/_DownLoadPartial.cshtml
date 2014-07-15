@@ -1,5 +1,21 @@
 ﻿<script type="text/javascript">
     function downloadClick() {
+      $.ajax({
+          url: "/SortingOrder/IsWareHouseSorting/",
+            success: function (responseText) {
+                var result = $.evalJSON(responseText);
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                }
+                else {
+                downClick()
+                }
+            }
+        });
+    }
+
+
+      function downClick() {
         $('#dlg_sorting_date').dialog('open').dialog('setTitle', '请选择时间');
         downloadKey = true;
         $('#beginDate').datebox({ editable: false });
@@ -59,36 +75,55 @@
         }
     }
 </script>
-<div id="dlg_sorting_date" class="easyui-dialog" modal="true"
-        style="width:290px;height:210px;padding:4px 4px"
-        closed="true" buttons="#dlg_allot_modify_buttons" align="center">
-        <form id="fm_sorting_date" method="post" novalidate>           
-            <table align="left" width="240">   
-            <tr>
-                <td width="60" style="text-align:right">选择下载:</td>
-                <td style="text-align:center"><input type="radio"  name="r1" value="false" checked="checked" />营销</td>
-                <td><input id="radioSort" type="radio" name="r1" value="true"/>分拣</td>
-              </tr>         
-              <tr>
-                <td width="60" style="text-align:right">下载日期:</td>
-                <td colspan="2"><input id="beginDate" class="easyui-datebox" type="text" style="width: 140px"/></td>
-              </tr>
-              @* <tr>
+<div id="dlg_sorting_date" class="easyui-dialog" modal="true" style="width: 290px;
+    height: 210px; padding: 4px 4px" closed="true" buttons="#dlg_allot_modify_buttons"
+    align="center">
+    <form id="fm_sorting_date" method="post" novalidate>
+    <table align="left" width="240">
+        <tr>
+            <td width="60" style="text-align: right">
+                选择下载:
+            </td>
+            <td style="text-align: center">
+                <input type="radio" name="r1" value="false" checked="checked" />营销
+            </td>
+            <td>
+                <input id="radioSort" type="radio" name="r1" value="true" />分拣
+            </td>
+        </tr>
+        <tr>
+            <td width="60" style="text-align: right">
+                下载日期:
+            </td>
+            <td colspan="2">
+                <input id="beginDate" class="easyui-datebox" type="text" style="width: 140px" />
+            </td>
+        </tr>
+        @* <tr>
                 <td width="60" style="text-align:right">结束日期:</td>
                 <td colspan="2"><input id="endDate" class="easyui-datebox" type="text" style="width: 140px"/></td>
               </tr>*@
-              <tr>
-                <td width="80" style="text-align:right">下载批次：</td>
-                <td colspan="2"><input type="text" id="batchID" style="width: 140px"/></td>
-              </tr>
-              <tr>
-                <td width="80" style="text-align:right">分拣线名称：</td>
-                <td colspan="2"><input type="text" id="SortingLineCode" style="width: 140px"/></td>
-              </tr>              
-            </table>
-        </form>
+        <tr>
+            <td width="80" style="text-align: right">
+                下载批次：
+            </td>
+            <td colspan="2">
+                <input type="text" id="batchID" style="width: 140px" />
+            </td>
+        </tr>
+        <tr>
+            <td width="80" style="text-align: right">
+                分拣线名称：
+            </td>
+            <td colspan="2">
+                <input type="text" id="SortingLineCode" style="width: 140px" />
+            </td>
+        </tr>
+    </table>
+    </form>
 </div>
 <div id="dlg_allot_modify_buttons">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="generateCheckClick()">确定</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg_sorting_date').dialog('close')">取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="generateCheckClick()">
+        确定</a> <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg_sorting_date').dialog('close')">
+            取消</a>
 </div>

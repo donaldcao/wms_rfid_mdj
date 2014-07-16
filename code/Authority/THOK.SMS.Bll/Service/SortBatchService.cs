@@ -632,9 +632,13 @@ namespace THOK.SMS.Bll.Service
                     groupQuantity.Add(groupNo, 0);
                     groupCount.Add(groupNo, 0);
                 }
+                //单品牌多烟道组保证不在同一烟道组
+                string tempProductCode = "";
                 while (bigs.Max(v => v.Value) > 0)
                 {
                     string productCode = null;
+                    bool isChangeProduct = true;
+                    int groupNo = 0;
                     int quantity = 0;
                     for (int i = 0; i < bigCount; i++)
                     {
@@ -652,7 +656,31 @@ namespace THOK.SMS.Bll.Service
                             continue;
                         }
                     }
-                    int groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                    if (productCode == tempProductCode)
+                    {
+                        isChangeProduct = false;
+                    }
+                    tempProductCode = productCode;
+                    //如果品牌未更换 要保证该品牌分配在多个烟道组上
+                    if (!isChangeProduct)
+                    {
+                        var channelGroup = ChannelAllotRepository.GetQueryable().Where(c => c.ProductCode == tempProductCode).Select(c => c.channel.GroupNo).Distinct();
+                        int tempCount = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).Count();
+                        if (tempCount > 0)
+                        {
+                            groupNo = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                        }
+                        //如果已经保证多烟道组或者换品牌 该品牌分配数量用来调节两线平衡
+                        else
+                        {
+                            groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                        }
+                    }
+                    else
+                    {
+                        groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                    }
+                    //分配的组烟道不够用则切换至有空余烟道的组
                     if (groupCount[groupNo] == canAllotBigChannels.Where(c => c.GroupNo == groupNo).Count())
                     {
                         do
@@ -662,6 +690,7 @@ namespace THOK.SMS.Bll.Service
                         } while (groupCount[groupNo] == canAllotBigChannels.Where(c => c.GroupNo == groupNo).Count());
 
                     }
+                    //确认分配  往烟道分配表写数据
                     var beAllotBigChannel = canAllotBigChannels.Where(c => c.GroupNo == groupNo && (usedChannelGroupNo.Count == 0 || usedChannelGroupNo.Keys.Contains(c.ChannelCode) == false)).FirstOrDefault();
                     ChannelAllot addChannelAllot = new ChannelAllot();
                     addChannelAllot.SortBatchId = sortBatchId;
@@ -692,7 +721,7 @@ namespace THOK.SMS.Bll.Service
                     smallCount++;
                     smallProductCodeArray[itemCount - 1] = item.Key;
                 }
-                //按划分系数划分大小品牌
+                //小品种烟道够不够用判断
                 var canAllotMixChannels = channel.Where(c => c.ChannelType == "5").OrderBy(c => c.OrderNo);
                 int canAllotMixChannelCount = canAllotMixChannels.Count();
                 var canAllotSingleSmallChannels = channel.Where(c => c.ChannelType == "2").OrderBy(c => c.OrderNo);

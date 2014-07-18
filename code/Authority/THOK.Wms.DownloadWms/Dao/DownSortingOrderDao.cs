@@ -142,5 +142,104 @@ namespace THOK.WMS.DownloadWms.Dao
            string sql = "SELECT * FROM WMS_UNIT_LIST";
            return this.ExecuteQuery(sql).Tables[0];
        }
+
+
+
+       /// <summary>
+       /// 主单
+       /// </summary>
+       /// <returns></returns>
+       public DataTable FindOrder()
+       {
+           string sql = "";
+           dbTypeName = this.SalesSystemDao();
+           switch (dbTypeName)
+           {
+
+               case "gzqdn-oracle":
+                   sql = @"SELECT '{0}', {1}, ORDER_ID AS ORDERID,ORG_CODE AS ORGCODE,1 AS AREACODE,
+                             DELIVER_LINE_CODE AS ROUTECODE,CUST_CODE AS CUSTOMERCODE,DELIVER_ORDER AS SORTID ,DETAIL_NUM AS DETAILNUM,'0' AS IS_IMPORT 
+                             FROM V_WMS_SORT_ORDER
+                             WHERE ORDER_DATE = '{2}' AND DELIVER_LINE_CODE NOT IN ({3}) AND ISACTIVE ='1' ";
+                   break;
+
+               case "yzyc-db2": //永州烟草
+                   sql = @"SELECT '{0}', {1}, A.ORDERID AS ORDERID,A.AREACODE AS AREACODE,A.RUTCODE AS ROUTECODE," +
+                           " A.CUSTOMERCODE AS CUSTOMERCODE,B.SORTID AS SORTID,A.ORDERDATE AS ORDERDATE,A.CUSTOMERNAME" +
+                           " FROM OUKANG.OUKANG_CO A " +
+                           " LEFT JOIN OUKANG_CUST B ON A.CUSTOMERCODE = B.CUSTOMERCODE " +
+                           " WHERE A.ORDERDATE = '{2}' AND B.ROUTECODE NOT IN ({3}) " +
+                           " GROUP BY ORDERID,A.CUSTOMERCODE, A.RUTCODE ,AREACODE,B.SORTID";
+                   break;
+
+               default:
+
+                   break;
+           }
+           return ExecuteQuery(sql).Tables[0];
+       }
+
+
+       /// <summary>
+       /// 细单
+       /// </summary>
+       /// <returns></returns>
+       public DataTable FindOrderDetail()
+       {
+           string sql = "";
+           dbTypeName = this.SalesSystemDao();
+           switch (dbTypeName)
+           {
+               case "gzqdn-oracle":
+                   sql = @"SELECT A.ORDER_DETAIL_ID AS ORDERDETAILID,A.ORDER_ID AS ORDERID,LTRIM(RTRIM(A.BRAND_CODE)) AS CIGARETTECODE, 
+                             LTRIM(RTRIM(A.BRAND_NAME)) AS CIGARETTENAME,'条' AS UTINNAME,A.QUANTITY AS QUANTITY,0,0,'{0}',{1},
+                             QTY_DEMAND AS QTYDEMAND,PRICE AS PRICE,AMOUNT AS AMOUNT,'0' AS IS_IMPORT,A.QUANTITY AS ORDER_QUANTITY 
+                             FROM V_WMS_SORT_ORDER_DETAIL A 
+                             LEFT JOIN V_WMS_SORT_ORDER B ON A.ORDER_ID = B.ORDER_ID
+                             WHERE B.ORDER_DATE = '{2}' AND B.DELIVER_LINE_CODE NOT IN ({3}) AND A.QUANTITY > 0 ";
+                   break;
+
+               case "yzyc-db2": //永州烟草
+                   sql = @"SELECT A.ORDERID AS ORDERID, A.CIGARETTECODE AS CIGARETTECODE, B.CIGARETTENAME AS CIGARETTENAME,A.QUANTITY,0,0,'{0}',{1}" +
+                       " FROM OUKANG.OUKANG_CO A " +
+                       " LEFT JOIN OUKANG.OUKANG_ITEM B ON A.CIGARETTECODE = B.CIGARETTECODE" +
+                       " LEFT JOIN OUKANG_CUST C ON A.CUSTOMERCODE = C.CUSTOMERCODE " +
+                       " WHERE ORDERDATE = '{2}' AND C.ROUTECODE NOT IN ({3})";
+                   break;
+
+               default:
+
+                   break;
+           }
+           return ExecuteQuery(sql).Tables[0];
+       }
+
+
+
+       //订单主表
+       public void SynchronizeMaster(DataTable dtData)
+       {
+           DateTime dt = new DateTime();
+           foreach (DataRow row in dtData.Rows)
+           {
+               string sql = "BEGIN " +
+                                   "INSERT wms_sort_order VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16},'{17}'）" +
+                            "END";
+               sql = string.Format(sql, row["ORDERID"], ' ', ' ', row["ORDERDATE"], ' ', row["CUSTOMERCODE"], row["CUSTOMERNAME"], ' ', ' ', row["DETAILNUM"], row["SORTID"], dt, ' ', '1', dt, row["ROUTECODE"], ' ', '1');
+               ExecuteNonQuery(sql);
+           }
+       }
+       //订单细表
+       public void SynchronizeDetail(DataTable detailTable)
+       {
+           foreach (DataRow row in detailTable.Rows)
+           {
+               string sql = "BEGIN " +
+                                   "INSERT wms_sort_order_detail VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8},'{9}','{10}','{11}') " +
+                               "END";
+               sql = string.Format(sql, row["ORDERDETAILID"], row["ORDERID"], row["CIGARETTECODE"], row["CIGARETTENAME"], ' ', row["UTINNAME"], row["QTYDEMAND"], row["QUANTITY"], row["PRICE"], row["AMOUNT"], row["QUANTITY"], row["ORDER_QUANTITY"]);
+               ExecuteNonQuery(sql);
+           }
+       }
    }
 }

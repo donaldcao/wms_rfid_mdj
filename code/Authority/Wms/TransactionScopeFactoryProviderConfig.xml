@@ -4,17 +4,16 @@
 	<property name="MasterDataConfigurationDictionary">
 		<key name="master">
 			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
-				<DataBaseType value ="OleDb"  desc =""/>
+				<DataBaseType value ="SqlServer"  desc =""/>
 				<ORMappingType value ="Emit" desc =""/>
 				<CommandTimeoutInSecs value ="" desc =""/>
 				<ConnectionLifetimeInSecs value ="" desc =""/>
 				<MinPoolSize value ="" desc =""/>
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
-				
-				<DataSource value ="Provider=SQLOLEDB;Data Source=.;Password=123456;User ID=sa;Initial Catalog=SortDB" desc =""/>
+				<DataSource value ="" desc =""/>
 				<IP value ="." desc =""/>
-				<DataBaseName value ="master" desc =""/>
+				<DataBaseName value ="wms_rfid_db" desc =""/>
 				<User value ="sa" desc =""/>
 				<Password value ="123456" desc =""/>
 			</DataConfiguration>
@@ -23,17 +22,16 @@
 			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
 				<DataBaseType value ="DB2"  desc =""/>
 				<ORMappingType value ="Emit" desc =""/>
-				<CommandTimeoutInSecs value ="" desc =""/>
+				<CommandTimeoutInSecs value ="10000" desc =""/>
 				<ConnectionLifetimeInSecs value ="" desc =""/>
 				<MinPoolSize value ="" desc =""/>
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
-
 				<DataSource value ="" desc =""/>
-				<IP value ="10.80.1.239:50000" desc =""/>
-				<DataBaseName value ="gxv3td" desc =""/>
-				<User value ="lzcc" desc =""/>
-				<Password value ="lzcc" desc =""/>
+				<IP value ="10.56.192.104:50000" desc =""/>
+				<DataBaseName value ="v6db" desc =""/>
+				<User value ="THOK" desc =""/>
+				<Password value ="mdjthok" desc =""/>
 			</DataConfiguration>
 		</key>
 	</property>

@@ -1,21 +1,5 @@
 ﻿<script type="text/javascript">
     function downloadClick() {
-      $.ajax({
-          url: "/SortingOrder/IsWareHouseSorting/",
-            success: function (responseText) {
-                var result = $.evalJSON(responseText);
-                if (result.success) {
-                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
-                }
-                else {
-                downClick()
-                }
-            }
-        });
-    }
-
-
-      function downClick() {
         $('#dlg_sorting_date').dialog('open').dialog('setTitle', '请选择时间');
         downloadKey = true;
         $('#beginDate').datebox({ editable: false });
@@ -105,7 +89,7 @@
               </tr>*@
         <tr>
             <td width="80" style="text-align: right">
-                下载批次：
+                下载批次:
             </td>
             <td colspan="2">
                 <input type="text" id="batchID" style="width: 140px" />
@@ -113,7 +97,7 @@
         </tr>
         <tr>
             <td width="80" style="text-align: right">
-                分拣线名称：
+                分拣线名称:
             </td>
             <td colspan="2">
                 <input type="text" id="SortingLineCode" style="width: 140px" />

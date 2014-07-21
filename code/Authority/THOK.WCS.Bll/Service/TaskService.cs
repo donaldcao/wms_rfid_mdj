@@ -584,12 +584,20 @@ namespace THOK.WCS.Bll.Service
             bool result = false;
             try
             {
-                IQueryable<Task> TaskQuery = TaskRepository.GetQueryable();
-                int intID = Convert.ToInt32(taskID);
-                var t = TaskQuery.FirstOrDefault(i => i.ID == intID);
-                TaskRepository.Delete(t);
-                TaskRepository.SaveChanges();
-                result = true;
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    IQueryable<Task> TaskQuery = TaskRepository.GetQueryable();
+                    int intID = Convert.ToInt32(taskID);
+                    var task = TaskQuery.FirstOrDefault(i => i.ID == intID);
+                    AddTaskHistorys(task);
+                    TaskHistoryRepository.SaveChanges();
+
+                    TaskRepository.Delete(task);
+                    TaskRepository.SaveChanges();
+
+                    scope.Complete();
+                    result = true;
+                }
             }
             catch (Exception ex)
             {

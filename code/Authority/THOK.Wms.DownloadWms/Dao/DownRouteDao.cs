@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using THOK.Util;
 using System.Data;
+using THOK.Wms.DownloadWms.Dao;
 
 namespace THOK.WMS.DownloadWms.Dao
 {
@@ -94,6 +95,79 @@ namespace THOK.WMS.DownloadWms.Dao
                             DATEADD(DAY, -7, CONVERT(VARCHAR(14), GETDATE(), 112))";
             this.ExecuteNonQuery(sql);
         }
-      
+
+        public string dbTypeName = "";
+        public string SalesSystemDao()
+        {
+            SysParameterDao parameterDao = new SysParameterDao();
+            Dictionary<string, string> parameter = parameterDao.FindParameters();
+
+            //仓储业务数据接口服务器数据库类型
+            if (parameter["SalesSystemDBType"] != "")
+                dbTypeName = parameter["SalesSystemDBType"];
+
+            return dbTypeName;
+        }
+
+
+        /// <summary>
+        /// 线路表
+        /// </summary>
+        /// <returns></returns>
+        public DataTable FindRoute()
+        {
+            string sql = "";
+            dbTypeName = this.SalesSystemDao();
+            switch (dbTypeName)
+            {
+
+                case "gzqdn-oracle":
+                    sql = @"SELECT DELIVER_LINE_CODE AS ROUTECODE, DELIVER_LINE_NAME AS ROUTENAME, 1 AS AREACODE, DELIVER_LINE_ORDER AS SORTID
+                             FROM V_WMS_DELIVER_LINE WHERE ISACTIVE = '1'";
+                    break;
+
+                case "yzyc-db2":
+                    sql = @"SELECT ROUTECODE,ROUTENAME, AREACODE, SORTID " +
+                            " FROM OUKANG.OUKANG_RUT";
+                    break;
+
+                default:
+
+                    break;
+            }
+            return ExecuteQuery(sql).Tables[0];
+        }
+
+        //配送线路表
+        public void SynchronizeRoute(DataTable routeTable)
+        {
+
+            DateTime dt = new DateTime();
+            foreach (DataRow row in routeTable.Rows)
+            {
+                string sql = "IF '{0}' IN (SELECT deliver_line_code FROM wms_deliver_line) " +
+                                "BEGIN " +
+                                    "UPDATE wms_deliver_line SET deliver_line_name = '{1}',dist_code = '{2}' WHERE deliver_line_code = '{0}' " +
+                                "END " +
+                             "ELSE " +
+                                "BEGIN " +
+                                    "INSERT wms_deliver_line VALUES ('{0}','{1}','{2},'{3}','{4},'{5}','{6},'{7}','{8}') " +
+                                "END";
+                sql = string.Format(sql, row["ROUTECODE"], ' ', row["ROUTENAME"], row["AREACODE"], row["SORTID"], ' ', '1', dt, ' ');
+                ExecuteNonQuery(sql);
+            }
+        }
+
+
+        //删除历史记录保留7 线路表，调度表，分拣中间表和分拣表（包含细表）,作业调度表
+        public void DeleteHistory(string orderDate)
+        {
+            string sql = @"DELETE wms_sort_work_dispatch where update_time< CONVERT(VARCHAR(14),DATEADD(DAY, -7, CONVERT(VARCHAR(100), GETDATE(), 112)),112)
+                           DELETE wms_sort_order_dispatch where update_time< CONVERT(VARCHAR(14),DATEADD(DAY, -7, CONVERT(VARCHAR(100), GETDATE(), 112)),112)
+                           DELETE wms_sort_order_detail where order_id in (select order_id from wms_sort_order where update_time< CONVERT(VARCHAR(14),DATEADD(DAY, -7, CONVERT(VARCHAR(100), GETDATE(), 112)),112))
+                           DELETE wms_sort_order where update_time< CONVERT(VARCHAR(14),DATEADD(DAY, -7, CONVERT(VARCHAR(100), GETDATE(), 112)),112)
+                           DELETE wms_deliver_line where update_time< CONVERT(VARCHAR(14),DATEADD(DAY, -7, CONVERT(VARCHAR(100), GETDATE(), 112)),112)";
+            this.ExecuteNonQuery(sql);
+        }
     }
 }

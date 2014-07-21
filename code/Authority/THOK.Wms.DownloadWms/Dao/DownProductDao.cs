@@ -90,6 +90,63 @@ namespace THOK.WMS.DownloadWms.Dao
             string sql = "SELECT * FROM WMS_PRODUCT WHERE  " + productCode;
             return this.ExecuteQuery(sql).Tables[0];
         }
+
+
+
+        /// <summary>
+        /// ≤˙∆∑
+        /// </summary>
+        /// <returns></returns>
+        public DataTable FindProduct()
+        {
+            string sql = "";
+            dbTypeName = this.SalesSystemDao();
+            switch (dbTypeName)
+            {
+
+                case "gzqdn-oracle":
+                    sql = @"SELECT LTRIM(RTRIM(BRAND_CODE)) AS CIGARETTECODE,LTRIM(RTRIM(BRAND_NAME)) AS CIGARETTENAME,
+                            IS_ABNORMITY_BRAND AS ISABNORMITY,SUBSTR(BARCODE_PIECE, -6, 6) AS BARCODE
+                            FROM V_WMS_BRAND  WHERE ISACTIVE ='1'";
+                    break;
+
+                case "yzyc-db2": //”¿÷›—Ã≤›
+                    sql = @"SELECT CIGARETTECODE, CIGARETTENAME,ISABNORMITY,RIGHT(ltrim(rtrim(BARCODE)),6)  BARCODE " +
+                            " FROM OUKANG.OUKANG_ITEM";
+                    break;
+
+                default:
+
+                    break;
+            }
+            return ExecuteQuery(sql).Tables[0];
+        }
+      
+
+
+      
+        //æÌ—Ã
+        public void SynchronizeCigarette(DataTable cigaretteTable)
+        {
+            DateTime dt = new DateTime();
+            foreach (DataRow row in cigaretteTable.Rows)
+            {
+                string sql = "IF '{0}' IN (SELECT product_code FROM wms_product) " +
+                                "BEGIN " +
+                                    "IF '{1}' =  '1' " +
+                                    "BEGIN " +
+                                        "UPDATE wms_product SET is_abnormity = '{1}',product_name = '{2}' WHERE product_code = '{0}' " +
+                                    "END " +
+                                "END " +
+                             "ELSE " +
+                                "BEGIN " +
+                                    "INSERT wms_product VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16},'{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26},'{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}) " +
+                                "END";
+                sql = string.Format(sql, row["CIGARETTECODE"], row["CIGARETTENAME"], ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', row["ISABNORMITY"].ToString() == "1" ? "1" : "0", ' ', '1', dt, ' ', ' ', ' ');
+                ExecuteNonQuery(sql);
+            }
+        }
+ 
         
     }
 }

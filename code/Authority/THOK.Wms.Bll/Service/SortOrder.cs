@@ -8,6 +8,12 @@ using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.Download.Interfaces;
 using THOK.Authority.Dal.Interfaces;
+using THOK.Wms.DownloadWms.Bll;
+using THOK.WMS.DownloadWms.Bll;
+using THOK.Authority.Bll.Interfaces;
+using THOK.Wms.DownloadWms.Dao;
+using THOK.WMS.DownloadWms.Dao;
+using System.Data;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -30,6 +36,9 @@ namespace THOK.Wms.Bll.Service
 
         [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
+
+        [Dependency]
+        public ISystemParameterService SystemParameterService { get; set; }
 
         protected override Type LogPrefix
         {
@@ -69,7 +78,7 @@ namespace THOK.Wms.Bll.Service
                 s.CompanyCode,
                 s.SaleRegionCode,
                 s.OrderDate,
-                s.OrderType,
+                OrderType = s.OrderType == "1" ? "普通客户" : "大客户",
                 s.CustomerCode,
                 s.CustomerName,
                 s.QuantitySum,
@@ -200,8 +209,9 @@ namespace THOK.Wms.Bll.Service
         {
             strResult = string.Empty;
             return true;
+            #region
             //var sort = SortOrderRepository.GetQueryable().FirstOrDefault(a => a.OrderID == sortOrder.OrderID);
-           
+
             //var sortQuantity = SortOrderDetailRepository.GetQueryable().Where(b => b.OrderID == sortOrder.OrderID)
             //    .GroupBy(s => s.OrderID).Select(c => new
             //                              {
@@ -244,24 +254,128 @@ namespace THOK.Wms.Bll.Service
             //{
             //    strResult = "保存失败，未找到该条数据！";
             //    return false;
-            //}         
+            //} 
+            #endregion
         }
 
-
-        //仓储分拣一体化
-        public bool IsWarehousSortIntegration(out string strResult)
+        #region  数据下载
+        public bool Down(string beginDate, string endDate, string sortLineCode, bool isSortDown, string batch, out string strResult)
         {
             strResult = string.Empty;
-            bool result = false;
+            string errorInfo = string.Empty;
+            string lineErrorInfo = string.Empty;
+            string custErrorInfo = string.Empty;
+            bool bResult = false;
+            bool lineResult = false;
 
+
+            DownSortingInfoBll sortBll = new DownSortingInfoBll();
+            DownRouteBll routeBll = new DownRouteBll();
+            DownSortingOrderBll orderBll = new DownSortingOrderBll();
+            DownCustomerBll custBll = new DownCustomerBll();
+            DownDistStationBll stationBll = new DownDistStationBll();
+            DownDistCarBillBll carBll = new DownDistCarBillBll();
+            DownUnitBll ubll = new DownUnitBll();
+            DownProductBll pbll = new DownProductBll();
+
+            beginDate = Convert.ToDateTime(beginDate).ToString("yyyyMMdd");
+            endDate = Convert.ToDateTime(endDate).ToString("yyyyMMdd");
+
+            // 判断是否仓储一体化 if type=1  是
             var systemParameterQuery = SystemParameterRepository.GetQueryable();
             var parameterValue = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("IsWarehousSortIntegration")).ParameterValue;
-            if (parameterValue == "1") //仓储分拣一体化
-            {
-                result = true;
-            }
-            return result;
-        }
+            string Type = parameterValue.ToString();
 
+            switch (Type)
+            {               
+                case "1":
+
+                    try
+                    {
+                        ubll.DownUnitCodeInfo();
+                        pbll.DownProductInfo();
+                        routeBll.DeleteTable();
+                        stationBll.DownDistStationInfo();
+                        if (!SystemParameterService.SetSystemParameter())
+                        {
+                            bool custResult = custBll.DownCustomerInfo();
+                            carBll.DownDistCarBillInfo(beginDate);
+                            if (isSortDown)
+                            {
+                                //从分拣下载分拣数据
+                                lineResult = routeBll.DownSortRouteInfo();
+                                bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
+                            }
+                            else
+                            {
+                                //从营销下载分拣数据 
+                                lineResult = routeBll.DownRouteInfo();
+                                //bResult = orderBll.GetSortingOrderDate(beginDate, endDate, out errorInfo);
+                                bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮
+                            }
+                        }
+                        else
+                        {
+                            bool custResult = custBll.DownCustomerInfos();//创联
+                            //carBll.DownDistCarBillInfo(beginDate);
+                            if (isSortDown)
+                            {
+                                //从分拣下载分拣数据
+                                lineResult = routeBll.DownSortRouteInfo();
+                                bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
+                            }
+                            else
+                            {
+                                //从营销下载分拣数据 创联
+                                lineResult = routeBll.DownRouteInfos();
+                                bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        strResult += e.Message + "线路：" + errorInfo + "。客户：" + errorInfo + "。分拣" + errorInfo;
+                    }                   
+                    break;
+                       
+                default:
+                    try
+                    {
+
+                        DownSalesSystemDao ssDao = new DownSalesSystemDao();
+                        DateTime dtOrder = DateTime.ParseExact(beginDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+                        string orderDate = dtOrder.AddDays(-7).ToShortDateString();
+                        //清空数据
+                        ssDao.DeleteHistory(orderDate);
+
+                        DownDistDao dd = new DownDistDao();
+                        DataTable areTable = dd.FindArea();
+                        dd.SynchronizeArea(areTable);
+
+                        DownRouteDao dr = new DownRouteDao();
+                        DataTable routeTable = dr.FindRoute();
+                        dr.SynchronizeRoute(routeTable);
+                        DownCustomerDao dc = new DownCustomerDao();
+                        DataTable customerTable = dc.FindCustomer(dtOrder);
+                        dc.SynchronizeCustomer(customerTable);
+                        DownProductDao dp = new DownProductDao();
+                        DataTable productTable = dp.FindProduct();
+                        dp.SynchronizeCigarette(productTable);
+                        DownSortingOrderDao ds = new DownSortingOrderDao();
+                        DataTable orderTable = ds.FindOrder();
+                        ds.SynchronizeMaster(orderTable);
+                        DataTable orderDetailTable = ds.FindOrderDetail();
+                        ds.SynchronizeDetail(orderDetailTable);
+
+                    }
+                    catch (Exception e)
+                    {
+                        strResult += e.Message + strResult;
+                    }
+                    break;
+            }
+            return bResult;
+        }
+                #endregion
     }
 }

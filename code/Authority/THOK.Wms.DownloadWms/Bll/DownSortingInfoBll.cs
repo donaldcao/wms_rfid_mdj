@@ -197,7 +197,7 @@ namespace THOK.Wms.DownloadWms.Bll
                 masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString();
                
                 masterrow["status"] = 0; //未分拣
-                masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QuantitySum"].ToString());//分拣数量等于总数量
+                //masterrow["sort_quantity_sum"] = Convert.ToDecimal(row["QuantitySum"].ToString());//分拣数量等于总数量
                 ds.Tables["WMS_SORT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
@@ -335,7 +335,7 @@ namespace THOK.Wms.DownloadWms.Bll
             mastertable.Columns.Add("deliver_line_code");
             mastertable.Columns.Add("dist_bill_id");
             mastertable.Columns.Add("status");
-            mastertable.Columns.Add("sort_quantity_sum");
+            //mastertable.Columns.Add("sort_quantity_sum");
 
             DataTable detailtable = ds.Tables.Add("WMS_SORT_ORDER_DETAIL");
             detailtable.Columns.Add("order_detail_id");

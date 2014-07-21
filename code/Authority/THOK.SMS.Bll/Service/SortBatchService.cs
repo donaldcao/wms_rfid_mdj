@@ -868,7 +868,12 @@ namespace THOK.SMS.Bll.Service
         private void OrderDetailSplitOptimize(int sortBatchId, IQueryable<string> deliverLineCodes, IQueryable<SortOrder> sortOrders, IQueryable<SortOrderDetail> sortOrderDetails, IQueryable<ChannelAllot> channelAllotQuery)
         {
             var sortOrderAllotMasterQuery = SortOrderAllotMasterRepository.GetQueryable().ToArray();
-
+            var channelGroups = channelAllotQuery.Select(c => c.channel.GroupNo).Distinct();
+            Dictionary<int, int> groupQuantity = new Dictionary<int, int>();
+            foreach (var groupNo in channelGroups)
+            {
+                groupQuantity.Add(groupNo, 0);
+            }
             foreach (var deliverLineCode in deliverLineCodes)
             {
                 var sortOrdersArray = sortOrders.Where(s => s.DeliverLineCode == deliverLineCode)
@@ -884,14 +889,12 @@ namespace THOK.SMS.Bll.Service
 
                     int orderQuantity = Convert.ToInt32(sortOrderDetailArray.Sum(c => c.SortQuantity));
 
-                    Dictionary<int, int> BagQuantity = packNoArray.ToDictionary(p => p.PackNo, p => p.Quantity);
-
-                    var channelGroups = channelAllotQuery.Select(c => c.channel.GroupNo).Distinct();
-                    Dictionary<int, int> groupQuantity = new Dictionary<int, int>();
-                    foreach (var groupNo in channelGroups)
+                    if (orderQuantity == 0)
                     {
-                        groupQuantity.Add(groupNo, 0);
+                        continue;
                     }
+
+                    Dictionary<int, int> BagQuantity = packNoArray.ToDictionary(p => p.PackNo, p => p.Quantity);
                     Dictionary<string, int> orderRemainQuantity = sortOrderDetailArray.ToDictionary(c => c.ProductCode, c => Convert.ToInt32(c.SortQuantity));
                     Dictionary<int, int> channelRemainQuantity = channelAllotQuery.ToDictionary(c => c.Id, c => c.Quantity);
 
@@ -911,38 +914,52 @@ namespace THOK.SMS.Bll.Service
                         {
                             if (groupIsAllot[groupNo])
                             {
-                                groupNo = groupIsAllot.Where(g => g.Value == false).First().Key;
+                                if (groupIsAllot.Where(g => g.Value == false).Count() > 0)
+                                {
+                                    groupNo = groupIsAllot.Where(g => g.Value == false).First().Key;
+                                }
                             }
-                            foreach (var product in orderRemainQuantity)
+                            foreach (var sortOrderDetail in sortOrderDetailArray)
                             {
-                                if (product.Value == 0)
+                                string pruductCode = sortOrderDetail.ProductCode;
+
+                                if (orderRemainQuantity[pruductCode] == 0)
                                 {
                                     continue;
                                 }
                                 else
                                 {
-                                    string pruductCode = product.Key;
                                     var channelAllotCodes = channelAllotQuery.Where(c => c.ProductCode.Equals(pruductCode)
                                                                                       && c.channel.GroupNo.Equals(groupNo))
                                                                              .Select(c => c.Id);
+                                    if (channelAllotCodes.Count() <= 0)
+                                    {
+                                        continue;
+                                    }
                                     var productRemainQuantity = channelRemainQuantity.Where(c => channelAllotCodes.Contains(c.Key))
                                                                                      .OrderByDescending(g => g.Value);
+                                    if (productRemainQuantity.Count() <= 0)
+                                    {
+                                        continue;
+                                    }
                                     var realAllotChannel = productRemainQuantity.Where(p => p.Value % 50 % channelTempQuantity > 0);
                                     int channelAllotId;
                                     int channelQuantity;
                                     if (realAllotChannel.Count() > 0)
                                     {
                                         channelAllotId = realAllotChannel.First().Key;
-                                        channelQuantity = realAllotChannel.First().Value;
+                                        channelQuantity = realAllotChannel.First().Value % 50 % channelTempQuantity;
                                     }
                                     else
                                     {
                                         channelAllotId = productRemainQuantity.First().Key;
                                         channelQuantity = productRemainQuantity.First().Value;
+
                                     }
                                     int realAllotQuantity = channelQuantity > quantity ? quantity : channelQuantity;
 
                                     quantity -= realAllotQuantity;
+                                    groupQuantity[groupNo] += realAllotQuantity;
                                     channelRemainQuantity[channelAllotId] -= realAllotQuantity;
                                     orderRemainQuantity[pruductCode] -= realAllotQuantity;
                                     SortOrderAllotDetail addSortOrderAllotDetail = new SortOrderAllotDetail();
@@ -965,6 +982,10 @@ namespace THOK.SMS.Bll.Service
                                         break;
                                     }
                                 }
+                            }
+                            if (quantity > 0)
+                            {
+                                groupIsAllot[groupNo] = true;
                             }
                         }
                     }

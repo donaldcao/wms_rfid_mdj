@@ -1001,9 +1001,9 @@ namespace THOK.SMS.Bll.Service
                 var NoOneProIP = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProIP")).ParameterValue;
                 var NoOneProPort = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProPort")).ParameterValue;
                 var NoOneProFilePath = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProFilePath")).ParameterValue;
-                if (sortBatch.Status == "01")  //01 未上传一号工程
+                if (sortBatch.Status == "02")  //02 已优化
                 {
-                    string txtFile = "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string txtFile =NoOneProFilePath+ "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
                     string zipFile = NoOneProFilePath + txtFile + ".zip";
                     txtFile += ".Order";
                   
@@ -1049,7 +1049,7 @@ namespace THOK.SMS.Bll.Service
             var productQuery = SortOrderAllotDetailRepository.GetQueryable();
 
             //正常分拣打码
-            var uploadOrder = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.Id == sortBatchId).ToArray().Select(c => new
+            var uploadOrder = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId == sortBatchId).Select(c => new
             {
                 c.Id,
                 c.SortBatchId,

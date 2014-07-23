@@ -2,7 +2,7 @@
     function uploadClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            if (row.Status == "未优化") {             
+            if (row.Status == "已优化") {
                 $.messager.confirm('温馨提示', '上传所选记录?', function (r) {
                     if (r) {
                         $.ajax({
@@ -11,7 +11,7 @@
                             success: function (responseText) {
                                 var result = $.evalJSON(responseText);
                                 if (result.success) {
-                                    $.messager.alert("上传一号工程", result.msg, "info");
+                                    $.messager.alert("温馨提示", result.msg, "info");
                                     $('#details').datagrid('reload');
                                 } else {
                                     $.messager.alert("错误", result.msg + '<br />' + result.data, "error");
@@ -22,7 +22,7 @@
                 });
             }
             else {
-                $.messager.alert("错误", "只有未上传才可以进行！", "error");
+                $.messager.alert("错误", "只有已优化才可上传一号工程！", "error");
             }
         } else {
             $.messager.alert('错误', '没有选择行！');

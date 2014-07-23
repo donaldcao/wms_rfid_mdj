@@ -342,11 +342,11 @@ namespace THOK.Wms.Bll.Service
                     try
                     {
 
-                        DownSalesSystemDao ssDao = new DownSalesSystemDao();
+                        //DeleteHistoryBll ssDao = new DeleteHistoryBll();
                         DateTime dtOrder = DateTime.ParseExact(beginDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
                         string orderDate = dtOrder.AddDays(-7).ToShortDateString();
                         //清空数据
-                        ssDao.DeleteHistory(orderDate);
+                        //ssDao.DeleteHistory(orderDate);
 
                         DownDistDao dd = new DownDistDao();
                         DataTable areTable = dd.FindArea();

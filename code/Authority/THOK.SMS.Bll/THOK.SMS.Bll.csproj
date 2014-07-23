@@ -36,6 +36,9 @@
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.1.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.95\lib\net40\EntityFramework.Extended.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
@@ -61,6 +64,10 @@
     <Compile Include="Interfaces\ISortOrderAllotDetailService.cs" />
     <Compile Include="Interfaces\ISortOrderAllotMasterService.cs" />
     <Compile Include="Interfaces\IHandSupplyService.cs" />
+    <Compile Include="Model\ChannelAllotInfo.cs" />
+    <Compile Include="Model\ChannelGroupInfo.cs" />
+    <Compile Include="Model\PackInfo.cs" />
+    <Compile Include="Model\SortOrderDetailInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\SortBatchService.cs" />
     <Compile Include="Service\ChannelAllotService.cs" />

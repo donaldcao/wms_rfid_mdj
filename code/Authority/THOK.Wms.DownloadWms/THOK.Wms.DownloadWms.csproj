@@ -87,7 +87,6 @@
     <Compile Include="Dao\DownReachDao.cs" />
     <Compile Include="Dao\DownRouteDao.cs" />
     <Compile Include="Dao\DownSaleRegionDao.cs" />
-    <Compile Include="Dao\DownSalesSystemDao.cs" />
     <Compile Include="Dao\DownSortingInfoDao.cs" />
     <Compile Include="Dao\DownSortingOrderDao.cs" />
     <Compile Include="Dao\DownSupplierDao.cs" />

@@ -2,23 +2,6 @@
 <TransactionScopeFactoryProvider>
 	<property name="DBOperationLogger" type="DBRabbit.Logger.DBOperationLogger,DBRabbit.dll"/>
 	<property name="MasterDataConfigurationDictionary">
-		<key name="master_1">
-			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
-				<DataBaseType value ="SqlServer"  desc =""/>
-				<ORMappingType value ="Emit" desc =""/>
-				<CommandTimeoutInSecs value ="" desc =""/>
-				<ConnectionLifetimeInSecs value ="" desc =""/>
-				<MinPoolSize value ="" desc =""/>
-				<MaxPoolSize value ="" desc =""/>
-				<DataBaseSchemaFileName value ="" desc =""/>
-				
-				<DataSource value ="" desc =""/>
-				<IP value ="." desc =""/>
-				<DataBaseName value ="wms_rfid_db" desc =""/>
-				<User value ="sa" desc =""/>
-				<Password value ="123456" desc =""/>
-			</DataConfiguration>
-		</key>
     <key name="master">
       <DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
         <DataBaseType value ="SqlServer"  desc =""/>

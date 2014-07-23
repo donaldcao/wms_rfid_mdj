@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
+using System.Text;
 using System.Transactions;
+using EntityFramework.Extensions;
 using Microsoft.Practices.Unity;
+using Microsoft.Win32;
 using THOK.Authority.Dal.Interfaces;
 using THOK.Common.Entity;
 using THOK.SMS.Bll.Interfaces;
+using THOK.SMS.Bll.Model;
 using THOK.SMS.Dal.Interfaces;
 using THOK.SMS.DbModel;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.DbModel;
 using THOK.Wms.SignalR.Common;
-using EntityFramework.Extensions;
-using THOK.SMS.Bll.Model;
 
 namespace THOK.SMS.Bll.Service
 {
@@ -971,6 +977,244 @@ namespace THOK.SMS.Bll.Service
             SortOrderAllotDetailRepository.SaveChanges();
         }
 
+        #endregion
+
+
+
+        #region  上传一号工程
+        public bool UpLoad(SortBatch sortbatch, out string strResult)
+        {
+
+            strResult = string.Empty;
+            bool result = false;
+
+            try
+            {
+                int sortBatchId = Convert.ToInt32(sortbatch.Id);
+                var sortBatch = SortBatchRepository.GetQueryable().FirstOrDefault(s => s.Id == sortBatchId);
+                var sortingLine = SortingLineRepository.GetQueryable().FirstOrDefault(s => s.SortingLineCode == sortBatch.SortingLineCode);
+                var systemParameterQuery = SystemParameterRepository.GetQueryable().ToArray();
+
+                var NoOneProIP = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProIP")).ParameterValue;
+                var NoOneProPort = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProPort")).ParameterValue;
+                var NoOneProFilePath = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProFilePath")).ParameterValue;
+                if (sortBatch.Status == "01")  //01 未上传一号工程
+                {
+                    string txtFile = "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string zipFile = NoOneProFilePath + txtFile + ".zip";
+                    txtFile += ".Order";
+                  
+                  try
+                    {
+                        CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
+                        CreateZipFile(NoOneProFilePath, txtFile, zipFile);
+                        SendZipFile(NoOneProIP, NoOneProPort, zipFile);
+                        SaveUploadStatus(sortbatch);
+                        DeleteFiles(NoOneProFilePath); 
+                        result = true;
+                    }
+                    catch (Exception e)
+                    {
+                        strResult = "原因：" + e.Message;
+                        return false;
+                    }                   
+                   
+                }
+                else
+                {
+                    strResult = "原因:已上传一号工程";
+                }
+            }
+            catch (Exception e)
+            {
+                strResult = "原因：" + e.Message;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 创建数据文件
+        /// </summary>
+        /// <param name="orderDate"></param>
+        /// <param name="batchNo"></param>
+        private void CreateDataFile(string productType,int sortBatchId, string txtFile, string zipFile)
+        {
+            FileStream file = new FileStream(txtFile, FileMode.Create);
+            StreamWriter writer = new StreamWriter(file, Encoding.UTF8);           
+
+            var deliverLineQuery = DeliverLineRepository.GetQueryable();
+            var productQuery = SortOrderAllotDetailRepository.GetQueryable();
+
+            //正常分拣打码
+            var uploadOrder = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.Id == sortBatchId).ToArray().Select(c => new
+            {
+                c.Id,
+                c.SortBatchId,
+                c.PackNo,
+                c.OrderId,
+                c.DeliverLineCode,
+                DeliverLineName = deliverLineQuery.Where(b => b.DeliverLineCode == c.DeliverLineCode).FirstOrDefault().DeliverLineName,
+                ProductCode = productQuery.Where(d => d.MasterId == c.Id).FirstOrDefault().ProductCode,
+                ProductName = productQuery.Where(d => d.MasterId == c.Id).FirstOrDefault().ProductName,
+                c.CustomerCode,
+                c.CustomerName,
+                c.CustomerOrder,
+                c.CustomerDeliverOrder,
+                c.CustomerInfo,
+                c.Quantity,
+                c.ExportNo,
+                c.FinishTime,
+                c.StartTime,
+                c.Status
+            }).ToArray();
+
+            foreach (var row in uploadOrder)
+            {
+                string rowData = row.ToString().Trim() + ";";
+                writer.WriteLine(rowData);
+                writer.Flush();
+            }
+        }
+
+
+        /// <summary>
+        /// 创建压缩文件
+        /// </summary>
+        public void CreateZipFile(string NoOneProFilePath,string txtFile, string zipFile)
+        {
+            String the_rar;
+            RegistryKey the_Reg;
+            Object the_Obj;
+            String the_Info;
+            ProcessStartInfo the_StartInfo;
+            Process zipProcess;
+
+            the_Reg = Registry.ClassesRoot.OpenSubKey("Applications\\WinRAR.exe\\Shell\\Open\\Command");
+            the_Obj = the_Reg.GetValue("");
+            the_rar = the_Obj.ToString();
+            the_Reg.Close();
+            the_rar = the_rar.Substring(1, the_rar.Length - 7);
+            the_Info = " a    " + zipFile + "  " + txtFile;
+            the_StartInfo = new ProcessStartInfo();
+            the_StartInfo.WorkingDirectory = NoOneProFilePath;
+            the_StartInfo.FileName = the_rar;
+            the_StartInfo.Arguments = the_Info;
+            the_StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            zipProcess = new Process();
+            zipProcess.StartInfo = the_StartInfo;
+            zipProcess.Start();
+
+            //等待压缩文件进程退出
+            while (!zipProcess.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+            }
+        }
+
+        /// <summary>
+        /// 发送压缩文件给中软一号工程
+        /// </summary>
+        public void SendZipFile(string NoOneProIP,string NoOneProPort,string zipFile)
+        {
+            TcpClient client = new TcpClient();
+            client.Connect(NoOneProIP, Convert.ToInt32(NoOneProPort));
+            NetworkStream stream = client.GetStream();
+            FileStream file = new FileStream(zipFile, FileMode.Open);
+            int fileLength = (int)file.Length;
+            byte[] fileBytes = BitConverter.GetBytes(fileLength);
+            Array.Reverse(fileBytes);
+            //发送文件长度
+            stream.Write(fileBytes, 0, 4);
+            stream.Flush();
+
+            byte[] data = new byte[1024];
+            int len = 0;
+            while ((len = file.Read(data, 0, 1024)) > 0)
+            {
+                stream.Write(data, 0, len);
+            }
+
+            file.Close();
+
+            byte[] buffer = new byte[1024];
+            string recvStr = "";
+            while (true)
+            {
+                int bytes = stream.Read(buffer, 0, 1024);
+
+                if (bytes <= 0)
+                    continue;
+                else
+                {
+                    recvStr = Encoding.ASCII.GetString(buffer, bytes - 3, 2);
+                    if (recvStr == "##")
+                    {
+                        recvStr = Encoding.GetEncoding("gb2312").GetString(buffer, 4, bytes - 5);
+                        break;
+                    }
+                }
+            }
+            client.Close();
+            if (recvStr.Split(';').Length > 2)
+            {
+                throw new Exception(recvStr);
+            }
+        }
+
+        /// <summary>
+        /// 删除数据文件和压缩文件
+        /// </summary>
+        public void DeleteFiles(string NoOneProFilePath)
+        {
+            try
+            {
+                DirectoryInfo dir = new DirectoryInfo(NoOneProFilePath);
+                FileInfo[] files = dir.GetFiles("*.*Order");
+
+                if (files != null)
+                {
+                    foreach (FileInfo file in files)
+                        file.Delete();
+                }
+                dir = new DirectoryInfo(NoOneProFilePath);
+                if (dir.Exists)
+                {
+                    files = dir.GetFiles("*.zip");
+                    if (files != null)
+                    {
+                        foreach (FileInfo file in files)
+                            file.Delete();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        /// <summary>
+        /// 更新上传批次状态
+        /// </summary>
+        private bool SaveUploadStatus(SortBatch sortbatch)
+        {
+            
+            bool result = false;      
+            var sortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id == sortbatch.Id);
+            if (sortBatchs != null)
+            {
+                try
+                {
+                    sortBatchs.Status = "03";
+                    SortBatchRepository.SaveChanges();
+                    result =true;
+                }
+                catch (Exception e)
+                {
+                    return false;     
+                }
+            }
+            return result;         
+        }
         #endregion
     }
 }

@@ -71,5 +71,14 @@ namespace Wms.Controllers.SMS.SortManage
             string msg = bResult ? "优化成功" : "优化失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
+        //上传一号工程
+        public ActionResult UpLoad(SortBatch sortbatch)
+        {
+            string strResult = string.Empty;
+            bool bResult = SortBatchService.UpLoad(sortbatch, out strResult);
+            string msg = bResult ? "上传成功" : "上传失败";
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
+        }
     }
 }

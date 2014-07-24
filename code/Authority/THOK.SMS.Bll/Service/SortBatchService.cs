@@ -1001,7 +1001,7 @@ namespace THOK.SMS.Bll.Service
                 if (sortBatch.Status == "02")  //02 已优化
                 {
                     string txtFile =NoOneProFilePath+ "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
-                    string zipFile = NoOneProFilePath + txtFile + ".zip";
+                    string zipFile =txtFile + ".zip";
                     txtFile += ".Order";
                   
                   try

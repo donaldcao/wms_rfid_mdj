@@ -2144,22 +2144,14 @@ namespace THOK.WCS.Bll.Service
                         }
                         else
                         {
-                            return -1;
+                            newTaskID = - 1;
                         }
 
                         task.CurrentPositionID = task.TargetPositionID;
                         task.State = "04";
                         TaskRepository.SaveChanges();
-
-                        if (newTaskID > 0)
-                        {
-                            scope.Complete();
-                            return newTaskID;
-                        }
-                        else
-                        {
-                            return newTaskID;
-                        }
+                        scope.Complete();
+                        return newTaskID;
                     }
                 }
                 catch (Exception ex)
@@ -2187,20 +2179,11 @@ namespace THOK.WCS.Bll.Service
                     using (TransactionScope scope = new TransactionScope())
                     {
                         newTaskID = CreateNewTaskForMoveBackRemainAndReturnTaskID(taskID, out errorInfo);
-
                         task.CurrentPositionID = task.TargetPositionID;
                         task.State = "04";
                         TaskRepository.SaveChanges();
-
-                        if (newTaskID > 0)
-                        {
-                            scope.Complete();
-                            return newTaskID;
-                        }
-                        else
-                        {
-                            return newTaskID;
-                        }
+                        scope.Complete();
+                        return newTaskID;
                     }
                 }
                 catch (Exception ex)

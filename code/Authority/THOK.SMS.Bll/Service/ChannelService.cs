@@ -35,7 +35,9 @@ namespace THOK.SMS.Bll.Service
             string str = "";
             switch (channelType)
             {
-
+                case "1":
+                    str = "立式机";
+                    break;
                 case "2":
                     str = "立式机";
                     break;
@@ -65,13 +67,12 @@ namespace THOK.SMS.Bll.Service
         public object GetDetails(int page, int rows, Channel channel)
         {
 
-            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
+            var channelQuery = ChannelRepository.GetQueryable();
+            var productQuery = ProductRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
 
             var channelDetails = channelQuery.Where(a => a.IsActive.Contains(channel.IsActive));
-            //烟道组
-           
+            //烟道组          
             if (channel.GroupNo>0)
             {
                 channelDetails = channelDetails.Where(a => a.GroupNo == channel.GroupNo);
@@ -92,8 +93,8 @@ namespace THOK.SMS.Bll.Service
             {
                 channelDetails = channelDetails.Where(a => a.ProductCode == channel.ProductCode);
             }
-            int total = channelDetails.Count();
-            var channelArray = channelDetails.OrderBy(a => a.ChannelCode).ToArray().Skip((page - 1) * rows).Take(rows)
+       
+            var channelArray = channelDetails.OrderBy(a => a.ChannelCode).ToArray().AsEnumerable()
                 .Select(c => new
                 {
                     c.ChannelCode,
@@ -102,8 +103,8 @@ namespace THOK.SMS.Bll.Service
                     c.ChannelName,                 
                     ChannelType = whatChannelType(c.ChannelType),
                     c.LedNo,
-                    DefaultProductCode = c.ProductCode,
-                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.ProductCode).Select(p => p.ProductName),
+                    ProductCode = c.ProductCode,
+                    ProductName = productQuery.Where(p => p.ProductCode == c.ProductCode).Select(p => p.ProductName),
                     c.RemainQuantity,
                     c.X,
                     c.Y,
@@ -114,8 +115,10 @@ namespace THOK.SMS.Bll.Service
                     c.SortAddress,
                     GroupNo = c.GroupNo == 1 ? "A线" : "B线",
                     c.OrderNo,
-                    Status = c.IsActive == "01" ? "可用":"不可用"
+                    IsActive = c.IsActive == "1" ? "启用" : "不启用"
                 });
+            int total = channelDetails.Count();
+            channelArray = channelArray.Skip((page - 1) * rows).Take(rows);
             return new { total, rows = channelArray.ToArray() };
         }
 
@@ -134,6 +137,7 @@ namespace THOK.SMS.Bll.Service
             {
                 try
                 {
+                    channel.UpdateTime = DateTime.Now;
                     ChannelRepository.Add(channel);
                     ChannelRepository.SaveChanges();
                     result = true;
@@ -230,12 +234,12 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public DataTable GetChannel(int page, int rows, string DefaultProductCode, string SortingLineCode, string ChannelType, string GroupNo, string Status)
+        public DataTable GetChannel(int page, int rows, string ProductCode, string SortingLineCode, string ChannelType, string GroupNo, string Status)
         {
-            IQueryable<Channel> channelQuery = ChannelRepository.GetQueryable();
-            IQueryable<Product> productQuery = ProductRepository.GetQueryable();
-            IQueryable<SortingLine> sortingLineQuery = SortingLineRepository.GetQueryable();
-            var channelDetails = channelQuery.Where(a => a.ProductCode.Contains(DefaultProductCode) && a.SortingLineCode.Contains(SortingLineCode) && a.ChannelType.Contains(ChannelType)&&a.IsActive.Contains(Status)).OrderBy(a => a.ChannelCode).Select(a=>a);
+            var channelQuery = ChannelRepository.GetQueryable();
+            var productQuery = ProductRepository.GetQueryable();
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
+            var channelDetails = channelQuery.Where(a => a.ProductCode.Contains(ProductCode) && a.SortingLineCode.Contains(SortingLineCode) && a.ChannelType.Contains(ChannelType)&&a.IsActive.Contains(Status)).OrderBy(a => a.ChannelCode).Select(a=>a);
         
             if (GroupNo != "")
             {
@@ -252,15 +256,15 @@ namespace THOK.SMS.Bll.Service
                     SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
                     c.ChannelName,
                     ChannelType = whatChannelType(c.ChannelType),                 
-                    DefaultProductCode = c.ProductCode,
-                    DefaultProductName = productQuery.Where(p => p.ProductCode == c.ProductCode).Select(p => p.ProductName),
+                    ProductCode = c.ProductCode,
+                    ProductName = productQuery.Where(p => p.ProductCode == c.ProductCode).Select(p => p.ProductName),
                     c.RemainQuantity,
                     c.ChannelCapacity,                  
                     GroupNo = c.GroupNo == 1 ? "A线" : "B线",
                     c.OrderNo,
                     c.SortAddress,
                     c.SupplyAddress,
-                    Status = c.IsActive == "01" ? "可用" : "不可用"
+                    IsActive = c.IsActive == "1" ? "启用" : "不启用"
                 }).ToArray();
             DataTable dt = new DataTable();
             dt.Columns.Add("烟道代码", typeof(string));
@@ -284,15 +288,15 @@ namespace THOK.SMS.Bll.Service
                         item.ChannelName,
                         item.ChannelType,
                         item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],                    
-                        item.DefaultProductCode,
-                        item.DefaultProductName.ToArray().Length <= 0 ? "" : item.DefaultProductName.ToArray()[0],
+                        item.ProductCode,
+                        item.ProductName.ToArray().Length <= 0 ? "" : item.ProductName.ToArray()[0],
                         item.RemainQuantity,
                         item.ChannelCapacity,
                         item.GroupNo,
                         item.OrderNo,
                         item.SortAddress,
                         item.SupplyAddress,
-                        item.Status
+                        item.IsActive
                     );
             }
             return dt;

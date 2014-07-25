@@ -124,7 +124,7 @@ namespace THOK.Wms.Bll.Service
             }
             else
             {
-                strResult = "保存失败，分拣数量不能大于实际数量";
+                strResult = "分拣数量不能大于实际数量";
                 return false;
             }
           

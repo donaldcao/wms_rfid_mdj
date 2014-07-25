@@ -75,7 +75,7 @@
     function editBillDetailClick() {
         var detailRow = $('#inBillDetail').datagrid('getSelected');
         if (detailRow) {
-            $('#dlg-AddBillDetail').dialog('open').dialog('setTitle', '修改细表信息');
+            $('#dlg-AddBillDetail').dialog('open').dialog('setTitle', '修改分拣订单细表');
             $('form input').removeAttr("disabled");
             $('form textarea').removeAttr("disabled");     
             $('#fm-inBillDetail').form('load', detailRow);
@@ -122,32 +122,32 @@
     </div>
 </div>
 <div id="dlg-detailButtons" style="width: auto; height: auto; background-color: #FFFFFF;">
-    <div border="false" style="padding: 4px 4px;">
+    <div border="false" style="padding: 20px 40px;">
         <form id="fm" method="post" novalidate>
-        <table height="100px">
+        <table height="60px">
             <tr>
-                <td width="60">
-                    订单日期
+                <td width="60" style="text-align:right">
+                    订单日期:
                 </td>
                 <td width="160">
                     <input name="OrderDate" id="editOrderDate" readonly="true">
                 </td>
-                <td width="60">
-                    订单编码
+                <td width="60" style="text-align:right">
+                    订单编码:
                 </td>
                 <td width="160">
                     <input name="OrderID" id="editOrderID" readonly="true">
                 </td>
             </tr>
             <tr>
-                <td width="60">
-                    客户编码
+                <td width="60" style="text-align:right">
+                    客户编码:
                 </td>
                 <td width="160">
                     <input name="CustomerCode" readonly="true" id="editCustomerCode">
                 </td>
-                <td width="60">
-                    客户名称
+                <td width="60" style="text-align:right">
+                    客户名称:
                 </td>
                 <td width="160">
                     <input name="CustomerName" readonly="true" id="editCustomerName">
@@ -166,52 +166,52 @@
     <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">
         取消</a>
 </div>
-<div id="dlg-AddBillDetail" class="easyui-dialog" modal="true" style="width: 270px;
-    height: 350px; padding: 0px 0px" closed="true" buttons="#dlg-AddBillDetailbuttons">
+<div id="dlg-AddBillDetail" class="easyui-dialog" modal="true" style="width: 250px;
+    height: 230px; padding: 5px 0px" closed="true" buttons="#dlg-AddBillDetailbuttons">
     <form id="fm-inBillDetail" method="post" novalidate>
-    <table style="padding: 10px 10px 0px 5px">
+    <table style="padding: 10px 20px 0px 5px">
         <tr>
-            <td width="160">
+            <td width="60">
                 <input name="OrderDetailID" id="dlgOrderId" style="display: none">
             </td>
         </tr>
         <tr>
-            <td width="60">
-                商品编码
+            <td width="60" style="text-align:right">
+                商品编码:
             </td>
-            <td width="160">
+            <td width="100">
                 <input name="ProductCode" id="dlgProductCode" readonly="true">
             </td>
         </tr>
         <tr>
-            <td width="60">
-                商品名称
+            <td width="60" style="text-align:right">
+                商品名称:
             </td>
-            <td width="160">
+            <td width="100">
                 <input name="ProductName" id="dlgProductName" readonly="true">
             </td>
         </tr>
         <tr>
-            <td width="60">
-                单位名称
+            <td width="60" style="text-align:right">
+                单位名称:
             </td>
-            <td width="160">
+            <td width="100">
                 <input name="UnitName" readonly="true" id="dlgUnitName">
             </td>
         </tr>
          <tr>
-            <td width="60">
-                实际数量
+            <td width="60" style="text-align:right">
+                实际数量:
             </td>
-            <td width="160">
+            <td width="100">
                 <input name="RealQuantity" id="dlgRealQuantity" readonly="true">
             </td>
         </tr>
         <tr>
-            <td width="60">
-                分拣数量
+            <td width="60" style="text-align:right">
+                分拣数量:
             </td>
-            <td width="160">
+            <td width="100">
                 <input name="SortQuantity" id="dlgSortQuantity">
             </td>
         </tr>

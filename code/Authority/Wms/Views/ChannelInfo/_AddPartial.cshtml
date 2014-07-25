@@ -1,7 +1,7 @@
 ﻿<script type="text/javascript">
     function addClick() {
-        $('#fm').form('clear');
         $("#dlg-details").dialog("open").dialog("setTitle", "新增");
+        $('#fm').form('clear');
         $('form input').removeAttr("disabled");
         $('#details-ChannelCode').removeAttr('readonly');
         url = '/ChannelInfo/Create/';
@@ -134,7 +134,7 @@
                     分拣地址:
                 </td>
                 <td align="left" style="width: 130px;">
-                    <input id="details-SortAddress" name="SortAddress" class="easyui-numberbox" required="true" />
+                    <input id="details-SortAddress" name="SortAddress" class="easyui-validatebox" required="true" />
                 </td>
                 <td style="text-align:right; width: 60px;">
                     宽:
@@ -171,8 +171,8 @@
                     预设卷烟:
                 </td>
                 <td align="left" style="width: 165px;">
-                    <input id="details-DefaultProductCode" name="DefaultProductCode" style="display: none;" />
-                    <input id="details-DefaultProductName" name="DefaultProductName" class="easyui-validatebox"
+                    <input id="details-DefaultProductCode" name="ProductCode" style="display: none;" />
+                    <input id="details-DefaultProductName" name="ProductName" class="easyui-validatebox"
                         readonly="readonly" />
                     <a href="#" id="DefaultProductNameSearch" class="easyui-linkbutton" iconcls="icon-search"
                         plain="true" onclick="DefaultProductNameSearchClick()"></a>
@@ -183,10 +183,10 @@
                     状 态:
                 </td>
                 <td align="left" style="width: 130px;">
-                    <select id="details-Status" name="Status" class="easyui-combobox" style="width: 130px"
+                    <select id="details-Status" name="IsActive" class="easyui-combobox" style="width: 130px"
                         editable="false" panelheight="45" required="true">
-                        <option value="01">可 用</option>
-                        <option value="02">不可用</option>
+                        <option value="1">启 用</option>
+                        <option value="0">不启用</option>
                     </select>
                 </td>
              </tr>

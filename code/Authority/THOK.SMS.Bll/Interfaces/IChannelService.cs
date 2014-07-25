@@ -17,6 +17,6 @@ namespace THOK.SMS.Bll.Interfaces
 
         bool Delete(string channelCode, out string strResult);
 
-        DataTable GetChannel(int page,int rows,string DefaultProductCode,string SortingLineCode,string ChannelType,string GroupNo,string Status);
+        DataTable GetChannel(int page,int rows,string ProductCode,string SortingLineCode,string ChannelType,string GroupNo,string IsActive);
     }
 }

@@ -80,16 +80,16 @@ namespace Wms.Controllers.SMS.BaseInfo
         {
 
             int page=0,rows=0;
-            string DefaultProductCode = Request.QueryString["DefaultProductCode"];
+            string ProductCode = Request.QueryString["ProductCode"];
             string SortingLineCode = Request.QueryString["SortingLineCode"];
             string ChannelType = Request.QueryString["ChannelType"];
             string GroupNo = Request.QueryString["GroupNo"];
-            string Status = Request.QueryString["Status"];
+            string IsActive = Request.QueryString["IsActive"];
 
 
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ChannelService.GetChannel(page, rows, DefaultProductCode, SortingLineCode, ChannelType, GroupNo, Status);
+            ep.DT1 = ChannelService.GetChannel(page, rows, ProductCode, SortingLineCode, ChannelType, GroupNo, IsActive);
             ep.HeadTitle1 = "烟道信息";
             return PrintService.Print(ep);
         }

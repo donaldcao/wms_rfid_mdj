@@ -21,15 +21,15 @@
                     $('#details-ChannelType').combo('setValue', 5).combo('setText', selectedRow.ChannelType);
                     break;
             }
-            if (selectedRow.Status == 'A线') {
+            if (selectedRow.GroupNo == 'A线') {
                 $('#details-GroupNo').combo('setValue', 1).combo('setText', selectedRow.GroupNo);
             } else {
                 $('#details-GroupNo').combo('setValue', 2).combo('setText', selectedRow.GroupNo);
             }
-            if (selectedRow.Status == '可用') {
-                $('#details-Status').combo('setValue', 1).combo('setText', selectedRow.Status);
+            if (selectedRow.IsActive == '启用') {
+                $('#details-Status').combo('setValue', 1).combo('setText', selectedRow.IsActive);
             } else {
-                $('#details-Status').combo('setValue', 2).combo('setText', selectedRow.Status);
+                $('#details-Status').combo('setValue', 0).combo('setText', selectedRow.IsActive);
             }
         } else {
             $.messager.alert('提示', '没有选择行！', 'info');

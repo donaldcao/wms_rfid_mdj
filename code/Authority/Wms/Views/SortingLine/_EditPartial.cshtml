@@ -1,49 +1,77 @@
 <script type="text/javascript">
-function editClick() {
-    var row = $('#details').datagrid('getSelected');
-    if (row) {
-        addLoad();
-        $('#dlg').dialog('open').dialog('setTitle', '编辑');
-        editKey = true;
-        $('#sortingLinefm').form('load', row);
-        $('#sortingLinefm .easyui-validatebox').validatebox({
-            required: true
-        });
-        $('#IsActivecc').combo({
-            hasDownArrow: true
-        });
-        $('#isSortingLineType').combo({
-            hasDownArrow: true
-        });
-        if (row.IsActive == '可用') {
-            $('#IsActivecc').combo('setValue', 1).combo('setText', row.IsActive);
+    function editClick() {
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            addLoad();
+            $('#dlg').dialog('open').dialog('setTitle', '编辑');
+            editKey = true;
+            $('#sortingLinefm').form('load', row);
+            $('#sortingLinefm .easyui-validatebox').validatebox({
+                required: true
+            });
+            $('#IsActivecc').combo({
+                hasDownArrow: true
+            });
+            $('#isSortingLineType').combo({
+                hasDownArrow: true
+            });
+
+            if (row.IsActive == '启用') {
+                $('#IsActivecc').combo('setValue', 1).combo('setText', row.IsActive);
+            } else {
+                $('#IsActivecc').combo('setValue', 0).combo('setText', row.IsActive);
+            }
+
+            if (row.OutBillTypeCode == '销售出库') {
+                $('#outBillTypeCode').combo('setValue', 2001).combo('setText', row.OutBillTypeCode);
+            }
+            if (row.OutBillTypeCode == '外部移出') {
+                $('#outBillTypeCode').combo('setValue', 2002).combo('setText', row.OutBillTypeCode);
+            }
+            if (row.OutBillTypeCode == '调拨出库') {
+                $('#outBillTypeCode').combo('setValue', 2003).combo('setText', row.OutBillTypeCode);
+            }
+
+            if (row.MoveBillTypeCode == '调整移库') {
+                $('#moveBillTypeCode').combo('setValue', 3001).combo('setText', row.MoveBillTypeCode);
+            }
+            if (row.MoveBillTypeCode == '出库移库') {
+                $('#moveBillTypeCode').combo('setValue', 3002).combo('setText', row.MoveBillTypeCode);
+            }
+            if (row.MoveBillTypeCode == '下限移库') {
+                $('#moveBillTypeCode').combo('setValue', 3003).combo('setText', row.MoveBillTypeCode);
+            }
+
+            if (row.SortingLineType == '半自动分拣线') {
+                $('#isSortingLineType').combo('setValue', 1).combo('setText', row.SortingLineType);
+            } else {
+                $('#isSortingLineType').combo('setValue', 2).combo('setText', row.SortingLineType);
+            }
+           
+            if (row.ProductType == '正常') {
+                $('#theProductType').combo('setValue', 1).combo('setText', row.ProductType);
+            }
+            else if (row.ProductType == '异型') {
+                $('#theProductType').combo('setValue', 2).combo('setText', row.ProductType);
+            }
+            else if (row.ProductType == '整件') {
+                $('#theProductType').combo('setValue', 3).combo('setText', row.ProductType);
+            }
+            else {
+                $('#theProductType').combo('setValue', 4).combo('setText', row.ProductType);
+            }
+           
+            if (row.SortingLineType == '半自动分拣线') {
+                $('#isSortingLineType').combo('setValue', 1).combo('setText', row.SortingLineType);
+            } else {
+                $('#isSortingLineType').combo('setValue', 2).combo('setText', row.SortingLineType);
+            }
+            $('form input').removeAttr("disabled");
+            $('form textarea').removeAttr("disabled");
+            $('#theSortingLineCode').attr("readonly", true);
+            url = '/SortingLine/Edit/';
         } else {
-            $('#IsActivecc').combo('setValue', 0).combo('setText', row.IsActive);
+            $.messager.alert('错误', '没有选择行！');
         }
-        if (row.SortingLineType == '半自动分拣线') {
-            $('#isSortingLineType').combo('setValue', 1).combo('setText', row.SortingLineType);
-        } else {
-            $('#isSortingLineType').combo('setValue', 2).combo('setText', row.SortingLineType);
-        }
-        if (row.ProductType == '正常') {
-            $('#theProductType').combo('setValue', 1).combo('setText', row.ProductType);
-        }
-        else if (row.ProductType == '异型') {
-            $('#theProductType').combo('setValue', 2).combo('setText', row.ProductType);
-        }
-        else if (row.ProductType == '整件') {
-            $('#theProductType').combo('setValue', 3).combo('setText', row.ProductType);
-        }
-        else {
-            $('#theProductType').combo('setValue', 4).combo('setText', row.ProductType);
-        }
-        $('form input').removeAttr("disabled");
-        $('form textarea').removeAttr("disabled");
-        $('#theSortingLineCode').attr("readonly", true);      
-        url = '/SortingLine/Edit/';
-    } else {
-        $.messager.alert('错误', '没有选择行！');
-    }
-};
+    };
 </script>
-   

@@ -63,12 +63,15 @@
         $.asyncProcessing.OnProgressComplete = function () {
             $('#details').datagrid('reload');
         }
-        $.asyncProcessing.Start('/downloadSortOrder', $.toJSON({ beginDate: $('#beginDate').datebox('getValue')
-                                , endDate: $('#endDate').datebox('getValue')
-                                , sortLineCode: $('#SortingLineCode').combo('getValue')
-                                , isSortDown: true
-                                , batch: $("#batchID").val()
-        }));
+        $.asyncProcessing.Start('/downloadSortOrder'
+                , $.toJSON({ ActionType: 'start'
+                                , beginDate: '2014-07-25' //$('#beginDate').datebox('getValue')
+                                , endDate: '2014-07-25' //$('#endDate').datebox('getValue')
+                                , sortLineCode: 1
+                                , isSortDown: false
+                                , batch: 1
+                })
+        );
     }
 </script>
 <div id="dlg_sorting_date" class="easyui-dialog" modal="true"

@@ -26,6 +26,17 @@ namespace THOK.Wms.SignalR.Connection
         protected override void Execute(string connectionId, string data, ProgressState ps, CancellationToken cancellationToken, string userName)
         {
             ActionData ad = jns.Parse<ActionData>(data);
+            
+            ProgressState ps1 = ps;
+            string data1 = data;
+            CancellationToken a1 = cancellationToken;
+            string user1 = userName;
+
+            string a = ad.BeginDate;
+            string b = ad.EndDate;
+            string c = ad.SortLineCode;
+            bool d = ad.IsSortDown;
+            string e = ad.Batch;
             DownloadSortOrderService.Download(connectionId, ps, cancellationToken, ad.BeginDate, ad.EndDate, ad.SortLineCode, ad.IsSortDown, ad.Batch);
         }     
     }

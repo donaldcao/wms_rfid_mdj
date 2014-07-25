@@ -236,14 +236,11 @@
     <Compile Include="Controllers\WMS\WarehouseInfo\AreaController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\CellController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\DefaultProductSetController.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcel2Controller.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\ExportExcelController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\ShelfController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\SplitPalletCellController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageCellPreviewController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\Warehouse2Controller.cs" />
-    <Compile Include="Controllers\WMS\WarehouseInfo\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1883,9 +1880,6 @@
     <Content Include="Views\DefaultProductSet\_DeletePartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_EditPartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_ProductPartial.cshtml" />
-    <Content Include="Views\ExportExcel\Index.cshtml" />
-    <Content Include="Views\ExportExcel\_PrintPartial.cshtml" />
-    <Content Include="Views\ExportExcel\_SearchPartial.cshtml" />
     <Content Include="Views\Company\_ParentCompanyNamePartial.cshtml" />
     <Content Include="Views\Department\_ParentCodePartial.cshtml" />
     <Content Include="Views\Department\_DepartmentLeaderPartial.cshtml" />
@@ -1901,9 +1895,6 @@
     <Content Include="Views\Company\AddPage.cshtml" />
     <Content Include="Views\Company\_EditPartial.cshtml" />
     <Content Include="Views\Company\_DeletePartial.cshtml" />
-    <Content Include="Views\ExportExcel2\_PrintPartial.cshtml" />
-    <Content Include="Views\ExportExcel2\Index.cshtml" />
-    <Content Include="Views\ExportExcel2\_SearchPartial.cshtml" />
     <Content Include="Views\CheckBill\_PrintPartial.cshtml" />
     <Content Include="Views\HelpContent\Index.cshtml" />
     <Content Include="Views\CurrentStock\_PrintPartial.cshtml" />
@@ -2031,7 +2022,6 @@
     <Content Include="Views\Role\_RoleUserPartial.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
-    <Content Include="Views\Warehouse\Index.cshtml" />
     <Content Include="Views\SortingLine\Index.cshtml" />
     <Content Include="Views\SortingLowerLimit\Index.cshtml" />
     <Content Include="Views\SortingOrder\Index.cshtml" />
@@ -2116,10 +2106,6 @@
     <Content Include="Views\UnitList\_EditPartial.cshtml" />
     <Content Include="Views\UnitList\_SearchPartial.cshtml" />
     <Content Include="Views\SortingRealTime\Index.cshtml" />
-    <Content Include="Views\Warehouse\_AddPartial.cshtml" />
-    <Content Include="Views\Warehouse\_DeletePartial.cshtml" />
-    <Content Include="Views\Warehouse\_EditPartial.cshtml" />
-    <Content Include="Views\Warehouse\_SearchPartial.cshtml" />
     <Content Include="Views\Unit\Index.cshtml" />
     <Content Include="Views\UnitList\Index.cshtml" />
     <Content Include="Views\Product\_BrandPartail.cshtml" />

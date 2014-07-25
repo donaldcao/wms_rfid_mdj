@@ -53,6 +53,16 @@
                 } else {
                     $('#' + divid + 'IsActive').combo('setValue', 0).combo('setText', laod.IsActive);
                 }
+                if (laod.FirstInFirstOut == '是') {
+                    $('#' + divid + 'FirstInFirstOut').combo('setValue', true).combo('setText', laod.FirstInFirstOut);
+                } else {
+                    $('#' + divid + 'FirstInFirstOut').combo('setValue', false).combo('setText', laod.FirstInFirstOut);
+                }
+                if (laod.IsMultiBrand == '是') {
+                    $('#' + divid + 'IsMultiBrand').combo('setValue', 1).combo('setText', laod.IsMultiBrand);
+                } else {
+                    $('#' + divid + 'IsMultiBrand').combo('setValue', 0).combo('setText', laod.IsMultiBrand);
+                }
             }
         });
     }

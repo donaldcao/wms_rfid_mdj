@@ -58,6 +58,18 @@
             $.messager.confirm('错误', '没选时间！请选择时间！');
         }
     }
+
+    function DDD() {
+        $.asyncProcessing.OnProgressComplete = function () {
+            $('#details').datagrid('reload');
+        }
+        $.asyncProcessing.Start('/downloadSortOrder', $.toJSON({ beginDate: $('#beginDate').datebox('getValue')
+                                , endDate: $('#endDate').datebox('getValue')
+                                , sortLineCode: $('#SortingLineCode').combo('getValue')
+                                , isSortDown: true
+                                , batch: $("#batchID").val()
+        }));
+    }
 </script>
 <div id="dlg_sorting_date" class="easyui-dialog" modal="true"
         style="width:290px;height:210px;padding:4px 4px"
@@ -89,6 +101,6 @@
         </form>
 </div>
 <div id="dlg_allot_modify_buttons">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="generateCheckClick()">确定</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="DDD()">确定</a>
 	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg_sorting_date').dialog('close')">取消</a>
 </div>

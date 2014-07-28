@@ -2,6 +2,7 @@
     function searchClick() {
         $('#dlg-search input').val("");
         $('#dlg-search').dialog('open').dialog('setTitle', '查询');
+        $('#OrderDate').datebox({ editable: false });
     }
 
     function select() {
@@ -37,24 +38,26 @@
         $("#productDetail").datagrid('load');
     }
 </script>
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width:300px;height:250px;padding:2px 2px"
-		closed="true" buttons="#dlg-buttons-search">
+<div id="dlg-search" class="easyui-dialog" modal="true" style="width: 300px; height: 250px;
+    padding: 2px 2px" closed="true" buttons="#dlg-buttons-search">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" style="padding:10px 10px;background:#fff;border:1px solid #ccc; ">
-            <table width ="250">
+        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
+            border: 1px solid #ccc;">
+            <table width="250">
                 <tr>
                     <td style="text-align: right">
-                        订单日期：
+                        订单日期:
                     </td>
-                    <td><input id="OrderDate" type="text" style="width: 130px " class="easyui-datebox"></td>
-                </tr> 
-                                         
+                    <td>
+                        <input id="OrderDate" type="text" style="width: 130px" class="easyui-datebox">
+                    </td>
+                </tr>
                 <tr>
                     <td style="text-align: right">
-                        批次号：
+                        批次号:
                     </td>
                     <td width="168">
-                        <input id="BatchNo" name="Batch" type="text" class="easyui-numberbox"/>
+                        <input id="BatchNo" name="Batch" type="text" class="easyui-numberbox" />
                     </td>
                 </tr>
                 <tr>
@@ -63,7 +66,7 @@
                     </td>
                     <td align="left" style="width: 170px;">
                         <input id="searchSortingLineCode" name="SortingLineCode" class="easyui-validatebox"
-                            readonly="readonly" required="true" />
+                            readonly="readonly" />
                         <a href="#" id="SortingLineSearch" class="easyui-linkbutton" iconcls="icon-search"
                             plain="true" onclick="SortingLineSearchClick()"></a>
                     </td>
@@ -73,8 +76,8 @@
                         分拣线名称:
                     </td>
                     <td align="left">
-                        <input type="text" name="SortingLineName" class="easyui-validatebox" required="true"
-                            id="searchSortingLineName" readonly="true" />
+                        <input type="text" name="SortingLineName" class="easyui-validatebox" id="searchSortingLineName"
+                            readonly="true" />
                     </td>
                 </tr>
                 <tr>
@@ -84,7 +87,7 @@
                     <td>
                         <input name="DeliverLineCode" id="deliverLineCode" type="text" readonly="readonly">
                         <a href="#" id="deliverLine_Search" class="easyui-linkbutton" iconcls="icon-search"
-                             readonly="true" plain="true" onclick="deliverLine_Select()"></a>
+                            readonly="true" plain="true" onclick="deliverLine_Select()"></a>
                     </td>
                 </tr>
                 <tr>
@@ -121,8 +124,9 @@
     </div>
 </div>
 <div id="dlg-buttons-search">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="select()">查询</a>
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="select()">查询</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">
+        取消</a>
 </div>
 @Html.Partial("_SortingLinePartial")
 @Html.Partial("_DeliverLinePartial")

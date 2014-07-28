@@ -1,22 +1,22 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var defaultProductCode = null,
+        var productCode = null,
             sortingLineCode = null,
             channelType = null,
             groupNo = null,
-            status = null;
+            isActive = null;
 
-        if ($('#searchDefaultProductCode').val() == null) { defaultProductCode = ""; } else { defaultProductCode = $('#searchDefaultProductCode').val(); }
+        if ($('#searchDefaultProductCode').val() == null) { productCode = ""; } else { productCode = $('#searchDefaultProductCode').val(); }
         if ($('#searchSortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#searchSortingLineCode').val(); }
         if (document.getElementById('search-ChannelType') == null) { channelType = ""; } else { channelType = $('#search-ChannelType').combo('getValue'); }
         if (document.getElementById('searchGroupNo') == null) { groupNo = ""; } else { groupNo = $('#searchGroupNo').combo('getValue'); }
-        if (document.getElementById('search-Status') == null) { status = ""; } else { status = $('#search-Status').combo('getValue'); }
+        if (document.getElementById('search-Status') == null) { isActive = ""; } else { isActive = $('#search-Status').combo('getValue'); }
 
         window.location.href = "/ChannelInfo/CreateExcelToClient/"
-                                + "?defaultProductCode="+ defaultProductCode
+                                + "?ProductCode=" + productCode
                                 + "&sortingLineCode=" + sortingLineCode
                                 + "&channelType=" +channelType
                                 + "&groupNo=" +groupNo
-                                + "&status=" + status
+                                + "&IsActive=" + isActive
     }
 </script>

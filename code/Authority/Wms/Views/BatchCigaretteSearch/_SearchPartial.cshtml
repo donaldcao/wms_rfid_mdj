@@ -2,6 +2,7 @@
     function searchClick() {
         $('#dlg-search input').val("");
         $('#dlg-search').dialog('open').dialog('setTitle', '查询');
+        $('#OrderDate').datebox({ editable: false });
     }
 
     function select() {
@@ -12,7 +13,8 @@
         queryParams.ProductCode = $("#searchProductCode").val();
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
-            pageNumber: 1
+            pageNumber: 1,
+            pageSize: 50
         });
         $('#details').datagrid("reload");
         $('#dlg-search').dialog("close");
@@ -37,14 +39,14 @@
             <table width ="250">
                 <tr>
                     <td style="text-align: right">
-                        订单日期：
+                        订单日期:
                     </td>
                     <td><input id="OrderDate" type="text" style="width: 130px " class="easyui-datebox" readonly="true" ></td>
                 </tr> 
                                          
                 <tr>
                     <td style="text-align: right">
-                        批次号：
+                        批次号:
                     </td>
                     <td width="168">
                         <input id="BatchNo" name="Batch" type="text" class="easyui-numberbox"/>
@@ -77,7 +79,7 @@
                     <td align="left" style="width: 170px;">
                         <input id="ProductCode" name="ProductCode" style="display: none;" />
                         <input id="searchProductCode" name="ProductCode" class="easyui-validatebox"
-                            readonly="readonly" required="true" />
+                            readonly="readonly"/>
                         <a href="#" id="ProductSearch" class="easyui-linkbutton" iconcls="icon-search"
                             plain="true" onclick="ProductSearchClick()"></a>
                     </td>
@@ -87,7 +89,7 @@
                         卷烟名称:
                     </td>
                     <td align="left">
-                        <input type="text" name="ProductName" class="easyui-validatebox" required="true"
+                        <input type="text" name="ProductName" class="easyui-validatebox"
                             id="searchProductName" readonly="true" />
                     </td>
                 </tr>

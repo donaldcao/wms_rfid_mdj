@@ -13,8 +13,10 @@ namespace THOK.Wms.Bll.Service
     {
         [Dependency]
         public ISortingLineRepository SortingLineRepository { get; set; }
+        [Dependency]
+        public IBillTypeRepository BillTypeRepository { get; set; }
 
-
+        
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -47,6 +49,8 @@ namespace THOK.Wms.Bll.Service
         {
             var sortLineQuery = SortingLineRepository.GetQueryable();
             var sortLine = sortLineQuery.Where(s => s.SortingLineCode == s.SortingLineCode);
+            var billtypeQuery = BillTypeRepository.GetQueryable();
+            
             if (sortingLineCode != string.Empty && sortingLineCode != null)
             {
                 sortLine = sortLine.Where(s => s.SortingLineCode.Contains(sortingLineCode));
@@ -74,11 +78,11 @@ namespace THOK.Wms.Bll.Service
                 b.SortingLineName,
                 ProductType = WhatStatus(b.ProductType),
                 SortingLineType = b.SortingLineType == "1" ? "半自动分拣线" : "全自动分拣线",
-                b.OutBillTypeCode,
-                b.MoveBillTypeCode,
+                OutBillTypeCode=billtypeQuery.Where(s=>s.BillTypeCode==b.OutBillTypeCode).FirstOrDefault().BillTypeName,
+                MoveBillTypeCode = billtypeQuery.Where(s => s.BillTypeCode == b.MoveBillTypeCode).FirstOrDefault().BillTypeName,
                 CellName = b.Cell != null ? b.Cell.CellName : "",
                 b.CellCode,
-                IsActive = b.IsActive == "1" ? "可用" : "不可用",
+                IsActive = b.IsActive == "1" ? "启用" : "不启用",
                 UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
@@ -99,7 +103,7 @@ namespace THOK.Wms.Bll.Service
                     b.SortingLineCode,
                     b.SortingLineName,
                     SortingLineType = b.SortingLineType == "1" ? "分拣线" : "整件线",
-                    IsActive = b.IsActive == "1" ? "可用" : "不可用"
+                    IsActive = b.IsActive == "1" ? "启用" : "不启用"
                 }).ToArray();
             
             return new { total, rows = temp };
@@ -160,7 +164,7 @@ namespace THOK.Wms.Bll.Service
                 b.SortingLineCode,
                 b.SortingLineName,
                 SortingLineType = b.SortingLineType == "1" ? "半自动分拣线" : "全自动分拣线",
-                IsActive = b.IsActive == "1" ? "可用" : "不可用",
+                IsActive = b.IsActive == "1" ? "启用" : "不启用",
                 UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
             return temp.ToArray();
@@ -171,18 +175,20 @@ namespace THOK.Wms.Bll.Service
         public System.Data.DataTable GetSortingLine(int page, int rows, string sortingLineCode, string sortingLineName, string productType, string sortingLineType, string IsActive)
         {
             var sortLineQuery = SortingLineRepository.GetQueryable();
-            var sortingLine = sortLineQuery.Where(a => a.SortingLineCode.Contains(sortingLineCode)&&a.SortingLineName.Contains(sortingLineName)&&a.ProductType.Contains(productType)&&a.SortingLineType.Contains(sortingLineType)&&a.IsActive.Contains(IsActive)).OrderBy(a => a.SortingLineCode).Select(a => a);                        
+            var billtypeQuery = BillTypeRepository.GetQueryable();
+            var sortingLine = sortLineQuery.Where(a => a.SortingLineCode.Contains(sortingLineCode)&&a.SortingLineName.Contains(sortingLineName)&&a.ProductType.Contains(productType)&&a.SortingLineType.Contains(sortingLineType)&&a.IsActive.Contains(IsActive)).OrderBy(a => a.SortingLineCode).Select(a => a);
+         
             var temp = sortingLine.ToArray().Select(b => new
             {
                 b.SortingLineCode,
                 b.SortingLineName,
                 SortingLineType = b.SortingLineType == "1" ? "半自动分拣线" : "全自动分拣线",
                 ProductType = WhatStatus(b.ProductType),
-                b.OutBillTypeCode,
-                b.MoveBillTypeCode,
+                OutBillTypeCode = billtypeQuery.Where(s => s.BillTypeCode == b.OutBillTypeCode).FirstOrDefault().BillTypeName,
+                MoveBillTypeCode = billtypeQuery.Where(s => s.BillTypeCode == b.MoveBillTypeCode).FirstOrDefault().BillTypeName,
                 //CellName = b.Cell != null ? b.Cell.CellName : "",
                 //b.CellCode,
-                IsActive = b.IsActive == "1" ? "可用" : "不可用",
+                IsActive = b.IsActive == "1" ? "启用" : "不启用",
             });
             System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("分拣线编码", typeof(string));
@@ -191,7 +197,7 @@ namespace THOK.Wms.Bll.Service
             dt.Columns.Add("分拣线类型", typeof(string));
             dt.Columns.Add("出库单类型", typeof(string));
             dt.Columns.Add("移库单类型", typeof(string));         
-            dt.Columns.Add("是否可用", typeof(string));
+            dt.Columns.Add("是否启用", typeof(string));
             foreach (var item in temp)
             {
                 dt.Rows.Add(

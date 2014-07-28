@@ -98,7 +98,7 @@ namespace Authority.Controllers.Wms.SortingInfo
 
             ExportParam ep = new ExportParam();
             ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode, sortingLineName, productType, SortingLineType, IsActive);
-            ep.HeadTitle1 = "分拣线信息设置";
+            ep.HeadTitle1 = "分拣设备信息";
             return PrintService.Print(ep);
         }
         #endregion

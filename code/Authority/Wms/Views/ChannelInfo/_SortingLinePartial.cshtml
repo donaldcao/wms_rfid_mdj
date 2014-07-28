@@ -12,7 +12,7 @@
     function sortingLineSave() {
         var selectedRow = $('#SortingLineDetails').datagrid('getSelected');
         if (selectedRow) {
-            if (selectedRow.IsActive == '可用') {
+            if (selectedRow.IsActive == '启用') {
                 $('#details-SortingLineCode').val(selectedRow.SortingLineCode);
                 $('#details-SortingLineName').val(selectedRow.SortingLineName);
 
@@ -30,7 +30,7 @@
                 $('#dlg-SortingLine').dialog('close');
               
             } else {
-                $.messager.alert('提示', '请选择可用分拣线！！', 'warning');
+                $.messager.alert('提示', '请选择启用分拣线！！', 'warning');
             }
         }
     }
@@ -68,7 +68,7 @@
         <tr>
           <th field="SortingLineCode" width="70">分拣线代码</th>
           <th field="SortingLineName" width="100">分拣线名称</th>
-          <th field="IsActive" width="40">是否可用</th>
+          <th field="IsActive" width="40">是否启用</th>
         </tr>
       </thead>
     </table>

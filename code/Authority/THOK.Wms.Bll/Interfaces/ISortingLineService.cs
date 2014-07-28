@@ -12,7 +12,7 @@ namespace THOK.Wms.Bll.Interfaces
 
        object GetDetailsForSort(int page, int rows);
 
-        bool Add(SortingLine sortingLine);
+       bool Add(SortingLine sortingLine);
 
         bool Delete(string sortingLineCode);
 

@@ -49,30 +49,26 @@ namespace THOK.Wms.Bll.Service
 
         public object GetDetails(int page, int rows, string OrderID, string orderDate, string productCode)
         {
-            if (orderDate == string.Empty || orderDate == null)
-            {
-                orderDate = DateTime.Now.ToString("yyyyMMdd");
-            }
-            else
-            {
-                orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
-            }
-            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
-            IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
-            var sortOrderDetail = sortOrderDetailQuery.Where(s => s.OrderDetailID == s.OrderDetailID).Select(s => new { s.OrderID, s.Product, s.RealQuantity });
+            var sortOrderQuery = SortOrderRepository.GetQueryable();
+            var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
             if (productCode != string.Empty && productCode != null)
             {
-                sortOrderDetail = sortOrderDetail.Where(s => s.Product.ProductCode == productCode && s.RealQuantity > 0);
+                var sortOrderDetail = sortOrderDetailQuery.Where(s => s.ProductCode == productCode).ToArray().Select(a => a.OrderID );
+                sortOrderQuery = sortOrderQuery.Where(s => sortOrderDetail.Contains(s.OrderID));
             }
 
-            var sortOrder = sortOrderQuery.Where(s => s.OrderDate == orderDate && sortOrderDetail.Any(d => d.OrderID == s.OrderID));
+            if (orderDate != string.Empty && orderDate != null)
+            {
+                orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
+                sortOrderQuery = sortOrderQuery.Where(a => a.OrderDate == orderDate);
+            }
 
             if (OrderID != string.Empty && OrderID != null)
             {
-                sortOrder = sortOrder.Where(s => s.OrderID == OrderID);
+                sortOrderQuery = sortOrderQuery.Where(s => s.OrderID.Contains(OrderID));
             }
 
-            var temp = sortOrder.AsEnumerable().OrderBy(t => t.OrderID).Select(s => new
+            var temp = sortOrderQuery.AsEnumerable().OrderBy(t => t.OrderID).Select(s => new
             {
                 s.OrderID,
                 s.CompanyCode,
@@ -95,6 +91,53 @@ namespace THOK.Wms.Bll.Service
             int total = temp.Count();
             temp = temp.Skip((page - 1) * rows).Take(rows);
             return new { total, rows = temp.ToArray() };
+
+            //if (orderDate == string.Empty || orderDate == null)
+            //{
+            //    orderDate = DateTime.Now.ToString("yyyyMMdd");
+            //}
+            //else
+            //{
+            //    orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
+            //}
+            //IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+            //IQueryable<SortOrderDetail> sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
+            //var sortOrderDetail = sortOrderDetailQuery.Where(s => s.OrderDetailID == s.OrderDetailID).Select(s => new { s.OrderID, s.Product, s.RealQuantity });
+            //if (productCode != string.Empty && productCode != null)
+            //{
+            //    sortOrderDetail = sortOrderDetail.Where(s => s.Product.ProductCode == productCode && s.RealQuantity > 0);
+            //}
+
+            //var sortOrder = sortOrderQuery.Where(s => s.OrderDate == orderDate && sortOrderDetail.Any(d => d.OrderID == s.OrderID));
+
+            //if (OrderID != string.Empty && OrderID != null)
+            //{
+            //    sortOrder = sortOrder.Where(s => s.OrderID == OrderID);
+            //}
+
+            //var temp = sortOrder.AsEnumerable().OrderBy(t => t.OrderID).Select(s => new
+            //{
+            //    s.OrderID,
+            //    s.CompanyCode,
+            //    s.SaleRegionCode,
+            //    s.OrderDate,
+            //    OrderType = s.OrderType == "1" ? "普通客户" : "大客户",
+            //    s.CustomerCode,
+            //    s.CustomerName,
+            //    s.QuantitySum,
+            //    s.DeliverLineCode,
+            //    s.AmountSum,
+            //    s.DetailNum,
+            //    s.DeliverOrder,
+            //    s.DeliverDate,
+            //    IsActive = s.IsActive == "1" ? "可用" : "不可用",
+            //    UpdateTime = s.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+            //    s.Description
+            //});
+
+            //int total = temp.Count();
+            //temp = temp.Skip((page - 1) * rows).Take(rows);
+            //return new { total, rows = temp.ToArray() };
         }
 
 
@@ -287,7 +330,7 @@ namespace THOK.Wms.Bll.Service
             string Type = parameterValue.ToString();
 
             switch (Type)
-            {               
+            {
                 case "1":
 
                     try
@@ -335,9 +378,9 @@ namespace THOK.Wms.Bll.Service
                     catch (Exception e)
                     {
                         strResult += e.Message + "线路：" + errorInfo + "。客户：" + errorInfo + "。分拣" + errorInfo;
-                    }                   
+                    }
                     break;
-                       
+
                 default:
                     try
                     {
@@ -376,6 +419,6 @@ namespace THOK.Wms.Bll.Service
             }
             return bResult;
         }
-                #endregion
+        #endregion
     }
 }

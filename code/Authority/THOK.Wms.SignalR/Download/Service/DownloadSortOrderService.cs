@@ -35,6 +35,32 @@ namespace THOK.Wms.SignalR.Download.Service
         {
             ConnectionId = connectionId;
             ps.State = StateType.Start;
+            ps.Messages.Add("开始下载");
+            NotifyConnection(ps.Clone());
+
+            ps.State = StateType.Processing;
+            ps.TotalProgressName = "TotalProgressName";
+            ps.TotalProgressValue = (int)(0);
+            ps.CurrentProgressName = "DownUnitCodeInfo";
+            ps.CurrentProgressValue = (int)(0);
+            NotifyConnection(ps.Clone());
+            ps.State = StateType.Processing;
+            ps.TotalProgressName = "TotalProgressName";
+            ps.TotalProgressValue = (int)(100);
+            ps.CurrentProgressName = "DownUnitCodeInfo";
+            ps.CurrentProgressValue = (int)(100);
+            NotifyConnection(ps.Clone());
+            ps.State = StateType.Processing;
+            ps.TotalProgressName = "TotalProgressName";
+            ps.TotalProgressValue = (int)(1000);
+            ps.CurrentProgressName = "DownUnitCodeInfo";
+            ps.CurrentProgressValue = (int)(1000);
+            NotifyConnection(ps.Clone());
+            ps.State = StateType.Processing;
+            ps.TotalProgressName = "TotalProgressName";
+            ps.TotalProgressValue = (int)(10000);
+            ps.CurrentProgressName = "DownUnitCodeInfo";
+            ps.CurrentProgressValue = (int)(10000);
             NotifyConnection(ps.Clone());
 
             string errorInfo = string.Empty;
@@ -46,14 +72,26 @@ namespace THOK.Wms.SignalR.Download.Service
             beginDate = Convert.ToDateTime(beginDate).ToString("yyyyMMdd");
             endDate = Convert.ToDateTime(endDate).ToString("yyyyMMdd");
 
+            //----------------begin-------------------------
+            ps.State = StateType.Processing;
+            ps.TotalProgressName = "TotalProgressName";
+            ps.TotalProgressValue = (int)(10 / 100 * 100);
+            ps.CurrentProgressName = "DownUnitCodeInfo";
+            ps.CurrentProgressValue = (int)(10 / 100 * 100);
+            NotifyConnection(ps.Clone());
+            
+            ps.State = StateType.Info;
+            ps.Messages.Add("正在下载单位表...");
+            NotifyConnection(ps.Clone());
+            //------------------end-----------------------
+
             ubll.DownUnitCodeInfo(); //下载单位表
 
-            ps.State = StateType.Processing;
-            ps.TotalProgressName = "下载单位表成功！";
-            ps.TotalProgressValue = (int)(10 / 100 * 100);
-            ps.CurrentProgressName = "----------";
-            ps.CurrentProgressValue = (int)(20 / 100 * 100);
+            //-------------------begin----------------------
+            ps.State = StateType.Info;
+            ps.Messages.Add("下载单位表成功！");
             NotifyConnection(ps.Clone());
+            //-------------------end----------------------
 
             pbll.DownProductInfo();
             routeBll.DeleteTable();
@@ -63,6 +101,13 @@ namespace THOK.Wms.SignalR.Download.Service
             {
                 bool custResult = custBll.DownCustomerInfo();
                 carBll.DownDistCarBillInfo(beginDate);
+
+                //-------------------begin----------------------
+                ps.State = StateType.Info;
+                ps.Messages.Add("下载配车单成功!");
+                NotifyConnection(ps.Clone());
+                //-------------------end----------------------
+
                 if (isSortDown)
                 {
                     //从分拣下载分拣数据
@@ -74,6 +119,12 @@ namespace THOK.Wms.SignalR.Download.Service
                     //从营销下载分拣数据 
                     lineResult = routeBll.DownRouteInfo();
                     bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮
+
+                    //-----------------begin------------------------
+                    ps.State = StateType.Info;
+                    ps.Messages.Add("下载路线表成功!");
+                    NotifyConnection(ps.Clone());
+                    //-----------------end------------------------
                 }
             }
             else
@@ -92,9 +143,11 @@ namespace THOK.Wms.SignalR.Download.Service
                     bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
                 }
             }
+            //-----------------begin------------------------
             ps.State = StateType.Info;
             ps.Messages.Add("下载完成!");
             NotifyConnection(ps.Clone());
+            //-----------------end------------------------
         }
     }
 }

@@ -59,19 +59,26 @@
         }
     }
 
-    function DDD() {
-        $.asyncProcessing.OnProgressComplete = function () {
-            $('#details').datagrid('reload');
-        }
+    function Download() {
+        var begin = $('#beginDate').datebox('getValue');
+        var lineCode = $('#SortingLineCode').combo('getValue');
+        var isChecked = $("input[type='radio']:checked").val();
+        var checked = false;
+        var bat = $("#batchID").val();
+
         $.asyncProcessing.Start('/downloadSortOrder'
                 , $.toJSON({ ActionType: 'start'
-                                , beginDate: '2014-07-25' //$('#beginDate').datebox('getValue')
-                                , endDate: '2014-07-25' //$('#endDate').datebox('getValue')
-                                , sortLineCode: 1
-                                , isSortDown: false
-                                , batch: 1
+                                , beginDate: begin
+                                , endDate: begin
+                                , sortLineCode: lineCode
+                                , isSortDown: checked
+                                , batch: bat
                 })
         );
+        $.asyncProcessing.OnProgressComplete = function () {
+            $('#dlg_sorting_date').dialog('close');
+            $('#details').datagrid('reload');
+        }
     }
 </script>
 <div id="dlg_sorting_date" class="easyui-dialog" modal="true"
@@ -104,6 +111,6 @@
         </form>
 </div>
 <div id="dlg_allot_modify_buttons">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="DDD()">确定</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="Download()">确定</a>
 	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg_sorting_date').dialog('close')">取消</a>
 </div>

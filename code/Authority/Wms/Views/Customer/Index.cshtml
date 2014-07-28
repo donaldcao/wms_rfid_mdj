@@ -1,6 +1,6 @@
 ﻿<div region="center" split="true" border="false">
     <table id="details" class="easyui-datagrid" url="/Customer/Details/" border="false"
-        singleselect="true" pagesize="50" fit="true" toolbar="#tool" pagination="true"
+        singleselect="true" pagesize="50" fit="true" toolbar="#tool" pagination="true" fitcolumns="true" 
         rownumbers="true">
         <thead>
             <tr>
@@ -13,7 +13,7 @@
                 <th field="DeliverLineCode" width="100">
                    线路编码
                 </th>
-                <th field="DeliverLineName" width="120">
+                <th field="DeliverLineName" width="180">
                    线路名称
                 </th>
                 <th field="DeliverOrder" width="80" >
@@ -25,9 +25,9 @@
                 <th field="IsActive" width="80" >
                    是否可用
                 </th>
-                <th field="UpdateTime" width="120" >
+             @* <th field="UpdateTime" width="120" >
                    更新时间
-                </th>
+                </th>*@
             </tr>
         </thead>
     </table>

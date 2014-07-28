@@ -613,7 +613,7 @@ namespace THOK.Wms.Bll.Service
                 c.ProductCode,
                 c.ProductName,
                 c.PieceBarcode,
-                IsAbnormity = c.IsAbnormity == "1" ? "是" : "不是",
+                IsAbnormity = c.IsAbnormity == "1" ? "异型烟" : "正常烟",
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
                 UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
@@ -678,7 +678,7 @@ namespace THOK.Wms.Bll.Service
             var temp = product.ToArray().Select(c => new
             {
                 c.BrandCode,
-                IsAbnormity = c.IsAbnormity == "1" ? "是" : "不是",
+                IsAbnormity = c.IsAbnormity == "1" ? "异型烟" : "正常烟",
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
                 c.ProductCode,
                 c.ProductName,

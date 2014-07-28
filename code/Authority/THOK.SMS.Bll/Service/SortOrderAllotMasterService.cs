@@ -30,7 +30,6 @@ namespace THOK.SMS.Bll.Service
             get { return this.GetType(); }
         }
 
-
         public object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode, string deliverLineCode, string customerCode, string status)
         {
             var sortOrderAllotMasterQuery = SortOrderAllotMasterRepository.GetQueryable();
@@ -101,7 +100,7 @@ namespace THOK.SMS.Bll.Service
                 c.CustomerOrder,
                 c.CustomerDeliverOrder,
                 c.Quantity,
-                Status = c.Status == "01" ? "已完成" : "未完成"
+                Status = c.Status == "01" ? "未完成" : "已完成"
             });
             return new { total, rows = channelAllotArray.ToArray() };
         }

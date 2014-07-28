@@ -29,7 +29,7 @@ namespace THOK.Wms.Bll.Service
             get { return this.GetType(); }
         }
 
-        #region IDeliverDistService 成员
+        #region 增删该查
 
         public object GetDetails(int page, int rows, string DistCode, string CustomCode, string DistName, string IsActive)
         {
@@ -60,15 +60,10 @@ namespace THOK.Wms.Bll.Service
                 Description = c.Description,
                 c.DeliverOrder,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
-                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd")
+                UpdateTime = c.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
             return new { total, rows = temp.ToArray() };
         }
-
-        #endregion
-
-        #region IDeliverDistService 成员
-
 
         public bool Add(DeliverDist deliverDist, out string strResult)
         {
@@ -99,11 +94,6 @@ namespace THOK.Wms.Bll.Service
             }
             return result;
         }
-
-        #endregion
-
-        #region IDeliverDistService 成员
-
 
         public object S_Details(int page, int rows, string QueryString, string Value)
         {
@@ -140,11 +130,6 @@ namespace THOK.Wms.Bll.Service
             return new { total, rows = temp.ToArray() };
         }
 
-        #endregion
-
-        #region IDeliverDistService 成员
-
-
         public bool Save(string DistCode, string DeliverOrder, out string strResult)
         {
             strResult = string.Empty;
@@ -162,11 +147,6 @@ namespace THOK.Wms.Bll.Service
             return true;
         }
 
-        #endregion
-
-        #region IDeliverDistService 成员
-
-
         public bool Delete(string DistCode)
         {
             var deliver = DeliverDistRepository.GetQueryable()
@@ -182,8 +162,6 @@ namespace THOK.Wms.Bll.Service
         }
 
         #endregion
-
-
 
         public System.Data.DataTable GetDeliverDistInfo(int page, int rows, string DistCode, string CustomCode, string DistName, string IsActive)
         {          

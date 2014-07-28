@@ -5,7 +5,7 @@
         var row = $('#details').datagrid('getSelected');
         if (row) {
             $('#editdlg').dialog('open').dialog('setTitle', '编辑');
-            if (row.IsAbnormity == '是') {
+            if (row.IsAbnormity == '异型烟') {
                 $('#IsAbnormity').combo('setValue', 1).combo('setText', row.IsAbnormity);
             } else {
                 $('#IsAbnormity').combo('setValue', 0).combo('setText', row.IsAbnormity);
@@ -62,8 +62,8 @@
                 <td>
                     <select  class="easyui-combobox" editable="false" id="IsAbnormity" name="IsAbnormity" panelHeight="50">
 		                <option value=""></option>
-                        <option value="1">是</option>
-		                <option value="0">不是</option>
+                        <option value="1">异型烟</option>
+		                <option value="0">正常烟</option>
                     </select>
                 </td>
                 </tr>

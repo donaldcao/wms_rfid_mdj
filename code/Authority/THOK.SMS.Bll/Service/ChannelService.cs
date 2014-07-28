@@ -93,33 +93,32 @@ namespace THOK.SMS.Bll.Service
             {
                 channelDetails = channelDetails.Where(a => a.ProductCode == channel.ProductCode);
             }
-       
-            var channelArray = channelDetails.OrderBy(a => a.ChannelCode).ToArray().AsEnumerable()
-                .Select(c => new
-                {
-                    c.ChannelCode,
-                    c.SortingLineCode,
-                    SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
-                    c.ChannelName,                 
-                    ChannelType = whatChannelType(c.ChannelType),
-                    c.LedNo,
-                    ProductCode = c.ProductCode,
-                    ProductName = productQuery.Where(p => p.ProductCode == c.ProductCode).Select(p => p.ProductName),
-                    c.RemainQuantity,
-                    c.X,
-                    c.Y,
-                    c.Width,
-                    c.Height,
-                    c.ChannelCapacity,
-                    c.SupplyAddress,
-                    c.SortAddress,
-                    GroupNo = c.GroupNo == 1 ? "A线" : "B线",
-                    c.OrderNo,
-                    IsActive = c.IsActive == "1" ? "启用" : "不启用"
-                });
+            channelDetails = channelDetails.OrderBy(c => c.SortingLineCode).ThenBy(c => c.GroupNo).ThenBy(c => c.SortAddress);
             int total = channelDetails.Count();
-            channelArray = channelArray.Skip((page - 1) * rows).Take(rows);
-            return new { total, rows = channelArray.ToArray() };
+            var channelArray = channelDetails.Skip((page - 1) * rows).Take(rows).ToArray();
+            var channelSkip = channelArray.Select(c => new
+            {
+                c.ChannelCode,
+                c.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortingLineCode).Select(s => s.SortingLineName),
+                c.ChannelName,
+                ChannelType = whatChannelType(c.ChannelType),
+                c.LedNo,
+                c.ProductCode,
+                c.ProductName,
+                c.RemainQuantity,
+                c.X,
+                c.Y,
+                c.Width,
+                c.Height,
+                c.ChannelCapacity,
+                c.SupplyAddress,
+                c.SortAddress,
+                GroupNo = c.GroupNo == 1 ? "A线" : "B线",
+                c.OrderNo,
+                IsActive = c.IsActive == "1" ? "启用" : "不启用"
+            });
+            return new { total, rows = channelSkip.ToArray() };
         }
 
         /// <summary>

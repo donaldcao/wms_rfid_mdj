@@ -5,19 +5,19 @@
 </script>
 <div region="center" split="true"  border="false">    
     <table id="details" class="easyui-datagrid" url="/DeliverDist/Details/" border="false" singleSelect="true" pageSize="50"
-        fit="true" toolbar="#tool"  pagination="true" rownumbers="true" >
+        fit="true" toolbar="#tool" fitcolumns="true" pagination="true" rownumbers="true" >
         <thead>
 			<tr>
                 <th field="DistCode"  width="120">配送区域编码</th>
                 <th field="DistName" width="180">配送区域名称</th>
-                <th field="CustomCode" width="100">自定义编码</th>             
+                <th field="CustomCode" width="100" hidden="true">自定义编码</th>            
                 <th field="DistCenterName" width="150">配送中心</th>
                 <th field="CompanyName" width="130">所属单位</th>
-                <th field="UniformCode" width="120"hidden="true" >统一编码</th>
-                <th field="DeliverOrder" width="100" >配送顺序</th>
-                <th field="IsActive" width="100" >是否可用</th>                           
-               @* <th field="UpdateTime" width="125" >更新时间</th>*@
-               @* <th field="Description"  width="120">描述</th>       *@        
+                <th field="UniformCode" width="120" hidden="true" >统一编码</th>
+                <th field="DeliverOrder" width="80" >配送顺序</th>
+                <th field="IsActive" width="80" >是否可用</th>                           
+                <th field="UpdateTime" width="140" >更新时间</th>
+               @* <th field="Description"  width="120">描述</th>*@        
             </tr>
 		</thead>
 	</table>

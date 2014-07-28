@@ -1,9 +1,9 @@
 ﻿<div border="false" region="center" split="true">
     <table id="details" class="easyui-datagrid" border="false" singleselect="true" url="/ChannelInfo/Details/"
-        fit="true" toolbar="#tool" pagination="true" rownumber="true" pagesize="20" rownumbers="true">
+        fit="true"  fitColumns="true" toolbar="#tool" pagination="true" rownumber="true" pagesize="50" rownumbers="true">
         <thead>
             <tr>
-                <th field="ChannelCode" width="60">
+                <th field="ChannelCode" width="80">
                     烟道代码
                 </th>
                 <th field="ChannelName" width="80">
@@ -12,23 +12,23 @@
                 <th field="ChannelType" width="60">
                     烟道类型
                 </th>
-                <th field="SortingLineCode" width="80" hidden="true">
+                <th field="SortingLineCode" width="80">
                     分拣线编码
                 </th>
-                <th field="SortingLineName" width="120">
+                <th field="SortingLineName" width="100">
                     分拣线名称
-                </th>
-                <th field="ProductCode" width="80">
-                    预设卷烟编码
-                </th>
-                <th field="ProductName" width="150">
-                    预设卷烟名称
                 </th>
                   <th field="IsActive" width="60">
                     状态
                 </th>
                   <th field="GroupNo" width="60">
                     组号
+                </th>
+                <th field="ProductCode" width="80">
+                    预设卷烟编码
+                </th>
+                <th field="ProductName" width="150">
+                    预设卷烟名称
                 </th>
                 <th field="RemainQuantity" width="60">
                     剩余数量
@@ -40,10 +40,10 @@
                 <th field="OrderNo" width="60">
                     顺序号
                 </th>
-                <th field="SortAddress" width="80">
+                <th field="SortAddress" width="60">
                     分拣地址
                 </th>
-                <th field="SupplyAddress" width="80">
+                <th field="SupplyAddress" width="60">
                     补货地址
                 </th>
               

@@ -444,7 +444,8 @@ namespace THOK.SMS.Bll.Service
                     //手工分拣对应的配送线路未实现：
                     //sortOrderOrderDispatchQuery = sortOrderOrderDispatchQuery.Where(s => s.SortBatchId == sortBatchId);
                 }
-
+                sortBatch.Status = "02";
+                SortBatchRepository.SaveChanges();
                 strResult = "优化成功！";
                 return true;
             //}
@@ -979,8 +980,6 @@ namespace THOK.SMS.Bll.Service
 
         #endregion
 
-
-
         #region  上传一号工程
         public bool UpLoad(SortBatch sortbatch, out string strResult)
         {
@@ -1009,7 +1008,8 @@ namespace THOK.SMS.Bll.Service
                         CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
                         CreateZipFile(NoOneProFilePath, txtFile, zipFile);
                         SendZipFile(NoOneProIP, NoOneProPort, zipFile);
-                        SaveUploadStatus(sortbatch);
+                        sortBatch.Status = "03";
+                        SortBatchRepository.SaveChanges();
                         DeleteFiles(NoOneProFilePath); 
                         result = true;
                     }
@@ -1192,29 +1192,6 @@ namespace THOK.SMS.Bll.Service
             }
         }
 
-        /// <summary>
-        /// 更新上传批次状态
-        /// </summary>
-        private bool SaveUploadStatus(SortBatch sortbatch)
-        {
-            
-            bool result = false;      
-            var sortBatchs = SortBatchRepository.GetQueryable().FirstOrDefault(a => a.Id == sortbatch.Id);
-            if (sortBatchs != null)
-            {
-                try
-                {
-                    sortBatchs.Status = "03";
-                    SortBatchRepository.SaveChanges();
-                    result =true;
-                }
-                catch (Exception e)
-                {
-                    return false;     
-                }
-            }
-            return result;         
-        }
         #endregion
     }
 }

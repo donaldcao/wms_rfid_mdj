@@ -859,7 +859,7 @@ namespace THOK.WCS.Bll.Service
                         var originPosition = PositionRepository.GetQueryable().FirstOrDefault(p => p.ID == originCellPosition.StockOutPositionID);
                         if (originPosition == null) { errorInfo = "未找到起始货位位置：" + originCellPosition.StockOutPosition.PositionName; return false; }
 
-                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("StockOutAndCheckPositionID"));
+                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("StockOutPositionID"));
                         if (targetSystemParam == null) { errorInfo = "请检查系统参数，未找到目标位置OutBillPosition！"; return false; }
                         int targetPositionID = Convert.ToInt32(targetSystemParam.ParameterValue);
 
@@ -952,7 +952,7 @@ namespace THOK.WCS.Bll.Service
                         int targetPositionID = 0;
                         if (SortingLineRepository.GetQueryable().Where(s => s.CellCode == moveBillDetail.InCellCode).Count() > 0)
                         {
-                            var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("StockOutAndCheckPositionID"));
+                            var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("MoveToSortPositionID"));
                             if (targetSystemParam == null) { errorInfo = "请检查系统参数，未找到目标位置OutBillPosition！"; return false; }
                             targetPositionID = Convert.ToInt32(targetSystemParam.ParameterValue);
                         }
@@ -1127,7 +1127,7 @@ namespace THOK.WCS.Bll.Service
                         var originPosition = PositionRepository.GetQueryable().FirstOrDefault(p => p.ID == originCellPosition.StockOutPositionID);
                         if (originPosition == null) { errorInfo = "未找到起始货位位置：" + originCellPosition.StockOutPosition.PositionName; return false; }
 
-                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("StockOutAndCheckPositionID"));
+                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("CheckPositionID"));
                         if (targetSystemParam == null) { errorInfo = "请检查系统参数，未找到目标位置OutBillPosition！"; return false; }
                         int targetPositionID = Convert.ToInt32(targetSystemParam.ParameterValue);
 
@@ -1217,7 +1217,7 @@ namespace THOK.WCS.Bll.Service
                         var originPosition = PositionRepository.GetQueryable().FirstOrDefault(p => p.ID == originCellPosition.StockOutPositionID);
                         if (originPosition == null) { errorInfo = "未找到起始货位位置：" + originCellPosition.StockOutPosition.PositionName; return false; }
 
-                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("StockOutAndCheckPositionID"));
+                        var targetSystemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName.Contains(originPosition.SRMName) && s.ParameterName.Contains("MoveToSortPositionID"));
                         if (targetSystemParam == null) { errorInfo = "请检查系统参数，未找到目标位置OutBillPosition！"; return false; }
                         int targetPositionID = Convert.ToInt32(targetSystemParam.ParameterValue);
 
@@ -2149,22 +2149,14 @@ namespace THOK.WCS.Bll.Service
                         }
                         else
                         {
-                            return -1;
+                            newTaskID = - 1;
                         }
 
                         task.CurrentPositionID = task.TargetPositionID;
                         task.State = "04";
                         TaskRepository.SaveChanges();
-
-                        if (newTaskID > 0)
-                        {
-                            scope.Complete();
-                            return newTaskID;
-                        }
-                        else
-                        {
-                            return newTaskID;
-                        }
+                        scope.Complete();
+                        return newTaskID;
                     }
                 }
                 catch (Exception ex)
@@ -2192,20 +2184,11 @@ namespace THOK.WCS.Bll.Service
                     using (TransactionScope scope = new TransactionScope())
                     {
                         newTaskID = CreateNewTaskForMoveBackRemainAndReturnTaskID(taskID, out errorInfo);
-
                         task.CurrentPositionID = task.TargetPositionID;
                         task.State = "04";
                         TaskRepository.SaveChanges();
-
-                        if (newTaskID > 0)
-                        {
-                            scope.Complete();
-                            return newTaskID;
-                        }
-                        else
-                        {
-                            return newTaskID;
-                        }
+                        scope.Complete();
+                        return newTaskID;
                     }
                 }
                 catch (Exception ex)

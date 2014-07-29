@@ -35,17 +35,28 @@
 
     function editSave() {
         var row = $('#details').datagrid('getSelected');
-        if (row.Status != "未优化" && $('#Status').combo("getText") == "未优化") {
-            $.messager.confirm("询问", "该操作将会删除优化，确定继续吗？", function (r) {
-                if (r) {
-                    url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=1";
-                    GetRequest();
-                }
-            })
+        if (row.Status == "已优化") {
+            if ($('#Status').combo("getText") == "未优化") {
+                $.messager.confirm("询问", "该操作将会删除优化，确定继续吗？", function (r) {
+                    if (r) {
+                        url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=1";
+                        GetRequest();
+                    }
+                });
+            }
+            else {
+                url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=0";
+                GetRequest();
+            }
         }
         else {
-            url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=0";
-            GetRequest();
+            if ($('#Status').combo("getText") == "未优化") {
+                $.messager.alert('提示：', '只有已优化的批次才能取消优化！');
+            }
+            else {
+                url = "/SortBatchDispatch/Edit/?IsRemoveOptimization=0";
+                GetRequest();
+            }
         }
     }
 
@@ -74,7 +85,7 @@
     <div class="easyui-layout" fit="true">
         <div region="center" border="false" style="padding: 10px 10px; border: 1px solid #ccc;">
             <form id="fm" method="post">
-            <table width="260" cellspacing="5">
+            <table width="270" cellspacing="5">
                 <tr hidden="true">
                     <td width="100" style="text-align: right">
                         ID:
@@ -100,19 +111,19 @@
                     </td>
                 </tr>
                 <tr>
+                    <td width="120" style="text-align: right">
+                        一号工程分拣日期:
+                    </td>
+                    <td align="left">
+                       <input id="NoOneProjectSortDate" name="NoOneProjectSortDate" class="easyui-datebox" editable="false" placeholder="只能为数字" required="true"/>
+                    </td>
+                </tr>
+                <tr>
                     <td width="100" style="text-align: right">
                         一号工程批次号:
                     </td>
                     <td width="150">
                         <input name="NoOneProjectBatchNo" id="NoOneProjectBatchNo"  class="easyui-numberbox" required="true"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100" style="text-align: right">
-                        分拣日期:
-                    </td>
-                    <td align="left">
-                       <input id="NoOneProjectSortDate" name="NoOneProjectSortDate" class="easyui-datebox" editable="false" placeholder="只能为数字" required="true"/>
                     </td>
                 </tr>
                 <tr>

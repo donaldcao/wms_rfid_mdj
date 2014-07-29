@@ -33,7 +33,12 @@ namespace THOK.Wms.SignalR.Download.Service
 
         public void Download(string connectionId, ProgressState ps, CancellationToken cancellationToken, string beginDate, string endDate, string sortLineCode, bool isSortDown, string batch)
         {
-            bool result = false;
+            if (string.IsNullOrEmpty(beginDate))
+            {
+                StateTypeForInfo(ps, "请填写日期！");
+                return;
+            }
+
             ConnectionId = connectionId;
             ps.State = StateType.Start;
             ps.Messages.Add("开始下载");
@@ -45,8 +50,6 @@ namespace THOK.Wms.SignalR.Download.Service
             string now2 = "正在下载";
             Random random = new Random();
             int random1 = random.Next(1, 5);
-            int random2 = random.Next(1, 30);
-            int random3 = random.Next(1, 100);
             int maxNum = 100;
 
             string errorInfo = string.Empty;
@@ -58,191 +61,235 @@ namespace THOK.Wms.SignalR.Download.Service
             beginDate = Convert.ToDateTime(beginDate).ToString("yyyyMMdd");
             endDate = Convert.ToDateTime(endDate).ToString("yyyyMMdd");
 
-            //单位信息
-            StateTypeForProcessing(ps, totalName1, random2, now1 + "单位信息", random3);
-            bool bUnit = ubll.DownUnitCodeInfo();
-            if (bUnit == false)
+            try
             {
-                StateTypeForInfo(ps, "同步单位信息失败！");
-                return;
-            }
-            StateTypeForProcessing(ps, totalName1, random1 + 30, now1 + "单位信息", maxNum);
-            StateTypeForInfo(ps, "同步单位信息成功！");
-
-            //卷烟信息
-            StateTypeForProcessing(ps, totalName1, random1 + 35, now1 + "卷烟信息", random3);
-            bool bPro = pbll.DownProductInfo();
-            if (bPro == false)
-            {
-                StateTypeForInfo(ps, "同步卷烟信息失败！");
-                return;
-            }
-            StateTypeForProcessing(ps, totalName1, random1 + 40, now1 + "卷烟信息", maxNum);
-            StateTypeForInfo(ps, "同步卷烟信息成功！");
-
-            //删除7日前的数据
-            StateTypeForProcessing(ps, totalName1, random1 + 45, "正在优化数据", random3);
-            routeBll.DeleteTable();
-            StateTypeForProcessing(ps, totalName1, random1 + 50, "正在优化数据", maxNum);
-            StateTypeForInfo(ps, "优化数据成功！");
-
-            //配送区域信息
-            StateTypeForProcessing(ps, totalName1, random1 + 55, now1 + "配送区域信息", random3);
-            bool bDistStation = stationBll.DownDistStationInfo();
-            if (bDistStation == false)
-            {
-                StateTypeForInfo(ps, "同步配送区域信息失败！");
-                return;
-            }
-            StateTypeForProcessing(ps, totalName1, random1 + 60, now1 + "配送区域信息", maxNum);
-            StateTypeForInfo(ps, "同步配送区域信息成功！");
-
-            if (!SystemParameterService.SetSystemParameter())
-            {
-                //客户信息
-                StateTypeForProcessing(ps, totalName1, random1 + 65, now1 + "客户信息", random3);
-                bool custResult = custBll.DownCustomerInfo();
-                if (custResult == false)
+                #region MyRegion
+                //单位信息
+                StateTypeForProcessing(ps, totalName1, random1, now1 + "单位信息", new Random().Next(1,100));
+                bool bUnit = ubll.DownUnitCodeInfo();
+                if (bUnit == false)
                 {
-                    StateTypeForInfo(ps, "同步客户信息失败！");
-                    return;
-                }
-                StateTypeForProcessing(ps, totalName1, random1 + 70, now1 + "客户信息", maxNum);
-                StateTypeForInfo(ps, "同步客户信息成功！");
-
-                //配车单信息
-                StateTypeForProcessing(ps, totalName1, random1 + 75, now1 + "配车单信息", random3);
-                bool bDistCar = carBll.DownDistCarBillInfo(beginDate);
-                if (bDistCar == false)
-                {
-                    StateTypeForInfo(ps, "同步配车单信息失败！");
-                    return;
-                }
-                StateTypeForProcessing(ps, totalName1, random1 + 80, now1 + "配车单信息", maxNum);
-                StateTypeForInfo(ps, "同步配车单信息成功！");
-
-                if (isSortDown)
-                {
-                    //从分拣下载分拣数据
-                    StateTypeForProcessing(ps, totalName1, random1 + 85, now2 + "线路信息", random3);
-                    lineResult = routeBll.DownSortRouteInfo();
-                    if (lineResult == false)
-                    {
-                        StateTypeForInfo(ps, "同步线路信息失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName1, random1 + 90, now2 + "线路信息", maxNum);
-                    StateTypeForInfo(ps, "同步线路信息成功！");
-
-                    //分拣订单
-                    StateTypeForProcessing(ps, totalName2, random1 + 95, now2 + "分拣订单", random3);
-                    bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
-                    if (bResult == false)
-                    {
-                        StateTypeForInfo(ps, "同步分拣订单失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
-                    StateTypeForInfo(ps, "同步分拣订单成功！");
-                    result = true;
+                    StateTypeForInfo(ps, "未发现新单位信息！");
                 }
                 else
                 {
-                    //从营销下载分拣数据 
-                    StateTypeForProcessing(ps, totalName1, random1 + 85, now2 + "线路信息", random3);
-                    lineResult = routeBll.DownRouteInfo();
-                    if (lineResult == false)
-                    {
-                        StateTypeForInfo(ps, "同步线路信息失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName1, random1 + 90, now2 + "线路信息", maxNum);
-                    StateTypeForInfo(ps, "同步线路信息成功！");
-
-                    //分拣订单
-                    StateTypeForProcessing(ps, totalName2, random1 + 95, now2 + "分拣订单", random3);
-                    bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮
-                    if (bResult == false)
-                    {
-                        StateTypeForInfo(ps, "下载分拣订单失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
-                    StateTypeForInfo(ps, "下载分拣订单成功！");
-                    result = true;
+                    StateTypeForInfo(ps, "同步单位信息成功！");
                 }
-            }
-            else
-            {
-                StateTypeForProcessing(ps, totalName2, random1 + 75, now1 + "客户信息", random3);
-                bool custResult = custBll.DownCustomerInfos();//创联
-                if (custResult == false)
-                {
-                    StateTypeForInfo(ps, "同步客户信息失败！");
-                    return;
-                }
-                StateTypeForProcessing(ps, totalName2, random1 + 80, now1 + "客户信息", maxNum);
-                StateTypeForInfo(ps, "同步客户信息成功！");
+                StateTypeForProcessing(ps, totalName1, random1 + 5, now1 + "单位信息", maxNum);
 
-                if (isSortDown)
+                //卷烟信息
+                StateTypeForProcessing(ps, totalName1, random1 + 10, now1 + "卷烟信息", new Random().Next(1,100));
+                bool bPro = pbll.DownProductInfo();
+                if (bPro == false)
                 {
-                    //从分拣下载分拣数据
-                    StateTypeForProcessing(ps, totalName1, random1 + 85, now1 + "线路信息", random3);
-                    lineResult = routeBll.DownSortRouteInfo();
-                    if (lineResult == false)
-                    {
-                        StateTypeForInfo(ps, "同步线路信息失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName1, random1 + 90, now1 + "线路信息", maxNum);
-                    StateTypeForInfo(ps, "同步线路信息成功！");
-
-                    StateTypeForProcessing(ps, totalName2, random1 + 95, now2 + "分拣订单", random3);
-                    bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
-                    if (bResult == false)
-                    {
-                        StateTypeForInfo(ps, "下载分拣订单失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
-                    StateTypeForInfo(ps, "下载分拣订单成功！");
-                    result = true;
+                    StateTypeForInfo(ps, "未发现新卷烟信息！");
                 }
                 else
                 {
-                    //从营销下载分拣数据 创联
-                    StateTypeForProcessing(ps, totalName1, random1 + 85, now1 + "线路信息", random3);
-                    lineResult = routeBll.DownRouteInfos();
-                    if (lineResult == false)
-                    {
-                        StateTypeForInfo(ps, "同步线路信息失败！");
-                        return;
-                    }
-                    StateTypeForProcessing(ps, totalName1, random1 + 90, now1 + "线路信息", maxNum);
-                    StateTypeForInfo(ps, "同步线路信息成功！");
+                    StateTypeForInfo(ps, "同步卷烟信息成功！");
+                }
+                StateTypeForProcessing(ps, totalName1, random1 + 15, now1 + "卷烟信息", maxNum);
+                
 
-                    StateTypeForProcessing(ps, totalName2, random1 + 95, now2 + "分拣订单", random3);
-                    bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
-                    if (bResult == false)
+                //删除7日前的数据
+                StateTypeForProcessing(ps, totalName1, random1 + 20, "正在优化数据", new Random().Next(1,100));
+                routeBll.DeleteTable();
+                StateTypeForInfo(ps, "优化数据成功！");
+                StateTypeForProcessing(ps, totalName1, random1 + 25, "正在优化数据", maxNum);
+                
+                //配送区域信息
+                StateTypeForProcessing(ps, totalName1, random1 + 30, now1 + "配送区域信息", new Random().Next(1,100));
+                bool bDistStation = stationBll.DownDistStationInfo();
+                if (bDistStation == false)
+                {
+                    StateTypeForInfo(ps, "未发现新配送区域信息！");
+                }
+                else
+                {
+                    StateTypeForInfo(ps, "同步配送区域信息成功！");
+                }
+                StateTypeForProcessing(ps, totalName1, random1 + 35, now1 + "配送区域信息", maxNum);
+                
+                #endregion
+
+                if (!SystemParameterService.SetSystemParameter())
+                {
+                    #region MyRegion
+                    //客户信息
+                    StateTypeForProcessing(ps, totalName1, random1 + 40, now1 + "客户信息", new Random().Next(1,100));
+                    bool custResult = custBll.DownCustomerInfo();
+                    if (custResult == false)
                     {
-                        StateTypeForInfo(ps, "下载分拣订单失败！");
-                        return;
+                        StateTypeForInfo(ps, "未发现新客户信息！");
                     }
-                    StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
-                    StateTypeForInfo(ps, "下载分拣订单成功！");
-                    result = true;
+                    else
+                    {
+                        StateTypeForInfo(ps, "同步客户信息成功！");
+                    }
+                    StateTypeForProcessing(ps, totalName1, random1 + 45, now1 + "客户信息", maxNum);
+                    
+                    //配车单信息
+                    StateTypeForProcessing(ps, totalName1, random1 + 50, now1 + "配车单信息", new Random().Next(1,100));
+                    bool bDistCar = carBll.DownDistCarBillInfo(beginDate);
+                    if (bDistCar == false)
+                    {
+                        StateTypeForInfo(ps, "未发现新配车单信息！");
+                    }
+                    else
+                    {
+                        StateTypeForInfo(ps, "同步配车单信息成功！");
+                    }
+                    StateTypeForProcessing(ps, totalName1, random1 + 55, now1 + "配车单信息", maxNum);
+                    
+
+                    if (isSortDown)
+                    {
+                        //从分拣下载分拣数据
+                        StateTypeForProcessing(ps, totalName1, random1 + 60, now2 + "线路信息", new Random().Next(1,100));
+                        lineResult = routeBll.DownSortRouteInfo();
+                        if (lineResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新线路信息！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "同步线路信息成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName1, random1 + 65, now2 + "线路信息", maxNum);
+                        
+
+                        //分拣订单
+                        StateTypeForProcessing(ps, totalName2, random1 + 70, now2 + "分拣订单", new Random().Next(1,100));
+                        bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
+                        if (bResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新分拣订单！");
+                            return;
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "下载分拣订单成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
+                    }
+                    else
+                    {
+                        //从营销下载分拣数据 
+                        StateTypeForProcessing(ps, totalName1, random1 + 65, now2 + "线路信息", new Random().Next(1,100));
+                        lineResult = routeBll.DownRouteInfo();
+                        if (lineResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新线路信息！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "同步线路信息成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName1, random1 + 70, now2 + "线路信息", maxNum);
+
+                        //分拣订单
+                        StateTypeForProcessing(ps, totalName2, random1 + 75, now2 + "分拣订单", new Random().Next(1,100));
+                        bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮
+                        if (bResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新分拣订单！");
+                            return;
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "下载分拣订单成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
+                    }
+                    #endregion
+                }
+                else
+                {
+                    #region MyRegion
+                    StateTypeForProcessing(ps, totalName2, random1 + 40, now1 + "客户信息", new Random().Next(1,100));
+                    bool custResult = custBll.DownCustomerInfos();//创联
+                    if (custResult == false)
+                    {
+                        StateTypeForInfo(ps, "未发现新客户信息！");
+                    }
+                    else
+                    {
+                        StateTypeForInfo(ps, "同步客户信息成功！");
+                    }
+                    StateTypeForProcessing(ps, totalName2, random1 + 45, now1 + "客户信息", maxNum);
+                    
+
+                    if (isSortDown)
+                    {
+                        //从分拣下载分拣数据
+                        StateTypeForProcessing(ps, totalName1, random1 + 50, now1 + "线路信息", new Random().Next(1,100));
+                        lineResult = routeBll.DownSortRouteInfo();
+                        if (lineResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新线路信息！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "同步线路信息成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName1, random1 + 55, now1 + "线路信息", maxNum);
+
+                        StateTypeForProcessing(ps, totalName2, random1 + 60, now2 + "分拣订单", new Random().Next(1,100));
+                        bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
+                        if (bResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新分拣订单！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "下载分拣订单成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
+                    }
+                    else
+                    {
+                        //从营销下载分拣数据 创联
+                        StateTypeForProcessing(ps, totalName1, random1 + 50, now1 + "线路信息", new Random().Next(1,100));
+                        lineResult = routeBll.DownRouteInfos();
+                        if (lineResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新线路信息！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "同步线路信息成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName1, random1 + 55, now1 + "线路信息", maxNum);
+                        
+                        StateTypeForProcessing(ps, totalName2, random1 + 60, now2 + "分拣订单", new Random().Next(1,100));
+                        bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
+                        if (bResult == false)
+                        {
+                            StateTypeForInfo(ps, "未发现新分拣订单！");
+                        }
+                        else
+                        {
+                            StateTypeForInfo(ps, "下载分拣订单成功！");
+                        }
+                        StateTypeForProcessing(ps, totalName2, 100, now2 + "分拣订单", maxNum);
+                    }
+                    #endregion
+                }
+                if (bResult == true)
+                {
+                    ps.State = StateType.Info;
+                    ps.Messages.Clear();
+                    ps.Messages.Add("下载成功！");
+                    NotifyConnection(ps.Clone());
+                }
+                else
+                {
+                    StateTypeForInfo(ps, "下载失败！");
                 }
             }
-            if (result == true)
+            catch (Exception ex)
             {
-                ps.State = StateType.Info;
-                ps.Messages.Clear();
-                ps.Messages.Add("下载成功！");
-                NotifyConnection(ps.Clone());
-            }
-            else
-            {
-                StateTypeForInfo(ps, "下载失败！");
+                StateTypeForInfo(ps, "下载异常！" + ex.Message);
             }
         }
 

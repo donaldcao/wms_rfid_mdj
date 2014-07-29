@@ -241,6 +241,7 @@
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageCellPreviewController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\StorageController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\Warehouse2Controller.cs" />
+    <Compile Include="Controllers\WMS\WarehouseInfo\WarehouseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

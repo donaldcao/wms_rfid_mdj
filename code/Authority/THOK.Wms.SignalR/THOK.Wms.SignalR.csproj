@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DBRabbit">
+      <HintPath>..\packages\DBRabbit.1.0.6\lib\net20\DBRabbit.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
@@ -96,10 +99,13 @@
     <Compile Include="Connection\AutomotiveSystemsConnection.cs" />
     <Compile Include="Connection\ConnectionBase.cs" />
     <Compile Include="Connection\DispatchSortWorkConnection.cs" />
+    <Compile Include="Connection\DownloadSortOrderConnection.cs" />
     <Compile Include="Dispatch\Interfaces\ISortOrderWorkDispatchService.cs" />
     <Compile Include="Dispatch\Service\SortWorkDispatchService.cs" />
     <Compile Include="Dispatch\Service\GuangxiSortWorkDispatchService.cs" />
     <Compile Include="Dispatch\Service\MudanjiangSortWorkDispatchService.cs" />
+    <Compile Include="Download\Interfaces\IDownloadSortOrderService.cs" />
+    <Compile Include="Download\Service\DownloadSortOrderService.cs" />
     <Compile Include="Model\ProgressState.cs" />
     <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,6 +118,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\THOK.Authority.Bll\THOK.Authority.Bll.csproj">
+      <Project>{8375EB8C-20CB-4E3E-BCF4-85E54F61D241}</Project>
+      <Name>THOK.Authority.Bll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.Authority.Dal\THOK.Authority.Dal.csproj">
       <Project>{A8E32F0A-A9F4-4CDD-8C7A-8304CD034070}</Project>
       <Name>THOK.Authority.Dal</Name>
@@ -135,6 +145,10 @@
     <ProjectReference Include="..\THOK.Wms.DbModel\THOK.WMS.DbModel.csproj">
       <Project>{E243AB76-351D-4C97-BFE3-D55E0BA0DECF}</Project>
       <Name>THOK.WMS.DbModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.Wms.DownloadWms\THOK.WMS.DownloadWms.csproj">
+      <Project>{70E54BF4-84BD-4F2C-B9E5-93F682A9844D}</Project>
+      <Name>THOK.WMS.DownloadWms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

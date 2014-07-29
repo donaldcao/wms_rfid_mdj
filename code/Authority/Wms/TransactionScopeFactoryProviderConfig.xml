@@ -2,38 +2,36 @@
 <TransactionScopeFactoryProvider>
 	<property name="DBOperationLogger" type="DBRabbit.Logger.DBOperationLogger,DBRabbit.dll"/>
 	<property name="MasterDataConfigurationDictionary">
-    <key name="master">
-      <DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
-        <DataBaseType value ="SqlServer"  desc =""/>
-        <ORMappingType value ="Emit" desc =""/>
-        <CommandTimeoutInSecs value ="" desc =""/>
-        <ConnectionLifetimeInSecs value ="" desc =""/>
-        <MinPoolSize value ="" desc =""/>
-        <MaxPoolSize value ="" desc =""/>
-        <DataBaseSchemaFileName value ="" desc =""/>
-
-        <DataSource value ="" desc =""/>
-        <IP value ="." desc =""/>
-        <DataBaseName value ="wms_rfid_db" desc =""/>
-        <User value ="sa" desc =""/>
-        <Password value ="123456" desc =""/>
-      </DataConfiguration>
-    </key>
-		<key name="YXConnection">
+		<key name="master">
 			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
-				<DataBaseType value ="DB2"  desc =""/>
+				<DataBaseType value ="SqlServer"  desc =""/>
 				<ORMappingType value ="Emit" desc =""/>
 				<CommandTimeoutInSecs value ="" desc =""/>
 				<ConnectionLifetimeInSecs value ="" desc =""/>
 				<MinPoolSize value ="" desc =""/>
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
-
 				<DataSource value ="" desc =""/>
-				<IP value ="10.80.1.239:50000" desc =""/>
-				<DataBaseName value ="gxv3td" desc =""/>
-				<User value ="lzcc" desc =""/>
-				<Password value ="lzcc" desc =""/>
+				<IP value ="." desc =""/>
+				<DataBaseName value ="wms_rfid_db" desc =""/>
+				<User value ="sa" desc =""/>
+				<Password value ="123456" desc =""/>
+			</DataConfiguration>
+		</key>
+		<key name="YXConnection">
+			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
+				<DataBaseType value ="DB2"  desc =""/>
+				<ORMappingType value ="Emit" desc =""/>
+				<CommandTimeoutInSecs value ="10000" desc =""/>
+				<ConnectionLifetimeInSecs value ="" desc =""/>
+				<MinPoolSize value ="" desc =""/>
+				<MaxPoolSize value ="" desc =""/>
+				<DataBaseSchemaFileName value ="" desc =""/>
+				<DataSource value ="" desc =""/>
+				<IP value ="10.56.192.104:50000" desc =""/>
+				<DataBaseName value ="v6db" desc =""/>
+				<User value ="THOK" desc =""/>
+				<Password value ="mdjthok" desc =""/>
 			</DataConfiguration>
 		</key>
 	</property>

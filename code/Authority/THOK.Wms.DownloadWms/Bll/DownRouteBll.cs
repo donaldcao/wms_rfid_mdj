@@ -309,5 +309,27 @@ namespace THOK.WMS.DownloadWms.Bll
                 throw new Exception("删除数据失败！原因：" + e.Message);
             }
         }
+
+
+        //  从营销系统下载线路数据
+        public DataTable GetRoute()
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownRouteDao dao = new DownRouteDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindRoute();
+            }
+        }
+        public void InsertRoute(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownRouteDao dao = new DownRouteDao();
+                dao.SynchronizeRoute(dd);
+
+            }
+        }
+
     }
 }

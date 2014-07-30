@@ -6,13 +6,8 @@ using THOK.Wms.DbModel;
 using THOK.Wms.Bll.Interfaces;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
-using THOK.Wms.Download.Interfaces;
 using THOK.Authority.Dal.Interfaces;
-using THOK.Wms.DownloadWms.Bll;
-using THOK.WMS.DownloadWms.Bll;
 using THOK.Authority.Bll.Interfaces;
-using THOK.Wms.DownloadWms.Dao;
-using THOK.WMS.DownloadWms.Dao;
 using System.Data;
 
 namespace THOK.Wms.Bll.Service
@@ -21,22 +16,14 @@ namespace THOK.Wms.Bll.Service
     {
         [Dependency]
         public ISortOrderRepository SortOrderRepository { get; set; }
-
         [Dependency]
         public ISortOrderDetailRepository SortOrderDetailRepository { get; set; }
-
         [Dependency]
         public ISortOrderDispatchRepository SortOrderDispatchRepository { get; set; }
-
         [Dependency]
-        public IProductRepository ProductRepository { get; set; }
-
-        [Dependency]
-        public ISortingDownService SortingDownService { get; set; }
-
+        public IProductRepository ProductRepository { get; set; }      
         [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
-
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
 
@@ -151,8 +138,8 @@ namespace THOK.Wms.Bll.Service
             {
                 orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
             }
-            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
-            IQueryable<SortOrderDispatch> SortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            var sortOrderQuery = SortOrderRepository.GetQueryable();
+            var SortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable();
             var sortorderDetail = SortOrderDetailRepository.GetQueryable();
             var sortorderDisp = SortOrderDispatchQuery.Where(s => s.OrderDate == orderDate);
             var sortOrder = sortOrderQuery.Where(s => s.OrderDate == orderDate && !sortorderDisp.Any(d => d.DeliverLineCode == s.DeliverLineCode))
@@ -176,76 +163,6 @@ namespace THOK.Wms.Bll.Service
         }
 
         #endregion
-
-        public bool DownSortOrder(string beginDate, string endDate, out string errorInfo)
-        {
-            errorInfo = string.Empty;
-            bool result = false;
-            string sortOrderStrs = "";
-            string sortOrderList = "";
-            try
-            {
-                var sortOrderIds = SortOrderRepository.GetQueryable().Where(s => s.OrderID == s.OrderID).Select(s => new { s.OrderID }).ToArray();
-
-                for (int i = 0; i < sortOrderIds.Length; i++)
-                {
-                    sortOrderStrs += sortOrderIds[i].OrderID + ",";
-                }
-
-                SortOrder[] SortOrders = SortingDownService.GetSortOrder(beginDate, endDate, sortOrderStrs);
-
-                foreach (var item in SortOrders)
-                {
-                    var sortOrder = new SortOrder();
-                    sortOrder.OrderID = item.OrderID;
-                    sortOrder.CompanyCode = item.CompanyCode;
-                    sortOrder.SaleRegionCode = item.SaleRegionCode;
-                    sortOrder.OrderDate = item.OrderDate;
-                    sortOrder.OrderType = item.OrderType;
-                    sortOrder.CustomerCode = item.CustomerCode;
-                    sortOrder.CustomerName = item.CustomerName;
-                    sortOrder.DeliverLineCode = item.DeliverLineCode;
-                    sortOrder.QuantitySum = item.QuantitySum;
-                    sortOrder.AmountSum = item.AmountSum;
-                    sortOrder.DetailNum = item.DetailNum;
-                    sortOrder.DeliverOrder = item.DeliverOrder;
-                    sortOrder.DeliverDate = item.DeliverDate;
-                    sortOrder.Description = item.Description;
-                    sortOrder.IsActive = item.IsActive;
-                    sortOrder.UpdateTime = item.UpdateTime;
-                    SortOrderRepository.Add(sortOrder);
-                    sortOrderList += item.OrderID + ",";
-                }
-                if (sortOrderList != string.Empty)
-                {
-                    SortOrderDetail[] SortOrderDetails = null; //SortingDownService.GetSortOrderDetail(sortOrderList);
-                    foreach (var detail in SortOrderDetails)
-                    {
-                        var sortOrderDetail = new SortOrderDetail();
-                        var product = ProductRepository.GetQueryable().FirstOrDefault(p => p.ProductCode == detail.ProductCode);
-                        sortOrderDetail.OrderDetailID = detail.OrderDetailID;
-                        sortOrderDetail.OrderID = detail.OrderID;
-                        sortOrderDetail.ProductCode = detail.ProductCode;
-                        sortOrderDetail.ProductName = detail.ProductName;
-                        sortOrderDetail.UnitCode = detail.UnitCode;
-                        sortOrderDetail.UnitName = detail.UnitName;
-                        sortOrderDetail.DemandQuantity = detail.DemandQuantity * product.UnitList.Unit02.Count;
-                        sortOrderDetail.RealQuantity = detail.RealQuantity * product.UnitList.Unit02.Count;
-                        sortOrderDetail.Price = detail.Price;
-                        sortOrderDetail.Amount = detail.Amount;
-                        sortOrderDetail.UnitQuantity = product.UnitList.Quantity02;
-                        SortOrderDetailRepository.Add(sortOrderDetail);
-                    }
-                }
-                SortOrderRepository.SaveChanges();
-                result = true;
-            }
-            catch (Exception e)
-            {
-                errorInfo = "出错，原因：" + e.Message;
-            }
-            return result;
-        }
 
         //修改主单
         public bool Save(SortOrder sortOrder, out string strResult)
@@ -300,125 +217,5 @@ namespace THOK.Wms.Bll.Service
             //} 
             #endregion
         }
-
-        #region  数据下载
-        public bool Down(string beginDate, string endDate, string sortLineCode, bool isSortDown, string batch, out string strResult)
-        {
-            strResult = string.Empty;
-            string errorInfo = string.Empty;
-            string lineErrorInfo = string.Empty;
-            string custErrorInfo = string.Empty;
-            bool bResult = false;
-            bool lineResult = false;
-
-
-            DownSortingInfoBll sortBll = new DownSortingInfoBll();
-            DownRouteBll routeBll = new DownRouteBll();
-            DownSortingOrderBll orderBll = new DownSortingOrderBll();
-            DownCustomerBll custBll = new DownCustomerBll();
-            DownDistStationBll stationBll = new DownDistStationBll();
-            DownDistCarBillBll carBll = new DownDistCarBillBll();
-            DownUnitBll ubll = new DownUnitBll();
-            DownProductBll pbll = new DownProductBll();
-
-            beginDate = Convert.ToDateTime(beginDate).ToString("yyyyMMdd");
-            endDate = Convert.ToDateTime(endDate).ToString("yyyyMMdd");
-
-            // 判断是否仓储一体化 if type=1  是
-            var systemParameterQuery = SystemParameterRepository.GetQueryable();
-            var parameterValue = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("IsWarehousSortIntegration")).ParameterValue;
-            string Type = parameterValue.ToString();
-
-            switch (Type)
-            {
-                case "1":
-
-                    try
-                    {
-                        ubll.DownUnitCodeInfo();
-                        pbll.DownProductInfo();
-                        routeBll.DeleteTable();
-                        stationBll.DownDistStationInfo();
-                        if (!SystemParameterService.SetSystemParameter())
-                        {
-                            bool custResult = custBll.DownCustomerInfo();
-                            carBll.DownDistCarBillInfo(beginDate);
-                            if (isSortDown)
-                            {
-                                //从分拣下载分拣数据
-                                lineResult = routeBll.DownSortRouteInfo();
-                                bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
-                            }
-                            else
-                            {
-                                //从营销下载分拣数据 
-                                lineResult = routeBll.DownRouteInfo();
-                                //bResult = orderBll.GetSortingOrderDate(beginDate, endDate, out errorInfo);
-                                bResult = orderBll.GetSortingOrderDate2(beginDate, endDate, out errorInfo);//牡丹江浪潮
-                            }
-                        }
-                        else
-                        {
-                            bool custResult = custBll.DownCustomerInfos();//创联
-                            //carBll.DownDistCarBillInfo(beginDate);
-                            if (isSortDown)
-                            {
-                                //从分拣下载分拣数据
-                                lineResult = routeBll.DownSortRouteInfo();
-                                bResult = sortBll.GetSortingOrderDate(beginDate, endDate, sortLineCode, batch, out errorInfo);
-                            }
-                            else
-                            {
-                                //从营销下载分拣数据 创联
-                                lineResult = routeBll.DownRouteInfos();
-                                bResult = orderBll.GetSortingOrderDates(beginDate, endDate, out errorInfo);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        strResult += e.Message + "线路：" + errorInfo + "。客户：" + errorInfo + "。分拣" + errorInfo;
-                    }
-                    break;
-
-                default:
-                    try
-                    {
-
-                        //DeleteHistoryBll ssDao = new DeleteHistoryBll();
-                        DateTime dtOrder = DateTime.ParseExact(beginDate, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        string orderDate = dtOrder.AddDays(-7).ToShortDateString();
-                        //清空数据
-                        //ssDao.DeleteHistory(orderDate);
-
-                        DownDistDao dd = new DownDistDao();
-                        DataTable areTable = dd.FindArea();
-                        dd.SynchronizeArea(areTable);
-
-                        DownRouteDao dr = new DownRouteDao();
-                        DataTable routeTable = dr.FindRoute();
-                        dr.SynchronizeRoute(routeTable);
-                        DownCustomerDao dc = new DownCustomerDao();
-                        DataTable customerTable = dc.FindCustomer(dtOrder);
-                        dc.SynchronizeCustomer(customerTable);
-                        DownProductDao dp = new DownProductDao();
-                        DataTable productTable = dp.FindProduct();
-                        dp.SynchronizeCigarette(productTable);
-                        DownSortingOrderDao ds = new DownSortingOrderDao();
-                        DataTable orderTable = ds.FindOrder();
-                        ds.SynchronizeMaster(orderTable);
-                        DataTable orderDetailTable = ds.FindOrderDetail();
-                        ds.SynchronizeDetail(orderDetailTable);
-
-                    }
-                    catch (Exception e)
-                    {
-                        strResult += e.Message + strResult;
-                    }
-                    break;
-            }
-            return bResult;
-        }
-        #endregion
     }
 }

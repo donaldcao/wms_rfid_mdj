@@ -103,7 +103,7 @@ namespace THOK.WMS.DownloadWms.Dao
         //¿Í»§
         public void SynchronizeCustomer(DataTable customerTable)
         {
-            DateTime dt = new DateTime();
+            DateTime dt = DateTime.Now;
             foreach (DataRow row in customerTable.Rows)
             {
                 string sql = "IF '{0}' IN (SELECT customer_code FROM wms_customer) " +
@@ -114,7 +114,7 @@ namespace THOK.WMS.DownloadWms.Dao
                                 " END " +
                              "ELSE " +
                                 " BEGIN " +
-                                    " INSERT wms_customer VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16},'{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}) " +
+                                    " INSERT wms_customer VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}') " +
                                 " END";
                 sql = string.Format(sql, row["CUSTOMERCODE"], row["N_CUST_CODE"], row["CUSTOMERNAME"], ' ', ' ', ' ', ' ', ' ', ' ', ' ', row["ROUTECODE"], row["SORTID"], row["ADDRESS"], row["TELNO"], ' ', row["LICENSENO"], ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '1', dt);
                 ExecuteNonQuery(sql);

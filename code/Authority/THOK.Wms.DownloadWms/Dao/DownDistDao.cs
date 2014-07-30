@@ -73,7 +73,6 @@ namespace THOK.WMS.DownloadWms.Dao
            return dbTypeName;
        }
 
-
        /// <summary>
        /// 根据条件下载区域表
        /// </summary>
@@ -95,7 +94,6 @@ namespace THOK.WMS.DownloadWms.Dao
                            " FROM OUKANG.OUKANG_REGION");
                    break;
 
-
                default://默认
 
                    break;
@@ -108,7 +106,7 @@ namespace THOK.WMS.DownloadWms.Dao
        //区域
        public void SynchronizeArea(DataTable areaTable)
        {
-           DateTime dt = new DateTime();
+           DateTime dt = DateTime.Now;
            foreach (DataRow row in areaTable.Rows)
            {
                string sql = "IF '{0}' IN (SELECT dist_code FROM wms_deliver_dist) " +
@@ -117,9 +115,9 @@ namespace THOK.WMS.DownloadWms.Dao
                                "END " +
                             "ELSE " +
                                "BEGIN " +
-                                   "INSERT wms_deliver_dist VALUES ('{0}','{1}','{2},'{3}','{4},'{5}','{6},'{7}','{8},'{9}') " +
+                                   "INSERT wms_deliver_dist VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}') " +
                                "END";
-               sql = string.Format(sql, row["AREACODE"], ' ', row["AREANAME"], ' ', ' ', ' ', ' ', '1', dt, row["SORTID"]);
+               sql = string.Format(sql, row["AREACODE"], ' ', row["arename"], ' ', ' ', ' ', ' ', '1', dt, row["SORTID"]);
                ExecuteNonQuery(sql);
            }
        }

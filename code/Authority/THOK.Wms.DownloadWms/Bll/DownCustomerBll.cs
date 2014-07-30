@@ -247,5 +247,27 @@ namespace THOK.WMS.DownloadWms.Bll
             return ds;
         }
         #endregion
+
+
+        //  从营销系统下载客户数据
+        public DataTable GetCustomer(DateTime dtOrder)
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownCustomerDao dao = new DownCustomerDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindCustomer(dtOrder);
+            }
+        }
+
+        public void InsertCustomer(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownCustomerDao dao = new DownCustomerDao();
+                dao.SynchronizeCustomer(dd);
+
+            }
+        }
     }
 }

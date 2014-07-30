@@ -9,6 +9,6 @@ namespace THOK.SMS.SignalR.Optimize.Interfaces
 {
     public interface IOptimizeSortOrderService
     {
-        void Optimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, string sortBatchId);
+        void Optimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, string id);
     }
 }

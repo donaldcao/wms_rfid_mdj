@@ -34,8 +34,8 @@ namespace Authority.Controllers.Wms.SortingInfo
         [Dependency]
         public ISystemParameterService SystemParameterService { get; set; }
 
-        [Dependency]
-        public ISortOrderDownService SortOrderDownService { get; set; }
+        //[Dependency]
+        //public ISortOrderDownService SortOrderDownService { get; set; }
         //
         // GET: /SortingOrder/
         public ActionResult Index(string moduleID)

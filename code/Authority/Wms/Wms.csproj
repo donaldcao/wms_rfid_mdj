@@ -1756,6 +1756,10 @@
       <Project>{50BD809C-BC8D-498E-9F09-A5C2593C5E43}</Project>
       <Name>THOK.SMS.Optimize</Name>
     </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.SignalR\THOK.SMS.SignalR.csproj">
+      <Project>{95ABFFA6-FD87-44A1-937B-E0602D90F432}</Project>
+      <Name>THOK.SMS.SignalR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.WCS.Bll\THOK.WCS.Bll.csproj">
       <Project>{C7885513-E200-41BD-8409-359DE49C232D}</Project>
       <Name>THOK.WCS.Bll</Name>

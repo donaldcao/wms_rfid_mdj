@@ -1304,11 +1304,17 @@ namespace THOK.WCS.Bll.Service
             CellPosition originCellPosition = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID == position.ID).FirstOrDefault();
             Cell originCell = CellRepository.GetQueryable().Where(i => i.CellCode == originCellPosition.CellCode).FirstOrDefault();
 
+            var emptyPalletCount = SystemParameterRepository.GetQueryable().Where(i => i.ParameterName == "EmptyPalletCount").FirstOrDefault();
+            if (emptyPalletCount == null)
+            {
+                errorInfo = "请检查：系统参数是否存在参数名：EmptyPalletCount！";
+                return false;
+            }
             var cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
                     && i.IsActive == "1"
                     && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
                     && (i.Storages.Any(s => s.ProductCode == palletCode
-                        && s.Quantity + s.InFrozenQuantity < ((s.Cell.MaxQuantity / 5) * 2) && s.OutFrozenQuantity == 0)));
+                        && s.Quantity + s.InFrozenQuantity < (Convert.ToInt32(emptyPalletCount.ParameterValue)) && s.OutFrozenQuantity == 0)));
             if (!cellQuery.Any())
             {
                 cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
@@ -1325,8 +1331,7 @@ namespace THOK.WCS.Bll.Service
                           + "2.LockTag必须未锁定，库存数量和入库冻结量必须=0";
                 return false;
             }
-
-            var cell = cellQuery.ToArray().OrderBy(c => Math.Abs(c.Col - c.Shelf.CellCols / 2)).FirstOrDefault();
+            var cell = cellQuery.ToArray().OrderBy(c => c.Layer).ThenBy(c => Math.Abs(c.Col - c.Shelf.CellCols / 2)).FirstOrDefault();
             if (cell == null)
             {
                 errorInfo = "请检查：货位表的字段储位列号Col和货架列数CellCols，计算：Math.Abs(Col - CellCols / 2)是否正确！";

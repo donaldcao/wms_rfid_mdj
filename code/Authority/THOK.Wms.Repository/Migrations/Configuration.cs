@@ -45,8 +45,8 @@ namespace THOK.Wms.Repository.Migrations
                     new SystemInfo()
                     {
                         SystemID = new Guid("E8344F88-08AD-4F9A-8F45-EAD8BB471104"),
-                        SystemName = "权限管理系统",
-                        Description = "权限管理系统",
+                        SystemName = "基础权限管理系统",
+                        Description = "基础权限管理系统",
                         Status = true
                     },
                     new SystemInfo()
@@ -58,9 +58,16 @@ namespace THOK.Wms.Repository.Migrations
                     },
                     new SystemInfo()
                     {
+                        SystemID = new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA9"),
+                        SystemName = "自动化仓储控制系统",
+                        Description = "自动化仓储控制系统",
+                        Status = true
+                    },
+                    new SystemInfo()
+                    {
                         SystemID = new Guid("ED0E6430-9DEB-4CDE-8DCF-702D5B528AA8"),
-                        SystemName = "分拣管理信息系统",
-                        Description = "半自动化分拣管理信息系统",
+                        SystemName = "自动化分拣管理系统",
+                        Description = "自动化分拣管理系统",
                         Status = true
                     }
                 );
@@ -3756,13 +3763,13 @@ namespace THOK.Wms.Repository.Migrations
 
         private void CreateAutomotiveSystems(AuthorizeContext context)
         {
-            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"));
+            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA9"));
             context.Set<Module>().AddOrUpdate(
                 new Module()
                 {
                     ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD"),
                     ModuleName = "仓库作业管理",
-                    ShowOrder = 9,
+                    ShowOrder = 11,
                     ModuleURL = "",
                     IndicateImage = "icon-son_Bill_Type",
                     DeskTopImage = "image-son_Bill_Type",
@@ -4021,12 +4028,12 @@ namespace THOK.Wms.Repository.Migrations
 
         private void CreateSystemInfo(AuthorizeContext context)
         {
-            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"));
+            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA9"));
             context.Set<Module>().AddOrUpdate(
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D"),
-                        ModuleName = "仓储控制管理",
+                        ModuleName = "基础信息管理",
                         ShowOrder = 10,
                         ModuleURL = "",
                         IndicateImage = "icon-Menu_Jurisdiction",
@@ -4034,6 +4041,18 @@ namespace THOK.Wms.Repository.Migrations
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F90"),
+                        ModuleName = "作业任务管理",
+                        ShowOrder = 12,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_Jurisdiction",
+                        DeskTopImage = "image-Menu_Jurisdiction",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F90")
                     },
                     new Module
                     {
@@ -4045,7 +4064,7 @@ namespace THOK.Wms.Repository.Migrations
                         DeskTopImage = "image-son_SortWork",
                         System = system,
                         System_SystemID = system.SystemID,
-                        ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F9D")
+                        ParentModule_ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F90")
                     },
                     new Module()
                     {
@@ -4123,7 +4142,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003319C7B1DC"),
-                        ModuleName = "报警信息",
+                        ModuleName = "设备报警信息",
                         ShowOrder = 7,
                         ModuleURL = "/AlarmInfo/",
                         IndicateImage = "icon-son_SortWork",

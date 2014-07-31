@@ -8,8 +8,6 @@ namespace THOK.Wms.Bll.Interfaces
 {
     public interface IDeliverLineService : IService<DeliverLine>
     {
-        bool DownDeliverLine(out string errorInfo);
-
         object GetDetails(int page, int rows, string DeliverLineCode, string CustomCode, string DeliverLineName, string DistCode, string DeliverOrder, string IsActive);
 
         bool Add(DeliverLine deliverLine, out string strResult);

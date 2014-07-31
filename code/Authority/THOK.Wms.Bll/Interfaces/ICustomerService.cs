@@ -8,8 +8,6 @@ namespace THOK.Wms.Bll.Interfaces
 {
     public interface ICustomerService : IService<Customer>
     {
-        bool DownDeliverLine(out string errorInfo);
-
         object GetDetails(int page, int rows, string CustomerCode,string CustomerName, string CompanyCode, string SaleRegionCode, string CustomerType, string CityOrCountryside, string LicenseCode, string IsActive);
 
         bool Add(Customer customer, out string strResult);

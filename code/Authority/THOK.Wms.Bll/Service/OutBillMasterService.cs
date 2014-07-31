@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.SignalR.Common;
 using System.Transactions;
-using THOK.Wms.Download.Interfaces;
 using System.Data;
 using THOK.WMS.Upload.Bll;
 
@@ -33,9 +30,6 @@ namespace THOK.Wms.Bll.Service
 
         [Dependency]
         public IStorageLocker Locker { get; set; }
-
-        [Dependency]
-        public IOutBillMasterDownService OutBillMasterDownService { get; set; }
 
         [Dependency]
         public IStorageRepository StorageRepository { get; set; }
@@ -539,62 +533,6 @@ namespace THOK.Wms.Bll.Service
                         return false;
                     }
                 }
-            }
-            return result;
-        }
-
-
-        public bool DownOutBillMaster(string beginDate, string endDate, out string errorInfo)
-        {
-            errorInfo = string.Empty;
-            bool result = false;
-            string outBillStr = "";
-            string outBillMasterStr = "";
-            try
-            {
-                var outBillNos = OutBillMasterRepository.GetQueryable().Where(i => i.BillNo == i.BillNo).Select(i => new { i.BillNo }).ToArray();
-
-                for (int i = 0; i < outBillNos.Length; i++)
-                {
-                    outBillStr += outBillNos[i].BillNo + ",";
-                }
-                OutBillMaster[] outBillMasterList = OutBillMasterDownService.GetOutBillMaster(outBillStr);
-                foreach (var master in outBillMasterList)
-                {
-                    var outBillMaster = new OutBillMaster();
-                    outBillMaster.BillNo = master.BillNo;
-                    outBillMaster.BillDate = master.BillDate;
-                    outBillMaster.BillTypeCode = master.BillTypeCode;
-                    outBillMaster.WarehouseCode = master.WarehouseCode;
-                    outBillMaster.Status = "1";
-                    outBillMaster.IsActive = master.IsActive;
-                    outBillMaster.UpdateTime = DateTime.Now;
-                    OutBillMasterRepository.Add(outBillMaster);
-                    outBillMasterStr += master.BillNo + ",";
-                }
-                if (outBillMasterStr != string.Empty)
-                {
-                    OutBillDetail[] outBillDetailList = OutBillMasterDownService.GetOutBillDetail(outBillMasterStr);
-                    foreach (var detail in outBillDetailList)
-                    {
-                        var outBillDetail = new OutBillDetail();
-                        outBillDetail.BillNo = detail.BillNo;
-                        outBillDetail.ProductCode = detail.ProductCode;
-                        outBillDetail.UnitCode = detail.UnitCode;
-                        outBillDetail.Price = detail.Price;
-                        outBillDetail.BillQuantity = detail.BillQuantity;
-                        outBillDetail.AllotQuantity = detail.AllotQuantity;
-                        outBillDetail.RealQuantity = detail.RealQuantity;
-                        outBillDetail.Description = detail.Description;
-                        OutBillDetailRepository.Add(outBillDetail);
-                    }
-                }
-                OutBillMasterRepository.SaveChanges();
-                result = true;
-            }
-            catch (Exception e)
-            {
-                errorInfo = "出错，原因：" + e.Message;
             }
             return result;
         }

@@ -33,18 +33,7 @@ namespace Wms.Controllers.Wms.InterfaceInfo
             return View();
         }
 
-
-        //下载线路信息
-        // GET: /DeliverLine/DownloadDeliverLineSave/
-        public ActionResult DownloadDeliverLineSave()
-        {
-            string errorInfo = string.Empty;
-            bool bResult = DeliverLineService.DownDeliverLine(out errorInfo);
-            string msg = bResult ? "新增成功" : "新增失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, errorInfo), "text", JsonRequestBehavior.AllowGet);
-        }
         // GET: /DeliverLine/Details/
-
         public ActionResult Details(int page, int rows, FormCollection collection)
         {
             string DeliverLineCode = collection["DeliverLineCode"] ?? "";

@@ -96,18 +96,6 @@ namespace Authority.Controllers.Wms.SortingInfo
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
-        //
-        // POST: /SortingOrder/DownSortOrder/
-        public ActionResult DownSortOrder(string beginDate, string endDate, string sortLineCode, bool isSortDown, string batch)
-        {      
-            string strResult = string.Empty;                
-            bool bResult = SortOrderService.Down(beginDate,endDate,sortLineCode,isSortDown,batch, out strResult);
-            string msg = bResult ? "下载成功" : "下载失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
-                          
-        }
-
-
         #region /SortingOrder/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {

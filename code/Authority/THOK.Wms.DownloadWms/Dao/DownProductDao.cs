@@ -128,7 +128,7 @@ namespace THOK.WMS.DownloadWms.Dao
         //¾íÑÌ
         public void SynchronizeCigarette(DataTable cigaretteTable)
         {
-            DateTime dt = new DateTime();
+            DateTime dt = DateTime.Now;
             foreach (DataRow row in cigaretteTable.Rows)
             {
                 string sql = "IF '{0}' IN (SELECT product_code FROM wms_product) " +
@@ -140,7 +140,7 @@ namespace THOK.WMS.DownloadWms.Dao
                                 "END " +
                              "ELSE " +
                                 "BEGIN " +
-                                    "INSERT wms_product VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16},'{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26},'{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}) " +
+                                    "INSERT wms_product VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}') " +
                                 "END";
                 sql = string.Format(sql, row["CIGARETTECODE"], row["CIGARETTENAME"], ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', row["ISABNORMITY"].ToString() == "1" ? "1" : "0", ' ', '1', dt, ' ', ' ', ' ');
                 ExecuteNonQuery(sql);

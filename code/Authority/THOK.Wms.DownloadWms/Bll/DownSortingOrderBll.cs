@@ -512,5 +512,53 @@ namespace THOK.WMS.DownloadWms.Bll
         }
 
         #endregion
+
+
+
+        //  从营销系统下载订单主表
+        public DataTable GetOrderMaster()
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownSortingOrderDao dao = new DownSortingOrderDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindOrder();
+            }
+        }
+
+        //插入本地数据库
+        public void InsertOrderMaster(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownSortingOrderDao dao = new DownSortingOrderDao();
+                dao.SynchronizeMaster(dd);
+
+            }
+        }
+
+        //查询订单细表
+        public DataTable GetOrderDetail()
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownSortingOrderDao dao = new DownSortingOrderDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindOrderDetail();
+            }
+        }
+        //插入本地数据库
+        public void InsertOrderDetail(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownSortingOrderDao dao = new DownSortingOrderDao();
+                dao.SynchronizeDetail(dd);
+
+            }
+        }
+
+
+
     }
 }

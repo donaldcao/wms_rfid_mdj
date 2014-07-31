@@ -146,9 +146,9 @@
       <Project>{E243AB76-351D-4C97-BFE3-D55E0BA0DECF}</Project>
       <Name>THOK.WMS.DbModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.DownloadWms\THOK.WMS.DownloadWms.csproj">
+    <ProjectReference Include="..\THOK.Wms.Download\THOK.WMS.Download.csproj">
       <Project>{70E54BF4-84BD-4F2C-B9E5-93F682A9844D}</Project>
-      <Name>THOK.WMS.DownloadWms</Name>
+      <Name>THOK.WMS.Download</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

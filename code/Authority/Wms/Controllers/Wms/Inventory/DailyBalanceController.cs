@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using THOK.Common.WebUtil;
 using THOK.Wms.Bll.Interfaces;
-using THOK.Wms.DownloadWms.Bll;
+using THOK.Wms.Download.Bll;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using System.Data;

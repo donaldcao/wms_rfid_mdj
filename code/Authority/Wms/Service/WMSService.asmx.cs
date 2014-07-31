@@ -12,7 +12,7 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Collections.Generic;
 using System.Xml;
-using THOK.Wms.DownloadWms.Bll;
+using THOK.Wms.Download.Bll;
 
 namespace Wms.Service
 {

@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Common.WebUtil;
-using THOK.WMS.DownloadWms.Bll;
-using THOK.Wms.DownloadWms.Bll;
 using THOK.Authority.Bll.Interfaces;
 using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
 using THOK.Wms.DbModel;
-using THOK.Wms.DownloadWms.Dao;
-using System.Data;
-using THOK.WMS.DownloadWms.Dao;
 
 namespace Authority.Controllers.Wms.SortingInfo
 {

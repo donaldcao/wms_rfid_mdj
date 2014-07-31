@@ -7,7 +7,7 @@ using THOK.Wms.AutomotiveSystems.Interfaces;
 using System.Text;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Common.WebUtil;
-using THOK.Wms.DownloadWms.Bll;
+using THOK.Wms.Download.Bll;
 
 namespace Wms.Controllers.Wms.AutomotiveSystems
 {

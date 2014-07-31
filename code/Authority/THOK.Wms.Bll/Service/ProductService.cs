@@ -6,7 +6,7 @@ using THOK.Wms.DbModel;
 using THOK.Wms.Bll.Interfaces;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
-using THOK.WMS.DownloadWms.Bll;
+
 using System.Data;
 namespace THOK.Wms.Bll.Service
 {
@@ -18,7 +18,7 @@ namespace THOK.Wms.Bll.Service
         [Dependency]
         public IStorageRepository StorageRepository { get; set; }
 
-        DownProductBll Product = new DownProductBll();
+ 
 
         protected override Type LogPrefix
         {

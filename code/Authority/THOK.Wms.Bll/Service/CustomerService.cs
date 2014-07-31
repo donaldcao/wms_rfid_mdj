@@ -7,7 +7,7 @@ using THOK.Wms.DbModel;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.Download.Interfaces;
-using THOK.WMS.DownloadWms.Bll;
+
 using System.Data;
 
 namespace THOK.Wms.Bll.Service
@@ -23,7 +23,7 @@ namespace THOK.Wms.Bll.Service
         [Dependency]
         public ICustomerDownService CustomerDownService { get; set; }
 
-        DownCustomerBll Customer = new DownCustomerBll();
+
 
         protected override Type LogPrefix
         {

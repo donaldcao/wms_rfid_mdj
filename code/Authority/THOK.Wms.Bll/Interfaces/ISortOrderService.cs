@@ -11,6 +11,5 @@ namespace THOK.Wms.Bll.Interfaces
         object GetDetails(int page, int rows, string OrderID, string orderDate,string productCode);
         object GetDetails(string orderDate);
         bool Save(SortOrder sortOrder, out string strResult);
-        bool Down(string beginDate, string endDate, string sortLineCode, bool isSortDown, string batch, out string strResult);
-    }
+       }
 }

@@ -367,5 +367,30 @@ namespace THOK.WMS.DownloadWms.Bll
             }
         }
         #endregion
+
+
+
+        //  从营销系统下载产品数据
+        public DataTable GetProduct()
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownProductDao dao = new DownProductDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindProduct();
+            }
+        }
+
+        public void InsertProduct(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownProductDao dao = new DownProductDao();
+                dao.SynchronizeCigarette(dd);
+
+            }
+        }
+
+
     }
 }

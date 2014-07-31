@@ -10,6 +10,8 @@ using THOK.Common;
 using SignalR;
 using THOK.Wms.SignalR;
 using THOK.Wms.SignalR.Connection;
+using THOK.SMS.SignalR;
+using THOK.SMS.SignalR.Connection;
 using System.IO.Compression;
 using THOK.Security;
 using Wms.Security;
@@ -44,6 +46,7 @@ namespace Wms
             routes.MapConnection<AllotStockOutConnection>("allotStockOut", "allotStockOut/{*operation}");
             routes.MapConnection<DispatchSortWorkConnection>("allotSortWork", "allotSortWork/{*operation}");
             routes.MapConnection<DownloadSortOrderConnection>("downloadSortOrder", "downloadSortOrder/{*operation}");
+            routes.MapConnection<OptimizeSortOrderConnection>("optimizeSortOrder", "optimizeSortOrder/{*operation}");
             routes.MapRoute(
                 "Default", // 路由名称
                 "{controller}/{action}/{SystemID}", // 带有参数的 URL

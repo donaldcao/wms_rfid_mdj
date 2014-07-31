@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50BD809C-BC8D-498E-9F09-A5C2593C5E43}</ProjectGuid>
+    <ProjectGuid>{95ABFFA6-FD87-44A1-937B-E0602D90F432}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>THOK.SMS.Optimize</RootNamespace>
-    <AssemblyName>THOK.SMS.Optimize</AssemblyName>
+    <RootNamespace>THOK.SMS.SignalR</RootNamespace>
+    <AssemblyName>THOK.SMS.SignalR</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -34,21 +34,45 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework.Extended">
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.95\lib\net40\EntityFramework.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=2.0.208.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
       <HintPath>..\Libraries\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\Libraries\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR">
+      <HintPath>..\packages\SignalR.Server.0.5.2\lib\net40\SignalR.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR.Hosting.AspNet">
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.2\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SignalR.Hosting.Common">
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.2\lib\net40\SignalR.Hosting.Common.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,37 +80,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IChannelOptimizeService.cs" />
-    <Compile Include="Interfaces\IGetOptimizeInfoService.cs" />
-    <Compile Include="Interfaces\IOrderSplitOptimizeService.cs" />
-    <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="Model\ChannelAllotInfo.cs" />
-    <Compile Include="Model\ChannelGroupInfo.cs" />
-    <Compile Include="Model\PackInfo.cs" />
-    <Compile Include="Model\SortOrderDetailInfo.cs" />
+    <Compile Include="Connection\ConnectionBase.cs" />
+    <Compile Include="Connection\OptimizeSortOrderConnection.cs" />
+    <Compile Include="Model\ProgressState.cs" />
+    <Compile Include="Notifier.cs" />
+    <Compile Include="Optimize\Interfaces\IOptimizeSortOrderService.cs" />
+    <Compile Include="Optimize\Service\OptimizeSortOrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\ChannelOptimizeService.cs" />
-    <Compile Include="Service\GetOptimizeInfoService.cs" />
-    <Compile Include="Service\OrderSplitOptimizeService.cs" />
-    <Compile Include="Service\ServiceBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\THOK.Authority.Bll\THOK.Authority.Bll.csproj">
-      <Project>{8375EB8C-20CB-4E3E-BCF4-85E54F61D241}</Project>
-      <Name>THOK.Authority.Bll</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Authority.Dal\THOK.Authority.Dal.csproj">
-      <Project>{A8E32F0A-A9F4-4CDD-8C7A-8304CD034070}</Project>
-      <Name>THOK.Authority.Dal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Authority.DbModel\THOK.Authority.DbModel.csproj">
-      <Project>{F7EB9C5D-6082-4DE6-B1C0-740AFF0CFE11}</Project>
-      <Name>THOK.Authority.DbModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\THOK.Common.Ef\THOK.Common.Ef.csproj">
       <Project>{59FB8EB5-F5B8-4423-8550-A7819C855CDE}</Project>
       <Name>THOK.Common.Ef</Name>
@@ -94,14 +100,6 @@
     <ProjectReference Include="..\THOK.Common.Entity\THOK.Common.Entity.csproj">
       <Project>{D629856F-6F11-4A87-8440-A5B66383A26A}</Project>
       <Name>THOK.Common.Entity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Common\THOK.Common.csproj">
-      <Project>{2F9C4207-F8A0-4E55-A2CB-3514ADC0A437}</Project>
-      <Name>THOK.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.SMS.Bll\THOK.SMS.Bll.csproj">
-      <Project>{3857795F-03BB-49A4-B6CD-7B01AF22C563}</Project>
-      <Name>THOK.SMS.Bll</Name>
     </ProjectReference>
     <ProjectReference Include="..\THOK.SMS.Dal\THOK.SMS.Dal.csproj">
       <Project>{A83872B4-27B6-4521-91F2-060062551EB8}</Project>
@@ -111,25 +109,13 @@
       <Project>{90503686-2101-43DA-B8BA-473F0F3D7A41}</Project>
       <Name>THOK.SMS.DbModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.Bll\THOK.WMS.Bll.csproj">
-      <Project>{2B8E7C92-13CA-426C-94DA-7D021EBD504C}</Project>
-      <Name>THOK.WMS.Bll</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.Dal\THOK.WMS.Dal.csproj">
-      <Project>{DB6CC091-9BC6-415C-A0D2-E34289669102}</Project>
-      <Name>THOK.WMS.Dal</Name>
+    <ProjectReference Include="..\THOK.SMS.Optimize\THOK.SMS.Optimize.csproj">
+      <Project>{50BD809C-BC8D-498E-9F09-A5C2593C5E43}</Project>
+      <Name>THOK.SMS.Optimize</Name>
     </ProjectReference>
     <ProjectReference Include="..\THOK.Wms.DbModel\THOK.WMS.DbModel.csproj">
       <Project>{E243AB76-351D-4C97-BFE3-D55E0BA0DECF}</Project>
       <Name>THOK.WMS.DbModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.DownloadWms\THOK.WMS.DownloadWms.csproj">
-      <Project>{70E54BF4-84BD-4F2C-B9E5-93F682A9844D}</Project>
-      <Name>THOK.WMS.DownloadWms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.Download\THOK.WMS.Download.csproj">
-      <Project>{9495DAFA-C32B-445C-B760-341CBE9288C6}</Project>
-      <Name>THOK.WMS.Download</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -142,7 +142,7 @@ namespace THOK.WMS.DownloadWms.Dao
         public void SynchronizeRoute(DataTable routeTable)
         {
 
-            DateTime dt = new DateTime();
+            DateTime dt = DateTime.Now;
             foreach (DataRow row in routeTable.Rows)
             {
                 string sql = "IF '{0}' IN (SELECT deliver_line_code FROM wms_deliver_line) " +
@@ -151,7 +151,7 @@ namespace THOK.WMS.DownloadWms.Dao
                                 "END " +
                              "ELSE " +
                                 "BEGIN " +
-                                    "INSERT wms_deliver_line VALUES ('{0}','{1}','{2},'{3}','{4},'{5}','{6},'{7}','{8}') " +
+                                    "INSERT wms_deliver_line VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}') " +
                                 "END";
                 sql = string.Format(sql, row["ROUTECODE"], ' ', row["ROUTENAME"], row["AREACODE"], row["SORTID"], ' ', '1', dt, ' ');
                 ExecuteNonQuery(sql);

@@ -6,22 +6,28 @@
                 $.messager.alert('错误', '请选择未优化的分拣批次！', 'info');
             }
             else {
-                var j_waitDialog = ShowWaitMessageDialog();
-                $.ajax({
-                    url: "/SortBatchDispatch/Optimize/", type: "GET", dataType: "text",
-                    data: { 'id': row.Id },
-                    complete: function () { HideWaitMessageDialog(j_waitDialog); },
-                    success: function (responseText) {
-                        var result = $.evalJSON(responseText);
-                        if (result.success) {
-                            $.messager.alert(g_MsgBoxTitle, result.msg, "info");
-                            $("#details").datagrid('reload');
-                        } else {
-                            $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
-                            $("#details").datagrid('reload');
-                        }
-                    }
-                });
+                var sortBatchId = row.Id;
+                $.asyncProcessing.Start('/OptimizeSortOrder', $.toJSON({ ActionType: 'start', sortBatchId: sortBatchId }));
+                $.asyncProcessing.OnProgressComplete = function () {
+                    $('#dlg_sorting_date').dialog('close');
+                    $('#details').datagrid('reload');
+                }
+//                var j_waitDialog = ShowWaitMessageDialog();
+//                $.ajax({
+//                    url: "/SortBatchDispatch/Optimize/", type: "GET", dataType: "text",
+//                    data: { 'id': row.Id },
+//                    complete: function () { HideWaitMessageDialog(j_waitDialog); },
+//                    success: function (responseText) {
+//                        var result = $.evalJSON(responseText);
+//                        if (result.success) {
+//                            $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+//                            $("#details").datagrid('reload');
+//                        } else {
+//                            $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+//                            $("#details").datagrid('reload');
+//                        }
+//                    }
+//                });
             }
         }
         else {

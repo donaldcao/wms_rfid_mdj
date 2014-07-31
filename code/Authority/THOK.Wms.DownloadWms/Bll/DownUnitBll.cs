@@ -464,5 +464,39 @@ namespace THOK.WMS.DownloadWms.Bll
         }
         #endregion
 
+
+
+
+        ////获取本地区域  test
+        //public DataTable GetArea()
+        //{
+        //    using (PersistentManager pm = new PersistentManager())
+        //    {
+        //        DownDistDao dao = new DownDistDao();              
+        //        return dao.FindArea();
+        //    }
+        //}
+
+
+        //  从营销系统下载区域数据
+        public DataTable GetArea()
+        {
+            using (PersistentManager dbPm = new PersistentManager("YXConnection"))
+            {
+                DownDistDao dao = new DownDistDao();
+                dao.SetPersistentManager(dbPm);
+                return dao.FindArea();
+            }
+        }
+
+        public void InsertArea(DataTable dd)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                DownDistDao dao = new DownDistDao();              
+                dao.SynchronizeArea(dd);
+               
+            }
+        }
     }
 }

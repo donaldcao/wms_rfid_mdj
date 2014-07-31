@@ -26,38 +26,38 @@
         $('#SortingLineCode').combogrid('clear');
     }
 
-    function generateCheckClick() {
-        var bat = $("#batchID").val();
-        var begin = $('#beginDate').datebox('getValue');
-        //var end = $('#endDate').datebox('getValue');
-        var sortCode = $('#SortingLineCode').combo('getValue');
-        var isChecked = $("input[type='radio']:checked").val();
-        var checked = true;
-        if (isChecked == "false")
-            checked = false;
-        if (begin != "") {
-            var j_waitDialog = ShowWaitMessageDialog();
-            $.ajax({
-                url: "/SortingOrder/DownSortOrder/", type: "GET", dataType: "text",
-                data: { 'beginDate': begin, "endDate": begin, sortLineCode: sortCode, isSortDown: checked, batch: bat },
-                complete: function () { HideWaitMessageDialog(j_waitDialog); },
-                success: function (responseText) {
-                    var result = $.evalJSON(responseText);
-                    if (result.success) {
-                        $.messager.alert(g_MsgBoxTitle, result.msg, "info");
-                        $("#details").datagrid('reload');
-                        $('#dlg_sorting_date').dialog('close');
-                    } else {
-                        $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
-                        $("#details").datagrid('reload');
-                        $('#dlg_sorting_date').dialog('close');
-                    }
-                }
-            });
-        } else {
-            $.messager.confirm('错误', '没选时间！请选择时间！');
-        }
-    }
+//    function generateCheckClick() {
+//        var bat = $("#batchID").val();
+//        var begin = $('#beginDate').datebox('getValue');
+//        //var end = $('#endDate').datebox('getValue');
+//        var sortCode = $('#SortingLineCode').combo('getValue');
+//        var isChecked = $("input[type='radio']:checked").val();
+//        var checked = true;
+//        if (isChecked == "false")
+//            checked = false;
+//        if (begin != "") {
+//            var j_waitDialog = ShowWaitMessageDialog();
+//            $.ajax({
+//                url: "/SortingOrder/DownSortOrder/", type: "GET", dataType: "text",
+//                data: { 'beginDate': begin, "endDate": begin, sortLineCode: sortCode, isSortDown: checked, batch: bat },
+//                complete: function () { HideWaitMessageDialog(j_waitDialog); },
+//                success: function (responseText) {
+//                    var result = $.evalJSON(responseText);
+//                    if (result.success) {
+//                        $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+//                        $("#details").datagrid('reload');
+//                        $('#dlg_sorting_date').dialog('close');
+//                    } else {
+//                        $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+//                        $("#details").datagrid('reload');
+//                        $('#dlg_sorting_date').dialog('close');
+//                    }
+//                }
+//            });
+//        } else {
+//            $.messager.confirm('错误', '没选时间！请选择时间！');
+//        }
+//    }
 
     function Download() {
         var begin = $('#beginDate').datebox('getValue');

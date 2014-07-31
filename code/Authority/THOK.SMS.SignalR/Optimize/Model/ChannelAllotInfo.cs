@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace THOK.SMS.Optimize.Model
+namespace THOK.SMS.SignalR.Optimize.Model
 {
-    public class ChannelAllotInfo
+    class ChannelAllotInfo
     {
         public int Id { get; set; }
 

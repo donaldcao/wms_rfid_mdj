@@ -13,7 +13,6 @@ using THOK.Security;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
 using THOK.Wms.DbModel;
-using THOK.SMS.Optimize.Interfaces;
 using THOK.Wms.DownloadWms.Dao;
 using System.Data;
 using THOK.WMS.DownloadWms.Dao;

@@ -19,8 +19,6 @@ namespace THOK.SMS.Bll.Interfaces
         System.Data.DataTable GetSortBatch(int page, int rows, string SortBatchId);
 
         object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);
-
-        bool Optimize(string id, out string strResult);
        
         bool UpLoad(SortBatch sortbatch, out string strResult);
     }

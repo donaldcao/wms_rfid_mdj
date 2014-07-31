@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using THOK.SMS.SignalR.Model;
 using System.Threading;
+using THOK.Wms.SignalR.Model;
 
 namespace THOK.SMS.SignalR.Optimize.Interfaces
 {

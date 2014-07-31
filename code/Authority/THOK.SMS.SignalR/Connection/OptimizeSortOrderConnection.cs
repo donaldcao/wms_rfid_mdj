@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.Practices.Unity;
-using THOK.SMS.SignalR.Model;
 using THOK.SMS.SignalR.Optimize.Interfaces;
+using THOK.Wms.SignalR.Connection;
+using THOK.Wms.SignalR.Model;
 
 namespace THOK.SMS.SignalR.Connection
 {

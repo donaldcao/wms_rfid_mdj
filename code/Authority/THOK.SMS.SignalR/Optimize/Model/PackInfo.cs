@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace THOK.SMS.Bll.Model
+namespace THOK.SMS.SignalR.Optimize.Model
 {
     class PackInfo
     {

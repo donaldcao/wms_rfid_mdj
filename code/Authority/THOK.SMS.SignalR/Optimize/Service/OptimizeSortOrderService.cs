@@ -1,30 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using THOK.SMS.SignalR.Connection;
-using THOK.SMS.SignalR.Optimize.Interfaces;
-using THOK.SMS.SignalR.Model;
 using System.Threading;
 using Microsoft.Practices.Unity;
-using THOK.SMS.Optimize.Interfaces;
-using THOK.Wms.DbModel;
-using THOK.SMS.DbModel;
 using THOK.SMS.Dal.Interfaces;
-using THOK.SMS.Optimize.Model;
+using THOK.SMS.DbModel;
+using THOK.SMS.SignalR.Connection;
+using THOK.SMS.SignalR.Optimize.Interfaces;
+using THOK.Wms.Dal.Interfaces;
+using THOK.Wms.DbModel;
+using THOK.Wms.SignalR.Model;
+using THOK.SMS.SignalR.Optimize.Model;
+using THOK.Authority.Dal.Interfaces;
+using THOK.Wms.SignalR;
 
 namespace THOK.SMS.SignalR.Optimize.Service
 {
     public class OptimizeSortOrderService : Notifier<OptimizeSortOrderConnection>, IOptimizeSortOrderService
     {
+
+        #region Dependency
         [Dependency]
-        public IGetOptimizeInfoService GetOptimizeInfoService { get; set; }
+        public ISortBatchRepository SortBatchRepository { get; set; }
 
         [Dependency]
-        public IChannelOptimizeService ChannelOptimizeService { get; set; }
+        public ISortingLineRepository SortingLineRepository { get; set; }
 
         [Dependency]
-        public IOrderSplitOptimizeService OrderSplitOptimizeService { get; set; }
+        public IChannelRepository ChannelRepository { get; set; }
+
+        [Dependency]
+        public ISystemParameterRepository SystemParameterRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderDispatchRepository SortOrderDispatchRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderRepository SortOrderRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderDetailRepository SortOrderDetailRepository { get; set; }
 
         [Dependency]
         public IChannelAllotRepository ChannelAllotRepository { get; set; }
@@ -35,8 +50,8 @@ namespace THOK.SMS.SignalR.Optimize.Service
         [Dependency]
         public ISortOrderAllotDetailRepository SortOrderAllotDetailRepository { get; set; }
 
-        [Dependency]
-        public ISortBatchRepository SortBatchRepository { get; set; }
+
+        #endregion
 
         public void Optimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, string id)
         {
@@ -49,48 +64,45 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 ps.Messages.Add("数据提取中，请稍等...");
                 int sortBatchId = Convert.ToInt32(id);
                 //优化的批次
-                SortBatch sortBatch = GetOptimizeInfoService.GetSortBatch(sortBatchId);
+                SortBatch sortBatch = GetSortBatch(sortBatchId);
                 //优化的分拣线
-                SortingLine sortingLine = GetOptimizeInfoService.GetSortingLine(sortBatch.SortingLineCode);
+                SortingLine sortingLine = GetSortingLine(sortBatch.SortingLineCode);
                 //可优化的分拣线烟道
-                Channel[] channels = GetOptimizeInfoService.GetChannel(sortBatch.SortingLineCode);
+                Channel[] channels = GetChannel(sortBatch.SortingLineCode);
 
                 //大小品种划分系数
-                double channelAllotScale = sortingLine.ProductType=="1"? GetOptimizeInfoService.GetChannelAllotScale():0.0;
+                double channelAllotScale = sortingLine.ProductType=="1"? GetChannelAllotScale():0.0;
                 //是否使用整件分拣线
-                bool isUseWholePieceSortingLine = GetOptimizeInfoService.GetIsUseWholePieceSortingLine();
+                bool isUseWholePieceSortingLine = GetIsUseWholePieceSortingLine();
 
                 StateTypeForProcessing(ps, "数据提取", new Random().Next(1, 5) + 5, "正在提取" + "线路信息", 100);
                 ps.Messages.Add("正在提取线路信息...");
-                string[] deliverLineCodes = GetOptimizeInfoService.GetDeliverLine(sortBatchId, sortingLine.ProductType);
+                string[] deliverLineCodes = GetDeliverLine(sortBatchId, sortingLine.ProductType);
 
                 StateTypeForProcessing(ps, "数据提取", new Random().Next(1, 5) + 10, "正在提取" + "主单信息", new Random().Next(1, 100));
                 ps.Messages.Add("正在提取主单信息...");
                 //分拣的主单信息
-                SortOrder[] sortOrders = GetOptimizeInfoService.GetSortOrder(sortBatch.OrderDate.ToString("yyyyMMdd"), deliverLineCodes);
+                SortOrder[] sortOrders = GetSortOrder(sortBatch.OrderDate.ToString("yyyyMMdd"), deliverLineCodes);
 
                 StateTypeForProcessing(ps, "数据提取", new Random().Next(1, 5) + 15, "正在提取" + "细单信息", 100);
                 ps.Messages.Add("正在提取细单信息...");
                 //分拣的细单信息
-                SortOrderDetail[] sortOrderDetails = GetOptimizeInfoService.GetSortOrderDetail(sortOrders, sortingLine.ProductType, isUseWholePieceSortingLine);
+                SortOrderDetail[] sortOrderDetails = GetSortOrderDetail(sortOrders, sortingLine.ProductType, isUseWholePieceSortingLine);
 
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 20, "正在优化" + "分拣烟道", new Random().Next(1, 5));
                 ps.Messages.Clear();
                 ps.Messages.Add("数据优化中，请稍等...");
-                //ChannelOptimizeService.ChannelAllotOptimize(sortBatchId, sortOrderDetails, channels, channelAllotScale);
                 ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
 
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 30, "正在保存" + "分配结果", 100);
-                ChannelAllot[] channelAllots = GetOptimizeInfoService.GetChannelAllot(sortBatchId);
+                ChannelAllot[] channelAllots = GetChannelAllot(sortBatchId);
 
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 32, "正在拆分" + "分拣订单", new Random().Next(1, 5));
-                //OrderSplitOptimizeService.OrderSplitOptimize(sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
                 OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
 
-                SortOrderAllotMaster[] sortOrderAllotMasters = GetOptimizeInfoService.GetSortOrderAllotMaster(sortBatchId);
+                SortOrderAllotMaster[] sortOrderAllotMasters = GetSortOrderAllotMaster(sortBatchId);
 
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 47, "正在优化" + "出烟分配", new Random().Next(1, 5));
-                //OrderSplitOptimizeService.OrderDetailSplitOptimize(sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
                 OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
 
                 ps.Messages.Clear();
@@ -108,6 +120,145 @@ namespace THOK.SMS.SignalR.Optimize.Service
 
                 StateTypeForInfo(ps, "优化出错！" + ex.Message);
             }
+        }
+
+        private SortBatch GetSortBatch(int sortBatchId)
+        {
+            return SortBatchRepository.GetQueryable().FirstOrDefault(s => s.Id == sortBatchId);
+        }
+
+        private SortingLine GetSortingLine(string sortingLineCode)
+        {
+            return SortingLineRepository.GetQueryable().FirstOrDefault(s => s.SortingLineCode == sortingLineCode);
+        }
+
+        private Channel[] GetChannel(string sortingLineCode)
+        {
+            return ChannelRepository.GetQueryable().Where(c => c.SortingLineCode == sortingLineCode && c.IsActive == "1").ToArray();
+        }
+
+        private bool GetIsUseWholePieceSortingLine()
+        {
+            return SortingLineRepository.GetQueryable().Where(s => s.ProductType == "3").Count() > 0;
+        }
+
+        private double GetChannelAllotScale()
+        {
+            try
+            {
+                return Convert.ToDouble(SystemParameterRepository.GetQueryable()
+                                   .Where(s => s.ParameterName == "ChannelAllotScale")
+                                   .Select(s => s.ParameterValue)
+                                   .FirstOrDefault());
+            }
+            catch (Exception)
+            {
+
+                return 0.9;
+            }
+
+
+        }
+
+        private string[] GetDeliverLine(int sortBatchId, string productType)
+        {
+            if (productType == "1")
+            {
+                //正常分拣线
+                return SortOrderDispatchRepository.GetQueryable()
+                                                  .Where(s => s.SortBatchId == sortBatchId)
+                                                  .OrderBy(s => s.DeliverLineNo)
+                                                  .Select(s => s.DeliverLineCode)
+                                                  .ToArray();
+            }
+            if (productType == "2")
+            {
+                //异型分拣线未实现 
+                return null;
+            }
+            if (productType == "3")
+            {
+                //整件分拣线未实现 
+                return null;
+            }
+            if (productType == "4")
+            {
+                //手工分拣线未实现 
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private SortOrder[] GetSortOrder(string orderDate, string[] deliverLineCodes)
+        {
+            return SortOrderRepository.GetQueryable()
+                                      .Where(s => s.OrderDate == orderDate && deliverLineCodes.Contains(s.DeliverLineCode))
+                                      .ToArray();
+        }
+
+        private SortOrderDetail[] GetSortOrderDetail(SortOrder[] sortOrders, string productType, bool isUseWholePieceSortingLine)
+        {
+            if (productType == "1")
+            {
+                if (isUseWholePieceSortingLine)
+                {
+                    var orderIds = sortOrders.Select(s => s.OrderID);
+                    var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
+                                                                   .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
+                                                                   .ToArray();
+                    SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity %= 50);
+                    return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
+                }
+                else
+                {
+                    var orderIds = sortOrders.Select(s => s.OrderID);
+                    return SortOrderDetailRepository.GetQueryable()
+                                                    .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
+                                                    .ToArray();
+                }
+            }
+            if (productType == "2")
+            {
+                var orderIds = sortOrders.Select(s => s.OrderID);
+                return SortOrderDetailRepository.GetQueryable()
+                                                    .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "1")
+                                                    .ToArray();
+            }
+            if (productType == "3")
+            {
+                var orderIds = sortOrders.Select(s => s.OrderID);
+                var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
+                                                                   .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
+                                                                   .ToArray();
+                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.SortQuantity / 50 * 50);
+                return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
+            }
+            if (productType == "4")
+            {
+                var orderIds = sortOrders.Select(s => s.OrderID);
+                var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
+                                                                   .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
+                                                                   .ToArray();
+                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.RealQuantity - d.SortQuantity);
+                return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private ChannelAllot[] GetChannelAllot(int sortBatchId)
+        {
+            return ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
+        }
+
+        private SortOrderAllotMaster[] GetSortOrderAllotMaster(int sortBatchId)
+        {
+            return SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
         }
 
         private void ChannelAllotOptimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, int sortBatchId, SortOrderDetail[] sortOrderDetails, Channel[] channels, double channelAllotScale)
@@ -619,13 +770,13 @@ namespace THOK.SMS.SignalR.Optimize.Service
             NotifyConnection(ps.Clone());
         }
 
-        private void StateTypeForProcessing(ProgressState ps, string TotalName, int TotalValue, string CurrentName, int CurrentValue)
+        private void StateTypeForProcessing(ProgressState ps, string totalName, int totalValue, string currentName, int currentValue)
         {
             ps.State = StateType.Processing;
-            ps.TotalProgressName = TotalName;
-            ps.TotalProgressValue = TotalValue;
-            ps.CurrentProgressName = CurrentName;
-            ps.CurrentProgressValue = CurrentValue;
+            ps.TotalProgressName = totalName;
+            ps.TotalProgressValue = totalValue;
+            ps.CurrentProgressName = currentName;
+            ps.CurrentProgressValue = currentValue;
             NotifyConnection(ps.Clone());
         }
     }

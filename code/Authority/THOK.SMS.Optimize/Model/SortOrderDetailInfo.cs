@@ -5,7 +5,7 @@ using System.Text;
 
 namespace THOK.SMS.Optimize.Model
 {
-    class SortOrderDetailInfo
+    public class SortOrderDetailInfo
     {
         public string ProductCode { get; set; }
 

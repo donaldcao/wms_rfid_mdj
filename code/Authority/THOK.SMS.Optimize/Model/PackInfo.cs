@@ -5,7 +5,7 @@ using System.Text;
 
 namespace THOK.SMS.Optimize.Model
 {
-    class PackInfo
+    public class PackInfo
     {
         public int Id { get; set; }
 

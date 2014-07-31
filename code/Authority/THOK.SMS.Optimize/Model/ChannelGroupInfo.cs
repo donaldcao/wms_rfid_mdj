@@ -5,7 +5,7 @@ using System.Text;
 
 namespace THOK.SMS.Optimize.Model
 {
-    class ChannelGroupInfo
+    public class ChannelGroupInfo
     {
         public int ChannelGroup { get; set; }
 

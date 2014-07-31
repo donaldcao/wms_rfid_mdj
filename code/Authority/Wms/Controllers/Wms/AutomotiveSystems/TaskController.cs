@@ -14,7 +14,7 @@ namespace Wms.Controllers.Wms.AutomotiveSystems
     public class TaskController : Controller
     {
         [Dependency]
-        public THOK.Wms.AutomotiveSystems.Interfaces.ITaskService TaskService { get; set; }
+        public ITaskService TaskService { get; set; }
 
         [Dependency]
         public IInBillMasterHistoryService InBillMasterHistory { get; set; }

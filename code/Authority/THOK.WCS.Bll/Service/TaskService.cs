@@ -1305,6 +1305,7 @@ namespace THOK.WCS.Bll.Service
             Cell originCell = CellRepository.GetQueryable().Where(i => i.CellCode == originCellPosition.CellCode).FirstOrDefault();
 
             var emptyPalletCount = SystemParameterRepository.GetQueryable().Where(i => i.ParameterName == "EmptyPalletCount").FirstOrDefault();
+            int epcValue = Convert.ToInt32(emptyPalletCount.ParameterValue);
             if (emptyPalletCount == null)
             {
                 errorInfo = "请检查：系统参数是否存在参数名：EmptyPalletCount！";
@@ -1314,7 +1315,7 @@ namespace THOK.WCS.Bll.Service
                     && i.IsActive == "1"
                     && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
                     && (i.Storages.Any(s => s.ProductCode == palletCode
-                        && s.Quantity + s.InFrozenQuantity < (Convert.ToInt32(emptyPalletCount.ParameterValue)) && s.OutFrozenQuantity == 0)));
+                        && s.Quantity + s.InFrozenQuantity < epcValue && s.OutFrozenQuantity == 0)));
             if (!cellQuery.Any())
             {
                 cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"

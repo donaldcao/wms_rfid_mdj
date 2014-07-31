@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using THOK.Wms.SignalR.Dispatch.Interfaces;
-using THOK.Wms.SignalR.Model;
 using System.Threading;
+using THOK.Common.SignalR.Connection;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Connection
 {

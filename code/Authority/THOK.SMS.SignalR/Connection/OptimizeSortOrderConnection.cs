@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using Microsoft.Practices.Unity;
 using THOK.SMS.SignalR.Optimize.Interfaces;
-using THOK.Wms.SignalR.Connection;
-using THOK.Wms.SignalR.Model;
+using THOK.Common.SignalR.Model;
+using THOK.Common.SignalR.Connection;
 
 namespace THOK.SMS.SignalR.Connection
 {

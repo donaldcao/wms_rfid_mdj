@@ -6,7 +6,7 @@ using System.Threading;
 using THOK.Common.SignalR.Model;
 using System.Web;
 
-namespace THOK.Wms.SignalR.Connection
+namespace THOK.Common.SignalR.Connection
 {
     public class ConnectionBase : PersistentConnection
     {

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using THOK.Wms.SignalR.Model;
-using System.Threading;
+﻿using System.Threading;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Dispatch.Interfaces
 {

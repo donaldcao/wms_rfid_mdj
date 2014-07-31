@@ -110,6 +110,10 @@
       <Project>{D629856F-6F11-4A87-8440-A5B66383A26A}</Project>
       <Name>THOK.Common.Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\THOK.Common.SignalR\THOK.Common.SignalR.csproj">
+      <Project>{E2D79ABD-3871-426A-9A30-B7B7D16E2B26}</Project>
+      <Name>THOK.Common.SignalR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.SMS.Dal\THOK.SMS.Dal.csproj">
       <Project>{A83872B4-27B6-4521-91F2-060062551EB8}</Project>
       <Name>THOK.SMS.Dal</Name>
@@ -125,10 +129,6 @@
     <ProjectReference Include="..\THOK.Wms.DbModel\THOK.WMS.DbModel.csproj">
       <Project>{E243AB76-351D-4C97-BFE3-D55E0BA0DECF}</Project>
       <Name>THOK.WMS.DbModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\THOK.Wms.SignalR\THOK.WMS.SignalR.csproj">
-      <Project>{04A2C9B1-0F35-42CF-A6A7-4319D7C6E95F}</Project>
-      <Name>THOK.WMS.SignalR</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

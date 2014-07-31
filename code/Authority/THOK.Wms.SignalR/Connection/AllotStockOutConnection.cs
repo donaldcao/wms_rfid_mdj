@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using SignalR;
-using System;
-using THOK.Wms.SignalR.Allot.Interfaces;
+﻿using THOK.Wms.SignalR.Allot.Interfaces;
 using Microsoft.Practices.Unity;
-using System.Collections.Generic;
 using System.Threading;
-using THOK.Wms.SignalR.Model;
+using THOK.Common.SignalR.Connection;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Connection
 {

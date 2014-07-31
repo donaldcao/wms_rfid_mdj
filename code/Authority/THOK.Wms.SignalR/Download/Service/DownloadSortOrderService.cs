@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Data;
-using THOK.Util;
-using THOK.WMS.DownloadWms.Dao;
 using THOK.Wms.SignalR.Download.Interfaces;
-using THOK.Wms.SignalR.Model;
 using THOK.WMS.DownloadWms.Bll;
 using THOK.Wms.DownloadWms.Bll;
 using THOK.Authority.Bll.Service;
@@ -15,6 +10,8 @@ using THOK.Authority.Bll.Interfaces;
 using Microsoft.Practices.Unity;
 using THOK.Wms.SignalR.Connection;
 using THOK.Authority.Dal.Interfaces;
+using THOK.Common.SignalR;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Download.Service
 {

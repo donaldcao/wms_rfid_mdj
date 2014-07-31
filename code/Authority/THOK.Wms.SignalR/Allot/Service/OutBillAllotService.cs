@@ -3,13 +3,13 @@ using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.SignalR.Allot.Interfaces;
 using THOK.Wms.SignalR.Connection;
 using THOK.Wms.SignalR.Common;
-using THOK.Wms.SignalR.Model;
 using System.Linq;
 using THOK.Wms.DbModel;
 using System;
-using THOK.Common.Entity;
 using THOK.Authority.Dal.Interfaces;
 using EntityFramework.Extensions;
+using THOK.Common.SignalR;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Allot.Service
 {
@@ -38,7 +38,7 @@ namespace THOK.Wms.SignalR.Allot.Service
         [Dependency]
         public IStorageRepository StorageRepository { get; set; }
 
-        public void Allot(string connectionId, Model.ProgressState ps, System.Threading.CancellationToken cancellationToken, string billNo, string[] areaCodes)
+        public void Allot(string connectionId,ProgressState ps, System.Threading.CancellationToken cancellationToken, string billNo, string[] areaCodes)
         {
             Locker.LockKey = billNo;
             ConnectionId = connectionId;

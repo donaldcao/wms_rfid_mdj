@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using THOK.Wms.SignalR.Connection;
 using THOK.Wms.SignalR.Dispatch.Interfaces;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.DbModel;
 using THOK.Wms.SignalR.Common;
-using System.Transactions;
-using THOK.Wms.SignalR.Model;
 using System.Threading;
 using THOK.Common.Entity;
 using THOK.Authority.Dal.Interfaces;
+using THOK.Common.SignalR;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Dispatch.Service
 {

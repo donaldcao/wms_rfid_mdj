@@ -2,26 +2,21 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
-using System.Security.Principal;
 using System.Diagnostics;
 using Authority.Controllers;
 using THOK.Common;
 using SignalR;
-using THOK.Wms.SignalR;
 using THOK.Wms.SignalR.Connection;
-using THOK.SMS.SignalR;
 using THOK.SMS.SignalR.Connection;
-using System.IO.Compression;
 using THOK.Security;
 using Wms.Security;
 using THOK.Common.Ef.Infrastructure;
 using THOK.Authority.Bll.Interfaces;
 using Quartz;
 using Quartz.Impl;
-using System.Configuration;
 using System.Collections.Specialized;
 using Wms.Quartz;
+using THOK.Common.SignalR;
 namespace Wms
 {
     // 注意: 有关启用 IIS6 或 IIS7 经典模式的说明，

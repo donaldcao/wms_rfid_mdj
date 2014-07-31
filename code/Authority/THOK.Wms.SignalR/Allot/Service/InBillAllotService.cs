@@ -7,13 +7,12 @@ using System.Linq;
 using System.Collections.Generic;
 using THOK.Wms.SignalR.Connection;
 using System.Threading;
-using THOK.Wms.SignalR.Model;
 using THOK.Wms.SignalR.Common;
-using THOK.Common.Entity;
-using THOK.Authority;
 using THOK.Authority.Dal.Interfaces;
 using THOK.Authority.DbModel;
 using EntityFramework.Extensions;
+using THOK.Common.SignalR;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.Wms.SignalR.Allot.Service
 {

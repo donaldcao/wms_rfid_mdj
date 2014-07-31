@@ -9,10 +9,10 @@ using THOK.SMS.SignalR.Connection;
 using THOK.SMS.SignalR.Optimize.Interfaces;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.DbModel;
-using THOK.Wms.SignalR.Model;
 using THOK.SMS.SignalR.Optimize.Model;
 using THOK.Authority.Dal.Interfaces;
-using THOK.Wms.SignalR;
+using THOK.Common.SignalR;
+using THOK.Common.SignalR.Model;
 
 namespace THOK.SMS.SignalR.Optimize.Service
 {

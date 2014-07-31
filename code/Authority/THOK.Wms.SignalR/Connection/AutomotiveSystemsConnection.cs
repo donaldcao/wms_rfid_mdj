@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SignalR;
+﻿using SignalR;
+using THOK.Common.SignalR;
 
 namespace THOK.Wms.SignalR.Connection
 {

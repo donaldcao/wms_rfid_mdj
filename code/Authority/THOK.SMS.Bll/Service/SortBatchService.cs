@@ -403,26 +403,18 @@ namespace THOK.SMS.Bll.Service
                 var NoOneProFilePath = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProFilePath")).ParameterValue;
                 if (sortBatch.Status == "02")  //02 已优化
                 {
-                    string txtFile =NoOneProFilePath+ "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
-                    string zipFile =txtFile + ".zip";
+                    string txtFile = NoOneProFilePath + "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string zipFile = txtFile + ".zip";
                     txtFile += ".Order";
-                  
-                  try
-                    {
-                        CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
-                        CreateZipFile(NoOneProFilePath, txtFile, zipFile);
-                        SendZipFile(NoOneProIP, NoOneProPort, zipFile);
-                        sortBatch.Status = "03";
-                        SortBatchRepository.SaveChanges();
-                        DeleteFiles(NoOneProFilePath); 
-                        result = true;
-                    }
-                    catch (Exception e)
-                    {
-                        strResult = "原因：" + e.Message;
-                        return false;
-                    }                   
-                   
+
+                    CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
+                    CreateZipFile(NoOneProFilePath, txtFile, zipFile);
+                    SendZipFile(NoOneProIP, NoOneProPort, zipFile);
+                    sortBatch.Status = "03";
+                    SortBatchRepository.SaveChanges();
+                    DeleteFiles(NoOneProFilePath);
+                    result = true;
+
                 }
                 else
                 {
@@ -478,6 +470,8 @@ namespace THOK.SMS.Bll.Service
                 writer.WriteLine(rowData);
                 writer.Flush();
             }
+
+            file.Close();
         }
 
 

@@ -33,7 +33,7 @@ namespace THOK.SMS.Bll.Service
                     s.ProductCode,
                     s.ProductName,
                     s.ChannelCode,
-                    s.channel.ChannelName,
+                    s.Channel.ChannelName,
                     s.Quantity
                 }).ToArray();
             return new { total, rows = sortOrderAllotDetailsArray };

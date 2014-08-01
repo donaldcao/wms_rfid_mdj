@@ -153,6 +153,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new SortOrderAllotMasterMap());
             modelBuilder.Configurations.Add(new SortOrderAllotDetailMap());
             modelBuilder.Configurations.Add(new HandSupplyMap());
+            modelBuilder.Configurations.Add(new SortSupplyMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

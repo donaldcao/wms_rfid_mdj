@@ -48,11 +48,11 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.Quantity).HasColumnName(ColumnMap.Value.To("Quantity"));
 
             // Relationships
-            this.HasRequired(t => t.sortBatch)
+            this.HasRequired(t => t.SortBatch)
                 .WithMany(t => t.HandSupplys)
                 .HasForeignKey(d => d.SortBatchId)
                 .WillCascadeOnDelete(false);
-            this.HasRequired(t => t.channel)
+            this.HasRequired(t => t.Channel)
                 .WithMany(t => t.HandSupplys)
                 .HasForeignKey(d => d.ChannelCode)
                 .WillCascadeOnDelete(false);

@@ -50,6 +50,8 @@ namespace THOK.SMS.SignalR.Optimize.Service
         [Dependency]
         public ISortOrderAllotDetailRepository SortOrderAllotDetailRepository { get; set; }
 
+        [Dependency]
+        public ISortSupplyRepository SortSupplyRepository { get; set; }
 
         #endregion
 
@@ -420,7 +422,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     //如果品牌未更换 要保证该品牌分配在多个烟道组上
                     if (!isChangeProduct)
                     {
-                        var channelGroup = ChannelAllotRepository.GetQueryable().Where(c => c.ProductCode == tempProductCode).Select(c => c.channel.GroupNo).Distinct();
+                        var channelGroup = ChannelAllotRepository.GetQueryable().Where(c => c.ProductCode == tempProductCode).Select(c => c.Channel.GroupNo).Distinct();
                         int tempCount = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).Count();
                         if (tempCount > 0)
                         {
@@ -630,7 +632,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
 
         private void OrderDetailSplitOptimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, int sortBatchId, string[] deliverLineCodes, SortOrder[] sortOrders, SortOrderDetail[] sortOrderDetails, ChannelAllot[] channelAllots, SortOrderAllotMaster[] sortOrderAllotMasters)
         {
-            var channelGroupInfos = channelAllots.Select(c => c.channel.GroupNo)
+            var channelGroupInfos = channelAllots.Select(c => c.Channel.GroupNo)
                                                  .Distinct()
                                                  .Select(g => new ChannelGroupInfo { ChannelGroup = g, Quantity = 0 })
                                                  .ToArray();
@@ -639,12 +641,12 @@ namespace THOK.SMS.SignalR.Optimize.Service
             {
                 Id = c.Id,
                 ChannelCode = c.ChannelCode,
-                GroupNo = c.channel.GroupNo,
-                OrderNo = c.channel.OrderNo,
+                GroupNo = c.Channel.GroupNo,
+                OrderNo = c.Channel.OrderNo,
                 ProductCode = c.ProductCode,
-                Quantity = ((c.Quantity - c.channel.RemainQuantity) / 50) * 50,
-                RemainQuantity = c.channel.RemainQuantity + ((c.Quantity - c.channel.RemainQuantity) % 50),
-                ChannelCapacity = c.channel.ChannelCapacity
+                Quantity = ((c.Quantity - c.Channel.RemainQuantity) / 50) * 50,
+                RemainQuantity = c.Channel.RemainQuantity + ((c.Quantity - c.Channel.RemainQuantity) % 50),
+                ChannelCapacity = c.Channel.ChannelCapacity
             })
                 .ToArray();
 
@@ -740,6 +742,12 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                         if (channelAllotInfo.RemainQuantity <= (channelAllotInfo.ChannelCapacity - 50) && channelAllotInfo.Quantity >= 50)
                                         {
                                             channelAllotInfo.RemainQuantity += 50;
+                                            SortSupply addSortSupply = new SortSupply();
+                                            addSortSupply.SortBatchId = sortBatchId;
+                                            addSortSupply.ChannelCode = channelAllotInfo.ChannelCode;
+                                            addSortSupply.ProductCode = channelAllotInfo.ProductCode;
+                                            addSortSupply.ProductName = sortOrderDetailInfo.ProductName;
+                                            SortSupplyRepository.Add(addSortSupply);
                                             channelAllotInfo.Quantity -= 50;
                                             channelAllotInfo.OrderNo = tmp2.Max(t => t.OrderNo) + 1;
                                         }

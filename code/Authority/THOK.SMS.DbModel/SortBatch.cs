@@ -24,6 +24,7 @@ namespace THOK.SMS.DbModel
         public virtual ICollection<ChannelAllot> ChannelAllots { get; set; }
         public virtual ICollection<HandSupply> HandSupplys { get; set; }
         public virtual ICollection<SortOrderAllotMaster> SortOrderAllotMasters { get; set; }
+        public virtual ICollection<SortSupply> SortSupplys { get; set; }
 
     }
 }

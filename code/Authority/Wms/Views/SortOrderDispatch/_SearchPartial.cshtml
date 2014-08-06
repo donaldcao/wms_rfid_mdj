@@ -53,6 +53,7 @@
         queryParams.SortingLineCode = $('#SortingLineCode').combogrid('getValue');
         queryParams.OrderDate = $('#SearchOrderDate').datebox('getValue');
         queryParams.WorkStatus = $('#WorkState').combo('getValue');
+        queryParams.SortStatus = $('#SortState').combo('getValue');
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({
             pageNumber: 1,

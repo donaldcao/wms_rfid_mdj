@@ -1,19 +1,16 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var row = $('#details').datagrid('getSelected');
-        if (row) {
-            var rowOrderId = null;
-            if (row.OrderID == null) {
-                rowOrderId = "";
-            }
-            else {
-                rowOrderId = row.OrderID;
-            }
-            window.location.href = "/SortingOrder/CreateExcelToClient/"
-                                    + "?orderId=" + rowOrderId;
-        }
-        else {
-            $.messager.alert("系统提示", "未选中行", "info");
-        }
+        var OrderID = null,
+        OrderDate = null,
+        ProductCode = null;
+        if ($('#OrderID').val() == null) { OrderID = ""; } else { OrderID = $('#OrderID').val(); }
+        if ($('#OrderDate').val() == null) { OrderDate = ""; } else { OrderDate = $('#OrderDate').val(); }
+        if ($('#productCode').val() == null) { ProductCode = ""; } else { ProductCode = $('#ProductCode').val(); }
+
+
+        window.location.href = "/SortingOrder/CreateExcelToClient/"
+                                + "?OrderID=" + $('#OrderID').val()
+                                + "&OrderDate=" + $('#OrderDate').datebox('getValue')
+                                + "&ProductCode=" + $('#productCode').val();
     }
 </script>

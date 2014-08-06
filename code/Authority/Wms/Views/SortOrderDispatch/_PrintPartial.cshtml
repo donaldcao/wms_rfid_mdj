@@ -1,24 +1,18 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var orderDate = null
-          , sortingLineCode = null;
+        var orderDate = null,
+        workStatus = null,
+        sortStatus = null,
+        sortingLineCode = null;
 
-        if (document.getElementById('searchOrderDate') == null) {
-            orderDate = "";
-        }
-        else {
-            orderDate = $('#searchOrderDate').datebox('getValue');
-        }
-
-        if (document.getElementById('SortingLineCode') != null) {
-            sortingLineCode = "";
-        }
-        else {
-            sortingLineCode = $('#SortingLineCode').combogrid('getValue');
-        }
-        
+        if ($('#SortingLineCode').val() == null) { SortingLineCode = ""; } else { SortingLineCode = $('#SortingLineCode').val(); }
+        if ($('#SearchOrderDate').val() == null) { OrderDate = ""; } else { OrderDate = $('#SearchOrderDate').val(); }
+        if ($('#SortState').val() == null) { SortState = ""; } else { SortState = $('#SortState').val(); }
+        if ($('#WorkState').val() == null) { WorkState = ""; } else { WorkState = $('#WorkState').val(); }
         window.location.href = "/SortOrderDispatch/CreateExcelToClient/"
-                                + "?orderDate=" + orderDate
-                                + "&sortingLineCode=" + sortingLineCode;
+                                + "?orderDate=" + $('#SearchOrderDate').datebox('getValue')
+                                + "&workStatus=" + $('#WorkState').combo('getValue')
+                                + "&sortStatus=" + $('#SortState').combo('getValue')
+                                + "&sortingLineCode=" + $('#SortingLineCode').combogrid('getValue');
     }
 </script>

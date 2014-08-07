@@ -11,5 +11,7 @@ namespace THOK.Wms.Bll.Interfaces
         object GetDetails(int page, int rows, string OrderID, string orderDate,string productCode);
         object GetDetails(string orderDate);
         bool Save(SortOrder sortOrder, out string strResult);
+
+        System.Data.DataTable GetSortOrder(int page, int rows, string orderID, string orderDate, string productCode);
        }
 }

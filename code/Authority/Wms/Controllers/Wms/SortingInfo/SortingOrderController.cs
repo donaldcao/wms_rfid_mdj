@@ -90,10 +90,12 @@ namespace Authority.Controllers.Wms.SortingInfo
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            string orderId = Request.QueryString["orderId"];
-
+            string orderID = Request.QueryString["OrderID"];
+            string orderDate = Request.QueryString["OrderDate"];
+            string productCode = Request.QueryString["productCode"];
+        
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortOrderDetailService.GetSortOrderDetail(page, rows, orderId);
+            ep.DT1 = SortOrderService.GetSortOrder(page, rows, orderID, orderDate, productCode);
             ep.HeadTitle1 = "分拣订单管理";
             return PrintService.Print(ep);
         }

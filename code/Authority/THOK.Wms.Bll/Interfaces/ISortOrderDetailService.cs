@@ -10,6 +10,6 @@ namespace THOK.Wms.Bll.Interfaces
     {
         object GetDetails(int page, int rows, string OrderID);
         bool Save(SortOrderDetail sortOrderDetail, out string strResult);
-        System.Data.DataTable GetSortOrderDetail(int page, int rows, string OrderID);
+        System.Data.DataTable GetSortOrderDetail(int page, int rows, string orderID);
     }
 }

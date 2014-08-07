@@ -16,10 +16,14 @@ namespace THOK.SMS.Bll.Interfaces
 
         bool Delete(string id, out string strResult);
 
-        System.Data.DataTable GetSortBatch(int page, int rows, string SortBatchId);
-
-        object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);
+        System.Data.DataTable GetSortBatch(int page, int rows, string SortBatchId);      
        
         bool UpLoad(SortBatch sortbatch, out string strResult);
+
+
+        //分拣配送
+        object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);
+        System.Data.DataTable DeliverOrderSearchInfo(int page, int rows, string orderDate, string batchNo,string sortingLineCode);
+
     }
 }

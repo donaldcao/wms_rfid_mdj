@@ -591,5 +591,83 @@ namespace THOK.SMS.Bll.Service
         }
 
         #endregion
+
+
+        //分拣配送打印
+        public System.Data.DataTable DeliverOrderSearchInfo(int page, int rows, string orderDate, string batchNo, string sortingLineCode)
+        {           
+            var sortDispatch = SortOrderDispatchRepository.GetQueryable().Where(a=>a.SortBatchId>0);
+            var sortBatchQuery = SortBatchRepository.GetQueryable();
+            var sortLineQuery = SortingLineRepository.GetQueryable();
+            var deliverLineQuery = DeliverLineRepository.GetQueryable();
+            if (orderDate != string.Empty && orderDate != null)
+            {
+                orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");
+                sortDispatch = sortDispatch.Where(s => s.OrderDate == orderDate);
+            }
+            if (batchNo != string.Empty && batchNo != null)
+            {
+                int TheBatchNo = Convert.ToInt32(batchNo);
+                var sortBatchIds = sortBatchQuery.Where(s => s.BatchNo == TheBatchNo).Select(s => s.Id);
+                sortDispatch = sortDispatch.Where(b => sortBatchIds.Contains(b.SortBatchId));
+            }
+            if (sortingLineCode != string.Empty && sortingLineCode != null)
+            {
+                sortDispatch = sortDispatch.Where(s => s.SortingLineCode == sortingLineCode);
+            }
+
+            var batchsort = sortDispatch.ToArray().OrderByDescending(b => b.SortBatchId).Select(a => new
+            {
+                OrderDate = sortBatchQuery.Where(s => s.Id == a.SortBatchId).FirstOrDefault().OrderDate.ToString("yyyy-MM-dd"),
+               a.SortingLineCode,
+               SortingLineName = sortLineQuery.FirstOrDefault(b=>b.SortingLineCode==a.SortingLineCode).SortingLineName,
+               a.DeliverLineCode,
+               DeliverLineName=deliverLineQuery.FirstOrDefault(c=>c.DeliverLineCode==a.DeliverLineCode).DeliverLineName,
+               a.DeliverLineNo,
+               SortStatus=a.SortStatus=="1"?"未分拣":"已分拣",
+               IsActive=a.IsActive=="1"?"可用":"不可用"
+            });
+
+            var batch = batchsort.OrderByDescending(a => a.OrderDate).ToArray()
+               .Select(a =>
+               new
+               {
+                   a.OrderDate,
+                   a.SortingLineCode,
+                   a.SortingLineName,
+                   a.DeliverLineCode,
+                   a.DeliverLineName,
+                   a.DeliverLineNo,
+                   a.SortStatus,
+                   a.IsActive                 
+               }).ToArray();
+
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("订单日期", typeof(string));
+            dt.Columns.Add("分拣线编码", typeof(string));
+            dt.Columns.Add("分拣线名称", typeof(string));
+            dt.Columns.Add("送货线路编码", typeof(string));
+            dt.Columns.Add("送货线路名称", typeof(string));
+            dt.Columns.Add("送货顺序", typeof(string));
+            dt.Columns.Add("分拣状态", typeof(string));
+            dt.Columns.Add("是否可用", typeof(string));
+
+            foreach (var item in batch)
+            {
+                dt.Rows.Add
+                    (
+                    item.OrderDate,
+                    item.SortingLineCode,
+                    item.SortingLineName,
+                    item.DeliverLineCode,
+                    item.DeliverLineName,
+                    item.DeliverLineNo,
+                    item.SortStatus,
+                    item.IsActive
+                    );
+            }
+
+            return dt;
+        }
     }
 }

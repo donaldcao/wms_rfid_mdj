@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using THOK.Wms.Bll.Interfaces;
+using THOK.Common.NPOI.Models;
+using THOK.Common.NPOI.Service;
 
 namespace Authority.Controllers.Wms.ComplexSearch
 {
@@ -48,6 +50,24 @@ namespace Authority.Controllers.Wms.ComplexSearch
         {
             var SortOrderDetail = OrderSearchDetailService.GetDetails(page, rows, OrderID);
             return Json(SortOrderDetail, "text", JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            string CustomerCode = Request.QueryString["CustomerCode"];
+            string CustomerName = Request.QueryString["CustomerName"];
+            string DeliverLineCode = Request.QueryString["DeliverLineCode"];
+            string OrderID = Request.QueryString["OrderID"];
+            string OrderDate = Request.QueryString["OrderDate"];
+
+            ExportParam ep = new ExportParam();
+            ep.DT1 = SortOrderSearchService.GetSortOrderSearchInfo(page, rows,OrderID,OrderDate,CustomerCode,CustomerName, DeliverLineCode);
+            ep.HeadTitle1 = "访销订单";
+
+            return PrintService.Print(ep);
         }
     }
 }

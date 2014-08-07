@@ -1,12 +1,20 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var row = $('#details').datagrid('getSelected');
-        if (row) {
-            window.location.href = "/SortingOrder/CreateExcelToClient/"
-                                    + "?orderId=" + row.OrderID;
-        }
-        else {
-            $.messager.alert("系统提示", "未选中行", "info");
-        }
+        var orderID=null,
+        orderDate = null,
+        customerCode = null,
+        customerName = null,
+        deliverLineCode = null;
+        if ($('#OrderID').val() == null) { orderID = ""; } else { orderID = $('#OrderID').val(); }
+        if ($('#searchDeliverLineCode').val() == null) { deliverLineCode = ""; } else { deliverLineCode = $('#searchDeliverLineCode').val(); }
+        if ($('#SearchOrderDate').val() == null) { OrderDate = ""; } else { OrderDate = $('#SearchOrderDate').val(); }
+        if ($('#CustomerCode').val() == null) { customerCode = ""; } else { customerCode = $('#CustomerCode').val(); }
+        if ($('#CustomerName').val() == null) { customerName = ""; } else { customerName = $('#CustomerName').val(); }
+        window.location.href = "/SortOrderSearch/CreateExcelToClient/"
+                                + "?orderID=" + $('#OrderID').val()
+                                + "&orderDate=" + $('#OrderDate').datebox('getValue')
+                                + "&customerCode=" + $('#CustomerCode').val()
+                                + "&customerName=" + $('#CustomerName').val()
+                                + "&deliverLineCode=" + $('#searchDeliverLineCode').val();
     }
 </script>

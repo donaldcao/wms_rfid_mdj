@@ -40,13 +40,17 @@ namespace Wms.Controllers.SMS.ComplexSearch
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
-        //打印 未完成
+        //打印
         public FileStreamResult CreateExcelToClient()
         {
-            //int page = 0, rows = 0;
+            int page = 0, rows = 0;
+            string orderDate = Request.QueryString["OrderDate"] ?? "";
+            string batchNo = Request.QueryString["BatchNo"] ?? "";
+            string sortingLineCode = Request.QueryString["SortingLineCode"] ?? "";
+          
             ExportParam ep = new ExportParam();
-            //ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows);
-            ep.HeadTitle1 = "线路配送查询";
+            ep.DT1 = SortBatchService.DeliverOrderSearchInfo(page, rows, orderDate, batchNo, sortingLineCode);
+            ep.HeadTitle1 = "分拣配送";           
             return PrintService.Print(ep);
         }
     }

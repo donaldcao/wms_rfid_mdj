@@ -1,5 +1,16 @@
-﻿@{
-    ViewBag.Title = "_PrintPartial";
-}
+﻿<script type="text/javascript">
+    function printClick() {
+        var orderDate = null,
+        batchNo = null,
+        sortingLineCode = null;
 
-<h2>_PrintPartial</h2>
+        if ($('#OrderDate').val() == null) { orderDate = ""; } else { orderDate = $('#OrderDate').val(); }
+        if ($('#BatchNo').val() == null) { batchNo = ""; } else { batchNo = $('#BatchNo').val(); }
+        if ($('#searchSortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#searchSortingLineCode').val(); }
+
+        window.location.href = "/DeliverOrderSearch/CreateExcelToClient/"
+                                + "?OrderDate=" + $('#OrderDate').datebox('getValue')
+                                + "&BatchNo=" + $('#BatchNo').val()
+                                + "&SortingLineCode=" + $("#searchSortingLineCode").val();
+    }
+</script>

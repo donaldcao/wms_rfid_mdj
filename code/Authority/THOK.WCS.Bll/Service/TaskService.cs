@@ -1743,7 +1743,9 @@ namespace THOK.WCS.Bll.Service
                             outAllot.RealQuantity += quantity;
                             outAllot.Storage.Quantity -= quantity;
                             outAllot.Storage.OutFrozenQuantity -= quantity;
-                            if (outAllot.Storage.Quantity == 0)
+                            if (outAllot.Storage.Quantity == 0
+                                && outAllot.Storage.InFrozenQuantity == 0
+                                && outAllot.Storage.OutFrozenQuantity == 0)
                             {
                                 outAllot.Storage.Rfid = "";
                                 outAllot.Storage.ProductCode = null;
@@ -1847,7 +1849,9 @@ namespace THOK.WCS.Bll.Service
                             moveDetail.InStorage.Rfid = "";
                             moveDetail.OutStorage.Quantity -= moveDetail.RealQuantity;
                             moveDetail.OutStorage.OutFrozenQuantity -= moveDetail.RealQuantity;
-                            if (moveDetail.OutStorage.Quantity == 0)
+                            if (moveDetail.OutStorage.Quantity == 0
+                                && moveDetail.OutStorage.InFrozenQuantity == 0
+                                && moveDetail.OutStorage.OutFrozenQuantity == 0)
                             {
                                 moveDetail.OutStorage.Rfid = "";
                                 moveDetail.OutStorage.StorageSequence = 0;

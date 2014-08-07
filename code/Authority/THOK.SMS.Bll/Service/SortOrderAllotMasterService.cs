@@ -119,20 +119,20 @@ namespace THOK.SMS.Bll.Service
            if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
-                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.sortOrderAllotMaster.sortBatch.OrderDate.Equals(date));
+                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.SortOrderAllotMaster.SortBatch.OrderDate.Equals(date));
             }
             if (batchNo != "")
             {
                 int batch = Convert.ToInt32(batchNo);
-                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.sortOrderAllotMaster.sortBatch.BatchNo.Equals(batch));
+                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.SortOrderAllotMaster.SortBatch.BatchNo.Equals(batch));
             }
             if (sortingLineCode != "")
             {
-                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.sortOrderAllotMaster.sortBatch.SortingLineCode.Equals(sortingLineCode));
+                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.SortOrderAllotMaster.SortBatch.SortingLineCode.Equals(sortingLineCode));
             }
             if (deliverLineCode != "")
             {
-                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.sortOrderAllotMaster.DeliverLineCode.Equals(deliverLineCode));
+                sortOrderAllotMasterDetailsQuery = sortOrderAllotMasterDetailsQuery.Where(c => c.SortOrderAllotMaster.DeliverLineCode.Equals(deliverLineCode));
             }
 
             var sortOrderAllotMasterArray = sortOrderAllotMasterDetailsQuery.OrderBy(s => s.Id).AsEnumerable()

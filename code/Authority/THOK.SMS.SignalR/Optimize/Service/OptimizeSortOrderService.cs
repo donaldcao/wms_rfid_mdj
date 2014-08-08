@@ -53,6 +53,9 @@ namespace THOK.SMS.SignalR.Optimize.Service
         [Dependency]
         public ISortSupplyRepository SortSupplyRepository { get; set; }
 
+        [Dependency]
+        public IHandSupplyRepository HandSupplyRepository { get; set; }
+
         #endregion
 
         public void Optimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, string id)
@@ -95,20 +98,27 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 //分拣的细单信息
                 SortOrderDetail[] sortOrderDetails = GetSortOrderDetail(sortOrders, sortingLine.ProductType, isUseWholePieceSortingLine);
 
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 20, "正在优化" + "分拣烟道", new Random().Next(1, 5));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 10, "正在优化" + "分拣烟道", new Random().Next(1, 5));
 
                 ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
 
                 ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
 
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 32, "正在拆分" + "分拣订单", new Random().Next(1, 5));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
                 OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
 
-                SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray(); ;
+                SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
 
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 47, "正在优化" + "出烟分配", new Random().Next(1, 5));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在优化" + "出烟分配", new Random().Next(1, 5));
                 OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
 
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(66, 95));
+                Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
+                SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
+                                                                                             .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType=="5")
+                                                                                             .OrderBy(s=>s.SortOrderAllotMaster.PackNo)
+                                                                                             .ToArray();
+                HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
                 ps.Messages.Clear();
                 ps.Messages.Add("优化成功！");
                 sortBatch.Status = "02";
@@ -258,7 +268,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
             var bigChannels = channels.Where(c => (c.ChannelType == "3" || c.ChannelType == "4"))
                 .OrderBy(c => c.OrderNo);
             int canAllotBigChannelCount = bigChannels.Count();
-            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在优化" + "分拣烟道", new Random().Next(10, 20));
+            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 12, "正在优化" + "分拣烟道", new Random().Next(10, 20));
             //按可用大品牌烟道进行二次划分
             if (canAllotBigChannelCount < bigCount)
             {
@@ -320,7 +330,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
             //是则继续进行大品种单品牌多烟道数量拆分
             else
             {
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 24, "正在优化" + "分拣烟道", new Random().Next(20, 30));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 14, "正在优化" + "分拣烟道", new Random().Next(20, 30));
                 //大品种烟道优化（New）   采用大品种烟道组A,B(C...)平均分配原则
                 var channelGroups = channels.Select(c => c.GroupNo).Distinct();
                 Dictionary<int, int> groupQuantity = new Dictionary<int, int>();
@@ -404,7 +414,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     groupCount[groupNo] += 1;
                 }
                 ChannelAllotRepository.SaveChanges();
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 25, "正在优化" + "分拣烟道", new Random().Next(30, 50));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 15, "正在优化" + "分拣烟道", new Random().Next(30, 50));
                
                 //小品种增加大品种零烟
                 foreach (var item in bigQuantitys)
@@ -446,7 +456,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     addChannelAllot.Quantity = quantity;
                     ChannelAllotRepository.Add(addChannelAllot);
                 }
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 26, "正在优化" + "分拣烟道", new Random().Next(50, 70));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 16, "正在优化" + "分拣烟道", new Random().Next(50, 70));
                 //混合烟道优化分配
                 if (smalls.Count > 0)
                 {
@@ -480,7 +490,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                         }
                     }
                 }
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 27, "正在优化" + "分拣烟道", new Random().Next(70, 99));
+                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 17, "正在优化" + "分拣烟道", new Random().Next(70, 99));
                 ChannelAllotRepository.SaveChanges();
             }
         }
@@ -498,7 +508,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                                 .OrderBy(s => s.DeliverOrder)
                                                 .ToArray();
                 PsTemp += 1;
-                StateTypeForProcessing(ps, "数据优化", 32 + (PsTemp * 10 / psCount), "正在拆分" + "分拣订单", new Random().Next(PsTemp * 70 / psCount, PsTemp * 70 / psCount) + new Random().Next(9, 10));
+                StateTypeForProcessing(ps, "数据优化", 22 + (PsTemp * 10 / psCount), "正在拆分" + "分拣订单", new Random().Next(PsTemp * 70 / psCount, PsTemp * 70 / psCount) + new Random().Next(9, 10));
                 foreach (var sortOrder in sortOrdersArray)
                 {
                     var sortOrderDetailArray = sortOrderDetails.Where(s => s.OrderID == sortOrder.OrderID)
@@ -562,7 +572,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
             }
             ps.Messages.Clear();
             ps.Messages.Add("保存结果时间较长（2-3分钟），请耐心等待...");
-            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在保存" + "拆分结果", new Random().Next(85, 99));
+            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 10) + 32, "正在保存" + "拆分结果", new Random().Next(85, 99));
             SortOrderAllotMasterRepository.SaveChanges();
         }
 
@@ -595,7 +605,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                                 .OrderBy(s => s.DeliverOrder)
                                                 .ToArray();
                 PsTemp += 1;
-                StateTypeForProcessing(ps, "数据优化", 52 + (PsTemp * 35 / psCount) + new Random().Next(1, 2), "正在优化" + "出烟分配", new Random().Next(PsTemp * 70 / psCount, PsTemp * 70 / psCount) + new Random().Next(9, 10));
+                StateTypeForProcessing(ps, "数据优化", 47 + (PsTemp * 33 / psCount) + new Random().Next(1, 2), "正在优化" + "出烟分配", new Random().Next(PsTemp * 70 / psCount, PsTemp * 70 / psCount) + new Random().Next(9, 10));
                 foreach (var sortOrder in sortOrdersArray)
                 {
                     var packInfos = sortOrderAllotMasters.Where(s => s.OrderId == sortOrder.OrderID)
@@ -668,7 +678,6 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                             addSortOrderAllotDetail.ProductCode = sortOrderDetailInfo.ProductCode;
                                             addSortOrderAllotDetail.ProductName = sortOrderDetailInfo.ProductName;
                                             addSortOrderAllotDetail.Quantity = (int)allotQuantity;
-                                            //SortOrderAllotDetailRepository.Add(addSortOrderAllotDetail);
                                             packInfo.SortOrderAllot.SortOrderAllotDetails.Add(addSortOrderAllotDetail);
                                         }
 
@@ -702,8 +711,122 @@ namespace THOK.SMS.SignalR.Optimize.Service
             }
             ps.Messages.Clear();
             ps.Messages.Add("保存结果时间较长（3-5分钟），请耐心等待...");
-            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 9) + 90, "正在保存" + "分配结果", new Random().Next(80, 99));
+            StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 9) + 80, "正在保存" + "分配结果", new Random().Next(80, 99));
             SortOrderAllotDetailRepository.SaveChanges();
+        }
+
+        private void HandSupplyOptimize(string ConnectionId, ProgressState ps, CancellationToken cancellationToken, int sortBatchId, SortOrderAllotDetail[] sortOrderAllotDetails, Channel[] mixChannels)
+        {
+            int supplyId =0;
+            int supplyBatch = 0;
+            int tempQuantity = 0;
+            string tempChannelCode = "";
+            Dictionary<string, int> mixChannelDic = new Dictionary<string, int>();
+            Dictionary<int, int> supplyBatchQuantity = new Dictionary<int, int>();
+            foreach (var mixChannel in mixChannels)
+            {
+                mixChannelDic.Add(mixChannel.ChannelCode, 0);
+            }
+            foreach (var sortOrderAllotDetail in sortOrderAllotDetails)
+            {
+                int quantity = sortOrderAllotDetail.Quantity;
+                while (quantity > 0)
+                {
+                    string channelCode = mixChannelDic.OrderBy(m => m.Value).FirstOrDefault().Key;
+                    if (mixChannelDic.Where(m => m.Value % 20 > 0).Count() > 0)
+                    {
+                        channelCode = mixChannelDic.First(m => m.Value % 20 > 0).Key;
+                    }
+                    if (tempChannelCode != channelCode)
+                    {
+                        ++supplyBatch;
+                        supplyBatchQuantity.Add(supplyBatch, 0);
+                    }
+                    tempChannelCode = channelCode;
+                    tempQuantity += quantity;
+                    HandSupply addHandSupply = new HandSupply();
+                    addHandSupply.SortBatchId = sortBatchId;
+                    addHandSupply.SupplyId = ++supplyId;
+                    
+                    addHandSupply.ChannelCode = channelCode;
+                    addHandSupply.PackNo = sortOrderAllotDetail.SortOrderAllotMaster.PackNo;
+                    addHandSupply.ProductCode = sortOrderAllotDetail.ProductCode;
+                    addHandSupply.ProductName = sortOrderAllotDetail.ProductName;
+                    if (tempQuantity <= 20)
+                    {
+                        if (mixChannelDic[channelCode] + quantity <= 20)
+                        {
+                            addHandSupply.Quantity = quantity;
+                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch;
+                        }
+                        else if(mixChannelDic[channelCode] + quantity <= 25)
+                        {
+                            addHandSupply.Quantity = quantity;
+                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                            //if (mixChannelDic[channelCode] == 25)
+                            //{
+                            //    mixChannelDic[channelCode] = 0;
+                            //}
+                        }
+                        else
+                        {
+                            addHandSupply.Quantity = 25 - mixChannelDic[channelCode];
+                            mixChannelDic[channelCode] = mixChannelDic[channelCode] + addHandSupply.Quantity - 25;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                            tempQuantity -= quantity - addHandSupply.Quantity;
+                        }
+                        if (tempQuantity == 20)
+                        {
+                            tempQuantity = 0;
+                        }
+                        quantity -= addHandSupply.Quantity;
+                        supplyBatchQuantity[addHandSupply.SupplyBatch] += addHandSupply.Quantity;
+
+                    }
+                    else
+                    {
+                        int allotQuantity = quantity + 20 - tempQuantity;
+
+                        if (mixChannelDic[channelCode] + allotQuantity <= 20)
+                        {
+                            addHandSupply.Quantity = allotQuantity;
+                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch;
+                        }
+                        else if (mixChannelDic[channelCode] + allotQuantity <= 25)
+                        {
+                            addHandSupply.Quantity = allotQuantity;
+                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                            //if (mixChannelDic[channelCode] == 25)
+                            //{
+                            //    mixChannelDic[channelCode] = 0;
+                            //}
+                        }
+                        else
+                        {
+                            addHandSupply.Quantity = 25 - mixChannelDic[channelCode];
+                            mixChannelDic[channelCode] = mixChannelDic[channelCode] + addHandSupply.Quantity - 25;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                        }
+                        quantity -= addHandSupply.Quantity;
+                        supplyBatchQuantity[addHandSupply.SupplyBatch] += addHandSupply.Quantity;
+                        tempQuantity = 0;
+                    }
+                    HandSupplyRepository.Add(addHandSupply);
+                    SortOrderAllotDetail addSortOrderAllotDetail = new SortOrderAllotDetail();
+                    addSortOrderAllotDetail.MasterId = sortOrderAllotDetail.MasterId;
+                    addSortOrderAllotDetail.ChannelCode = channelCode;
+                    addSortOrderAllotDetail.ProductCode = addHandSupply.ProductCode;
+                    addSortOrderAllotDetail.ProductName = addHandSupply.ProductName;
+                    addSortOrderAllotDetail.Quantity = addHandSupply.Quantity;
+                    SortOrderAllotDetailRepository.Add(addSortOrderAllotDetail);
+                }
+                SortOrderAllotDetailRepository.Delete(sortOrderAllotDetail);
+            }
+            HandSupplyRepository.SaveChanges();
         }
 
         private void StateTypeForProcessing(ProgressState ps, string totalName, int totalValue, string currentName, int currentValue)

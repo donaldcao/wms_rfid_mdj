@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace THOK.SMS.DbModel.Mapping
 {
-    public class ChannelAllotMap : EntityMappingBase<ChannelAllot>
+    public class SortSupplyMap : EntityMappingBase<SortSupply>
     {
-        public ChannelAllotMap()
+        public SortSupplyMap()
             : base("Sms")
         {
             // Primary Key
@@ -20,6 +20,8 @@ namespace THOK.SMS.DbModel.Mapping
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             this.Property(t => t.SortBatchId)
                 .IsRequired();
+            this.Property(t => t.PackNo)
+               .IsRequired();
             this.Property(t => t.ChannelCode)
                 .IsRequired()
                 .HasMaxLength(20);
@@ -27,24 +29,22 @@ namespace THOK.SMS.DbModel.Mapping
                 .HasMaxLength(20);
             this.Property(t => t.ProductName)
                 .HasMaxLength(50);
-            this.Property(t => t.Quantity)
-                .IsRequired();
 
             // Table & Column Mappings
             this.Property(t => t.Id).HasColumnName(ColumnMap.Value.To("Id"));
             this.Property(t => t.SortBatchId).HasColumnName(ColumnMap.Value.To("SortBatchId"));
+            this.Property(t => t.PackNo).HasColumnName(ColumnMap.Value.To("PackNo"));
             this.Property(t => t.ChannelCode).HasColumnName(ColumnMap.Value.To("ChannelCode"));
             this.Property(t => t.ProductCode).HasColumnName(ColumnMap.Value.To("ProductCode"));
             this.Property(t => t.ProductName).HasColumnName(ColumnMap.Value.To("ProductName"));
-            this.Property(t => t.Quantity).HasColumnName(ColumnMap.Value.To("Quantity"));
 
             // Relationships
             this.HasRequired(t => t.SortBatch)
-                .WithMany(t => t.ChannelAllots)
+                .WithMany(t => t.SortSupplys)
                 .HasForeignKey(d => d.SortBatchId)
                 .WillCascadeOnDelete(false);
             this.HasRequired(t => t.Channel)
-                .WithMany(t => t.ChannelAllots)
+                .WithMany(t => t.SortSupplys)
                 .HasForeignKey(d => d.ChannelCode)
                 .WillCascadeOnDelete(false);
 

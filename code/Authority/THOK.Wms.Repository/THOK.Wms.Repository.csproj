@@ -78,6 +78,10 @@
     <Compile Include="Migrations\201407140858241_delete_sortorder_sortquantitysum_column.Designer.cs">
       <DependentUpon>201407140858241_delete_sortorder_sortquantitysum_column.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201408010906042_add_sms_sortsupply.cs" />
+    <Compile Include="Migrations\201408010906042_add_sms_sortsupply.Designer.cs">
+      <DependentUpon>201408010906042_add_sms_sortsupply.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -135,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407140858241_delete_sortorder_sortquantitysum_column.resx">
       <DependentUpon>201407140858241_delete_sortorder_sortquantitysum_column.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408010906042_add_sms_sortsupply.resx">
+      <DependentUpon>201408010906042_add_sms_sortsupply.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

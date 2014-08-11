@@ -27,7 +27,7 @@ namespace THOK.SMS.DbModel
         public DateTime FinishTime { get; set; }
         public string Status { get; set; }
 
-        public SortBatch sortBatch { get; set; }
+        public SortBatch SortBatch { get; set; }
 
         public virtual ICollection<SortOrderAllotDetail> SortOrderAllotDetails { get; set; }
 

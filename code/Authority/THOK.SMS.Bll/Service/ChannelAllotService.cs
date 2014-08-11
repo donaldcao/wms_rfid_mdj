@@ -32,16 +32,16 @@ namespace THOK.SMS.Bll.Service
             if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.OrderDate.Equals(date));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.OrderDate.Equals(date));
             }
             if (batchNo != "")
             {
                 int batch = Convert.ToInt32(batchNo);
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.BatchNo.Equals(batch));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.BatchNo.Equals(batch));
             }
             if (sortingLineCode != "")
             {
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.SortingLineCode.Equals(sortingLineCode));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.SortingLineCode.Equals(sortingLineCode));
             }
             if (productCode != "")
             {
@@ -50,12 +50,12 @@ namespace THOK.SMS.Bll.Service
             var channelAllot = channelAllotQuery.OrderBy(c => c.SortBatchId).ThenBy(c => c.ChannelCode).Select(c => new
             {
                 c.SortBatchId,
-                c.sortBatch.OrderDate,
-                c.sortBatch.BatchNo,
-                c.sortBatch.SortingLineCode,
-                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.sortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
+                c.SortBatch.OrderDate,
+                c.SortBatch.BatchNo,
+                c.SortBatch.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
                 c.ChannelCode,
-                c.channel.ChannelName,
+                c.Channel.ChannelName,
                 c.ProductCode,
                 c.ProductName,
                 c.Quantity
@@ -87,16 +87,16 @@ namespace THOK.SMS.Bll.Service
             if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.OrderDate.Equals(date));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.OrderDate.Equals(date));
             }
             if (batchNo != "")
             {
                 int batch = Convert.ToInt32(batchNo);
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.BatchNo.Equals(batch));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.BatchNo.Equals(batch));
             }
             if (sortingLineCode != "")
             {
-                channelAllotQuery = channelAllotQuery.Where(c => c.sortBatch.SortingLineCode.Equals(sortingLineCode));
+                channelAllotQuery = channelAllotQuery.Where(c => c.SortBatch.SortingLineCode.Equals(sortingLineCode));
             }
             if (productCode != "")
             {
@@ -105,12 +105,12 @@ namespace THOK.SMS.Bll.Service
             var channelAllot = channelAllotQuery.Select(c => new
             {
                 c.SortBatchId,
-                c.sortBatch.OrderDate,
-                c.sortBatch.BatchNo,
-                c.sortBatch.SortingLineCode,
-                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.sortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
+                c.SortBatch.OrderDate,
+                c.SortBatch.BatchNo,
+                c.SortBatch.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
                 c.ChannelCode,
-                c.channel.ChannelName,
+                c.Channel.ChannelName,
                 c.ProductCode,
                 c.ProductName,
                 c.Quantity
@@ -151,26 +151,26 @@ namespace THOK.SMS.Bll.Service
             if (batchNo != null && batchNo != string.Empty)
             {
                 int no = Convert.ToInt32(batchNo);
-                channelAllotDetail = channelAllotDetail.Where(b => b.sortBatch.BatchNo.Equals(no));
+                channelAllotDetail = channelAllotDetail.Where(b => b.SortBatch.BatchNo.Equals(no));
             }
             if (sortingLineCode != "" && sortingLineCode != string.Empty)
             {
-                channelAllotDetail = channelAllotDetail.Where(c => c.sortBatch.SortingLineCode.Contains(sortingLineCode));
+                channelAllotDetail = channelAllotDetail.Where(c => c.SortBatch.SortingLineCode.Contains(sortingLineCode));
             }
             if (orderDate != "" && orderDate != string.Empty)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
-                channelAllotDetail = channelAllotDetail.Where(c => c.sortBatch.OrderDate.Equals(date));
+                channelAllotDetail = channelAllotDetail.Where(c => c.SortBatch.OrderDate.Equals(date));
             }
 
             var sortSupplyDetails = channelAllotDetail.Select(c => new
            {
-               OrderDate = c.sortBatch.OrderDate,
-               c.sortBatch.BatchNo,
-               c.sortBatch.SortingLineCode,
-               SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.sortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
+               OrderDate = c.SortBatch.OrderDate,
+               c.SortBatch.BatchNo,
+               c.SortBatch.SortingLineCode,
+               SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
                c.ChannelCode,
-               c.channel.ChannelName,
+               c.Channel.ChannelName,
                c.ProductCode,
                c.ProductName,
                Quantity = c.Quantity,

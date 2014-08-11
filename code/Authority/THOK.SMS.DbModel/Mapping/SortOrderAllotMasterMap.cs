@@ -69,7 +69,7 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.Status).HasColumnName(ColumnMap.Value.To("Status"));
 
             // Relationships
-            this.HasRequired(t => t.sortBatch)
+            this.HasRequired(t => t.SortBatch)
                 .WithMany(t => t.SortOrderAllotMasters)
                 .HasForeignKey(d => d.SortBatchId)
                 .WillCascadeOnDelete(false);

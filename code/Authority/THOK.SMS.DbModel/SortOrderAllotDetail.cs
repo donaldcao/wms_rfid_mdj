@@ -14,8 +14,8 @@ namespace THOK.SMS.DbModel
         public string ProductName { get; set; }
         public int Quantity { get; set; }
 
-        public SortOrderAllotMaster sortOrderAllotMaster { get; set; }
-        public Channel channel { get; set; }
+        public SortOrderAllotMaster SortOrderAllotMaster { get; set; }
+        public Channel Channel { get; set; }
 
     }
 }

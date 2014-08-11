@@ -262,7 +262,7 @@ namespace THOK.SMS.Bll.Service
                 {
                     //删除订单主表、细表
                     SortOrderAllotDetailRepository.GetQueryable()
-                        .Where(s => s.sortOrderAllotMaster.SortBatchId == sortBatch.Id).Delete();
+                        .Where(s => s.SortOrderAllotMaster.SortBatchId == sortBatch.Id).Delete();
                     SortOrderAllotMasterRepository.GetQueryable()
                         .Where(a => a.SortBatchId == sortBatch.Id).Delete();
                     

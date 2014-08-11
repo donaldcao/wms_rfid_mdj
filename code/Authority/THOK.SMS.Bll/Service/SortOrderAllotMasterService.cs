@@ -43,16 +43,16 @@ namespace THOK.SMS.Bll.Service
             if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
-                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.sortBatch.OrderDate.Equals(date));
+                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.SortBatch.OrderDate.Equals(date));
             }
             if (batchNo != "")
             {
                 int batch = Convert.ToInt32(batchNo);
-                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.sortBatch.BatchNo.Equals(batch));
+                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.SortBatch.BatchNo.Equals(batch));
             }
             if (sortingLineCode != "")
             {
-                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.sortBatch.SortingLineCode.Equals(sortingLineCode));
+                sortOrderAllotMasterQuery = sortOrderAllotMasterQuery.Where(c => c.SortBatch.SortingLineCode.Equals(sortingLineCode));
             }
             if (deliverLineCode != "")
             {
@@ -72,10 +72,10 @@ namespace THOK.SMS.Bll.Service
                 c.PackNo,
                 c.OrderId,
                 c.SortBatchId,
-                c.sortBatch.OrderDate,
-                c.sortBatch.BatchNo,
-                c.sortBatch.SortingLineCode,
-                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.sortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
+                c.SortBatch.OrderDate,
+                c.SortBatch.BatchNo,
+                c.SortBatch.SortingLineCode,
+                SortingLineName = sortingLineQuery.Where(s => s.SortingLineCode == c.SortBatch.SortingLineCode).FirstOrDefault().SortingLineName,
                 c.DeliverLineCode,
                 DeliverLineName = DeliverLineQuery.Where(s => s.DeliverLineCode == c.DeliverLineCode).FirstOrDefault().DeliverLineName,
                 c.CustomerCode,

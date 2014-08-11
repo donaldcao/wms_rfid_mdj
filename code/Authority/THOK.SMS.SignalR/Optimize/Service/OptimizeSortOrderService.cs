@@ -721,26 +721,35 @@ namespace THOK.SMS.SignalR.Optimize.Service
             int supplyBatch = 0;
             int tempQuantity = 0;
             string tempChannelCode = "";
-            Dictionary<string, int> mixChannelDic = new Dictionary<string, int>();
+            Dictionary<string, int> mixChannelDic_1 = new Dictionary<string, int>();
+            Dictionary<string, int> mixChannelDic_2 = new Dictionary<string, int>();
             Dictionary<int, int> supplyBatchQuantity = new Dictionary<int, int>();
             foreach (var mixChannel in mixChannels)
             {
-                mixChannelDic.Add(mixChannel.ChannelCode, 0);
+                mixChannelDic_1.Add(mixChannel.ChannelCode, 0);
+                mixChannelDic_2.Add(mixChannel.ChannelCode, 0);
             }
             foreach (var sortOrderAllotDetail in sortOrderAllotDetails)
             {
                 int quantity = sortOrderAllotDetail.Quantity;
                 while (quantity > 0)
                 {
-                    string channelCode = mixChannelDic.OrderBy(m => m.Value).FirstOrDefault().Key;
-                    if (mixChannelDic.Where(m => m.Value % 20 > 0).Count() > 0)
+                    string channelCode = mixChannelDic_1.OrderBy(m => m.Value).FirstOrDefault().Key;
+                    if (mixChannelDic_1.Where(m => m.Value % 20 > 0).Count() > 0)
                     {
-                        channelCode = mixChannelDic.First(m => m.Value % 20 > 0).Key;
+                        channelCode = mixChannelDic_1.First(m => m.Value % 20 > 0).Key;
                     }
                     if (tempChannelCode != channelCode)
                     {
                         ++supplyBatch;
                         supplyBatchQuantity.Add(supplyBatch, 0);
+                    }
+                    if (mixChannelDic_1.Count() == 1)
+                    {
+                        if (mixChannelDic_1[channelCode] > 0)
+                        {
+                            supplyBatch = mixChannelDic_1[channelCode] % 20 == 0 ? mixChannelDic_1[channelCode] / 20 : mixChannelDic_1[channelCode] / 20 + 1;
+                        }
                     }
                     tempChannelCode = channelCode;
                     tempQuantity += quantity;
@@ -754,27 +763,30 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     addHandSupply.ProductName = sortOrderAllotDetail.ProductName;
                     if (tempQuantity <= 20)
                     {
-                        if (mixChannelDic[channelCode] + quantity <= 20)
+                        if (mixChannelDic_2[channelCode] + quantity <= 20)
                         {
                             addHandSupply.Quantity = quantity;
-                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] += addHandSupply.Quantity;
                             addHandSupply.SupplyBatch = supplyBatch;
                         }
-                        else if(mixChannelDic[channelCode] + quantity <= 25)
+                        else if(mixChannelDic_2[channelCode] + quantity <= 25)
                         {
                             addHandSupply.Quantity = quantity;
-                            mixChannelDic[channelCode] += addHandSupply.Quantity;
-                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
-                            //if (mixChannelDic[channelCode] == 25)
-                            //{
-                            //    mixChannelDic[channelCode] = 0;
-                            //}
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic_2.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic_2.Count()] < 25 ? supplyBatch - mixChannelDic_2.Count() : supplyBatch;
+                            if (mixChannelDic_2[channelCode] == 25)
+                            {
+                                mixChannelDic_2[channelCode] = 0;
+                            }
                         }
                         else
                         {
-                            addHandSupply.Quantity = 25 - mixChannelDic[channelCode];
-                            mixChannelDic[channelCode] = mixChannelDic[channelCode] + addHandSupply.Quantity - 25;
-                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                            addHandSupply.Quantity = 25 - mixChannelDic_2[channelCode];
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] = mixChannelDic_2[channelCode] + addHandSupply.Quantity - 25;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic_2.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic_2.Count()] < 25 ? supplyBatch - mixChannelDic_2.Count() : supplyBatch;
                             tempQuantity -= quantity - addHandSupply.Quantity;
                         }
                         if (tempQuantity == 20)
@@ -789,27 +801,30 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     {
                         int allotQuantity = quantity + 20 - tempQuantity;
 
-                        if (mixChannelDic[channelCode] + allotQuantity <= 20)
+                        if (mixChannelDic_2[channelCode] + allotQuantity <= 20)
                         {
                             addHandSupply.Quantity = allotQuantity;
-                            mixChannelDic[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] += addHandSupply.Quantity;
                             addHandSupply.SupplyBatch = supplyBatch;
                         }
-                        else if (mixChannelDic[channelCode] + allotQuantity <= 25)
+                        else if (mixChannelDic_2[channelCode] + allotQuantity <= 25)
                         {
                             addHandSupply.Quantity = allotQuantity;
-                            mixChannelDic[channelCode] += addHandSupply.Quantity;
-                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
-                            //if (mixChannelDic[channelCode] == 25)
-                            //{
-                            //    mixChannelDic[channelCode] = 0;
-                            //}
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] += addHandSupply.Quantity;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic_2.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic_2.Count()] < 25 ? supplyBatch - mixChannelDic_2.Count() : supplyBatch;
+                            if (mixChannelDic_2[channelCode] == 25)
+                            {
+                                mixChannelDic_2[channelCode] = 0;
+                            }
                         }
                         else
                         {
-                            addHandSupply.Quantity = 25 - mixChannelDic[channelCode];
-                            mixChannelDic[channelCode] = mixChannelDic[channelCode] + addHandSupply.Quantity - 25;
-                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic.Count()] < 25 ? supplyBatch - mixChannelDic.Count() : supplyBatch;
+                            addHandSupply.Quantity = 25 - mixChannelDic_2[channelCode];
+                            mixChannelDic_1[channelCode] += addHandSupply.Quantity;
+                            mixChannelDic_2[channelCode] = mixChannelDic_2[channelCode] + addHandSupply.Quantity - 25;
+                            addHandSupply.SupplyBatch = supplyBatch > mixChannelDic_2.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic_2.Count()] < 25 ? supplyBatch - mixChannelDic_2.Count() : supplyBatch;
                         }
                         quantity -= addHandSupply.Quantity;
                         supplyBatchQuantity[addHandSupply.SupplyBatch] += addHandSupply.Quantity;

@@ -623,7 +623,7 @@ namespace THOK.Wms.Bll.Service
                 //分配件烟；大品种拆盘区 
                 var storages = storageQuery.Where(s => s.Cell.Area.AreaType == "10"
                                         && s.ProductCode == product.ProductCode)
-                                  .OrderBy(s => new { s.StorageTime, s.Cell.Area.AllotOutOrder, s.Quantity });
+                                  .OrderBy(s => new { s.Quantity, s.StorageTime, s.Cell.Area.AllotOutOrder });
                 if (quantity > 0) AllotPiece(moveBillMaster, storages, cell, ref quantity);
             }
         }

@@ -4788,9 +4788,45 @@ namespace THOK.Wms.Repository.Migrations
                     },
                     new Module()
                     {
+                        ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F9D"),
+                        ModuleName = "补货计划管理",
+                        ShowOrder = 3,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91"),
+                        ModuleName = "拆盘位置库存",
+                        ShowOrder = 1,
+                        ModuleURL = "/SupplyPositionStorage/",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F92"),
+                        ModuleName = "自动补货计划",
+                        ShowOrder = 2,
+                        ModuleURL = "/SupplyTask/",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F9D")
+                    },
+                    new Module()
+                    {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300"),
                         ModuleName = "综合数据查询",
-                        ShowOrder = 3,
+                        ShowOrder = 4,
                         ModuleURL = "",
                         IndicateImage = "icon-Menu_StockInto",
                         DeskTopImage = "image-Menu_StockInto",

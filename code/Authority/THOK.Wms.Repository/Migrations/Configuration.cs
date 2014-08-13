@@ -4680,9 +4680,21 @@ namespace THOK.Wms.Repository.Migrations
                     },
                     new Module()
                     {
+                        ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100"),
+                        ModuleName = "拆盘位置信息",
+                        ShowOrder = 3,
+                        ModuleURL = "/SupplyPosition/",
+                        IndicateImage = "icon-son_Employee",
+                        DeskTopImage = "image-son_Employee",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
                         ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E914C7B1DC"),
                         ModuleName = "销售卷烟信息",
-                        ShowOrder = 3,
+                        ShowOrder = 4,
                         ModuleURL = "/ProductInfo/",
                         IndicateImage = "icon-son_CigaretteInfo",
                         DeskTopImage = "image-son_CigaretteInfo",
@@ -4694,7 +4706,7 @@ namespace THOK.Wms.Repository.Migrations
                     {
                         ModuleID = new Guid("ED0E6430-3EA8-4FA8-91A7-6AE712C7B1DC"),
                         ModuleName = "配送区域信息",
-                        ShowOrder = 4,
+                        ShowOrder = 5,
                         ModuleURL = "/DeliverDist/",
                         IndicateImage = "icon-son_StockOutBill",
                         DeskTopImage = "image-son_StockOutBill",
@@ -4706,7 +4718,7 @@ namespace THOK.Wms.Repository.Migrations
                     {
                         ModuleID = new Guid("235A95C8-C37D-6A27-96F1-6EDEA3370A7E"),
                         ModuleName = "配送线路信息",
-                        ShowOrder = 5,
+                        ShowOrder = 6,
                         ModuleURL = "/DeliverLine/",
                         IndicateImage = "icon-son_CigaretteSupplier",
                         DeskTopImage = "image-son_CigaretteSupplier",
@@ -4718,7 +4730,7 @@ namespace THOK.Wms.Repository.Migrations
                     {
                         ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B1DC"),
                         ModuleName = "零售客户信息",
-                        ShowOrder = 6,
+                        ShowOrder = 7,
                         ModuleURL = "/Customer/",
                         IndicateImage = "icon-son_Employee",
                         DeskTopImage = "image-son_Employee",
@@ -4726,8 +4738,8 @@ namespace THOK.Wms.Repository.Migrations
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
                     },
-                     new Module()
-                     {
+                    new Module()
+                    {
                          ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200"),
                          ModuleName = "分拣调度管理",
                          ShowOrder = 2,
@@ -4737,7 +4749,7 @@ namespace THOK.Wms.Repository.Migrations
                          System = system,
                          System_SystemID = system.SystemID,
                          ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0200")
-                     },
+                    },
                     new Module()
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0201"),
@@ -4800,8 +4812,20 @@ namespace THOK.Wms.Repository.Migrations
                     },
                     new Module()
                     {
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
+                        ModuleName = "分拣订单查询",
+                        ShowOrder = 2,
+                        ModuleURL = "/SortOrderAllotSearch/",
+                        IndicateImage = "icon-Menu_StockInto",
+                        DeskTopImage = "image-Menu_StockInto",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                    new Module()
+                    {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0302"),
-                        ModuleName = "分拣备货查询",
+                        ModuleName = "备货清单查询",
                         ShowOrder = 3,
                         ModuleURL = "/BatchCigaretteSearch/",
                         IndicateImage = "icon-Menu_StockInto",
@@ -4824,12 +4848,12 @@ namespace THOK.Wms.Repository.Migrations
                     },
                     new Module()
                     {
-                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0304"),
-                        ModuleName = "分拣订单查询",
-                        ShowOrder = 2,
-                        ModuleURL = "/SortOrderAllotSearch/",
-                        IndicateImage = "icon-Menu_StockInto",
-                        DeskTopImage = "image-Menu_StockInto",
+                        ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0403"),
+                        ModuleName = "分拣补货查询",
+                        ShowOrder = 5,
+                        ModuleURL = "/SortSupply/",
+                        IndicateImage = "icon-Menu_StockDiffer",
+                        DeskTopImage = "image-Menu_StockDiffer",
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
@@ -4837,8 +4861,8 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0305"),
-                        ModuleName = "分拣配送查询",
-                        ShowOrder = 5,
+                        ModuleName = "分拣状态查询",
+                        ShowOrder = 6,
                         ModuleURL = "/DeliverOrderSearch/",
                         IndicateImage = "icon-son_CigaretteSupplier",
                         DeskTopImage = "image-son_CigaretteSupplier",
@@ -4850,7 +4874,6 @@ namespace THOK.Wms.Repository.Migrations
             context.SaveChanges();
 
             context.Set<Function>().AddOrUpdate(
-
                 new Function()
                 {
                     FunctionID = new Guid("EAB101C1-8A93-23E9-8901-C864C062319F"),
@@ -5355,7 +5378,6 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0305")
                 }
-
             );
            context.SaveChanges();
         }

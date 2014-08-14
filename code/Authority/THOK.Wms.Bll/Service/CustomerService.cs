@@ -35,7 +35,7 @@ namespace THOK.Wms.Bll.Service
 
         public object GetDetails(int page, int rows, string CustomerCode, string CustomerName, string CompanyCode, string SaleRegionCode, string CustomerType, string CityOrCountryside, string LicenseCode, string IsActive)
         {
-            IQueryable<Customer> customerQuery = CustomerRepository.GetQueryable();
+            var customerQuery = CustomerRepository.GetQueryable();
             var customer = customerQuery.Where(c => c.CustomerCode.Contains(CustomerCode) &&
                                                           c.CustomerType.Contains(CustomerType) &&
                                                           c.SaleRegionCode.Contains(SaleRegionCode) &&
@@ -332,10 +332,18 @@ namespace THOK.Wms.Bll.Service
             var customerQuery = CustomerRepository.GetQueryable();
             var deliverQuery = DeliverLineRepository.GetQueryable();
 
-            var customer = customerQuery.Where(a => a.CustomCode.Contains(CustomerCode) && a.CustomerName.Contains(CustomerName)).OrderBy(a => a.CustomerCode).Select(a => a);
+            var customer = customerQuery.OrderBy(a => a.CustomerCode).Select(a => a);
 
-            if (!DeliverLineCode.Equals(string.Empty)) {
-                customer = customer.Where(a => a.DeliverLineCode.Contains(DeliverLineCode));            
+            if (DeliverLineCode!=string.Empty&&DeliverLineCode!="") {
+                customer = customer.Where(a => a.DeliverLineCode==DeliverLineCode);            
+            }
+            if (CustomerName != string.Empty && CustomerName != "")
+            {
+                customer = customer.Where(a => a.CustomerName.Contains(CustomerName));
+            }
+            if (CustomerCode != string.Empty && CustomerCode != "")
+            {
+                customer = customer.Where(a => a.CustomerCode.Contains(CustomerCode));
             }
 
             var customerinfo = customer.ToArray().Select(c => new
@@ -343,7 +351,7 @@ namespace THOK.Wms.Bll.Service
                 c.CustomerCode,
                 c.CustomerName,
                 c.DeliverLineCode,
-                DeliverLineName = deliverQuery.FirstOrDefault(b => b.DeliverLineCode == c.DeliverLineCode).DeliverLineName,
+                DeliverLineName = deliverQuery.FirstOrDefault(a => a.DeliverLineCode == c.DeliverLineCode).DeliverLineName,
                 c.DeliverOrder,
                 c.Address,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用",
@@ -403,7 +411,7 @@ namespace THOK.Wms.Bll.Service
                 c.CustomerName,
                 c.DeliverOrder,
                 c.DeliverLineCode,
-                DeliverLineName = deliverLineQuery.Where(d => d.DeliverLineCode == deliverLineCode).FirstOrDefault().DeliverLineName,
+                DeliverLineName = deliverLineQuery.FirstOrDefault(a=>a.DeliverLineCode==c.DeliverLineCode).DeliverLineName,
                 c.Address,
                 c.IsActive,
                 c.UpdateTime

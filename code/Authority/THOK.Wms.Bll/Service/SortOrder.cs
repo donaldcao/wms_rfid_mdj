@@ -41,7 +41,7 @@ namespace THOK.Wms.Bll.Service
             if (productCode != string.Empty && productCode != null)
             {
                 var sortOrderDetail = sortOrderDetailQuery.Where(s => s.ProductCode == productCode).ToArray().Select(a => a.OrderID );
-                sortOrderQuery = sortOrderQuery.Where(s => sortOrderDetail.Contains(s.OrderID));
+                sortOrderQuery = sortOrderQuery.Where(s => sortOrderDetail.Contains(s.OrderID));             
             }
 
             if (orderDate != string.Empty && orderDate != null)
@@ -217,5 +217,65 @@ namespace THOK.Wms.Bll.Service
             //} 
             #endregion
         }
+
+
+        //分拣订单管理打印
+        public System.Data.DataTable GetSortOrder(int page, int rows, string OrderID, string orderDate, string ProductCode)
+        {
+           
+                var sortOrderDetailQuery = SortOrderDetailRepository.GetQueryable();
+                var sortOrderQuery = SortOrderRepository.GetQueryable();
+
+                if (ProductCode != string.Empty && ProductCode != null)
+                {                 
+                    sortOrderDetailQuery = sortOrderDetailQuery.Where(s => s.ProductCode.Contains(ProductCode));
+                }
+
+                if (orderDate != string.Empty && orderDate != null)
+                {
+                    orderDate = Convert.ToDateTime(orderDate).ToString("yyyyMMdd");                
+                    sortOrderDetailQuery = sortOrderDetailQuery.Where(s => s.SortOrder.OrderDate == orderDate);
+                }
+
+                var outBillDetail = sortOrderDetailQuery.Where(i => i.OrderID.Contains(OrderID)).OrderBy(i => i.OrderID).AsEnumerable().Select(i => new
+                {
+                   
+                    i.OrderID,
+                    i.Product.ProductCode,
+                    i.Product.ProductName,
+                    i.UnitCode,
+                    i.UnitName,
+                    i.RealQuantity,
+                    i.SortQuantity,
+                    i.Price,
+                    i.Amount
+                });
+                System.Data.DataTable dt = new System.Data.DataTable();
+                dt.Columns.Add("订单编码", typeof(string));
+                dt.Columns.Add("商品编码", typeof(string));
+                dt.Columns.Add("商品名称", typeof(string));
+                dt.Columns.Add("单位编码", typeof(string));
+                dt.Columns.Add("单位名称", typeof(string));
+                dt.Columns.Add("数量", typeof(string));
+                dt.Columns.Add("分拣数量", typeof(string));
+                dt.Columns.Add("单价", typeof(string));
+                dt.Columns.Add("金额", typeof(string));
+                foreach (var item in outBillDetail)
+                {
+                    dt.Rows.Add
+                        (                            
+                            item.OrderID,
+                            item.ProductCode,
+                            item.ProductName,
+                            item.UnitCode,
+                            item.UnitName,
+                            item.RealQuantity,
+                            item.SortQuantity,
+                            item.Price,
+                            item.Amount
+                        );
+                }
+                return dt;
+            }                
     }
 }

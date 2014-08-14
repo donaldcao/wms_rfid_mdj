@@ -39,7 +39,8 @@ namespace Wms.Controllers.Wms.SortingInfo
             string SortingLineCode = collection["SortingLineCode"] ?? "";
             string OrderDate = collection["OrderDate"] ?? "";
             string WorkStatus = collection["WorkStatus"] ?? "";
-            var sortOrder = SortOrderDispatchService.GetDetails(page, rows, OrderDate, WorkStatus,SortingLineCode);
+            string SortStatus = collection["SortStatus"] ?? "";
+            var sortOrder = SortOrderDispatchService.GetDetails(page, rows, OrderDate, WorkStatus,SortStatus,SortingLineCode);
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
@@ -100,9 +101,11 @@ namespace Wms.Controllers.Wms.SortingInfo
             int page = 0, rows = 0;
             string orderDate = Request.QueryString["orderDate"];
             string sortingLineCode = Request.QueryString["sortingLineCode"];
-
+            string WorkStatus = Request.QueryString["WorkStatus"];
+            string SortStatus = Request.QueryString["SortStatus"];
+          
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortOrderDispatchService.GetSortOrderDispatch(page, rows, orderDate, sortingLineCode);
+            ep.DT1 = SortOrderDispatchService.GetSortOrderDispatch(page, rows, orderDate,WorkStatus,SortStatus, sortingLineCode);
             ep.HeadTitle1 = "分拣线路调度";
             return PrintService.Print(ep);
         }

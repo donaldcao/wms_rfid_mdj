@@ -26,13 +26,18 @@ namespace THOK.Wms.Bll.Service
 
         #region ISortOrderDispatchService 成员
 
-        public object GetDetails(int page, int rows, string OrderDate,string WorkStatus, string SortingLineCode)
+        public object GetDetails(int page, int rows, string OrderDate,string WorkStatus, string SortStatus,string SortingLineCode)
         {
-            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
             var sortDispatch = sortDispatchQuery.Where(s => s.ID == s.ID);
-            if (WorkStatus == string.Empty || WorkStatus == null)
+            if (WorkStatus != string.Empty || WorkStatus != "")
             {
-                sortDispatch = sortDispatchQuery.Where(s => s.WorkStatus != "2");
+                sortDispatch = sortDispatchQuery.Where(s => s.WorkStatus ==WorkStatus);
+            }
+
+            if (SortStatus != string.Empty || SortStatus != "")
+            {
+                sortDispatch = sortDispatchQuery.Where(s => s.SortStatus == SortStatus);
             }
             if (OrderDate != string.Empty && OrderDate != null)
             {
@@ -43,7 +48,7 @@ namespace THOK.Wms.Bll.Service
             {
                 sortDispatch = sortDispatch.Where(s => s.SortingLineCode == SortingLineCode);
             }
-            var temp = sortDispatch.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
+            var temp = sortDispatch.OrderBy(b => b.OrderDate).AsEnumerable().Select(b => new
            {
                b.ID,
                b.SortingLineCode,
@@ -256,21 +261,29 @@ namespace THOK.Wms.Bll.Service
 
         #endregion
 
-        public System.Data.DataTable GetSortOrderDispatch(int page, int rows, string OrderDate, string SortingLineCode)
+        public System.Data.DataTable GetSortOrderDispatch(int page, int rows, string OrderDate,string WorkStatus,string SortStatus, string SortingLineCode)
         {
-            System.Data.DataTable dt = new System.Data.DataTable();
-            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
-            var sortDispatch = sortDispatchQuery.Where(s => s.WorkStatus != "2");
+           
+            var sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+          
             if (OrderDate != string.Empty && OrderDate != null)
             {
                 OrderDate = Convert.ToDateTime(OrderDate).ToString("yyyyMMdd");
-                sortDispatch = sortDispatch.Where(s => s.OrderDate == OrderDate);
+                sortDispatchQuery = sortDispatchQuery.Where(s => s.OrderDate == OrderDate);
             }
             if (SortingLineCode != string.Empty && SortingLineCode != null)
             {
-                sortDispatch = sortDispatch.Where(s => s.SortingLineCode == SortingLineCode);
+                sortDispatchQuery = sortDispatchQuery.Where(s => s.SortingLineCode == SortingLineCode);
             }
-            var temp = sortDispatch.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
+            if (SortStatus != string.Empty && SortStatus != null)
+            {
+                sortDispatchQuery = sortDispatchQuery.Where(s => s.SortStatus == SortStatus);
+            }
+            if (WorkStatus != string.Empty && WorkStatus != null)
+            {
+                sortDispatchQuery = sortDispatchQuery.Where(s => s.WorkStatus == WorkStatus);
+            }
+            var temp = sortDispatchQuery.OrderBy(b => b.SortingLineCode).AsEnumerable().Select(b => new
             {
                 b.ID,
                 b.SortingLineCode,
@@ -278,15 +291,19 @@ namespace THOK.Wms.Bll.Service
                 b.OrderDate,
                 b.DeliverLineCode,
                 WorkStatus = b.WorkStatus == "1" ? "未作业" : "已作业",
+                SortStatus=b.SortStatus=="1"?"未分拣":"已分拣",
                 b.DeliverLine.DeliverLineName,
                 IsActive = b.IsActive == "1" ? "可用" : "不可用",
                 UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
+
+            System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("订单日期", typeof(string));
             dt.Columns.Add("分拣线编码", typeof(string));
             dt.Columns.Add("分拣线名称", typeof(string));
             dt.Columns.Add("送货线路编码", typeof(string));
             dt.Columns.Add("送货线路名称", typeof(string));
+            dt.Columns.Add("分拣状态", typeof(string));
             dt.Columns.Add("作业状态", typeof(string));
             dt.Columns.Add("是否可用", typeof(string));
             dt.Columns.Add("修改时间", typeof(string));
@@ -297,6 +314,7 @@ namespace THOK.Wms.Bll.Service
                             t.SortingLineName,
                             t.DeliverLineCode,
                             t.DeliverLineName,
+                            t.SortStatus,
                             t.WorkStatus,
                             t.IsActive,
                             t.UpdateTime);

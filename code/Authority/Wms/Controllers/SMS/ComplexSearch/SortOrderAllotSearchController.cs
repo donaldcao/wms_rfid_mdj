@@ -52,12 +52,17 @@ namespace Wms.Controllers.SMS.ComplexSearch
             return Json(sortOrderDetail, "text", JsonRequestBehavior.AllowGet);
         }
 
-        //打印 未完成
+        //分拣订单  打印
         public FileStreamResult CreateExcelToClient()
         {
-            //int page = 0, rows = 0;
+            int page = 0, rows = 0;
             ExportParam ep = new ExportParam();
-            //ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows);
+
+            string batchNo = Request.QueryString["batchNo"];
+            string sortingLineCode = Request.QueryString["SortingLineCode"];
+            string deliverLineCode = Request.QueryString["DeliverLineCode"];
+            string OrderDate = Request.QueryString["OrderDate"];
+            ep.DT1 = SortOrderAllotMasterServer.GetSortOrderAllotMaster(page, rows, OrderDate, batchNo, deliverLineCode,sortingLineCode);
             ep.HeadTitle1 = "分拣订单";
             return PrintService.Print(ep);
         }

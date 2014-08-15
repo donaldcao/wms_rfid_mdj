@@ -77,47 +77,25 @@ namespace THOK.Wms.SignalR.Download.Service
                         //单位信息
                         StateTypeForProcessing(ps, totalName1, random1, now1 + "单位信息", new Random().Next(1, 100));
                         bool bUnit = ubll.DownUnitCodeInfo();
-                        if (bUnit == false)
-                        {
-                            StateTypeForInfo(ps, "未发现新单位信息！");
-                        }
-                        else
-                        {
-                            StateTypeForInfo(ps, "同步单位信息成功！");
-                        }
+
                         StateTypeForProcessing(ps, totalName1, random1 + 5, now1 + "单位信息", maxNum);
 
                         //卷烟信息
                         StateTypeForProcessing(ps, totalName1, random1 + 10, now1 + "卷烟信息", new Random().Next(1, 100));
                         bool bPro = pbll.DownProductInfo();
-                        if (bPro == false)
-                        {
-                            StateTypeForInfo(ps, "未发现新卷烟信息！");
-                        }
-                        else
-                        {
-                            StateTypeForInfo(ps, "同步卷烟信息成功！");
-                        }
+
                         StateTypeForProcessing(ps, totalName1, random1 + 15, now1 + "卷烟信息", maxNum);
 
 
                         //删除7日前的数据
                         StateTypeForProcessing(ps, totalName1, random1 + 20, "正在优化数据", new Random().Next(1, 100));
                         routeBll.DeleteTable();
-                        StateTypeForInfo(ps, "优化数据成功！");
                         StateTypeForProcessing(ps, totalName1, random1 + 25, "正在优化数据", maxNum);
 
                         //配送区域信息
                         StateTypeForProcessing(ps, totalName1, random1 + 30, now1 + "配送区域信息", new Random().Next(1, 100));
                         bool bDistStation = stationBll.DownDistStationInfo();
-                        if (bDistStation == false)
-                        {
-                            StateTypeForInfo(ps, "未发现新配送区域信息！");
-                        }
-                        else
-                        {
-                            StateTypeForInfo(ps, "同步配送区域信息成功！");
-                        }
+
                         StateTypeForProcessing(ps, totalName1, random1 + 35, now1 + "配送区域信息", maxNum);
 
                         #endregion
@@ -128,27 +106,13 @@ namespace THOK.Wms.SignalR.Download.Service
                             //客户信息
                             StateTypeForProcessing(ps, totalName1, random1 + 40, now1 + "客户信息", new Random().Next(1, 100));
                             bool custResult = custBll.DownCustomerInfo();
-                            if (custResult == false)
-                            {
-                                StateTypeForInfo(ps, "未发现新客户信息！");
-                            }
-                            else
-                            {
-                                StateTypeForInfo(ps, "同步客户信息成功！");
-                            }
+
                             StateTypeForProcessing(ps, totalName1, random1 + 45, now1 + "客户信息", maxNum);
 
                             //配车单信息
                             StateTypeForProcessing(ps, totalName1, random1 + 50, now1 + "配车单信息", new Random().Next(1, 100));
                             bool bDistCar = carBll.DownDistCarBillInfo(beginDate);
-                            if (bDistCar == false)
-                            {
-                                StateTypeForInfo(ps, "未发现新配车单信息！");
-                            }
-                            else
-                            {
-                                StateTypeForInfo(ps, "同步配车单信息成功！");
-                            }
+
                             StateTypeForProcessing(ps, totalName1, random1 + 55, now1 + "配车单信息", maxNum);
 
 
@@ -157,14 +121,7 @@ namespace THOK.Wms.SignalR.Download.Service
                                 //从分拣下载分拣数据
                                 StateTypeForProcessing(ps, totalName1, random1 + 60, now2 + "线路信息", new Random().Next(1, 100));
                                 lineResult = routeBll.DownSortRouteInfo();
-                                if (lineResult == false)
-                                {
-                                    StateTypeForInfo(ps, "未发现新线路信息！");
-                                }
-                                else
-                                {
-                                    StateTypeForInfo(ps, "同步线路信息成功！");
-                                }
+ 
                                 StateTypeForProcessing(ps, totalName1, random1 + 65, now2 + "线路信息", maxNum);
 
 
@@ -187,14 +144,7 @@ namespace THOK.Wms.SignalR.Download.Service
                                 //从营销下载分拣数据 
                                 StateTypeForProcessing(ps, totalName1, random1 + 65, now2 + "线路信息", new Random().Next(1, 100));
                                 lineResult = routeBll.DownRouteInfo();
-                                if (lineResult == false)
-                                {
-                                    StateTypeForInfo(ps, "未发现新线路信息！");
-                                }
-                                else
-                                {
-                                    StateTypeForInfo(ps, "同步线路信息成功！");
-                                }
+
                                 StateTypeForProcessing(ps, totalName1, random1 + 70, now2 + "线路信息", maxNum);
 
                                 //分拣订单
@@ -318,27 +268,23 @@ namespace THOK.Wms.SignalR.Download.Service
 
                         StateTypeForProcessing(ps, "配送区域下载", random1, now1 + "配送区域", new Random().Next(1, 100));
                         DataTable areTable = ubll.GetArea();
-                        StateTypeForInfo(ps, "同步配送区域成功！");
                         ubll.InsertArea(areTable);
                         StateTypeForProcessing(ps, "配送区域下载", random1 + 20, now1 + "配送区域", maxNum);
 
                         StateTypeForProcessing(ps, "配送线路下载", random1, now1 + "配送线路", new Random().Next(1, 100));
                         DataTable routeTable = routeBll.GetRoute();
-                        StateTypeForInfo(ps, "同步配送线路成功！");
                         routeBll.InsertRoute(routeTable);
                         StateTypeForProcessing(ps, "配送线路下载", random1 + 40, now1 + "配送线路", maxNum);
 
 
                         StateTypeForProcessing(ps, "客户信息下载", random1, now1 + "客户信息", new Random().Next(1, 100));
                         DataTable customerTable = custBll.GetCustomer(dtOrder);
-                        StateTypeForInfo(ps, "同步客户信息成功！");
                         custBll.InsertCustomer(customerTable);
                         StateTypeForProcessing(ps, "客户信息下载", random1 + 60, now1 + "客户信息", maxNum);
 
 
                         StateTypeForProcessing(ps, "卷烟信息下载", random1, now1 + "卷烟信息", new Random().Next(1, 100));
                         DataTable productTable = pbll.GetProduct();
-                        StateTypeForInfo(ps, "同步卷烟信息成功！");
                         pbll.InsertProduct(productTable);
                         StateTypeForProcessing(ps, "卷烟信息下载", random1 + 80, now1 + "卷烟信息", maxNum);
 

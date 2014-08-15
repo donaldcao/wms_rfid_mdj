@@ -61,11 +61,11 @@ namespace THOK.SMS.SignalR.Optimize.Service
 
         public void Optimize(string connectionId, ProgressState ps, CancellationToken cancellationToken, string id)
         {
-            ConnectionId = connectionId;
-            ps.State = StateType.Start;
-            NotifyConnection(ps.Clone());
             try
             {
+                ConnectionId = connectionId;
+                ps.State = StateType.Start;
+                NotifyConnection(ps.Clone());
                 StateTypeForProcessing(ps, "数据提取", new Random().Next(1, 5), "正在提取" + "优化数据", new Random().Next(1, 100));
                 int sortBatchId = Convert.ToInt32(id);
                 //优化的批次
@@ -80,11 +80,11 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                                       .ToArray();
 
                 //大小品种划分系数
-                double channelAllotScale = sortingLine.ProductType == "1" ? 
+                double channelAllotScale = sortingLine.ProductType == "1" ?
                                                Convert.ToDouble(SystemParameterRepository.GetQueryable()
                                                       .Where(s => s.ParameterName == "ChannelAllotScale")
                                                       .Select(s => s.ParameterValue)
-                                                      .FirstOrDefault()) 
+                                                      .FirstOrDefault())
                                                : 0.0;
                 //是否使用整件分拣线
                 bool isUseWholePieceSortingLine = SortingLineRepository.GetQueryable().Where(s => s.ProductType == "3").Count() > 0;
@@ -116,18 +116,36 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(10, 55));
                 Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
                 SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
-                                                                                             .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType=="5")
-                                                                                             .OrderBy(s=>s.SortOrderAllotMaster.PackNo)
+                                                                                             .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType == "5")
+                                                                                             .OrderBy(s => s.SortOrderAllotMaster.PackNo)
                                                                                              .ToArray();
                 HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
                 ps.Messages.Clear();
                 ps.Messages.Add("优化成功！");
                 sortBatch.Status = "02";
                 SortBatchRepository.SaveChanges();
-                StateTypeForProcessing(ps, "优化完成", 100,"订单优化完成！", 100);
+                StateTypeForProcessing(ps, "优化完成", 100, "订单优化完成！", 100);
             }
             catch (Exception ex)
             {
+                try
+                {
+                    int sortBatchId = Convert.ToInt32(id);
+                    SortOrderAllotDetailRepository.GetQueryable()
+                                                  .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId)
+                                                  .Delete();
+                    ChannelAllotRepository.GetQueryable()
+                                          .Where(c => c.SortBatchId == sortBatchId).Delete();
+                    SortOrderAllotMasterRepository.GetQueryable()
+                                                  .Where(c => c.SortBatchId == sortBatchId).Delete();
+
+                }
+                catch (Exception ex2)
+                {
+                    ps.State = StateType.Error;
+                    ps.Messages.Add("优化失败！原因：" + ex.Message + ex2.Message);
+                    NotifyConnection(ps.Clone());
+                }
                 ps.State = StateType.Error;
                 ps.Messages.Add("优化失败！原因：" + ex.Message);
                 NotifyConnection(ps.Clone());
@@ -870,7 +888,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                     addHandSupply.SupplyBatch = supplyBatch > mixChannelDic_2.Count() && supplyBatchQuantity[supplyBatch - mixChannelDic_2.Count()] < changeQuantity ? supplyBatch - mixChannelDic_2.Count() : supplyBatch;
                                     tempQuantity = tempQuantity + addHandSupply.Quantity - quantity;
                                 }
-                                if (tempQuantity == 20)
+                                if (tempQuantity >= 20)
                                 {
                                     tempQuantity = 0;
                                 }

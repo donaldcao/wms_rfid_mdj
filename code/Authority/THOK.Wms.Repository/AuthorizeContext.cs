@@ -154,6 +154,9 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new SortOrderAllotDetailMap());
             modelBuilder.Configurations.Add(new HandSupplyMap());
             modelBuilder.Configurations.Add(new SortSupplyMap());
+            modelBuilder.Configurations.Add(new SupplyPositionMap());
+            modelBuilder.Configurations.Add(new SupplyPositionStorageMap());
+            modelBuilder.Configurations.Add(new SupplyTaskMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

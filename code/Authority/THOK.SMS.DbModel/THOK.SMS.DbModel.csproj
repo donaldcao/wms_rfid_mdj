@@ -58,12 +58,18 @@
     <Compile Include="Mapping\SortOrderAllotMasterMap.cs" />
     <Compile Include="Mapping\HandSupplyMap.cs" />
     <Compile Include="Mapping\SortSupplyMap.cs" />
+    <Compile Include="Mapping\SupplyPositionMap.cs" />
+    <Compile Include="Mapping\SupplyPositionStorageMap.cs" />
+    <Compile Include="Mapping\SupplyTaskMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortBatch.cs" />
     <Compile Include="SortOrderAllotDetail.cs" />
     <Compile Include="SortOrderAllotMaster.cs" />
     <Compile Include="HandSupply.cs" />
     <Compile Include="SortSupply.cs" />
+    <Compile Include="SupplyPosition.cs" />
+    <Compile Include="SupplyPositionStorage.cs" />
+    <Compile Include="SupplyTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THOK.Common.Ef\THOK.Common.Ef.csproj">

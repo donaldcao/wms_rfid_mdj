@@ -35,6 +35,10 @@ namespace THOK.Wms.DbModel.Mapping
 
             this.Property(t => t.SortBatchId);
 
+            this.Property(t => t.SortBatchYxId);
+
+            this.Property(t => t.SortBatchZjId);
+
             this.Property(t => t.DeliverLineNo);
 
             this.Property(t => t.SortStatus)
@@ -60,6 +64,8 @@ namespace THOK.Wms.DbModel.Mapping
             this.Property(t => t.SortingLineCode).HasColumnName(ColumnMap.Value.To("SortingLineCode"));
             this.Property(t => t.DeliverLineCode).HasColumnName(ColumnMap.Value.To("DeliverLineCode"));
             this.Property(t => t.SortWorkDispatchID).HasColumnName(ColumnMap.Value.To("SortWorkDispatchID"));
+            this.Property(t => t.SortBatchYxId).HasColumnName(ColumnMap.Value.To("SortBatchYxId"));
+            this.Property(t => t.SortBatchZjId).HasColumnName(ColumnMap.Value.To("SortBatchZjId"));
             this.Property(t => t.SortBatchId).HasColumnName(ColumnMap.Value.To("SortBatchId"));
             this.Property(t => t.DeliverLineNo).HasColumnName(ColumnMap.Value.To("DeliverLineNo"));
             this.Property(t => t.SortStatus).HasColumnName(ColumnMap.Value.To("SortStatus"));

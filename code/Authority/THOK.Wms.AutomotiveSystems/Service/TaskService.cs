@@ -698,7 +698,9 @@ namespace THOK.Wms.AutomotiveSystems.Service
                                         outAllot.Status = "2";
                                         outAllot.RealQuantity += quantity;
                                         outAllot.Storage.Quantity -= quantity;
-                                        if (outAllot.Storage.Quantity == 0)
+                                        if (outAllot.Storage.Quantity == 0 
+                                            && outAllot.Storage.InFrozenQuantity == 0 
+                                            && outAllot.Storage.OutFrozenQuantity == 0)
                                         {
                                             outAllot.Storage.ProductCode = null;
                                             outAllot.Storage.StorageSequence = 0;
@@ -784,7 +786,9 @@ namespace THOK.Wms.AutomotiveSystems.Service
                                         if (!moveDetail.InStorage.Cell.FirstInFirstOut) moveDetail.InStorage.StorageSequence = moveDetail.InStorage.Cell.Storages.Min(s => s.StorageSequence) - 1;
                                         moveDetail.OutStorage.Cell.StorageTime = moveDetail.OutStorage.Cell.Storages.Where(s => s.Quantity > 0).Count() > 0
                                                 ? moveDetail.OutStorage.Cell.Storages.Where(s => s.Quantity > 0).Min(s => s.StorageTime) : DateTime.Now;
-                                        if (moveDetail.OutStorage.Quantity == 0)
+                                        if (moveDetail.OutStorage.Quantity == 0
+                                        	&& moveDetail.OutStorage.InFrozenQuantity == 0
+                                            && moveDetail.OutStorage.OutFrozenQuantity == 0)
                                         {
                                             moveDetail.OutStorage.Rfid = "";
                                             moveDetail.OutStorage.StorageSequence = 0;

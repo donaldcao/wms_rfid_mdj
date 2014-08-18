@@ -47,6 +47,9 @@ namespace THOK.SMS.Bll.Service
         public IHandSupplyRepository HandSupplyRepository { get; set; }
 
         [Dependency]
+        public ISortSupplyRepository SortSupplyRepository { get; set; }
+
+        [Dependency]
         public IChannelAllotRepository ChannelAllotRepository { get; set; }
 
         [Dependency]
@@ -217,6 +220,12 @@ namespace THOK.SMS.Bll.Service
                             continue;
                         }
                         sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
+                        //异型烟分拣线
+                        var sortingLineYx=sortingLineQuery.Where(a=>a.ProductType=="2").Select(a=>a.SortingLineCode);
+                        sortOrderDispatch.SortBatchYxId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode==sortingLineYx.FirstOrDefault()&&a.OrderDate.Equals(date)).Id;
+                        //整件分拣线
+                        var sortingLineZj=sortingLineQuery.Where(a=>a.ProductType=="3").Select(a=>a.SortingLineCode);
+                        sortOrderDispatch.SortBatchZjId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineZj.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
                     }
                     SortOrderDispatchRepository.SaveChanges();
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
@@ -273,6 +282,10 @@ namespace THOK.SMS.Bll.Service
                     //删除手工补货表
                     ChannelAllotRepository.GetQueryable()
                         .Where(a => a.SortBatchId.Equals(sortBatch.Id)).Delete();
+
+                    //删除分拣补货计划表
+                    SortSupplyRepository.GetQueryable()
+                       .Where(a => a.SortBatchId.Equals(sortBatch.Id)).Delete();
                 }
                 sortBatchs.NoOneProjectBatchNo = sortBatch.NoOneProjectBatchNo;
                 sortBatchs.Status = sortBatch.Status;
@@ -303,6 +316,8 @@ namespace THOK.SMS.Bll.Service
                     foreach (var sortOrderDispatch in sortOrderDispatchQuery)
                     {
                         sortOrderDispatch.SortBatchId = 0;
+                        sortOrderDispatch.SortBatchZjId = 0;
+                        sortOrderDispatch.SortBatchYxId = 0;
                         sortOrderDispatch.DeliverLineNo = 0;
                     }
                     SortBatchRepository.Delete(SortBatch);

@@ -60,7 +60,7 @@ namespace Wms.Controllers.SMS.SortManage
         {
             string strResult = string.Empty;
             bool bResult = SortBatchService.Delete(id, out strResult);
-            string msg = bResult ? "修改成功" : "修改失败";
+            string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 

@@ -27,7 +27,6 @@ namespace THOK.Wms.DbModel.Mapping
 
             this.Property(t => t.ProductName)
                 .IsRequired()
-                .IsFixedLength()
                 .HasMaxLength(40);
 
             this.Property(t => t.UnitCode)

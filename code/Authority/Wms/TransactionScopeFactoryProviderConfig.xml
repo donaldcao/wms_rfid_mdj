@@ -12,7 +12,7 @@
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
 				<DataSource value ="" desc =""/>
-				<IP value ="." desc =""/>
+				<IP value ="ZQLOON-PC\SQLEXPRESS" desc =""/>
 				<DataBaseName value ="wms_rfid_db" desc =""/>
 				<User value ="sa" desc =""/>
 				<Password value ="123456" desc =""/>
@@ -28,7 +28,7 @@
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
 				<DataSource value ="" desc =""/>
-				<IP value ="10.56.192.104:50000" desc =""/>
+				<IP value ="10.56.192.107:50000" desc =""/>
 				<DataBaseName value ="v6db" desc =""/>
 				<User value ="THOK" desc =""/>
 				<Password value ="mdjthok" desc =""/>

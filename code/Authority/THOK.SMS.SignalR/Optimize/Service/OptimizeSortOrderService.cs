@@ -87,7 +87,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                                       .FirstOrDefault())
                                                : 0.0;
                 //是否使用整件分拣线
-                bool isUseWholePieceSortingLine = SortingLineRepository.GetQueryable().Where(s => s.ProductType == "3").Count() > 0;
+                bool isUseWholePieceSortingLine = SortingLineRepository.GetQueryable().Where(s => s.ProductType == "3" && s.IsActive == "1").Count() > 0;
 
                 string[] deliverLineCodes = GetDeliverLine(sortBatchId, sortingLine.ProductType);
 
@@ -98,33 +98,41 @@ namespace THOK.SMS.SignalR.Optimize.Service
 
                 //分拣的细单信息
                 SortOrderDetail[] sortOrderDetails = GetSortOrderDetail(sortOrders, sortingLine.ProductType, isUseWholePieceSortingLine);
+                if (sortOrderDetails.Length > 0)
+                {
+                    if (sortingLine.ProductType == "1")
+                    {
+                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 10, "正在优化" + "分拣烟道", new Random().Next(1, 5));
 
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 10, "正在优化" + "分拣烟道", new Random().Next(1, 5));
+                        ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
+                    }
+                    StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
+                    OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
+                    if (sortingLine.ProductType == "1" && sortingLine.ProductType == "3")
+                    {
+                        ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
+                        SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
+                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在优化" + "出烟分配", new Random().Next(1, 5));
+                        OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
 
-                ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
-
-                ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
-
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
-                OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
-
-                SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
-
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在优化" + "出烟分配", new Random().Next(1, 5));
-                OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
-
-                StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(10, 55));
-                Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
-                SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
-                                                                                             .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType == "5")
-                                                                                             .OrderBy(s => s.SortOrderAllotMaster.PackNo)
-                                                                                             .ToArray();
-                HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
-                ps.Messages.Clear();
-                ps.Messages.Add("优化成功！");
-                sortBatch.Status = "02";
-                SortBatchRepository.SaveChanges();
-                StateTypeForProcessing(ps, "优化完成", 100, "订单优化完成！", 100);
+                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(10, 55));
+                        Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
+                        SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
+                                                                                                     .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType == "5")
+                                                                                                     .OrderBy(s => s.SortOrderAllotMaster.PackNo)
+                                                                                                     .ToArray();
+                        HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
+                    }
+                    ps.Messages.Clear();
+                    ps.Messages.Add("优化成功！");
+                    sortBatch.Status = "02";
+                    SortBatchRepository.SaveChanges();
+                    StateTypeForProcessing(ps, "优化完成", 100, "订单优化完成！", 100);
+                }
+                else
+                {
+                    ps.Messages.Add("没有可优化数据！");
+                }
             }
             catch (Exception ex)
             {
@@ -166,12 +174,20 @@ namespace THOK.SMS.SignalR.Optimize.Service
             if (productType == "2")
             {
                 //异型分拣线未实现 
-                return null;
+                return SortOrderDispatchRepository.GetQueryable()
+                                                 .Where(s => s.SortBatchAbnormalId == sortBatchId)
+                                                 .OrderBy(s => s.DeliverLineNo)
+                                                 .Select(s => s.DeliverLineCode)
+                                                 .ToArray();
             }
             if (productType == "3")
             {
                 //整件分拣线未实现 
-                return null;
+                return SortOrderDispatchRepository.GetQueryable()
+                                                  .Where(s => s.SortBatchPiecesId == sortBatchId)
+                                                  .OrderBy(s => s.DeliverLineNo)
+                                                  .Select(s => s.DeliverLineCode)
+                                                  .ToArray();
             }
             if (productType == "4")
             {
@@ -362,77 +378,80 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 }
                 //单品牌多烟道组保证不在同一烟道组
                 string tempProductCode = "";
-                while (bigs.Max(v => v.Value) > 0)
+                if (bigs.Count > 0)
                 {
-                    string productCode = null;
-                    bool isChangeProduct = true;
-                    int groupNo = 0;
-                    int quantity = 0;
-                    for (int i = 0; i < bigCount; i++)
+                    while (bigs.Max(v => v.Value) > 0)
                     {
-                        productCode = bigProductCodeArray[i];
-                        if (bigs[productCode] >= 1)
+                        string productCode = null;
+                        bool isChangeProduct = true;
+                        int groupNo = 0;
+                        int quantity = 0;
+                        for (int i = 0; i < bigCount; i++)
                         {
-                            int allotQuantity = Convert.ToInt32(bigQuantitys[productCode]);
-                            quantity = (allotQuantity - allotQuantity % 50) / 50 / Convert.ToInt32(bigs[productCode]) * 50;
-                            bigQuantitys[productCode] -= quantity;
-                            bigs[productCode] -= 1;
-                            break;
+                            productCode = bigProductCodeArray[i];
+                            if (bigs[productCode] >= 1)
+                            {
+                                int allotQuantity = Convert.ToInt32(bigQuantitys[productCode]);
+                                quantity = (allotQuantity - allotQuantity % 50) / 50 / Convert.ToInt32(bigs[productCode]) * 50;
+                                bigQuantitys[productCode] -= quantity;
+                                bigs[productCode] -= 1;
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
-                        else
+                        if (productCode == tempProductCode)
                         {
-                            continue;
+                            isChangeProduct = false;
                         }
-                    }
-                    if (productCode == tempProductCode)
-                    {
-                        isChangeProduct = false;
-                    }
-                    tempProductCode = productCode;
-                    //如果品牌未更换 要保证该品牌分配在多个烟道组上
-                    if (!isChangeProduct)
-                    {
-                        var channelGroup = ChannelAllotRepository.GetQueryable().Where(c => c.ProductCode == tempProductCode).Select(c => c.Channel.GroupNo).Distinct();
-                        int tempCount = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).Count();
-                        if (tempCount > 0)
+                        tempProductCode = productCode;
+                        //如果品牌未更换 要保证该品牌分配在多个烟道组上
+                        if (!isChangeProduct)
                         {
-                            groupNo = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                            var channelGroup = ChannelAllotRepository.GetQueryable().Where(c => c.ProductCode == tempProductCode).Select(c => c.Channel.GroupNo).Distinct();
+                            int tempCount = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).Count();
+                            if (tempCount > 0)
+                            {
+                                groupNo = groupQuantity.Where(g => !channelGroup.Contains(g.Key)).OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                            }
+                            //如果已经保证多烟道组或者换品牌 该品牌分配数量用来调节两线平衡
+                            else
+                            {
+                                groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                            }
                         }
-                        //如果已经保证多烟道组或者换品牌 该品牌分配数量用来调节两线平衡
                         else
                         {
                             groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
                         }
-                    }
-                    else
-                    {
-                        groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
-                    }
-                    //分配的组烟道不够用则切换至有空余烟道的组
-                    if (groupCount[groupNo] == bigChannels.Where(c => c.GroupNo == groupNo).Count())
-                    {
-                        do
+                        //分配的组烟道不够用则切换至有空余烟道的组
+                        if (groupCount[groupNo] == bigChannels.Where(c => c.GroupNo == groupNo).Count())
                         {
-                            groupQuantity.Remove(groupNo);
-                            groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
-                        } while (groupCount[groupNo] == bigChannels.Where(c => c.GroupNo == groupNo).Count());
+                            do
+                            {
+                                groupQuantity.Remove(groupNo);
+                                groupNo = groupQuantity.OrderBy(g => g.Value).ToDictionary(g => g.Key, g => g.Value).First().Key;
+                            } while (groupCount[groupNo] == bigChannels.Where(c => c.GroupNo == groupNo).Count());
 
+                        }
+                        //确认分配  往烟道分配表写数据
+                        var beAllotBigChannel = bigChannels.Where(c => c.GroupNo == groupNo && (usedChannelGroupNo.Count == 0 || usedChannelGroupNo.Keys.Contains(c.ChannelCode) == false)).FirstOrDefault();
+                        ChannelAllot addChannelAllot = new ChannelAllot();
+                        addChannelAllot.SortBatchId = sortBatchId;
+                        addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
+                        string productName = beAllotProducts.Where(p => p.ProductCode == productCode).Select(p => p.ProductName).FirstOrDefault();
+                        addChannelAllot.ProductCode = productCode;
+                        addChannelAllot.ProductName = productName;
+                        addChannelAllot.Quantity = quantity;
+                        ChannelAllotRepository.Add(addChannelAllot);
+                        usedChannelGroupNo.Add(beAllotBigChannel.ChannelCode, groupNo);
+                        groupQuantity[groupNo] += quantity;
+                        groupCount[groupNo] += 1;
                     }
-                    //确认分配  往烟道分配表写数据
-                    var beAllotBigChannel = bigChannels.Where(c => c.GroupNo == groupNo && (usedChannelGroupNo.Count == 0 || usedChannelGroupNo.Keys.Contains(c.ChannelCode) == false)).FirstOrDefault();
-                    ChannelAllot addChannelAllot = new ChannelAllot();
-                    addChannelAllot.SortBatchId = sortBatchId;
-                    addChannelAllot.ChannelCode = beAllotBigChannel.ChannelCode;
-                    string productName = beAllotProducts.Where(p => p.ProductCode == productCode).Select(p => p.ProductName).FirstOrDefault();
-                    addChannelAllot.ProductCode = productCode;
-                    addChannelAllot.ProductName = productName;
-                    addChannelAllot.Quantity = quantity;
-                    ChannelAllotRepository.Add(addChannelAllot);
-                    usedChannelGroupNo.Add(beAllotBigChannel.ChannelCode, groupNo);
-                    groupQuantity[groupNo] += quantity;
-                    groupCount[groupNo] += 1;
+                    ChannelAllotRepository.SaveChanges();
                 }
-                ChannelAllotRepository.SaveChanges();
                 StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 15, "正在优化" + "分拣烟道", new Random().Next(30, 50));
                
                 //小品种增加大品种零烟

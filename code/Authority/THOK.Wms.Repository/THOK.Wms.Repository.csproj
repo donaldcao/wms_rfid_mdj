@@ -82,6 +82,14 @@
     <Compile Include="Migrations\201408010906042_add_sms_sortsupply.Designer.cs">
       <DependentUpon>201408010906042_add_sms_sortsupply.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201408150829593_add_sort_supply_position.cs" />
+    <Compile Include="Migrations\201408150829593_add_sort_supply_position.Designer.cs">
+      <DependentUpon>201408150829593_add_sort_supply_position.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201408190206391_update_wms_sort_order_dispatch.cs" />
+    <Compile Include="Migrations\201408190206391_update_wms_sort_order_dispatch.Designer.cs">
+      <DependentUpon>201408190206391_update_wms_sort_order_dispatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -142,6 +150,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201408010906042_add_sms_sortsupply.resx">
       <DependentUpon>201408010906042_add_sms_sortsupply.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408150829593_add_sort_supply_position.resx">
+      <DependentUpon>201408150829593_add_sort_supply_position.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408190206391_update_wms_sort_order_dispatch.resx">
+      <DependentUpon>201408190206391_update_wms_sort_order_dispatch.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

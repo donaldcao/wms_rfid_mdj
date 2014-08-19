@@ -167,6 +167,7 @@ namespace THOK.Wms.Bll.Service
                 IsActive = b.IsActive == "1" ? "启用" : "不启用",
                 UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")
             });
+            temp = temp.Where(t => t.IsActive == "启用");
             return temp.ToArray();
         }
 

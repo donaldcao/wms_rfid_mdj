@@ -169,6 +169,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\ChannelInfoController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\ProductInfoController.cs" />
+    <Compile Include="Controllers\SMS\BaseInfo\SupplyPositionController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\BatchCigaretteSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\ChannelAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
@@ -2517,6 +2518,7 @@
     <Content Include="Views\SortBatchDispatch\_OptimizePartial.cshtml" />
     <Content Include="Views\SortingOrder\_EditPartial.cshtml" />
     <Content Include="Views\SortBatchDispatch\_UpLoadPartial.cshtml" />
+    <Content Include="Views\SupplyPosition\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

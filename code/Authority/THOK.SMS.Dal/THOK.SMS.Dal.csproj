@@ -56,6 +56,7 @@
     <Compile Include="EntityRepository\SortOrderAllotMasterRepository.cs" />
     <Compile Include="EntityRepository\HandSupplyRepository.cs" />
     <Compile Include="EntityRepository\SortSupplyRepository.cs" />
+    <Compile Include="EntityRepository\SupplyPositionRepository.cs" />
     <Compile Include="Interfaces\ISortBatchRepository.cs" />
     <Compile Include="Interfaces\IChannelAllotRepository.cs" />
     <Compile Include="Interfaces\IChannelRepository.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Interfaces\ISortOrderAllotMasterRepository.cs" />
     <Compile Include="Interfaces\IHandSupplyRepository.cs" />
     <Compile Include="Interfaces\ISortSupplyRepository.cs" />
+    <Compile Include="Interfaces\ISupplyPositionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

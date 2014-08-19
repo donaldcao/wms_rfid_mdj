@@ -31,6 +31,8 @@ namespace THOK.SMS.Bll.Service
         {
             var channelAllotQuery = ChannelAllotRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
+            var productQuery = ProductRepository.GetQueryable();
+
             if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
@@ -65,7 +67,7 @@ namespace THOK.SMS.Bll.Service
             });
             int total = channelAllot.Count();
             var channelAllotDetail = channelAllot.Skip((page - 1) * rows).Take(rows);
-            var channelAllotArray = channelAllotDetail.ToArray().Select(c => new
+            var channelAllotArray = channelAllotDetail.ToArray().Join(productQuery, c => c.ProductCode, p => p.ProductCode, (c, p) => new
             {
                 c.SortBatchId,
                 OrderDate = c.OrderDate.ToString("yyyy-MM-dd"),
@@ -76,7 +78,8 @@ namespace THOK.SMS.Bll.Service
                 c.ChannelName,
                 c.ProductCode,
                 c.ProductName,
-                c.Quantity
+                c.Quantity,
+                ConversionQuantity = Math.Floor(c.Quantity / p.UnitList.Quantity01) + " 件 " + Math.Floor(c.Quantity % p.UnitList.Quantity01) + " 条"
             });
             return new { total, rows = channelAllotArray.ToArray() };
         }

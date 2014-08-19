@@ -13,8 +13,9 @@ namespace THOK.Wms.DbModel
        public string DeliverLineCode { get; set; }
        public Guid? SortWorkDispatchID { get; set; }
        public int SortBatchId { get; set; }
-       public int SortBatchYxId { get; set; }
-       public int SortBatchZjId { get; set; }
+       public int SortBatchAbnormalId { get; set; }
+       public int SortBatchPiecesId { get; set; }
+       public int SortBatchManualId { get; set; }
        public int DeliverLineNo { get; set; }
        public string SortStatus { get; set; }
        public string WorkStatus { get; set; }

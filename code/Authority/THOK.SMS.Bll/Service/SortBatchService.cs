@@ -219,13 +219,26 @@ namespace THOK.SMS.Bll.Service
                         {
                             continue;
                         }
+                        //正常分拣线
                         sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
                         //异型烟分拣线
-                        var sortingLineYx=sortingLineQuery.Where(a=>a.ProductType=="2").Select(a=>a.SortingLineCode);
-                        sortOrderDispatch.SortBatchYxId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode==sortingLineYx.FirstOrDefault()&&a.OrderDate.Equals(date)).Id;
+                        if (sortOrderDispatch.SortBatchAbnormalId == 0)
+                        {
+                            var sortingLineAbnormal = sortingLineQuery.Where(a => a.ProductType == "2").Select(a => a.SortingLineCode);
+                            sortOrderDispatch.SortBatchAbnormalId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineAbnormal.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                        }
                         //整件分拣线
-                        var sortingLineZj=sortingLineQuery.Where(a=>a.ProductType=="3").Select(a=>a.SortingLineCode);
-                        sortOrderDispatch.SortBatchZjId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineZj.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                        if (sortOrderDispatch.SortBatchPiecesId==0)
+                        {
+                            var sortingLinePieces = sortingLineQuery.Where(a => a.ProductType == "3").Select(a => a.SortingLineCode);
+                            sortOrderDispatch.SortBatchPiecesId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLinePieces.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                        }
+                        //手工分拣线
+                        if (sortOrderDispatch.SortBatchManualId == 0)
+                        {
+                            var sortingLineManual = sortingLineQuery.Where(a => a.ProductType == "4").Select(a => a.SortingLineCode);
+                            sortOrderDispatch.SortBatchManualId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineManual.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                        }
                     }
                     SortOrderDispatchRepository.SaveChanges();
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
@@ -312,12 +325,32 @@ namespace THOK.SMS.Bll.Service
                 if (SortBatch != null)
                 {
                     //更新调度表
+                    //正常分拣线
                     var sortOrderDispatchQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchId.Equals(batchId)).AsEnumerable();
+                    //异型分拣线
+                    var sortOrderDispatchAbnormalQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchAbnormalId.Equals(batchId)).AsEnumerable();
+                    //整件分拣线
+                    var sortOrderDispatchPiecesQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchPiecesId.Equals(batchId)).AsEnumerable();
+                    //手工分拣线
+                    var sortOrderDispatchManualQuery = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchManualId.Equals(batchId)).AsEnumerable();
                     foreach (var sortOrderDispatch in sortOrderDispatchQuery)
                     {
                         sortOrderDispatch.SortBatchId = 0;
-                        sortOrderDispatch.SortBatchZjId = 0;
-                        sortOrderDispatch.SortBatchYxId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    foreach (var sortOrderDispatch in sortOrderDispatchAbnormalQuery)
+                    {
+                        sortOrderDispatch.SortBatchAbnormalId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    foreach (var sortOrderDispatch in sortOrderDispatchPiecesQuery)
+                    {
+                        sortOrderDispatch.SortBatchPiecesId = 0;
+                        sortOrderDispatch.DeliverLineNo = 0;
+                    }
+                    foreach (var sortOrderDispatch in sortOrderDispatchManualQuery)
+                    {
+                        sortOrderDispatch.SortBatchManualId = 0;
                         sortOrderDispatch.DeliverLineNo = 0;
                     }
                     SortBatchRepository.Delete(SortBatch);

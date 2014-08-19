@@ -175,7 +175,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
             {
                 //异型分拣线未实现 
                 return SortOrderDispatchRepository.GetQueryable()
-                                                 .Where(s => s.SortBatchYxId == sortBatchId)
+                                                 .Where(s => s.SortBatchAbnormalId == sortBatchId)
                                                  .OrderBy(s => s.DeliverLineNo)
                                                  .Select(s => s.DeliverLineCode)
                                                  .ToArray();
@@ -184,7 +184,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
             {
                 //整件分拣线未实现 
                 return SortOrderDispatchRepository.GetQueryable()
-                                                  .Where(s => s.SortBatchZjId == sortBatchId)
+                                                  .Where(s => s.SortBatchPiecesId == sortBatchId)
                                                   .OrderBy(s => s.DeliverLineNo)
                                                   .Select(s => s.DeliverLineCode)
                                                   .ToArray();

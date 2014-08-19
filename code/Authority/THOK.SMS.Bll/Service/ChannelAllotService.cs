@@ -19,6 +19,8 @@ namespace THOK.SMS.Bll.Service
         public ISortBatchRepository SortBatchRepository { get; set; }
         [Dependency]
         public IChannelRepository ChannelRepository { get; set; }
+        [Dependency]
+        public IProductRepository ProductRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -84,6 +86,8 @@ namespace THOK.SMS.Bll.Service
             var channelAllotQuery = ChannelAllotRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
             var channelQuery = ChannelRepository.GetQueryable();
+            var productQuery = ProductRepository.GetQueryable();
+            
             if (orderDate != string.Empty && orderDate != null)
             {
                 DateTime date = Convert.ToDateTime(orderDate);
@@ -102,6 +106,7 @@ namespace THOK.SMS.Bll.Service
             {
                 channelAllotQuery = channelAllotQuery.Where(c => c.ProductCode.Equals(productCode));
             }
+
             var channelAllot = channelAllotQuery.Select(c => new
             {
                 c.SortBatchId,
@@ -114,7 +119,6 @@ namespace THOK.SMS.Bll.Service
                 c.ProductCode,
                 c.ProductName,
                 c.Quantity
-
             }).GroupBy(c => new { c.OrderDate, c.BatchNo, c.SortingLineCode, c.SortingLineName, c.ProductCode, c.ProductName }).Select(c => new
             {
                 c.Key.OrderDate,
@@ -125,9 +129,11 @@ namespace THOK.SMS.Bll.Service
                 c.Key.ProductName,
                 Quantity = c.Sum(g => g.Quantity)
             }).OrderByDescending(c => c.OrderDate).ThenByDescending(c => c.BatchNo).ThenBy(c => c.SortingLineCode).ThenByDescending(c => c.Quantity);
+            
             int total = channelAllot.Count();
             var channelAllotDetail = channelAllot.Skip((page - 1) * rows).Take(rows);
-            var channelAllotArray = channelAllotDetail.ToArray().Select(c => new
+
+            var channelAllotArray = channelAllotDetail.ToArray().Join(productQuery, c => c.ProductCode, p => p.ProductCode, (c, p) => new
             {
                 OrderDate = c.OrderDate.ToString("yyyy-MM-dd"),
                 c.BatchNo,
@@ -135,8 +141,10 @@ namespace THOK.SMS.Bll.Service
                 c.SortingLineName,
                 c.ProductCode,
                 c.ProductName,
-                c.Quantity
+                c.Quantity,
+                ConversionQuantity = Math.Floor(c.Quantity / p.UnitList.Quantity01) + " 件 " + Math.Floor(c.Quantity % p.UnitList.Quantity01) + " 条"
             });
+
             return new { total, rows = channelAllotArray.ToArray() };
         }
 

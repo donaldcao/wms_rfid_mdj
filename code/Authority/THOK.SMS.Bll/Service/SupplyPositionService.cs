@@ -24,28 +24,28 @@ namespace THOK.SMS.Bll.Service
             IQueryable<SupplyPosition> supplyPositionQuery = SupplyPositionRepository.GetQueryable();
             if (!string.IsNullOrEmpty(supplyPosition.PositionName))
             {
-                supplyPositionQuery.Where(a => a.PositionName.Contains(supplyPosition.PositionName));
+                supplyPositionQuery = supplyPositionQuery.Where(a => a.PositionName.Contains(supplyPosition.PositionName));
             }
             IQueryable<SupplyPosition> supplyPositionQuery1 = supplyPositionQuery;
             if (!string.IsNullOrEmpty(supplyPosition.PositionType))
             {
-                supplyPositionQuery1.Where(a => a.PositionType == supplyPosition.PositionType);
+                supplyPositionQuery1 = supplyPositionQuery.Where(a => a.PositionType == supplyPosition.PositionType);
             }
             IQueryable<SupplyPosition> supplyPositionQuery2 = supplyPositionQuery1;
             if (!string.IsNullOrEmpty(supplyPosition.ProductCode))
             {
-                supplyPositionQuery2.Where(a => a.ProductCode == supplyPosition.ProductCode);
+                supplyPositionQuery2 = supplyPositionQuery1.Where(a => a.ProductCode == supplyPosition.ProductCode);
             }
             IQueryable<SupplyPosition> supplyPositionQuery3 = supplyPositionQuery2;
             if (!string.IsNullOrEmpty(supplyPosition.ProductName))
             {
-                supplyPositionQuery3.Where(a => a.ProductName.Contains(supplyPosition.ProductName));
+                supplyPositionQuery3 = supplyPositionQuery2.Where(a => a.ProductName.Contains(supplyPosition.ProductName));
             }
             var v1 = supplyPositionQuery3.ToArray().Select(a => new
             {
                 a.Id,
                 a.PositionName,
-                a.PositionType,
+                PositionType = a.PositionType == "01" ? "正常拆盘位置" : a.PositionType == "02" ? "混合拆盘位置" : "异常",
                 a.ProductCode,
                 a.ProductName,
                 a.PositionAddress,
@@ -53,7 +53,7 @@ namespace THOK.SMS.Bll.Service
                 a.SortingLineCodes,
                 a.TargetSupplyAddresses,
                 a.Description,
-                a.IsActive
+                IsActive = a.IsActive == "0" ? "不可用" : a.IsActive == "1" ? "可用" : "异常"
             });
             int total = v1.Count();
             var v2 = v1.Skip((page - 1) * rows).Take(rows);

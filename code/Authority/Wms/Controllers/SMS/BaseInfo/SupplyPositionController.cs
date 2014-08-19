@@ -30,12 +30,13 @@ namespace Wms.Controllers.SMS.BaseInfo
         }
 
         // GET: /SupplyPosition/Details/
-        public JsonResult Details(int page, int rows, SupplyPosition supplyPosition)
+        public JsonResult Details(int page, int rows, FormCollection collection)
         {
-            supplyPosition.PositionName = supplyPosition.ProductName ?? "";
-            supplyPosition.PositionType = supplyPosition.PositionType ?? "";
-            supplyPosition.ProductCode = supplyPosition.ProductCode ?? "";
-            supplyPosition.ProductName = supplyPosition.ProductName ?? "";
+            SupplyPosition supplyPosition = new SupplyPosition();
+            supplyPosition.PositionName = collection["PositionName"] ?? "";
+            supplyPosition.PositionType = collection["PositionType"] ?? "";
+            supplyPosition.ProductCode = collection["ProductCode"] ?? "";
+            supplyPosition.ProductName = collection["ProductName"] ?? "";
             object data = SupplyPositionService.GetDetails(page, rows, supplyPosition);
             return Json(data, "text", JsonRequestBehavior.AllowGet);
         }

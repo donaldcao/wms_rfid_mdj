@@ -4958,7 +4958,57 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("235A95C8-C37D-6F47-95D1-6EDEAFE70A7E")
                 },
-                 new Function()
+                //拆盘位置信息
+                new Function()
+                {
+                    FunctionID = new Guid("9F75AE64-95F3-4CBA-B35E-104605C88FE7"),
+                    FunctionName = "查找",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("62301936-F727-4CE2-BA96-F33AF7ACEC49"),
+                    FunctionName = "新增",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("68C275DE-C0FD-4CB8-8C66-6F9ECA6E6112"),
+                    FunctionName = "编辑",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("4A974323-5899-4468-B5E6-00ED07AC51A5"),
+                    FunctionName = "删除",
+                    ControlName = "delete",
+                    IndicateImage = "icon-remove",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("3DEF9558-4A1F-416C-9C41-08EC53B1FB49"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("87F8EA05-76F5-4851-A66D-DB2468A33CE4"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
+                },
+                //
+                new Function()
                  {
                      FunctionID = new Guid("EAB101C1-8A93-4E6B-8931-C664C068919F"),
                      FunctionName = "查询",

@@ -85,5 +85,20 @@ namespace Wms.Controllers.SMS.BaseInfo
             ep.HeadTitle1 = "拆盘位置信息";
             return PrintService.Print(ep);
         }
+
+        // GET: /SupplyPosition/GetDetails/
+        public ActionResult GetDetails(int page, int rows, string QueryString, string Value)
+        {
+            if (QueryString == null)
+            {
+                QueryString = "Id";
+            }
+            if (Value == null)
+            {
+                Value = "";
+            }
+            object data = SupplyPositionService.GetDetails(page, rows, QueryString, Value);
+            return Json(data, "text", JsonRequestBehavior.AllowGet);
+        }
     }
 }

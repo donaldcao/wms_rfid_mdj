@@ -60,6 +60,30 @@ namespace THOK.SMS.Bll.Service
             var v2 = v1.Skip((page - 1) * rows).Take(rows);
             return new { total, rows = v2 };
         }
+        public object GetDetails(int page, int rows, string QueryString, string Value)
+        {
+            string id = ""; string positionName = "";
+
+            if (QueryString == "Id")
+            {
+                id = Value;
+            }
+            else
+            {
+                positionName = Value;
+            }
+            IQueryable<SupplyPosition> query = SupplyPositionRepository.GetQueryable();
+            var v1 = query.Where(a => a.Id.ToString().Contains(id) && a.PositionName.Contains(positionName))
+                .OrderBy(a => a.Id)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.PositionName
+                });
+            int total = query.Count();
+            v1 = v1.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = v1.ToArray() };
+        }
 
         public bool Add(SupplyPosition entity, out string strResult)
         {

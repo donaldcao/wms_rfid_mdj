@@ -10,6 +10,7 @@ namespace THOK.SMS.Bll.Interfaces
     public interface ISupplyPositionService
     {
         object GetDetails(int page, int rows, SupplyPosition entity);
+        object GetDetails(int page, int rows, string QueryString, string Value);
         bool Add(SupplyPosition entity, out string strResult);
         bool Save(SupplyPosition entity, out string strResult);
         bool Delete(int id, out string strResult);

@@ -55,6 +55,12 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public ISystemParameterRepository SystemParameterRepository { get; set; }
 
+        [Dependency]
+        public ISortOrderRepository SortOrderRepository { get; set; }
+
+        [Dependency]
+        public ISortOrderDetailRepository SortOrderDetailRepository { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -173,6 +179,30 @@ namespace THOK.SMS.Bll.Service
                 .Select(a => a.Key).ToArray();
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortingLineQuery = SortingLineRepository.GetQueryable();
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            var sortOrderDetailRepository = SortOrderDetailRepository.GetQueryable();
+            var sortOrderRepository = SortOrderRepository.GetQueryable();
+            var sortingAbnormal = sortOrderDetailRepository.Where(s => s.Product.IsAbnormity == "1")
+                               .Join(sortOrderRepository,
+                               sod => sod.OrderID,
+                               so => so.OrderID,
+                               (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity, sod.ProductCode })
+                               .GroupBy(a => new { a.OrderDate, a.DeliverLineCode })
+                               .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.RealQuantity) });
+            var sortingPieces = sortOrderDetailRepository.Where(s => s.Product.IsAbnormity == "0")
+                              .Join(sortOrderRepository,
+                              sod => sod.OrderID,
+                              so => so.OrderID,
+                              (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity, sod.ProductCode })
+                              .GroupBy(a => new { a.OrderDate, a.DeliverLineCode })
+                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.RealQuantity) });
+            var sortingManual = sortOrderDetailRepository.Where(s => s.Product.IsAbnormity == "0")
+                              .Join(sortOrderRepository,
+                              sod => sod.OrderID,
+                              so => so.OrderID,
+                              (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity,sod.DemandQuantity, sod.ProductCode })
+                              .GroupBy(a => new { a.OrderDate, a.DeliverLineCode })
+                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.DemandQuantity-s.RealQuantity) });
             foreach (var orderDate in sortOrderDispatchArray)
             {
                 try
@@ -224,23 +254,76 @@ namespace THOK.SMS.Bll.Service
                         //异型烟分拣线
                         if (sortOrderDispatch.SortBatchAbnormalId == 0)
                         {
-                            var sortingLineAbnormal = sortingLineQuery.Where(a => a.ProductType == "2").Select(a => a.SortingLineCode);
-                            sortOrderDispatch.SortBatchAbnormalId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineAbnormal.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                            var sortingLineAbnormal = sortingLineQuery.Where(a => a.ProductType == "2" && a.IsActive == "1").Select(a => a.SortingLineCode);
+                            if (sortingLineAbnormal.ToArray().Count()>0)
+                            {
+                                var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
+                                    .Join(sortingLineQuery.Where(a => a.ProductType == "2" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
+                                    .Select(a => new
+                                    {
+                                     a.Id,
+                                     quantity = sortOrderDispatchQuery.FirstOrDefault(b => b.SortBatchAbnormalId.Equals(a.Id)) == null ? 0 :
+                                     sortingAbnormal
+                                     .Join(sortOrderDispatchQuery,
+                                     b => b.DeliverLineCode,
+                                     c => c.DeliverLineCode,
+                                    (b,c) => new { b.DeliverLineCode, c.SortBatchAbnormalId, b.quantity })
+                                    .GroupBy(b=> new { SortBatchAbnormalId = b.SortBatchAbnormalId })
+                                    .Select(b=> new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchAbnormalId }).FirstOrDefault(s=>s.SortBatchAbnormalId.Equals(a.Id)).quantity
+                                    }).OrderBy(a => a.quantity).ToArray();
+                                sortOrderDispatch.SortBatchAbnormalId = sortingLineCode.FirstOrDefault().Id;
+                                SortOrderDispatchRepository.SaveChanges();
+                            }
                         }
                         //整件分拣线
-                        if (sortOrderDispatch.SortBatchPiecesId==0)
+                        if (sortOrderDispatch.SortBatchPiecesId == 0)
                         {
-                            var sortingLinePieces = sortingLineQuery.Where(a => a.ProductType == "3").Select(a => a.SortingLineCode);
-                            sortOrderDispatch.SortBatchPiecesId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLinePieces.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                            var sortingLinePieces = sortingLineQuery.Where(a => a.ProductType == "3" && a.IsActive == "1").Select(a => a.SortingLineCode);
+                            if (sortingLinePieces.ToArray().Count() > 0)
+                            {
+                                var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
+                                   .Join(sortingLineQuery.Where(a => a.ProductType == "3" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
+                                   .Select(a => new
+                                   {
+                                       a.Id,
+                                       quantity = sortOrderDispatchQuery.FirstOrDefault(b => b.SortBatchAbnormalId.Equals(a.Id)) == null ? 0 :
+                                        sortingPieces
+                                        .Join(sortOrderDispatchQuery,
+                                        b => b.DeliverLineCode,
+                                        c => c.DeliverLineCode,
+                                       (b, c) => new { b.DeliverLineCode, c.SortBatchPiecesId, b.quantity })
+                                       .GroupBy(b => new { SortBatchPiecesId = b.SortBatchPiecesId })
+                                       .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchPiecesId }).FirstOrDefault(s => s.SortBatchPiecesId.Equals(a.Id)).quantity
+                                       }).OrderBy(a => a.quantity).ToArray();
+                                sortOrderDispatch.SortBatchPiecesId = sortingLineCode.FirstOrDefault().Id;
+                                SortOrderDispatchRepository.SaveChanges();
+                            }
                         }
                         //手工分拣线
                         if (sortOrderDispatch.SortBatchManualId == 0)
                         {
-                            var sortingLineManual = sortingLineQuery.Where(a => a.ProductType == "4").Select(a => a.SortingLineCode);
-                            sortOrderDispatch.SortBatchManualId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode == sortingLineManual.FirstOrDefault() && a.OrderDate.Equals(date)).Id;
+                            var sortingLineManual = sortingLineQuery.Where(a => a.ProductType == "4" && a.IsActive == "1").Select(a => a.SortingLineCode);
+                            if (sortingLineManual.ToArray().Count() > 0)
+                            {
+                                var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
+                                   .Join(sortingLineQuery.Where(a => a.ProductType == "4" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
+                                   .Select(a => new
+                                   {
+                                       a.Id,
+                                       quantity = sortOrderDispatchQuery.FirstOrDefault(b => b.SortBatchAbnormalId.Equals(a.Id)) == null ? 0 :
+                                           sortingManual
+                                           .Join(sortOrderDispatchQuery,
+                                           b => b.DeliverLineCode,
+                                           c => c.DeliverLineCode,
+                                          (b, c) => new { b.DeliverLineCode, c.SortBatchManualId, b.quantity })
+                                          .GroupBy(b => new { SortBatchManualId = b.SortBatchManualId })
+                                          .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchManualId }).FirstOrDefault(s => s.SortBatchManualId.Equals(a.Id)).quantity
+                                   }).OrderBy(a => a.quantity).ToArray();
+                                sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault().Id;
+                                SortOrderDispatchRepository.SaveChanges();
+                            }
                         }
                     }
-                    SortOrderDispatchRepository.SaveChanges();
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
                     {
                         var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode) && a.SortBatchId > 0)

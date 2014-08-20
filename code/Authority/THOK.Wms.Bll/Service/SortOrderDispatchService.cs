@@ -160,7 +160,7 @@ namespace THOK.Wms.Bll.Service
             int ID = Convert.ToInt32(id);
             var sortOrderDispatch = SortOrderDispatchRepository.GetQueryable()
                .FirstOrDefault(s => s.ID == ID);
-            if (sortOrderDispatch != null)
+            if (sortOrderDispatch != null && sortOrderDispatch.SortBatchAbnormalId == 0 && sortOrderDispatch.SortBatchManualId == 0&& sortOrderDispatch.SortBatchPiecesId==0)
             {
                 SortOrderDispatchRepository.Delete(sortOrderDispatch);
                 SortOrderDispatchRepository.SaveChanges();

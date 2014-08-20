@@ -100,14 +100,12 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 SortOrderDetail[] sortOrderDetails = GetSortOrderDetail(sortOrders, sortingLine.ProductType, isUseWholePieceSortingLine);
                 if (sortOrderDetails.Length > 0)
                 {
-                    if (sortingLine.ProductType == "1")
-                    {
-                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 10, "正在优化" + "分拣烟道", new Random().Next(1, 5));
+                    StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 10, "正在优化" + "分拣烟道", new Random().Next(1, 5));
+                    ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
 
-                        ChannelAllotOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderDetails, channels, channelAllotScale);
-                    }
                     StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
                     OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
+
                     if (sortingLine.ProductType == "1" && sortingLine.ProductType == "3")
                     {
                         ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
@@ -192,7 +190,11 @@ namespace THOK.SMS.SignalR.Optimize.Service
             if (productType == "4")
             {
                 //手工分拣线未实现 
-                return null;
+                return SortOrderDispatchRepository.GetQueryable()
+                                                  .Where(s => s.SortBatchManualId == sortBatchId)
+                                                  .OrderBy(s => s.DeliverLineNo)
+                                                  .Select(s => s.DeliverLineCode)
+                                                  .ToArray();
             }
             else
             {

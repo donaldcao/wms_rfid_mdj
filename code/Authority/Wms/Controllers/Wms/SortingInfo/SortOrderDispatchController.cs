@@ -25,6 +25,7 @@ namespace Wms.Controllers.Wms.SortingInfo
         {
             ViewBag.hasSearch = true;
             ViewBag.hasAdd = true;
+            ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
             ViewBag.hasPrint = true;
             ViewBag.hasHelp = true;
@@ -91,7 +92,7 @@ namespace Wms.Controllers.Wms.SortingInfo
         public ActionResult Delete(string id)
         {
             bool bResult = SortOrderDispatchService.Delete(id);
-            string msg = bResult ? "删除成功" : "删除失败,该线路有卷烟已被优化，请编辑分拣线编码！";
+            string msg = bResult ? "删除成功" : "删除失败,该线路有卷烟已被优化，请编辑分拣线编码或者取消占用该线路的分拣线优化！";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }
 

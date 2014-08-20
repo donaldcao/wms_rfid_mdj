@@ -124,7 +124,7 @@ namespace THOK.Wms.Bll.Service
             return bResult;
         }
 
-        public new bool Add(string SortingLineCode, string DeliverLineCodes, string orderDate)
+        public bool Add(string SortingLineCode, string DeliverLineCodes, string orderDate)
         {
             if (orderDate == string.Empty || orderDate == null)
             {

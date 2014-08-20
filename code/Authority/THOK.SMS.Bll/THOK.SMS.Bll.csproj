@@ -64,6 +64,8 @@
     <Compile Include="Interfaces\ISortOrderAllotDetailService.cs" />
     <Compile Include="Interfaces\ISortOrderAllotMasterService.cs" />
     <Compile Include="Interfaces\IHandSupplyService.cs" />
+    <Compile Include="Interfaces\ISortTaskService.cs" />
+    <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\SortBatchService.cs" />
     <Compile Include="Service\ChannelAllotService.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="Service\SortOrderAllotDetailService.cs" />
     <Compile Include="Service\SortOrderAllotMasterService.cs" />
     <Compile Include="Service\HandSupplyService.cs" />
+    <Compile Include="Service\SortTaskService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

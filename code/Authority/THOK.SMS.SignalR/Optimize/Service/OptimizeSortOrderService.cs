@@ -106,7 +106,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
                     OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
 
-                    if (sortingLine.ProductType == "1" && sortingLine.ProductType == "3")
+                    if (sortingLine.ProductType == "1" || sortingLine.ProductType == "3")
                     {
                         ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
                         SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();

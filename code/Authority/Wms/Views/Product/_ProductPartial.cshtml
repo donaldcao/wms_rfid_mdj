@@ -30,7 +30,7 @@
             pagesize: 10
         });
     }
-    
+
     function productSave() {
         var productRow = $('#productTable').datagrid('getSelected');
         if (productRow) {
@@ -43,7 +43,7 @@
             $('#dlg-product').dialog('close');
         }
     }
-    
+
     function productDoubleClick() {
         $('#productTable').datagrid({
             onDblClickRow: function () {

@@ -35,29 +35,29 @@ namespace Wms.Controllers.SMS.BaseInfo
         // GET: /SupplyPosition/Details/
         public ActionResult Details(int page, int rows, FormCollection collection)
         {
-            SupplyPosition supplyPosition = new SupplyPosition();
-            supplyPosition.PositionName = collection["PositionName"] ?? "";
-            supplyPosition.PositionType = collection["PositionType"] ?? "";
-            supplyPosition.ProductCode = collection["ProductCode"] ?? "";
-            supplyPosition.ProductName = collection["ProductName"] ?? "";
-            object data = SupplyPositionService.GetDetails(page, rows, supplyPosition);
+            SupplyPosition entity = new SupplyPosition();
+            entity.PositionName = collection["PositionName"] ?? "";
+            entity.PositionType = collection["PositionType"] ?? "";
+            entity.ProductCode = collection["ProductCode"] ?? "";
+            entity.ProductName = collection["ProductName"] ?? "";
+            object data = SupplyPositionService.GetDetails(page, rows, entity);
             return Json(data, "text", JsonRequestBehavior.AllowGet);
         }
 
         // POST: /SupplyPosition/Add/
-        public ActionResult Add(SupplyPosition supplyPosition)
+        public ActionResult Add(SupplyPosition entity)
         {
             string strResult = null;
-            bool bResult = SupplyPositionService.Add(supplyPosition, out strResult);
+            bool bResult = SupplyPositionService.Add(entity, out strResult);
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
         // POST: /SupplyPosition/Save/
-        public ActionResult Save(SupplyPosition supplyPosition)
+        public ActionResult Save(SupplyPosition entity)
         {
             string strResult = null;
-            bool bResult = SupplyPositionService.Save(supplyPosition, out strResult);
+            bool bResult = SupplyPositionService.Save(entity, out strResult);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -75,13 +75,13 @@ namespace Wms.Controllers.SMS.BaseInfo
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            SupplyPosition supplyPosition = new SupplyPosition();
-            supplyPosition.PositionName = Request.QueryString["positionName"];
-            supplyPosition.PositionType = Request.QueryString["positionType"];
-            supplyPosition.ProductCode = Request.QueryString["productCode"];
-            supplyPosition.ProductName = Request.QueryString["productName"];
+            SupplyPosition entity = new SupplyPosition();
+            entity.PositionName = Request.QueryString["positionName"];
+            entity.PositionType = Request.QueryString["positionType"];
+            entity.ProductCode = Request.QueryString["productCode"];
+            entity.ProductName = Request.QueryString["productName"];
             ExportParam ep = new ExportParam();
-            ep.DT1 = SupplyPositionService.GetTable(page, rows, supplyPosition);
+            ep.DT1 = SupplyPositionService.GetTable(page, rows, entity);
             ep.HeadTitle1 = "拆盘位置信息";
             return PrintService.Print(ep);
         }

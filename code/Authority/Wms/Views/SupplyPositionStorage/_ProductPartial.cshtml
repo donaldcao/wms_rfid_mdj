@@ -3,14 +3,13 @@
         productInit();
         productDoubleClick();
     });
-    //浏览商品信息
+
     function productQuery() {
         $('#dlg-product').dialog('open').dialog('setTitle', '选择商品');
         $('#productTable').datagrid({ url: '/Product/Details/' });
         $("#productTable").datagrid('reload');
     }
 
-    //属性初始化
     function productInit() {
         $('#productType').combo({ required: true, editable: false, panelWidth: 100, panelHeight: 'auto' })
         $('#productTable').datagrid({
@@ -24,7 +23,7 @@
             pagesize: 10
         });
     }
-    //选中赋值
+    
     function productSave() {
         var productRow = $('#productTable').datagrid('getSelected');
         if (productRow) {
@@ -37,7 +36,7 @@
             $('#dlg-product').dialog('close');
         }
     }
-    //双击赋值
+    
     function productDoubleClick() {
         $('#productTable').datagrid({
             onDblClickRow: function () {
@@ -45,7 +44,7 @@
             }
         })
     }
-    //根据条件查询
+    
     function productQueryClick() {
         $("#productTable").datagrid({
             url: '/DefaultProductSet/GetProductBy/?QueryString=' + $('#productType').combogrid('getValue') + '&Value=' + $('#productInfo').val()

@@ -5,15 +5,15 @@
         addInit();
     });
 
-    //初始化
     function addInit() {
         $('#productCode2').attr('readonly', 'true');
         $('#productName2').attr('readonly', 'true');
+        $('#positionAddress2').attr('placeholder', '只能为数字');
+        $('#positionCapacity2').attr('placeholder', '只能为数字');
         $('#positionType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
         $('#isActive2').combo({ editable: false, width: 130, panelHeight: 'auto' });
     }
 
-    //添加
     function addClick() {
         $('#dlg-add').dialog('open').dialog('setTitle', '新增');
         $('#addFm').form('clear');
@@ -25,7 +25,6 @@
         url = '/SupplyPosition/Add/';
     }
 
-    //保存
     function save() {
         $('#addFm').form('submit', {
             url: url,

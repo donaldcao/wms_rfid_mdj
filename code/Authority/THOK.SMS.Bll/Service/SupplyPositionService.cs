@@ -20,29 +20,29 @@ namespace THOK.SMS.Bll.Service
             get { return this.GetType(); }
         }
 
-        public object GetDetails(int page, int rows, SupplyPosition supplyPosition)
+        public object GetDetails(int page, int rows, SupplyPosition entity)
         {
-            IQueryable<SupplyPosition> supplyPositionQuery = SupplyPositionRepository.GetQueryable();
-            if (!string.IsNullOrEmpty(supplyPosition.PositionName))
+            IQueryable<SupplyPosition> query = SupplyPositionRepository.GetQueryable();
+            if (!string.IsNullOrEmpty(entity.PositionName))
             {
-                supplyPositionQuery = supplyPositionQuery.Where(a => a.PositionName.Contains(supplyPosition.PositionName));
+                query = query.Where(a => a.PositionName.Contains(entity.PositionName));
             }
-            IQueryable<SupplyPosition> supplyPositionQuery1 = supplyPositionQuery;
-            if (!string.IsNullOrEmpty(supplyPosition.PositionType))
+            IQueryable<SupplyPosition> query1 = query;
+            if (!string.IsNullOrEmpty(entity.PositionType))
             {
-                supplyPositionQuery1 = supplyPositionQuery.Where(a => a.PositionType == supplyPosition.PositionType);
+                query1 = query.Where(a => a.PositionType == entity.PositionType);
             }
-            IQueryable<SupplyPosition> supplyPositionQuery2 = supplyPositionQuery1;
-            if (!string.IsNullOrEmpty(supplyPosition.ProductCode))
+            IQueryable<SupplyPosition> supplyPositionQuery2 = query1;
+            if (!string.IsNullOrEmpty(entity.ProductCode))
             {
-                supplyPositionQuery2 = supplyPositionQuery1.Where(a => a.ProductCode == supplyPosition.ProductCode);
+                supplyPositionQuery2 = query1.Where(a => a.ProductCode == entity.ProductCode);
             }
-            IQueryable<SupplyPosition> supplyPositionQuery3 = supplyPositionQuery2;
-            if (!string.IsNullOrEmpty(supplyPosition.ProductName))
+            IQueryable<SupplyPosition> query3 = supplyPositionQuery2;
+            if (!string.IsNullOrEmpty(entity.ProductName))
             {
-                supplyPositionQuery3 = supplyPositionQuery2.Where(a => a.ProductName.Contains(supplyPosition.ProductName));
+                query3 = supplyPositionQuery2.Where(a => a.ProductName.Contains(entity.ProductName));
             }
-            var v1 = supplyPositionQuery3.ToArray().Select(a => new
+            var v1 = query3.ToArray().Select(a => new
             {
                 a.Id,
                 a.PositionName,
@@ -61,22 +61,22 @@ namespace THOK.SMS.Bll.Service
             return new { total, rows = v2 };
         }
 
-        public bool Add(SupplyPosition supplyPosition, out string strResult)
+        public bool Add(SupplyPosition entity, out string strResult)
         {
             bool result = false;
             strResult = null;
-            SupplyPosition sp = new SupplyPosition();
-            sp.PositionName = supplyPosition.PositionName;
-            sp.PositionType = supplyPosition.PositionType;
-            sp.ProductCode = supplyPosition.ProductCode;
-            sp.ProductName = supplyPosition.ProductName;
-            sp.PositionAddress = supplyPosition.PositionAddress;
-            sp.PositionCapacity = supplyPosition.PositionCapacity;
-            sp.SortingLineCodes = supplyPosition.SortingLineCodes;
-            sp.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
-            sp.Description = supplyPosition.Description;
-            sp.IsActive = supplyPosition.IsActive;
-            SupplyPositionRepository.Add(sp);
+            SupplyPosition en = new SupplyPosition();
+            en.PositionName = entity.PositionName;
+            en.PositionType = entity.PositionType;
+            en.ProductCode = entity.ProductCode;
+            en.ProductName = entity.ProductName;
+            en.PositionAddress = entity.PositionAddress;
+            en.PositionCapacity = entity.PositionCapacity;
+            en.SortingLineCodes = entity.SortingLineCodes;
+            en.TargetSupplyAddresses = entity.TargetSupplyAddresses;
+            en.Description = entity.Description;
+            en.IsActive = entity.IsActive;
+            SupplyPositionRepository.Add(en);
             try
             {
                 SupplyPositionRepository.SaveChanges();
@@ -89,26 +89,25 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public bool Save(SupplyPosition supplyPosition, out string strResult)
+        public bool Save(SupplyPosition entity, out string strResult)
         {
             bool result = false;
             strResult = null;
 
-            SupplyPosition supplyPositionQuery = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == supplyPosition.Id);
-
-            if (supplyPosition != null)
+            SupplyPosition en = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == entity.Id);
+            if (entity != null)
             {
-                supplyPositionQuery.Id = supplyPosition.Id;
-                supplyPositionQuery.PositionName = supplyPosition.PositionName;
-                supplyPositionQuery.PositionType = supplyPosition.PositionType;
-                supplyPositionQuery.ProductCode = supplyPosition.ProductCode;
-                supplyPositionQuery.ProductName = supplyPosition.ProductName;
-                supplyPositionQuery.PositionAddress = supplyPosition.PositionAddress;
-                supplyPositionQuery.PositionCapacity = supplyPosition.PositionCapacity;
-                supplyPositionQuery.SortingLineCodes = supplyPosition.SortingLineCodes;
-                supplyPositionQuery.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
-                supplyPositionQuery.Description = supplyPosition.Description;
-                supplyPositionQuery.IsActive = supplyPosition.IsActive;
+                en.Id = entity.Id;
+                en.PositionName = entity.PositionName;
+                en.PositionType = entity.PositionType;
+                en.ProductCode = entity.ProductCode;
+                en.ProductName = entity.ProductName;
+                en.PositionAddress = entity.PositionAddress;
+                en.PositionCapacity = entity.PositionCapacity;
+                en.SortingLineCodes = entity.SortingLineCodes;
+                en.TargetSupplyAddresses = entity.TargetSupplyAddresses;
+                en.Description = entity.Description;
+                en.IsActive = entity.IsActive;
             }
             try
             {
@@ -127,12 +126,12 @@ namespace THOK.SMS.Bll.Service
             bool result = false;
             strResult = null;
 
-            var SupplyPositionQuery = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == id);
-            if (SupplyPositionQuery != null)
+            SupplyPosition en = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == id);
+            if (en != null)
             {
                 try
                 {
-                    SupplyPositionRepository.Delete(SupplyPositionQuery);
+                    SupplyPositionRepository.Delete(en);
                     SupplyPositionRepository.SaveChanges();
                     result = true;
                 }
@@ -144,29 +143,29 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public DataTable GetTable(int page, int rows, SupplyPosition supplyPosition)
+        public DataTable GetTable(int page, int rows, SupplyPosition entity)
         {
-            IQueryable<SupplyPosition> supplyPositionQuery = SupplyPositionRepository.GetQueryable();
-            if (!string.IsNullOrEmpty(supplyPosition.PositionName))
+            IQueryable<SupplyPosition> query = SupplyPositionRepository.GetQueryable();
+            if (!string.IsNullOrEmpty(entity.PositionName))
             {
-                supplyPositionQuery = supplyPositionQuery.Where(a => a.PositionName.Contains(supplyPosition.PositionName));
+                query = query.Where(a => a.PositionName.Contains(entity.PositionName));
             }
-            IQueryable<SupplyPosition> supplyPositionQuery1 = supplyPositionQuery;
-            if (!string.IsNullOrEmpty(supplyPosition.PositionType))
+            IQueryable<SupplyPosition> query1 = query;
+            if (!string.IsNullOrEmpty(entity.PositionType))
             {
-                supplyPositionQuery1 = supplyPositionQuery.Where(a => a.PositionType == supplyPosition.PositionType);
+                query1 = query.Where(a => a.PositionType == entity.PositionType);
             }
-            IQueryable<SupplyPosition> supplyPositionQuery2 = supplyPositionQuery1;
-            if (!string.IsNullOrEmpty(supplyPosition.ProductCode))
+            IQueryable<SupplyPosition> query2 = query1;
+            if (!string.IsNullOrEmpty(entity.ProductCode))
             {
-                supplyPositionQuery2 = supplyPositionQuery1.Where(a => a.ProductCode == supplyPosition.ProductCode);
+                query2 = query1.Where(a => a.ProductCode == entity.ProductCode);
             }
-            IQueryable<SupplyPosition> supplyPositionQuery3 = supplyPositionQuery2;
-            if (!string.IsNullOrEmpty(supplyPosition.ProductName))
+            IQueryable<SupplyPosition> query3 = query2;
+            if (!string.IsNullOrEmpty(entity.ProductName))
             {
-                supplyPositionQuery3 = supplyPositionQuery2.Where(a => a.ProductName.Contains(supplyPosition.ProductName));
+                query3 = query2.Where(a => a.ProductName.Contains(entity.ProductName));
             }
-            var v1 = supplyPositionQuery3.ToArray().Select(a => new
+            var v1 = query3.ToArray().Select(a => new
             {
                 a.Id,
                 a.PositionName,
@@ -192,21 +191,21 @@ namespace THOK.SMS.Bll.Service
             dt.Columns.Add("可补货目标地址", typeof(string));
             dt.Columns.Add("描述", typeof(string));
             dt.Columns.Add("状态", typeof(string));
-            foreach (var v in v1)
+            foreach (var a in v1)
             {
                 dt.Rows.Add
                 (
-                    v.Id,
-                    v.PositionName,
-                    v.PositionType,
-                    v.ProductCode,
-                    v.ProductName,
-                    v.PositionAddress,
-                    v.PositionCapacity,
-                    v.SortingLineCodes,
-                    v.TargetSupplyAddresses,
-                    v.Description,
-                    v.IsActive
+                    a.Id,
+                    a.PositionName,
+                    a.PositionType,
+                    a.ProductCode,
+                    a.ProductName,
+                    a.PositionAddress,
+                    a.PositionCapacity,
+                    a.SortingLineCodes,
+                    a.TargetSupplyAddresses,
+                    a.Description,
+                    a.IsActive
                 );
             }
             return dt;

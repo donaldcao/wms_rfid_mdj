@@ -15,13 +15,14 @@
     //查询条件
     function searchByParams() {
         var queryParams = $('#details').datagrid('options').queryParams;
+        queryParams.Id = $('#id1').val();
         queryParams.PositionName = $('#positionName1').val();
         queryParams.PositionType = $('#positionType1').combo('getValue');
         queryParams.ProductCode = $('#productCode1').val();
         queryParams.ProductName = $('#productName1').val();
 
         $('#details').datagrid('options').queryParams = queryParams;
-        $('#details').datagrid({ pageNumber: 1, pageSize: 50 });
+        $('#details').datagrid({ pageNumber: 1, pageSize: 10 });
         $("#details").datagrid('reload');
         $('#dlg-search').dialog('close');
     }
@@ -34,6 +35,9 @@
     <div class="easyui-layout" fit="true">
         <div region="center" border="false" class="div0">
             <table>
+                <tr>
+                    <td><input id="id1" type="text" style="display:none;"/></td>
+                </tr>
                 <tr>
                     <td>位置名称：</td>
                     <td width="168" align="left"><input id="positionName1" type="text" /></td>

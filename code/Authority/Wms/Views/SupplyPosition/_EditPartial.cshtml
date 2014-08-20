@@ -2,7 +2,7 @@
     function editClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            editInit();
+            editInit(row);
 
             //PositionType
             if (row.PositionType == '正常拆盘位置') {
@@ -25,7 +25,7 @@
         }
     }
 
-    function editInit() {
+    function editInit(row) {
         $('#dlg-add').dialog('open').dialog('setTitle', '编辑');
         //文本赋值&下拉框赋值
         $('#addFm').form('load', row);

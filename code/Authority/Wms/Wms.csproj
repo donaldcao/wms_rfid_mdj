@@ -2524,6 +2524,7 @@
     <Content Include="Views\SupplyPosition\_EditPartial.cshtml" />
     <Content Include="Views\SupplyPosition\_DeletePartial.cshtml" />
     <Content Include="Views\SupplyPosition\_PrintPartial.cshtml" />
+    <Content Include="Views\SupplyPosition\_ProductPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

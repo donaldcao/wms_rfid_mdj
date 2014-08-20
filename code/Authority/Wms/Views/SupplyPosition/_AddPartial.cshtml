@@ -10,6 +10,7 @@
     function addInit() {
         $('#productCode2').attr('readonly', 'true');
         $('#productName2').attr('readonly', 'true');
+        $('#positionType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
         $('#isActive2').combo({ editable: false, width: 130, panelHeight: 'auto' });
     }
 
@@ -47,9 +48,9 @@
     }
 </script>
 <style type="text/css">
-    #dlg-add{ width: 500px; height: 260px; padding: 0px 0px;}
+    #dlg-add{ width: 540px; height: 160px; padding: 0px 0px;}
     .div1{ padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
-    .addtable { width: 480px; padding: 0px 0px; }
+    .addtable { width: 520px; padding: 0px 0px; }
 </style>
 <div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
     <div class="easyui-layout" fit="true">
@@ -57,44 +58,54 @@
             <form id="addFm" method="post" novalidate>
             <table class="addtable">
                 <tr>
-                    <td><input name="ID" style="display: none" /></td>
+                    <td><input name="Id" style="display: none" /></td>
                 </tr>
                 <tr>
                     <td>
                         任务类型
                     </td>
                     <td style="padding-right: 30px;">
-                        <select id="positionType2" name="PositionType" class="easyui-combobox">
+                        <select id="positionType2" name="PositionType" class="easyui-combobox" required="true">
                             <option value=""></option>
                             <option value="01">正常拆盘位置</option>
                             <option value="02">混合拆盘位置</option>
                         </select>
                     </td>
-                    <td>
-                        状态
+                    <td>位置名称</td>
+                    <td><input id="positionName2" name="PositionName"/></td>
+                </tr>
+                <tr>
+                    <td>商品编码</td>
+                    <td><input id="productCode2" name="ProductCode"/></td>
+                    <td>商品名称
                     </td>
                     <td>
-                        <select id="isActive2" name="IsActive" class="easyui-combobox">
-                            <option value=""></option>
-                            <option value="0">可用</option>
-                            <option value="1">禁用</option>
-                        </select>
+                        <input id="productName2" name="ProductName"  class="easyui-validatebox" />
+                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                 </tr>
                 <tr>
+                    <td>位置地址</td>
+                    <td><input id="positionAddress2" name="PositionAddress" class="easyui-validatebox"/></td>
+                    <td>位置容量</td>
+                    <td><input id="positionCapacity2" name="PositionCapacity"  class="easyui-validatebox" /></td>
+                </tr>
+                 <tr>
+                    <td>可补货分拣线</td>
+                    <td><input id="sortingLineCodes2" name="SortingLineCodes" class="easyui-validatebox"/></td>
+                    <td>可补货目标地址</td>
+                    <td><input id="targetSupplyAddresses2" name="TargetSupplyAddresses"  class="easyui-validatebox" /></td>
+                </tr>
+                 <tr>
+                    <td>描述</td>
+                    <td><input id="description2" name="Description"/></td>
+                    <td>状态</td>
                     <td>
-                        商品编码
-                    </td>
-                    <td>
-                        <input id="productCode2" name="ProductCode" class="easyui-validatebox" required="true"/>
-                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search"
-                            plain="true"></a>
-                    </td>
-                    <td>
-                        商品名称
-                    </td>
-                    <td>
-                        <input id="productName2" name="ProductName" />
+                        <select id="isActive2" name="IsActive" class="easyui-combobox" required="true">
+                            <option value=""></option>
+                            <option value="1">可用</option>
+                            <option value="0">禁用</option>
+                        </select>
                     </td>
                 </tr>
             </table>
@@ -104,6 +115,6 @@
 </div>
 <div id="dlg-buttons">
     <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
-    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">
-        取消</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">取消</a>
 </div>
+@Html.Partial("_ProductPartial")

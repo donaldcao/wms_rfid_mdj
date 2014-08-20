@@ -95,22 +95,20 @@ namespace THOK.SMS.Bll.Service
             strResult = null;
 
             SupplyPosition supplyPositionQuery = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == supplyPosition.Id);
-            SupplyPosition sp = new SupplyPosition();
 
             if (supplyPosition != null)
             {
-                sp.Id = supplyPosition.Id;
-                sp.PositionName = supplyPosition.PositionName;
-                sp.PositionType = supplyPosition.PositionType;
-                sp.ProductCode = supplyPosition.ProductCode;
-                sp.ProductName = supplyPosition.ProductName;
-                sp.PositionAddress = supplyPosition.PositionAddress;
-                sp.PositionCapacity = supplyPosition.PositionCapacity;
-                sp.SortingLineCodes = supplyPosition.SortingLineCodes;
-                sp.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
-                sp.Description = supplyPosition.Description;
-                sp.IsActive = supplyPosition.IsActive;
-                SupplyPositionRepository.Add(sp);
+                supplyPositionQuery.Id = supplyPosition.Id;
+                supplyPositionQuery.PositionName = supplyPosition.PositionName;
+                supplyPositionQuery.PositionType = supplyPosition.PositionType;
+                supplyPositionQuery.ProductCode = supplyPosition.ProductCode;
+                supplyPositionQuery.ProductName = supplyPosition.ProductName;
+                supplyPositionQuery.PositionAddress = supplyPosition.PositionAddress;
+                supplyPositionQuery.PositionCapacity = supplyPosition.PositionCapacity;
+                supplyPositionQuery.SortingLineCodes = supplyPosition.SortingLineCodes;
+                supplyPositionQuery.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
+                supplyPositionQuery.Description = supplyPosition.Description;
+                supplyPositionQuery.IsActive = supplyPosition.IsActive;
             }
             try
             {
@@ -197,19 +195,19 @@ namespace THOK.SMS.Bll.Service
             foreach (var v in v1)
             {
                 dt.Rows.Add
-                    (
-                        v.Id,
-                        v.PositionName,
-                        v.PositionType,
-                        v.ProductCode,
-                        v.ProductName,
-                        v.PositionAddress,
-                        v.PositionCapacity,
-                        v.SortingLineCodes,
-                        v.TargetSupplyAddresses,
-                        v.Description,
-                        v.IsActive
-                    );
+                (
+                    v.Id,
+                    v.PositionName,
+                    v.PositionType,
+                    v.ProductCode,
+                    v.ProductName,
+                    v.PositionAddress,
+                    v.PositionCapacity,
+                    v.SortingLineCodes,
+                    v.TargetSupplyAddresses,
+                    v.Description,
+                    v.IsActive
+                );
             }
             return dt;
         }

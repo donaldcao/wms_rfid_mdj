@@ -1,17 +1,17 @@
 ﻿<script type="text/javascript">
     function deleteClick() {
-        var deleteRow = $('#details').datagrid('getSelected');
-        if (deleteRow) {
-            deleteInit();
-            url = '/SupplyPosition/Delete/?id=' + deleteRow.ID;
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            deleteInit(row);
+            url = '/SupplyPosition/Delete/?id=' + row.Id;
         } else {
             $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
 
-    function deleteInit() {
+    function deleteInit(row) {
         $('#dlg-add').dialog('open').dialog('setTitle', '删除');
-        $('#addFm').form('load', deleteRow);
+        $('#addFm').form('load', row);
         //使Form中的文本验证失效
         $('#addFm .easyui-validatebox').validatebox({ required: false });
         //使Form中的文本禁用

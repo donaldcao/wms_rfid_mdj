@@ -2656,7 +2656,7 @@ namespace THOK.WCS.Bll.Service
                     {
                         if (task.Quantity == task.TaskQuantity && task.OrderType != "04")
                         {
-                            if (task.TaskType != "03")
+                            if (task.TaskType != "03" && task.State != "04")
                             {
                                 if (CreateNewTaskForEmptyPalletStack(0, position.PositionName, out errorInfo))
                                 {
@@ -2685,7 +2685,7 @@ namespace THOK.WCS.Bll.Service
                         }
                         else
                         {
-                            if (task.CurrentPositionID != task.OriginPositionID)
+                            if (task.CurrentPositionID != task.OriginPositionID && task.State != "04")
                             {
                                 if (CreateNewTaskForMoveBackRemain(task.ID, out errorInfo))
                                 {

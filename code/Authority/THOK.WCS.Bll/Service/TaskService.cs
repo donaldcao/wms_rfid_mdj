@@ -2296,6 +2296,7 @@ namespace THOK.WCS.Bll.Service
 
             //分配整托盘烟；固定拆盘位； 
             var storages = storageQuery.Where(s => product.PointAreaCodes.Contains(s.Cell.AreaCode)
+                                    && s.CellCode != cell.CellCode
                                     && s.ProductCode == product.ProductCode)
                               .OrderBy(s => new { sCount = s.Cell.Storages.Where(a => a.Quantity > 0 && a.OutFrozenQuantity == 0).Count(), s.Cell.StorageTime, s.Cell.Area.AllotOutOrder, s.CellCode, s.StorageSequence, s.Quantity });
             AllotPallet(moveBillMaster, storages, cell);

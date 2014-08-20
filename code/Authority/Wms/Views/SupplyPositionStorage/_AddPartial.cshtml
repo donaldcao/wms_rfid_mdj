@@ -1,0 +1,99 @@
+﻿<script type="text/javascript">
+    var url;
+
+    $(function () {
+        addInit();
+    });
+
+    function addInit() {
+        $('#productCode2').attr('readonly', 'true');
+        $('#productName2').attr('readonly', 'true');
+        $('#positionId2').attr('readonly', 'true');
+        $('#positionName2').attr('readonly', 'true');
+        $('#quantity2').attr('placeholder', '只能为数字');
+        $('#waitQuantity2').attr('placeholder', '只能为数字');
+    }
+
+    function addClick() {
+        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
+        $('#addFm').form('clear');
+        //恢复Form中的文本的有效验证
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        //恢复Form中禁用的文本
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+        url = '/SupplyPositionStorage/Add/';
+    }
+
+    function save() {
+        $('#addFm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    $('#dlg-add').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
+</script>
+<style type="text/css">
+    #dlg-add { width: 270px; height: 190px; padding: 0px 0px; }
+    .addtable { width: 250px; padding: 0px 0px; }
+    .div1 { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
+</style>
+<div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" class="div1">
+            <form id="addFm" method="post" novalidate>
+            <table class="addtable">
+                <tr>
+                    <td><input name="Id" style="display: none" /></td>
+                </tr>
+                <tr>
+                    <td>位置编号</td>
+                    <td><input id="positionId2" name="PositionID"  class="easyui-validatebox" />
+                        <a href="#" onclick="supplyPositionQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>位置名称</td>
+                    <td><input id="positionName2" name="PositionName"/></td>
+                </tr>
+                <tr>
+                    <td>商品编码</td>
+                    <td><input id="productCode2" name="ProductCode" class="easyui-validatebox"/>
+                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>商品名称</td>
+                    <td><input id="productName2" name="ProductName" /></td>
+                </tr>
+                 <tr>
+                    <td>库存数量</td>
+                    <td><input id="quantity2" name="Quantity"  class="easyui-validatebox" /></td>
+                 </tr>
+                 <tr>
+                    <td>待入数量</td>
+                    <td><input id="waitQuantity2" name="WaitQuantity"  class="easyui-validatebox" /></td>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">取消</a>
+</div>
+@Html.Partial("../Product/_ProductPartial")
+@Html.Partial("_SupplyPositionPartial")

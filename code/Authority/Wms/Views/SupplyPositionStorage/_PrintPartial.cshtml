@@ -1,0 +1,10 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var positionName = null, positionType = null, productCode = null, productName = null;
+        if ($('#productCode1').val() == null) { productCode = ""; } else { productCode = $('#productCode1').val() }
+        if ($('#productName1').val() == null) { productName = ""; } else { productName = $('#productName1').val() }
+        window.location.href = "/SupplyPositionStorage/CreateExcelToClient/"
+        + "?productCode=" + productCode
+        + "&productName=" + productName;
+    }
+</script>

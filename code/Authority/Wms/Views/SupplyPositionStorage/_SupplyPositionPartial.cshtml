@@ -1,0 +1,79 @@
+﻿<script type="text/javascript">
+    $(function () {
+        supplyPositionInit();
+        supplyPositionDoubleClick();
+    });
+
+    function supplyPositionQuery() {
+        $('#dlg-supplyposition').dialog('open').dialog('setTitle', '选择');
+        $('#supplypositionTable').datagrid({ url: '/SupplyPosition/Details/' });
+        $("#supplypositionTable").datagrid('reload');
+    }
+
+    function supplyPositionInit() {
+        $('#supplyPositionType').combo({ required: true, editable: false, panelWidth: 100, panelHeight: 'auto' })
+        $('#supplypositionTable').datagrid({
+            border: false,
+            singleSelect: true,
+            fit: true,
+            fitColumns: false,
+            toolbar: "#btn-query",
+            pagination: true,
+            rownumbers: true,
+            pagesize: 10
+        });
+    }
+    
+    function supplyPositionSave() {
+        var productRow = $('#supplypositionTable').datagrid('getSelected');
+        if (productRow) {
+            //AddPartial中的id
+            $('#positionId2').val(productRow.Id);
+            $('#positionName2').val(productRow.PositionName);
+            $('#dlg-supplyposition').dialog('close');
+        }
+    }
+    
+    function supplyPositionDoubleClick() {
+        $('#supplypositionTable').datagrid({
+            onDblClickRow: function () {
+                supplyPositionSave();
+            }
+        })
+    }
+    
+    function supplyPositionQueryClick() {
+        $("#supplypositionTable").datagrid({
+            url: '/SupplyPosition/GetDetails/?QueryString=' + $('#supplyPositionType').combogrid('getValue') + '&Value=' + $('#supplypositionInfo').val()
+        });
+        $("#supplypositionTable").datagrid('reload');
+    }
+</script>
+<style type="text/css">
+    #dlg-supplyposition{width: 450px;height: 320px;padding: 0px 0px;}
+    .divproinfo1{width: 450px;height: 320px;}
+</style>
+<div id="dlg-supplyposition" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-supplyposition-buttons">
+    <div id="btnQuery">
+        <select id="supplyPositionType" class="easyui-combobox" style="width: 100px;" readonly="true">
+            <option value="Id">位置编号</option>
+            <option value="PositionName">位置名称</option>
+        </select>
+        <input id="supplypositionInfo">
+        <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="supplyPositionQueryClick()" id="productQuery">查询</a>
+    </div>
+    <div split="true" border="false" class="divproinfo1">
+        <table id="supplypositionTable" class="easyui-datagrid">
+            <thead>
+                <tr>
+                    <th field="Id" width="80">编号</th>
+                    <th field="PositionName" width="320">位置名称</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="dlg-supplyposition-buttons">
+        <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="supplyPositionSave()">确定</a>
+        <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-supplyposition').dialog('close')">取消</a>
+    </div>
+</div>

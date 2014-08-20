@@ -27,11 +27,8 @@
     function supplyPositionSave() {
         var productRow = $('#supplypositionTable').datagrid('getSelected');
         if (productRow) {
-            //SearchPartial中的id
-            $('#id1').val(productRow.Id);
-            $('#positionName1').val(productRow.PositionName);
             //AddPartial中的id
-            $('#id2').val(productRow.Id);
+            $('#positionId2').val(productRow.Id);
             $('#positionName2').val(productRow.PositionName);
             $('#dlg-supplyposition').dialog('close');
         }

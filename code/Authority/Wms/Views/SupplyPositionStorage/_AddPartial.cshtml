@@ -8,6 +8,8 @@
     function addInit() {
         $('#productCode2').attr('readonly', 'true');
         $('#productName2').attr('readonly', 'true');
+        $('#positionId2').attr('readonly', 'true');
+        $('#positionName2').attr('readonly', 'true');
         $('#quantity2').attr('placeholder', '只能为数字');
         $('#waitQuantity2').attr('placeholder', '只能为数字');
     }
@@ -58,7 +60,7 @@
                 </tr>
                 <tr>
                     <td>位置编号</td>
-                    <td><input id="id2" name="PositionID"  class="easyui-validatebox" />
+                    <td><input id="positionId2" name="PositionID"  class="easyui-validatebox" />
                         <a href="#" onclick="supplyPositionQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                 </tr>

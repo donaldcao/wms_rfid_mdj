@@ -53,11 +53,96 @@ namespace THOK.SMS.Bll.Service
                 a.SortingLineCodes,
                 a.TargetSupplyAddresses,
                 a.Description,
-                IsActive = a.IsActive == "0" ? "不可用" : a.IsActive == "1" ? "可用" : "异常"
+                IsActive = a.IsActive == "0" ? "禁用" : a.IsActive == "1" ? "可用" : "异常"
             });
             int total = v1.Count();
             var v2 = v1.Skip((page - 1) * rows).Take(rows);
             return new { total, rows = v2 };
+        }
+
+        public bool Add(SupplyPosition supplyPosition, out string strResult)
+        {
+            bool result = false;
+            strResult = null;
+            SupplyPosition sp = new SupplyPosition();
+            sp.PositionName = supplyPosition.PositionName;
+            sp.PositionType = supplyPosition.PositionType;
+            sp.ProductCode = supplyPosition.ProductCode;
+            sp.ProductName = supplyPosition.ProductName;
+            sp.PositionAddress = supplyPosition.PositionAddress;
+            sp.PositionCapacity = supplyPosition.PositionCapacity;
+            sp.SortingLineCodes = supplyPosition.SortingLineCodes;
+            sp.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
+            sp.Description = supplyPosition.Description;
+            sp.IsActive = supplyPosition.IsActive;
+            SupplyPositionRepository.Add(sp);
+            try
+            {
+                SupplyPositionRepository.SaveChanges();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                strResult = ex.Message;
+            }
+            return result;
+        }
+
+        public bool Save(SupplyPosition supplyPosition, out string strResult)
+        {
+            bool result = false;
+            strResult = null;
+
+            SupplyPosition supplyPositionQuery = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == supplyPosition.Id);
+            SupplyPosition sp = new SupplyPosition();
+
+            if (supplyPosition != null)
+            {
+                sp.Id = supplyPosition.Id;
+                sp.PositionName = supplyPosition.PositionName;
+                sp.PositionType = supplyPosition.PositionType;
+                sp.ProductCode = supplyPosition.ProductCode;
+                sp.ProductName = supplyPosition.ProductName;
+                sp.PositionAddress = supplyPosition.PositionAddress;
+                sp.PositionCapacity = supplyPosition.PositionCapacity;
+                sp.SortingLineCodes = supplyPosition.SortingLineCodes;
+                sp.TargetSupplyAddresses = supplyPosition.TargetSupplyAddresses;
+                sp.Description = supplyPosition.Description;
+                sp.IsActive = supplyPosition.IsActive;
+                SupplyPositionRepository.Add(sp);
+            }
+            try
+            {
+                SupplyPositionRepository.SaveChanges();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                strResult = ex.Message;
+            }
+            return result;
+        }
+
+        public bool Delete(int id, out string strResult)
+        {
+            bool result = false;
+            strResult = null;
+
+            var SupplyPositionQuery = SupplyPositionRepository.GetQueryable().FirstOrDefault(a => a.Id == id);
+            if (SupplyPositionQuery != null)
+            {
+                try
+                {
+                    SupplyPositionRepository.Delete(SupplyPositionQuery);
+                    SupplyPositionRepository.SaveChanges();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    strResult = ex.Message;
+                }
+            }
+            return result;
         }
     }
 }

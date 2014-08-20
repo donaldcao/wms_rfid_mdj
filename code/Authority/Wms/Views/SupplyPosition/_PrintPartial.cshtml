@@ -1,6 +1,14 @@
-﻿
-@{
-    ViewBag.Title = "_PrintPartial";
-}
-
-<h2>_PrintPartial</h2>
+﻿<script type="text/javascript">
+    function printClick() {
+        var positionName = null, positionType = null, productCode = null, productName = null;
+        if ($('#positionName1').val() == null) { positionName = ""; } else { positionName = $('#positionName1').val() }
+        if ($('#positionType1').val() == null) { positionType = ""; } else { positionType = $('#positionType1').val() }
+        if ($('#productCode1').val() == null) { productCode = ""; } else { productCode = $('#productCode1').val() }
+        if ($('#productName1').val() == null) { productName = ""; } else { productName = $('#productName1').val() }
+        window.location.href = "/SupplyPosition/CreateExcelToClient/"
+        + "?positionName=" + positionName
+        + "&positionType=" + positionType
+        + "&productCode=" + productCode
+        + "&productName=" + productName;
+    }
+</script>

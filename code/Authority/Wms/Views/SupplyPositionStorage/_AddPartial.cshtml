@@ -9,8 +9,8 @@
     function addInit() {
         $('#productCode2').attr('readonly', 'true');
         $('#productName2').attr('readonly', 'true');
-        $('#positionType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
-        $('#isActive2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#quantity2').attr('placeholder', '只能为数字');
+        $('#waitQuantity2').attr('placeholder', '只能为数字');
     }
 
     //添加
@@ -18,11 +18,11 @@
         $('#dlg-add').dialog('open').dialog('setTitle', '新增');
         $('#addFm').form('clear');
         //恢复Form中的文本的有效验证
-        $('#addFm .easyui-validatebox').validatebox({ required: true }); 
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
         //恢复Form中禁用的文本
         $('form input').removeAttr("disabled");
         $('form textarea').removeAttr("disabled");
-        url = '/SupplyPosition/Add/';
+        url = '/SupplyPositionStorage/Add/';
     }
 
     //保存
@@ -47,8 +47,8 @@
     }
 </script>
 <style type="text/css">
-    #dlg-add { width: 540px; height: 160px; padding: 0px 0px;}
-    .addtable { width: 520px; padding: 0px 0px; }
+    #dlg-add { width: 280px; height: 180px; padding: 0px 0px; }
+    .addtable { width: 250px; padding: 0px 0px; }
     .div1 { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
 </style>
 <div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
@@ -60,49 +60,26 @@
                     <td><input name="Id" style="display: none" /></td>
                 </tr>
                 <tr>
-                    <td>任务类型</td>
-                    <td style="padding-right: 30px;">
-                        <select id="positionType2" name="PositionType" class="easyui-combobox" required="true">
-                            <option value=""></option>
-                            <option value="01">正常拆盘位置</option>
-                            <option value="02">混合拆盘位置</option>
-                        </select>
-                    </td>
-                    <td>位置名称</td>
-                    <td><input id="positionName2" name="PositionName"/></td>
+                    <td>位置编号</td>
+                    <td><input id="positionId2" name="PositionID"/></td>
                 </tr>
                 <tr>
                     <td>商品编码</td>
-                    <td><input id="productCode2" name="ProductCode"/></td>
-                    <td>商品名称</td>
-                    <td>
-                        <input id="productName2" name="ProductName"  class="easyui-validatebox" />
+                    <td><input id="productCode2" name="ProductCode"/>
                         <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                 </tr>
                 <tr>
-                    <td>位置地址</td>
-                    <td><input id="positionAddress2" name="PositionAddress" class="easyui-validatebox"/></td>
-                    <td>位置容量</td>
-                    <td><input id="positionCapacity2" name="PositionCapacity"  class="easyui-validatebox" /></td>
+                    <td>商品名称</td>
+                    <td><input id="productName2" name="ProductName"  class="easyui-validatebox" /></td>
                 </tr>
                  <tr>
-                    <td>可补货分拣线</td>
-                    <td><input id="sortingLineCodes2" name="SortingLineCodes" class="easyui-validatebox"/></td>
-                    <td>可补货目标地址</td>
-                    <td><input id="targetSupplyAddresses2" name="TargetSupplyAddresses"  class="easyui-validatebox" /></td>
-                </tr>
+                    <td>库存数量</td>
+                    <td><input id="quantity2" name="Quantity"/></td>
+                 </tr>
                  <tr>
-                    <td>描述</td>
-                    <td><input id="description2" name="Description"/></td>
-                    <td>状态</td>
-                    <td>
-                        <select id="isActive2" name="IsActive" class="easyui-combobox" required="true">
-                            <option value=""></option>
-                            <option value="1">可用</option>
-                            <option value="0">禁用</option>
-                        </select>
-                    </td>
+                    <td>待入数量</td>
+                    <td><input id="waitQuantity2" name="WaitQuantity"/></td>
                 </tr>
             </table>
             </form>

@@ -170,6 +170,7 @@
     <Compile Include="Controllers\SMS\BaseInfo\ChannelInfoController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\ProductInfoController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\SupplyPositionController.cs" />
+    <Compile Include="Controllers\SMS\BaseInfo\SupplyPositionStorageController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\BatchCigaretteSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\ChannelAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
@@ -2525,6 +2526,13 @@
     <Content Include="Views\SupplyPosition\_DeletePartial.cshtml" />
     <Content Include="Views\SupplyPosition\_PrintPartial.cshtml" />
     <Content Include="Views\SupplyPosition\_ProductPartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\Index.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_SearchPartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_AddPartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_EditPartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_DeletePartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_PrintPartial.cshtml" />
+    <Content Include="Views\SupplyPositionStorage\_ProductPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

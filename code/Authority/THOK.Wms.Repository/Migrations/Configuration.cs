@@ -5007,6 +5007,55 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E913C7B100")
                 },
+                //²ðÅÌÎ»ÖÃ¿â´æ
+                new Function()
+                {
+                    FunctionID = new Guid("439B8426-EEBE-4D14-A4C6-9AF1952527A0"),
+                    FunctionName = "²éÕÒ",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("B2B97874-E057-4F0D-A4CB-B53E0A53BB3C"),
+                    FunctionName = "ÐÂÔö",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("AF97656E-5E63-4577-B64E-A47E290874AA"),
+                    FunctionName = "±à¼­",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("978F41A2-AC87-4859-BEEE-A15DEA69B4CD"),
+                    FunctionName = "É¾³ý",
+                    ControlName = "delete",
+                    IndicateImage = "icon-remove",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EFED53AB-00C8-4C80-BC8D-A34A8A1FDB08"),
+                    FunctionName = "´òÓ¡",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("F53392B8-08C7-446E-A6D0-F9089F7B2C71"),
+                    FunctionName = "°ïÖú",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F91")
+                },
                 //
                 new Function()
                  {

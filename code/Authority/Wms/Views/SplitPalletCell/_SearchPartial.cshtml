@@ -1,20 +1,18 @@
 ﻿<script type="text/javascript">
-    function searchInit() {
-        $('#productCode1').attr('readonly', 'true');
-        $('#productName1').attr('readonly', 'true');
-        $('#shelfType1').combo({ editable: false, width: 129, panelHeight: 'auto' });
-    }
-    //清空文本
-    function serachClear() {
-        $("input[type=text]").attr("value", "");
-        $('#shelfType1').combo('setValue', "");
-    }
     function searchClick() {
         serachClear();
         searchInit();
         $('#dlg-search').dialog('open').dialog('setTitle', '查询');
     }
-    //查询条件
+    function searchInit() {
+        $('#productCode1').attr('readonly', 'true');
+        $('#productName1').attr('readonly', 'true');
+        $('#shelfType1').combo({ editable: false, width: 129, panelHeight: 'auto' });
+    }
+    function serachClear() {
+        $("input[type=text]").attr("value", "");
+        $('#shelfType1').combo('setValue', "");
+    }
     function searchByParams() {
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.ID = $('#id1').val();
@@ -26,25 +24,25 @@
         $('#dlg-search').dialog('close');
     }
 </script>
-<div id="dlg-search" class="easyui-dialog" modal="true" style="width: 300px; height: 180px;
-    padding: 2px 2px" closed="true" buttons="#dlg-search-buttons">
+<style type="text/css">
+    #dlg-search{ width: 270px; height: 90px; padding:2px 2px; }
+    .c_add_table { width: 250px; padding: 0px 0px; }
+    .c_div { padding:10px 10px; background:$fff; border:1px solid #ccc; }
+</style>
+<div id="dlg-search" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-search-buttons">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" style="padding: 10px 10px; background: #fff;
-            border: 1px solid #ccc;">
-            <table>
+        <div region="center" border="false" class="c_div"">
+            <table class="c_add_table">
                 <tr>
-                    <td><input id="productCode1" type="text" style="display:none;"/></td>
-                    <td class="searchTd1">商品名称：</td>
-                    <td align="left">
+                    <td>商品名称</td>
+                    <td>
+                        <input id="productCode1" type="text" style="display:none;"/>
                         <input id="productName1" type="text" />
-                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search"
-                            plain="true"></a>
+                        <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                 </tr>
                 <tr>
-                    <td width="60" style="text-align: right">
-                        拆盘类型：
-                    </td>
+                    <td>拆盘类型</td>
                     <td>
                         <select id="shelfType1" class="easyui-combobox">
                             <option value=""></option>

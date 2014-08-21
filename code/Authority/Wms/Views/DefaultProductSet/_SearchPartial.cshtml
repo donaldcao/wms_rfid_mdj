@@ -7,14 +7,13 @@
     function searchClick() {
         $('#dlgSearch').dialog('open').dialog('setTitle', '查询');
         $("input[type=text]").attr("value", "");
-        searchLoad();
     }
     //点击查询结果
     function searchResult() {
         var productChoose = $('#productChoose').combogrid('getValue');
-        var cellInfo = $('#cellInfo').val();
+        var productInfo = $('#productInfo').val();
         $("#details").datagrid({
-            url: '/DefaultProductSet/GetCellBy/?QueryString=' + productChoose + '&Value=' + cellInfo
+            url: '/DefaultProductSet/GetCellBy/?QueryString=' + productChoose + '&Value=' + productInfo
         });
         $("#details").datagrid('reload');
         $('#dlgSearch').dialog('close');
@@ -31,7 +30,7 @@
                 <option value="ProductCode">卷烟编码</option>
                 <option value="ProductName">卷烟名称</option>
             </select>
-            <input id="cellInfo" type="text">
+            <input id="productInfo" type="text">
         </div>
     </div>
 </div>

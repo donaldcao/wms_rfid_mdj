@@ -30,6 +30,7 @@ namespace THOK.SMS.DbModel
         public int OrderNo { get; set; }
         public int SortAddress { get; set; }
         public int SupplyAddress { get; set; }
+        public int SupplyCachePosition { get; set; }
         public string IsActive { get; set; }
         public DateTime UpdateTime { get; set; }
 

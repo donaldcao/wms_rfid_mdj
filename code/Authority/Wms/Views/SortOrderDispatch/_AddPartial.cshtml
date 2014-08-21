@@ -58,7 +58,26 @@
             editKey = false;
         }
     }
-
+    function editsave() {
+        url = url + "&SortingLineCode=" + $('#sortNO').combobox('getValue');
+        $('#editFm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.alert(g_MsgBoxTitle, result.msg, "info");
+                    $('#dlg-edit').dialog('close');
+                    $('#details').datagrid('reload');
+                } else {
+                    $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
     function Request(sortlineCode, deliverLineCode, sortDate, isauto) {
         $.getJSON('/SortOrderDispatch/Create/', { SortingLineCode: sortlineCode, DeliverLineCodes: deliverLineCode, orderDate: sortDate,IsAuto:isauto }, function (result) {
             if (result) {
@@ -132,7 +151,21 @@
         </thead>
     </table>
 </div>
-
+<div id="dlg-edit" class="easyui-dialog" modal="true" closed="true" buttons="#eidt-buttons" style="width: 260px; height: 120px;">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" class="div1">
+            <form id="editFm" method="post" novalidate>
+            <table class="edittable">
+                <tr>
+                    <td>分拣线编码</td>
+                    <td style="padding-right: 30px;">
+                        <select id="sortNO" name="sortNO" class="easyui-combobox" required="true">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                        </select>
+                    </td>
+                </tr>
+                </table></form></div></div></div>
 <div id="bar" style="width: auto; height: auto; background-color: #FFFFFF;padding:1px 10px;" >时间:
     <input id="orderDate" class="easyui-datebox" type="text" style="width: 140px" editable="false"/>
     <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="allot()">查询</a>
@@ -150,5 +183,9 @@
     <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="save()">确定</a>
     <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">
         取消</a>
+</div>
+<div id="eidt-buttons">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="editsave()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-edit').dialog('close')">取消</a>
 </div>
 

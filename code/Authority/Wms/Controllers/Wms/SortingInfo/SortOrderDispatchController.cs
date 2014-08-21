@@ -80,9 +80,9 @@ namespace Wms.Controllers.Wms.SortingInfo
 
         //
         // POST: /SortOrderDispatch/Edit/
-        public ActionResult Edit(SortOrderDispatch sortDisoatch)
+        public ActionResult Edit(string id, string SortingLineCode)
         {
-            bool bResult = SortOrderDispatchService.Save(sortDisoatch);
+            bool bResult = SortOrderDispatchService.Edit(id, SortingLineCode);
             string msg = bResult ? "修改成功" : "修改失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }

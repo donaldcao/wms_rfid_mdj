@@ -90,6 +90,10 @@
     <Compile Include="Migrations\201408190206391_update_wms_sort_order_dispatch.Designer.cs">
       <DependentUpon>201408190206391_update_wms_sort_order_dispatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201408210244528_update_Channel.cs" />
+    <Compile Include="Migrations\201408210244528_update_Channel.Designer.cs">
+      <DependentUpon>201408210244528_update_Channel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -156,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201408190206391_update_wms_sort_order_dispatch.resx">
       <DependentUpon>201408190206391_update_wms_sort_order_dispatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408210244528_update_Channel.resx">
+      <DependentUpon>201408210244528_update_Channel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -183,7 +183,16 @@ namespace THOK.Wms.Bll.Service
             SortOrderDispatchRepository.SaveChanges();
             return true;
         }
+        public bool Edit(string id, string SortingLineCode)
+        {
+            int Id = int.Parse(id);
+            var sortOrderDispatch = SortOrderDispatchRepository.GetQueryable().FirstOrDefault(s => s.ID == Id);
+            sortOrderDispatch.SortingLineCode =SortingLineCode;
+            sortOrderDispatch.UpdateTime = DateTime.Now;
 
+            SortOrderDispatchRepository.SaveChanges();
+            return true;
+        }
         public object GetWorkStatus()
         {
             IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();

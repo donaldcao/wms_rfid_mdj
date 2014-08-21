@@ -175,6 +175,7 @@
     <Compile Include="Controllers\SMS\ComplexSearch\ChannelAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\SortOrderAllotSearchController.cs" />
+    <Compile Include="Controllers\SMS\ComplexSearch\SortSupplyController .cs" />
     <Compile Include="Controllers\SMS\SortManage\BatchSortDispatchController.cs" />
     <Compile Include="Controllers\SMS\SortManage\SortTaskController.cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
@@ -1930,6 +1931,7 @@
     <Content Include="Views\DefaultProductSet\_SearchPartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_DeletePartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_EditPartial.cshtml" />
+    <Content Include="Views\DefaultProductSet\_ProductPartial.cshtml" />
     <Content Include="Views\Company\_ParentCompanyNamePartial.cshtml" />
     <Content Include="Views\Department\_ParentCodePartial.cshtml" />
     <Content Include="Views\Department\_DepartmentLeaderPartial.cshtml" />
@@ -2039,16 +2041,19 @@
     <Content Include="Views\ChannelInfo\_DeletePartial.cshtml" />
     <Content Include="Views\ChannelInfo\_EditPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_PrintPartial.cshtml" />
+    <Content Include="Views\ChannelInfo\_ProductPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_SearchPartial.cshtml" />
     <Content Include="Views\ChannelInfo\_SortingLinePartial.cshtml" />
     <Content Include="Views\ChannelAllotSearch\Index.cshtml" />
     <Content Include="Views\ChannelAllotSearch\_SearchPartial.cshtml" />
     <Content Include="Views\ChannelAllotSearch\_PrintPartial.cshtml" />
+    <Content Include="Views\ChannelAllotSearch\_ProductPartial.cshtml" />
     <Content Include="Views\ChannelAllotSearch\_SortingLinePartial.cshtml" />
     <Content Include="Views\Customer\_DeliverLinePartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\Index.cshtml" />
     <Content Include="Views\DeliverOrderSearch\Index.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\_PrintPartial.cshtml" />
+    <Content Include="Views\BatchCigaretteSearch\_ProductPartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\_SearchPartial.cshtml" />
     <Content Include="Views\BatchCigaretteSearch\_SortingLinePartial.cshtml" />
     <Content Include="Views\DeliverOrderSearch\_SearchPartial.cshtml" />
@@ -2477,15 +2482,18 @@
     <Content Include="Views\TaskManage\_DeletePartial.cshtml" />
     <Content Include="Views\TaskManage\_PrintPartial.cshtml" />
     <Content Include="Views\TaskManage\_PathPartial.cshtml" />
+    <Content Include="Views\TaskManage\_ProductPartial.cshtml" />
     <Content Include="Views\TaskManage\_CellPartial.cshtml" />
     <Content Include="Views\TaskManage\_PositionPartial.cshtml" />
     <Content Include="Views\TaskManage\_EmptyPartial.cshtml" />
     <Content Include="Views\SplitPalletCell\Index.cshtml" />
     <Content Include="Views\SplitPalletCell\_SearchPartial.cshtml" />
     <Content Include="Views\SplitPalletCell\_EditPartial.cshtml" />
+    <Content Include="Views\SplitPalletCell\_ProductPartial.cshtml" />
     <Content Include="Views\PdaTask\_FinishPartial.cshtml" />
     <Content Include="Views\PdaTask\_SearchPartial.cshtml" />
     <Content Include="Views\PdaTask\Index.cshtml" />
+    <Content Include="Views\ProductSize\_ProductPartial.cshtml" />
     <Content Include="Views\StorageCellPreview\Index.cshtml" />
     <Content Include="Views\StorageCellPreview\_SearchPartial.cshtml" />
     <Content Include="Views\Shared\_OptimizePartial.cshtml" />
@@ -2501,6 +2509,7 @@
     <Content Include="Views\SortOrderAllotSearch\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_DeliverLinePartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_SortingLinePartial.cshtml" />
+    <Content Include="Views\SortOrderAllotSearch\_ProductPartial.cshtml" />
     <Content Include="Views\SortOrderAllotSearch\_PrintPartial.cshtml" />
     <Content Include="Views\SortOrderSearch\_DeliverLine.cshtml" />
     <Content Include="Views\SortBatchDispatch\_SearchPartial.cshtml" />
@@ -2526,6 +2535,11 @@
     <Content Include="Views\SupplyPositionStorage\_PrintPartial.cshtml" />
     <Content Include="Views\SupplyPositionStorage\_SupplyPositionPartial.cshtml" />
     <Content Include="Views\Product\_ProductPartial.cshtml" />
+    <Content Include="Views\SortSupply\Index.cshtml" />
+    <Content Include="Views\SortSupply\_PrintPartial.cshtml" />
+    <Content Include="Views\SortSupply\_ProductPartial.cshtml" />
+    <Content Include="Views\SortSupply\_SearchPartial.cshtml" />
+    <Content Include="Views\SortSupply\_SortingLinePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

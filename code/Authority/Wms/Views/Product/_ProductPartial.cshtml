@@ -1,14 +1,14 @@
 ﻿<script type="text/javascript">
+    function productQuery() {
+        $('#dlg-product').dialog('open').dialog('setTitle', '选择');
+        $('#productTable').datagrid({ url: '/Product/Details/' });
+        $("#productTable").datagrid('reload');
+    }
+    
     function productQueryClick() {
         $("#productTable").datagrid({
             url: '/DefaultProductSet/GetProductBy/?QueryString=' + $('#productType').combogrid('getValue') + '&Value=' + $('#productInfo').val()
         });
-        $("#productTable").datagrid('reload');
-    }
-
-    function productQuery() {
-        $('#dlg-product').dialog('open').dialog('setTitle', '选择');
-        $('#productTable').datagrid({ url: '/Product/Details/' });
         $("#productTable").datagrid('reload');
     }
 

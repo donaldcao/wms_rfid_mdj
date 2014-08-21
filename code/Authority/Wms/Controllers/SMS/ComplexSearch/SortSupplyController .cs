@@ -33,20 +33,6 @@ namespace Wms.Controllers.SMS.ComplexSearch
         public ActionResult Details(int page, int rows, FormCollection collection)
         {
             SortSupply sortSupply = new SortSupply();
-            //string SortBatchId = collection["SortBatchId"] ?? "";
-            //if (SortBatchId != "" && SortBatchId != null)
-            //{
-            //    sortSupply.SortBatchId = Convert.ToInt32(SortBatchId);
-            //}
-            //string PackNo = collection["PackNo"] ?? "";
-            //if (PackNo != "" && PackNo != null)
-            //{
-            //    sortSupply.PackNo = Convert.ToInt32(PackNo);
-            //}
-            //sortSupply.ChannelCode = collection["ChannelCode"] ?? "";
-            //sortSupply.ProductCode = collection["ProductCode"] ?? "";
-            //sortSupply.ProductName = collection["ProductName"] ?? "";
-
             string SortBatchId = collection["SortBatchId"] ?? "";
             if (SortBatchId != "" && SortBatchId != null)
             {
@@ -57,9 +43,23 @@ namespace Wms.Controllers.SMS.ComplexSearch
             {
                 sortSupply.PackNo = Convert.ToInt32(PackNo);
             }
-            sortSupply.ChannelCode = sortSupply.ChannelCode ?? "";
-            sortSupply.ProductCode = sortSupply.ProductCode ?? "";
-            sortSupply.ProductName = sortSupply.ProductName ?? "";
+            sortSupply.ChannelCode = collection["ChannelCode"] ?? "";
+            sortSupply.ProductCode = collection["ProductCode"] ?? "";
+            sortSupply.ProductName = collection["ProductName"] ?? "";
+
+            //string SortBatchId = collection["SortBatchId"] ?? "";
+            //if (SortBatchId != "" && SortBatchId != null)
+            //{
+            //    sortSupply.SortBatchId = Convert.ToInt32(SortBatchId);
+            //}
+            //string PackNo = collection["PackNo"] ?? "";
+            //if (PackNo != "" && PackNo != null)
+            //{
+            //    sortSupply.PackNo = Convert.ToInt32(PackNo);
+            //}
+            //sortSupply.ChannelCode = sortSupply.ChannelCode ?? "";
+            //sortSupply.ProductCode = sortSupply.ProductCode ?? "";
+            //sortSupply.ProductName = sortSupply.ProductName ?? "";
 
             var sortSupplyDetail = SortSupplyServer.GetDetails(page, rows, sortSupply);
             return Json(sortSupplyDetail, "text", JsonRequestBehavior.AllowGet);

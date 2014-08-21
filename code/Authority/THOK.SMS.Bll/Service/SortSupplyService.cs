@@ -36,7 +36,7 @@ namespace THOK.SMS.Bll.Service
             var sortSupplyDetail2 = sortSupplyDetail1;
             if (sortSupply.PackNo != null && sortSupply.PackNo != 0)
             {
-                sortSupplyDetail1 = sortSupplyQuery.Where(s => s.PackNo == sortSupply.PackNo).OrderBy(s => s.Id);
+                sortSupplyDetail2 = sortSupplyDetail1.Where(s => s.PackNo == sortSupply.PackNo).OrderBy(s => s.Id);
             }
             var sortSupplyDetail3 = sortSupplyDetail2;
             if (sortSupply.ProductCode != null)

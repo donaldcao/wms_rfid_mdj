@@ -5,11 +5,12 @@
         if (!productRow || productRow.length == 0) {
             $.messager.alert('提示', '请选择要编辑的数据!', 'info');
             return;
-        }        
+        }
         if (productRow) {
-            $('#productCode').val(productRow.ProductCode);
-            $('#productName').val(productRow.ProductName);
-            $('#productData').dialog('close');
+            $('#productCode2').attr("readonly", true);
+            $('#productName2').attr("readonly", true);
+            $('#productCode2').val(productRow.ProductCode);
+            $('#productName2').val(productRow.ProductName);
         };
         $('#dlg').dialog('open').dialog('setTitle', '编辑');
         editKey = true;

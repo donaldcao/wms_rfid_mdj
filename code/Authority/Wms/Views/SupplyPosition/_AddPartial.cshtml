@@ -31,9 +31,9 @@
         $('form textarea').removeAttr("disabled");
     }
     $(function () {
-        addControlProperties();
+        addInit();
     });
-    function addControlProperties() {
+    function addInit() {
         $('#productCode2').attr('readonly', 'true');
         $('#productName2').attr('readonly', 'true');
         $('#positionAddress2').attr('placeholder', '只能为数字');

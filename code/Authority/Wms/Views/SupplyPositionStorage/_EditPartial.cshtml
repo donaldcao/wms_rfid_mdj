@@ -2,21 +2,17 @@
     function editClick() {
         var row = $('#details').datagrid('getSelected');
         if (row) {
-            editInit(row);
+            editShowDialog(row);
             url = '/SupplyPositionStorage/Save/';
 
         } else {
             $.messager.alert('错误', '没有选择行！', 'info');
         }
     }
-
-    function editInit(row) {
+    function editShowDialog(row) {
         $('#dlg-add').dialog('open').dialog('setTitle', '编辑');
-        //文本赋值&下拉框赋值
         $('#addFm').form('load', row);
-        //恢复Form中的文本的有效验证
         $('#addFm .easyui-validatebox').validatebox({ required: true });
-        //恢复Form中禁用的文本
         $('form input').removeAttr("disabled");
         $('form textarea').removeAttr("disabled");
     }

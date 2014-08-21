@@ -1,6 +1,6 @@
 ﻿<script type="text/javascript">
     function productQuery() {
-        $('#dlg-product').dialog('open').dialog('setTitle', '选择');
+        $('#dlg-product').dialog('open').dialog('setTitle', '卷烟信息');
         $('#productTable').datagrid({ url: '/Product/Details/' });
         $("#productTable").datagrid('reload');
     }
@@ -40,6 +40,15 @@
             //AddPartial中的id
             $('#productCode2').val(productRow.ProductCode);
             $('#productName2').val(productRow.ProductName);
+            $('#dlg-product').dialog('close');
+        }
+        else {
+            //SearchPartial中的id
+            $('#productCode1').val(null);
+            $('#productName1').val(null);
+            //AddPartial中的id
+            $('#productCode2').val(null);
+            $('#productName2').val(null);
             $('#dlg-product').dialog('close');
         }
     }

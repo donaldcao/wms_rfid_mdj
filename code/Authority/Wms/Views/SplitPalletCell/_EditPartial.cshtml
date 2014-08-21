@@ -7,12 +7,12 @@
 
             //文本赋值&下拉框赋值
             $('#editFm').form('load', row);
-            $("#defaultProductCode2").attr("value", '');
-            $("#defaultProductName2").attr("value", '');
-            $('#defaultProductName2').attr('placeholder', '如不填写，则为删除');
+            $("#productCode2").attr("value", '');
+            $("#productName2").attr("value", '');
+            $('#productName2').attr('placeholder', '如不填写，则为删除');
 
             $('#cellName2').attr('readonly', 'true');
-            $('#defaultProductName2').attr('readonly', 'true');
+            $('#productName2').attr('readonly', 'true');
 
             url = "/SplitPalletCell/Edit";
         }
@@ -46,23 +46,9 @@
     }
 </script>
 <style type="text/css">
-    #dlg-edit
-    {
-        width: 295px;
-        height: 110px;
-        padding: 0px 0px;
-    }
-    .div1
-    {
-        padding: 10px 10px;
-        background: #fff;
-        border: 1px solid #ccc;
-    }
-    .edittable
-    {
-        width: 280px;
-        padding: 0px 0px;
-    }
+    #dlg-edit {width: 295px;height: 110px;padding: 0px 0px;}
+    .div1 {padding: 10px 10px;background: #fff;border: 1px solid #ccc;}
+    .edittable {width: 280px;padding: 0px 0px;}
 </style>
 <div id="dlg-edit" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
     <div class="easyui-layout" fit="true">
@@ -83,8 +69,8 @@
                         预设卷烟：
                     </td>
                     <td>
-                        <input id="defaultProductCode2" name="DefaultProductCode" type="text" style="display: none;" />
-                        <input id="defaultProductName2" type="text" />
+                        <input id="productCode2" name="DefaultProductCode" type="text" style="display: none;" />
+                        <input id="productName2" type="text" />
                         <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search"
                             plain="true"></a>
                     </td>

@@ -30,7 +30,7 @@ namespace THOK.SMS.Bll.Service
             var SortSupplyQuery = SortSupplyRepository.GetQueryable();
             var ProductQuery=ProductRepository.GetQueryable();
             var SupplyTask = SortSupplyQuery.Where
-                (s => s.SortBatch.OrderDate == orderdate && s.SortBatch.BatchNo == batchNO)
+                (s => s.SortBatch.OrderDate == orderdate && s.SortBatch.BatchNo == batchNO && s.Channel.SupplyCachePosition == supplyCachePositionNo)
                 .Join(ProductQuery,
                   a=>a.ProductCode,
                   b=>b.ProductCode,
@@ -59,13 +59,29 @@ namespace THOK.SMS.Bll.Service
                      s.SupplyAddress,
                      status = "0"
                  }).OrderBy(s=>s.PackNo);
-
-            for (int i = 0; i < vacancyQuantity; i++)
+            //产生任务量=空位数（vacancyQuantity）-未下单总量（status=0）任务SupplyId=max(补货计划所有任务)+1
+            if (SupplyTask.Count() > 0)
             {
-                i += 1;
+                if (SupplyTask.Count() == 0)//==max(补货计划所有任务)
+                {
+                    errorInfo = "补货计划已完成！";
+                    return false;
+                }
+                else
+                {
+                    for (int i = 0; i < vacancyQuantity; i++)
+                    {
+                        i += 1;
+                    }
+                    errorInfo = "任务生成成功！";
+                    return true;
+                }
             }
-            errorInfo = "任务生成成功！";
-            return true;
+            else
+            {
+                errorInfo = "没有新任务生成！";
+                return false;
+            }
         }
     }
 }

@@ -23,6 +23,8 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public IProductRepository ProductRepository { get; set; }
 
+        [Dependency]
+        public ISupplyTaskRepository SupplyTaskRepository { get; set; }
 
         #endregion
         public bool CreateSortSupply(int supplyCachePositionNo, int vacancyQuantity, DateTime orderdate, int batchNO, out string errorInfo)
@@ -55,24 +57,42 @@ namespace THOK.SMS.Bll.Service
                      s.ChannelName,
                      s.ProductCode,
                      s.ProductName,
-                     originPositionAddress = "",
+                     s.OneProjectBarcode,
+                     OriginPositionAddress = 0,
                      s.SupplyAddress,
                      status = "0"
-                 }).OrderBy(s=>s.PackNo);
+                 }).OrderBy(s=>s.PackNo).ToArray();
             //产生任务量=空位数（vacancyQuantity）-未下单总量（status=0）任务SupplyId=max(补货计划所有任务)+1
+            var SupplyTaskQuery = SupplyTaskRepository.GetQueryable();
+            int notOrderQuantity = SupplyTaskQuery.Where(s => s.Status == "0").Count();
+            int maxSupplyId = SupplyTaskQuery.Select(s => s.SupplyId).Max() == null ? 0 : SupplyTaskQuery.Select(s => s.SupplyId).Max();
             if (SupplyTask.Count() > 0)
             {
-                if (SupplyTask.Count() == 0)//==max(补货计划所有任务)
+                if (SupplyTask.Count() == maxSupplyId)
                 {
                     errorInfo = "补货计划已完成！";
                     return false;
                 }
                 else
                 {
-                    for (int i = 0; i < vacancyQuantity; i++)
+                    SupplyTask supplyTask = new SupplyTask();
+                    for (int i = 0; i < vacancyQuantity - notOrderQuantity; i++)
                     {
-                        i += 1;
+                        supplyTask.SupplyId = maxSupplyId + i+1;
+                        supplyTask.PackNo = SupplyTask[i].PackNo;
+                        supplyTask.SortingLineCode = SupplyTask[i].SortingLineCode;
+                        supplyTask.GroupNo = SupplyTask[i].GroupNo;
+                        supplyTask.ChannelCode = SupplyTask[i].ChannelCode;
+                        supplyTask.ChannelName = SupplyTask[i].ChannelName;
+                        supplyTask.ProductCode = SupplyTask[i].ProductCode;
+                        supplyTask.ProductName = SupplyTask[i].ProductName;
+                        supplyTask.ProductBarcode = SupplyTask[i].OneProjectBarcode;
+                        supplyTask.OriginPositionAddress = SupplyTask[i].OriginPositionAddress;
+                        supplyTask.TargetSupplyAddress = SupplyTask[i].SupplyAddress;
+                        supplyTask.Status = SupplyTask[i].status;
+                        SupplyTaskRepository.Add(supplyTask);
                     }
+                    SupplyTaskRepository.SaveChanges();
                     errorInfo = "任务生成成功！";
                     return true;
                 }

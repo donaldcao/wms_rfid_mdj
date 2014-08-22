@@ -1,0 +1,19 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var orderCode = null,
+            batchNo = null,
+            sortingLineCode = null,
+            productCode = null;
+
+        if ($('#OrderDate').datebox('getValue') == null) { orderCode = ""; } else { orderCode = $('#OrderDate').datebox('getValue') }
+        if ($('#BatchNo').val() == null) { batchNo = ""; } else { batchNo = $('#BatchNo').val() }
+        if ($('#searchSortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#searchSortingLineCode').val() }
+        if ($('#searchProductCode').val() == null) { productCode = ""; } else { productCode = $('#searchProductCode').val() }
+
+        window.location.href = "/ChannelAllotSearch/CreateExcelToClient/"
+                                + "?OrderDate=" + orderCode
+                                + "&BatchNo=" + batchNo
+                                + "&SortingLineCode=" + sortingLineCode
+                                + "&ProductCode=" + productCode;
+    }
+</script>

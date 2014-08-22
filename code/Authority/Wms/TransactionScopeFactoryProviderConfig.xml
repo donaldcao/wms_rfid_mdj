@@ -12,8 +12,8 @@
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
 				<DataSource value ="" desc =""/>
-				<IP value ="ZQLOON-PC\SQLEXPRESS" desc =""/>
-				<DataBaseName value ="wms_rfid_db" desc =""/>
+				<IP value ="IPHONE\MSSQLSERVER2008" desc =""/>
+				<DataBaseName value ="wms_rfid_db_yz" desc =""/>
 				<User value ="sa" desc =""/>
 				<Password value ="123456" desc =""/>
 			</DataConfiguration>

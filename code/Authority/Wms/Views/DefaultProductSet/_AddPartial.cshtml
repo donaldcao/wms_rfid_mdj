@@ -9,8 +9,8 @@
     };
     function addClick() {
         editType = 'add';        
-        $('#productCode').attr("readonly", true);
-        $('#productName').attr("readonly", true);
+        $('#productCode2').attr("readonly", true);
+        $('#productName2').attr("readonly", true);
         $('#dlg').dialog('open').dialog('setTitle', '新增');
         addKey = true;
         $.ajaxSender.send('/DefaultProductSet/CellCodeSet/',
@@ -21,12 +21,7 @@
                             $.fn.zTree.init($("#treeDemo"), setting, data);
                         }, $('#dlg'));
     }
-    function productSearchClick() {
-        $('#productData').dialog('open').dialog('setTitle', '选择卷烟信息');
-        $('#productDetail').datagrid({ url: '/DefaultProductSet/LoadProduct/' });
-        $("#productDetail").datagrid('reload');
-    }
-
+    
     function enterSave() {
         $('#dlg').dialog('close');
         $('#details').datagrid('reload');
@@ -63,20 +58,20 @@
         }
 
         if ((ware != "" || area != "" || shelf != "" || cell != "") 
-            && ($('#productCode').val() != "")) {
+            && ($('#productCode2').val() != "")) {
             $.ajaxSender.send('/DefaultProductSet/CellInsertCode/',
                         {
                             'wareCodes': ware,
                             'areaCodes': area,
                             'shelfCodes': shelf,
                             'cellCodes': cell,
-                            'defaultProductCode': $("#productCode").val(),
+                            'defaultProductCode': $("#productCode2").val(),
                             'editType': editType
                         },
                         function (data) {
                             $('#details').datagrid('reload');
-                            $("#productCode").attr("value", "");
-                            $("#productName").attr("value", "");
+                            $("#productCode2").attr("value", "");
+                            $("#productName2").attr("value", "");
                         }, $('#dlg'));
                         addKey = false;
                         editKey = false;
@@ -95,9 +90,7 @@
             <div class="easyui-layout" fit="true">
                 <div id="sidebar" region="west" border="false" style="width: 220px; border-right-style: solid;
                     border-right-width: 1px; border-right-color: #99BBE8;">
-                    @*<ul id="productTree" class="easyui-tree" checkbox="true" url=''>*@
                     <ul id="treeDemo" class="ztree"></ul>
-                    </ul>
                 </div>
                 <div id="main" region="center" fit="true" border="false" style="margin: 10px 10px 10px 10px;">
                     <div style="padding: 3px 3px 3px 3px;">
@@ -105,10 +98,9 @@
                             卷烟编码:
                         </div>
                         <div>
-                            <input id="productCode" name="DefaultProductCode" type="text" class="easyui-validatebox"
+                            <input id="productCode2" name="DefaultProductCode" type="text" class="easyui-validatebox"
                                 style="width: 140px;" missingmessage="必填" required="true" />
-                            <a href="#" id="productSearch" class="easyui-linkbutton" iconcls="icon-search" plain="true"
-                                onclick="productSearchClick()"></a>
+                            <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="productQuery()"></a>
                         </div>
                     </div>
                     <div style="padding: 3px 3px 3px 3px;">
@@ -116,7 +108,7 @@
                             卷烟名称:
                         </div>
                         <div>
-                            <input id="productName" type="text" class="easyui-validatebox" style="width: 140px;" />
+                            <input id="productName2" type="text" class="easyui-validatebox" style="width: 140px;" />
                         </div>
                     </div>
                 </div>

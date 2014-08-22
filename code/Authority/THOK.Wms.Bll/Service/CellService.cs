@@ -1426,18 +1426,18 @@ namespace THOK.Wms.Bll.Service
         {
             bool bResult = false;
             strResult = string.Empty;
-
-            var isExist = CellRepository.GetQueryable().Where(a => a.DefaultProductCode == cell.DefaultProductCode
-                                                                && a.CellCode != cell.CellCode
-                                                                && a.AreaCode == "001-07");
-            var c = CellRepository.GetQueryable().FirstOrDefault(a => a.CellCode == cell.CellCode);
+            
+            IQueryable<Cell> isExist = CellRepository.GetQueryable().Where(a => a.CellCode != cell.CellCode
+                                                                             && a.DefaultProductCode == cell.DefaultProductCode.ToString()
+                                                                             && a.AreaCode == "001-07");
+            Cell entity = CellRepository.GetQueryable().FirstOrDefault(a => a.CellCode == cell.CellCode);
             
             if (isExist.Count() < 1)
             {
-                if (c != null)
+                if (entity != null)
                 {
-                    c.DefaultProductCode = cell.DefaultProductCode;
-                    CellRepository.SaveChanges();
+                    entity.DefaultProductCode = cell.DefaultProductCode;
+                    CellRepository.SaveChanges(); 
                     bResult = true;
                 }
                 else

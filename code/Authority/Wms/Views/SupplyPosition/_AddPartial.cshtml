@@ -1,30 +1,9 @@
 ﻿<script type="text/javascript">
     var url;
-
-    $(function () {
-        addInit();
-    });
-
-    function addInit() {
-        $('#productCode2').attr('readonly', 'true');
-        $('#productName2').attr('readonly', 'true');
-        $('#positionAddress2').attr('placeholder', '只能为数字');
-        $('#positionCapacity2').attr('placeholder', '只能为数字');
-        $('#positionType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
-        $('#isActive2').combo({ editable: false, width: 130, panelHeight: 'auto' });
-    }
-
     function addClick() {
-        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
-        $('#addFm').form('clear');
-        //恢复Form中的文本的有效验证
-        $('#addFm .easyui-validatebox').validatebox({ required: true }); 
-        //恢复Form中禁用的文本
-        $('form input').removeAttr("disabled");
-        $('form textarea').removeAttr("disabled");
+        addShowDialog();
         url = '/SupplyPosition/Add/';
     }
-
     function save() {
         $('#addFm').form('submit', {
             url: url,
@@ -44,17 +23,35 @@
             }
         });
     }
+    function addShowDialog() {
+        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
+        $('#addFm').form('clear');
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+    }
+    $(function () {
+        addInit();
+    });
+    function addInit() {
+        $('#productCode2').attr('readonly', 'true');
+        $('#productName2').attr('readonly', 'true');
+        $('#positionAddress2').attr('placeholder', '只能为数字');
+        $('#positionCapacity2').attr('placeholder', '只能为数字');
+        $('#positionType2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+        $('#isActive2').combo({ editable: false, width: 130, panelHeight: 'auto' });
+    }
 </script>
 <style type="text/css">
     #dlg-add { width: 320px; height: 300px; padding: 0px 0px;}
-    .addtable { width: 300px; padding: 0px 0px; }
-    .div1 { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
+    .c_add_table { width: 300px; padding: 0px 0px; }
+    .c_div { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
 </style>
 <div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" class="div1">
+        <div region="center" border="false" class="c_div">
             <form id="addFm" method="post" novalidate>
-            <table class="addtable">
+            <table class="c_add_table">
                 <tr>
                     <td><input name="Id" style="display: none" /></td>
                 </tr>
@@ -74,7 +71,7 @@
                 </tr>
                 <tr>
                     <td>商品编码</td>
-                    <td><input id="productCode2" name="ProductCode" class="easyui-validatebox" />
+                    <td><input id="productCode2" name="ProductCode"/>
                         <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                     </td>
                 </tr>
@@ -88,15 +85,15 @@
                 </tr>
                 <tr>
                     <td>位置容量</td>
-                    <td><input id="positionCapacity2" name="PositionCapacity"  class="easyui-validatebox" /></td>
+                    <td><input id="positionCapacity2" name="PositionCapacity"  class="easyui-validatebox"/></td>
                 </tr>
                  <tr>
                     <td>可补货分拣线</td>
-                    <td><input id="sortingLineCodes2" name="SortingLineCodes" class="easyui-validatebox"/></td>
+                    <td><input id="sortingLineCodes2" name="SortingLineCodes"/></td>
                  </tr>
                  <tr>
                     <td>可补货目标地址</td>
-                    <td><input id="targetSupplyAddresses2" name="TargetSupplyAddresses"  class="easyui-validatebox" /></td>
+                    <td><input id="targetSupplyAddresses2" name="TargetSupplyAddresses"/></td>
                 </tr>
                 <tr>
                     <td>状态</td>

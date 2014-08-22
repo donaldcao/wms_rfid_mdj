@@ -1,18 +1,9 @@
 ﻿<script type="text/javascript">
-    function searchInit() {
-        $('#positionType1').combo({ editable: false, width: 129, panelHeight: 'auto' });
-    }
-    //清空文本
-    function serachClear() {
-        $("input[type=text]").attr("value", "");
-        $('#positionType1').combo('setValue', "");
-    }
     function searchClick() {
         serachClear();
         searchInit();
         $('#dlg-search').dialog('open').dialog('setTitle', '查询');
     }
-    //查询条件
     function searchByParams() {
         var queryParams = $('#details').datagrid('options').queryParams;
         queryParams.Id = $('#id1').val();
@@ -20,20 +11,26 @@
         queryParams.PositionType = $('#positionType1').combo('getValue');
         queryParams.ProductCode = $('#productCode1').val();
         queryParams.ProductName = $('#productName1').val();
-
         $('#details').datagrid('options').queryParams = queryParams;
         $('#details').datagrid({ pageNumber: 1, pageSize: 10 });
         $("#details").datagrid('reload');
         $('#dlg-search').dialog('close');
     }
+    function searchInit() {
+        $('#positionType1').combo({ editable: false, width: 129, panelHeight: 'auto' });
+    }
+    function serachClear() {
+        $("input[type=text]").attr("value", "");
+        $('#positionType1').combo('setValue', "");
+    }
 </script>
 <style type="text/css">
     #dlg-search{ width:260px; height:160px; padding:2px 2px; }
-    .div0 { padding:10px 10px; background:$fff; border:1px solid #ccc; }
+    .c_div { padding:10px 10px; background:$fff; border:1px solid #ccc; }
 </style>
 <div id="dlg-search" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-search-buttons">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" class="div0">
+        <div region="center" border="false" class="c_div">
             <table>
                 <tr>
                     <td><input id="id1" type="text" style="display:none;"/></td>

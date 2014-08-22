@@ -14,13 +14,6 @@
         $("#SortingLineDetails").datagrid('load');
     }
 
-    //查询卷烟
-    function DefaultProductNameSearchClick() {
-        $('#productData').dialog('open').dialog('setTitle', '选择卷烟信息');
-        $('#productDetail').datagrid({ url: '/DefaultProductSet/LoadProduct/' });
-        $("#productDetail").datagrid('load');
-    }
-
     //保存修改
     function save() {
         $('form input').removeAttr("disabled");
@@ -171,11 +164,9 @@
                     预设卷烟:
                 </td>
                 <td align="left" style="width: 165px;">
-                    <input id="details-DefaultProductCode" name="ProductCode" style="display: none;" />
-                    <input id="details-DefaultProductName" name="ProductName" class="easyui-validatebox"
-                        readonly="readonly" />
-                    <a href="#" id="DefaultProductNameSearch" class="easyui-linkbutton" iconcls="icon-search"
-                        plain="true" onclick="DefaultProductNameSearchClick()"></a>
+                    <input id="productCode2" name="ProductCode" class="easyui-validatebox" style="display: none;" />
+                    <input id="productName2" name="ProductName" readonly="true" />
+                    <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
                 </td>  
              </tr>
              <tr>

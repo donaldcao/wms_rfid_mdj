@@ -1,30 +1,9 @@
 ﻿<script type="text/javascript">
     var url;
-
-    $(function () {
-        addInit();
-    });
-
-    function addInit() {
-        $('#productCode2').attr('readonly', 'true');
-        $('#productName2').attr('readonly', 'true');
-        $('#positionId2').attr('readonly', 'true');
-        $('#positionName2').attr('readonly', 'true');
-        $('#quantity2').attr('placeholder', '只能为数字');
-        $('#waitQuantity2').attr('placeholder', '只能为数字');
-    }
-
     function addClick() {
-        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
-        $('#addFm').form('clear');
-        //恢复Form中的文本的有效验证
-        $('#addFm .easyui-validatebox').validatebox({ required: true });
-        //恢复Form中禁用的文本
-        $('form input').removeAttr("disabled");
-        $('form textarea').removeAttr("disabled");
+        addShowDialog();
         url = '/SupplyPositionStorage/Add/';
     }
-
     function save() {
         $('#addFm').form('submit', {
             url: url,
@@ -44,29 +23,47 @@
             }
         });
     }
+    function addShowDialog() {
+        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
+        $('#addFm').form('clear');
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+    }
+    $(function () {
+        addInit();
+    });
+    function addInit() {
+        $('#productCode2').attr('readonly', 'true');
+        $('#productName2').attr('readonly', 'true');
+        $('#positionId2').attr('readonly', 'true');
+        $('#positionName2').attr('readonly', 'true');
+        $('#quantity2').attr('placeholder', '只能为数字');
+        $('#waitQuantity2').attr('placeholder', '只能为数字');
+    }
 </script>
 <style type="text/css">
-    #dlg-add { width: 270px; height: 190px; padding: 0px 0px; }
-    .addtable { width: 250px; padding: 0px 0px; }
-    .div1 { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
+    #dlg-add { width: 270px; height: 170px; padding: 0px 0px; }
+    .c_add_table { width: 250px; padding: 0px 0px; }
+    .c_div { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
 </style>
 <div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
     <div class="easyui-layout" fit="true">
-        <div region="center" border="false" class="div1">
+        <div region="center" border="false" class="c_div">
             <form id="addFm" method="post" novalidate>
-            <table class="addtable">
+            <table class="c_add_table">
                 <tr>
                     <td><input name="Id" style="display: none" /></td>
                 </tr>
                 <tr>
-                    <td>位置编号</td>
-                    <td><input id="positionId2" name="PositionID"  class="easyui-validatebox" />
-                        <a href="#" onclick="supplyPositionQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
+                    <td><input id="positionId2" name="PositionID"  class="easyui-validatebox" style="display: none"/>
                     </td>
                 </tr>
                 <tr>
                     <td>位置名称</td>
-                    <td><input id="positionName2" name="PositionName"/></td>
+                    <td><input id="positionName2" name="PositionName"/>
+                        <a href="#" onclick="supplyPositionQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
+                    </td>
                 </tr>
                 <tr>
                     <td>商品编码</td>
@@ -96,4 +93,4 @@
     <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">取消</a>
 </div>
 @Html.Partial("../Product/_ProductPartial")
-@Html.Partial("_SupplyPositionPartial")
+@Html.Partial("../SupplyPosition/_SupplyPositionPartial")

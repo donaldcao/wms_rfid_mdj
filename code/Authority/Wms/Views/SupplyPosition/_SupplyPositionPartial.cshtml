@@ -1,15 +1,19 @@
 ﻿<script type="text/javascript">
-    $(function () {
-        supplyPositionInit();
-        supplyPositionDoubleClick();
-    });
-
     function supplyPositionQuery() {
         $('#dlg-supplyposition').dialog('open').dialog('setTitle', '选择');
         $('#supplypositionTable').datagrid({ url: '/SupplyPosition/Details/' });
         $("#supplypositionTable").datagrid('reload');
     }
-
+    function supplyPositionQueryClick() {
+        $("#supplypositionTable").datagrid({
+            url: '/SupplyPosition/GetDetails/?QueryString=' + $('#supplyPositionType').combogrid('getValue') + '&Value=' + $('#supplypositionInfo').val()
+        });
+        $("#supplypositionTable").datagrid('reload');
+    }
+    $(function () {
+        supplyPositionInit();
+        supplyPositionDoubleClick();
+    });
     function supplyPositionInit() {
         $('#supplyPositionType').combo({ required: true, editable: false, panelWidth: 100, panelHeight: 'auto' })
         $('#supplypositionTable').datagrid({
@@ -23,7 +27,6 @@
             pagesize: 10
         });
     }
-    
     function supplyPositionSave() {
         var productRow = $('#supplypositionTable').datagrid('getSelected');
         if (productRow) {
@@ -33,20 +36,12 @@
             $('#dlg-supplyposition').dialog('close');
         }
     }
-    
     function supplyPositionDoubleClick() {
         $('#supplypositionTable').datagrid({
             onDblClickRow: function () {
                 supplyPositionSave();
             }
         })
-    }
-    
-    function supplyPositionQueryClick() {
-        $("#supplypositionTable").datagrid({
-            url: '/SupplyPosition/GetDetails/?QueryString=' + $('#supplyPositionType').combogrid('getValue') + '&Value=' + $('#supplypositionInfo').val()
-        });
-        $("#supplypositionTable").datagrid('reload');
     }
 </script>
 <style type="text/css">

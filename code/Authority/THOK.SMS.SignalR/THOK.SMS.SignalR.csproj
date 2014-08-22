@@ -87,6 +87,7 @@
     <Compile Include="Optimize\Model\PackInfo.cs" />
     <Compile Include="Optimize\Model\SortOrderDetailInfo.cs" />
     <Compile Include="Optimize\Service\OptimizeSortOrderService.cs" />
+    <Compile Include="Optimize\Service\OptimizeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

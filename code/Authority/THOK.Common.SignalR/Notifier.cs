@@ -1,10 +1,15 @@
 ﻿using SignalR;
+using THOK.Common.SignalR.Model;
+using System;
+using System.Threading;
 
 namespace THOK.Common.SignalR
 {
     public class Notifier<TPersistentConnection> where TPersistentConnection : PersistentConnection
     {
-        protected string ConnectionId = "";
+        public string ConnectionId { get; set; }
+        public ProgressState ProgressState { get; set; }
+        public CancellationToken CancellationToken { get; set; }
 
         public void Notify(object message)
         {
@@ -31,9 +36,24 @@ namespace THOK.Common.SignalR
                 var context = GlobalHost.ConnectionManager.GetConnectionContext<TPersistentConnection>();
                 context.Connection.Send(ConnectionId, message);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
             }
+        }
+
+        public void NotifyMessage()
+        {
+            NotifyConnection(ProgressState.Clone());
+        }
+
+        public void NotifyProgress(string totalName, int totalValue, string currentName, int currentValue)
+        {
+            ProgressState.State = StateType.Processing;
+            ProgressState.TotalProgressName = totalName;
+            ProgressState.TotalProgressValue = totalValue;
+            ProgressState.CurrentProgressName = currentName;
+            ProgressState.CurrentProgressValue = currentValue;
+            NotifyConnection(ProgressState.Clone());
         }
     }
 }

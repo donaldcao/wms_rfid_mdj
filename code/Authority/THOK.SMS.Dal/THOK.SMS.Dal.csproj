@@ -67,6 +67,7 @@
     <Compile Include="Interfaces\ISortSupplyRepository.cs" />
     <Compile Include="Interfaces\ISupplyPositionRepository.cs" />
     <Compile Include="Interfaces\ISupplyPositionStorageRepository.cs" />
+    <Compile Include="Interfaces\ISupplyTaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

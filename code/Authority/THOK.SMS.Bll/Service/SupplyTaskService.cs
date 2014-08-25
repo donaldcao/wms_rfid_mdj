@@ -101,16 +101,17 @@ namespace THOK.SMS.Bll.Service
                     s.SortingLineCode,
                     //SortingLineName = sortingLineQuery.Where(sl => sl.SortingLineCode == sl.SortingLineCode).Select(sl => sl.SortingLineName),
                     GroupNo = s.GroupNo == 1 ? "A线" : "B线",
-                    s.ProductCode,
-                    s.ProductName,
                     s.ChannelCode,
                     s.ChannelName,
+                    s.ProductCode,
+                    s.ProductName,
                     s.ProductBarcode,
                     s.OriginPositionAddress,
                     s.TargetSupplyAddress,
                     Status = s.Status == "1" ? "已下单" : "未下单"
                 });
             System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("Id", typeof(int));
             dt.Columns.Add("补货编码", typeof(int));
             dt.Columns.Add("烟包包号", typeof(int));
             dt.Columns.Add("分拣线代码", typeof(string));
@@ -130,10 +131,16 @@ namespace THOK.SMS.Bll.Service
                     item.Id,
                     item.SupplyId,
                     item.PackNo,
+                    item.SortingLineCode,
+                    item.GroupNo,
                     item.ProductCode,
                     item.ProductName,
                     item.ChannelCode,
-                    item.ChannelName
+                    item.ChannelName,
+                    item.ProductBarcode,
+                    item.OriginPositionAddress,
+                    item.TargetSupplyAddress,
+                    item.Status
                     );
             }
             return dt;

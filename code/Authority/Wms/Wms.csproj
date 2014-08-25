@@ -1931,7 +1931,6 @@
     <Content Include="Views\DefaultProductSet\_SearchPartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_DeletePartial.cshtml" />
     <Content Include="Views\DefaultProductSet\_EditPartial.cshtml" />
-    <Content Include="Views\DefaultProductSet\_ProductPartial.cshtml" />
     <Content Include="Views\Company\_ParentCompanyNamePartial.cshtml" />
     <Content Include="Views\Department\_ParentCodePartial.cshtml" />
     <Content Include="Views\Department\_DepartmentLeaderPartial.cshtml" />

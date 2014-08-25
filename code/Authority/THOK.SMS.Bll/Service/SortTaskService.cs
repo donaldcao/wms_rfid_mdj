@@ -30,7 +30,7 @@ namespace THOK.SMS.Bll.Service
         public IChannelRepository ChannelRepository { get; set; }
 
         #endregion
-        public bool CreateSortSupply(int supplyCachePositionNo, int vacancyQuantity, DateTime orderdate, int batchNO, out string errorInfo)
+        public bool CreateNewSupplyTask(int supplyCachePositionNo, int vacancyQuantity, DateTime orderdate, int batchNO, out string errorInfo)
         {
             try
             {

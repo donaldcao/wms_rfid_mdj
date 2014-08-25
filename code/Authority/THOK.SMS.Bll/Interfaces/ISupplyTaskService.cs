@@ -8,6 +8,8 @@ namespace THOK.SMS.Bll.Interfaces
 {
     public interface ISupplyTaskService : IService<SupplyTask>
     {
+        object GetDetails(int page, int rows, SupplyTask supplyTask);
 
+        System.Data.DataTable GetSupplyTask(int page, int rows, SupplyTask supplyTask);
     }
 }

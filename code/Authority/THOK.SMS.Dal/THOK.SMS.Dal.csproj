@@ -58,6 +58,7 @@
     <Compile Include="EntityRepository\SortSupplyRepository.cs" />
     <Compile Include="EntityRepository\SupplyPositionRepository.cs" />
     <Compile Include="EntityRepository\SupplyPositionStorageRepository.cs" />
+    <Compile Include="EntityRepository\SupplyTaskRepository.cs" />
     <Compile Include="Interfaces\ISortBatchRepository.cs" />
     <Compile Include="Interfaces\IChannelAllotRepository.cs" />
     <Compile Include="Interfaces\IChannelRepository.cs" />

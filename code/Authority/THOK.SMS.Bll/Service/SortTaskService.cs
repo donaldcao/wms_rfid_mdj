@@ -34,7 +34,7 @@ namespace THOK.SMS.Bll.Service
         {
             var SortSupplyQuery = SortSupplyRepository.GetQueryable();
             var ProductQuery=ProductRepository.GetQueryable();
-            var SupplyTask = SortSupplyQuery.Where
+            var SortTask = SortSupplyQuery.Where
                 (s => s.SortBatch.OrderDate == orderdate && s.SortBatch.BatchNo == batchNO && s.Channel.SupplyCachePosition == supplyCachePositionNo)
                 .Join(ProductQuery,
                   a=>a.ProductCode,
@@ -49,7 +49,7 @@ namespace THOK.SMS.Bll.Service
                      a.Channel.ChannelName,
                      a.ProductCode,
                      a.ProductName,
-                     OneProjectBarcode=b.OneProjectBarcode.Substring(7,6).ToString(),
+                     ProductBarcode=b.PieceBarcode==null?b.OneProjectBarcode.Substring(7,6).ToString():b.PieceBarcode,
                      a.Channel.SupplyAddress
                   })
                  .Select(s => new
@@ -62,26 +62,26 @@ namespace THOK.SMS.Bll.Service
                      s.ChannelName,
                      s.ProductCode,
                      s.ProductName,
-                     s.OneProjectBarcode,
+                     s.ProductBarcode,
                      OriginPositionAddress = 0,
                      s.SupplyAddress,
                      status = "0"
                  }).OrderBy(s=>s.PackNo).ToArray();
             //产生任务量=空位数（vacancyQuantity）-未下单总量（status=0）任务SupplyId=sum(补货计划所有任务)+1
             var SupplyTaskQuery = SupplyTaskRepository.GetQueryable();
-            int notOrderQuantity = SupplyTaskQuery
+            int OrderQuantity = SupplyTaskQuery
                 .Join(ChannelRepository.GetQueryable()
                 , a => a.ChannelCode
                 , b => b.ChannelCode
                 , (a, b) => new { b.SupplyCachePosition }).Where(a => a.SupplyCachePosition == supplyCachePositionNo).Count();
-            int SupplyIdSum = 0;
-            if (SupplyTaskQuery.Count() > 0)
+            int notOrderQuantity = SupplyTaskQuery
+                .Join(ChannelRepository.GetQueryable()
+                , a => a.ChannelCode
+                , b => b.ChannelCode
+                , (a, b) => new { b.SupplyCachePosition ,a.Status}).Where(a => a.SupplyCachePosition == supplyCachePositionNo&&a.Status=="0").Count();
+            if (SortTask.Count() > 0)
             {
-                SupplyIdSum = SupplyTaskQuery.Select(s => s.SupplyId).Count();
-            }
-            if (SupplyTask.Count() > 0)
-            {
-                if (SupplyTask.Count() == SupplyIdSum)
+                if (SortTask.Count() == OrderQuantity)
                 {
                     errorInfo = "补货计划已完成！";
                     return false;
@@ -91,18 +91,18 @@ namespace THOK.SMS.Bll.Service
                     SupplyTask supplyTask = new SupplyTask();
                     for (int i = 0; i < vacancyQuantity - notOrderQuantity; i++)
                     {
-                        supplyTask.SupplyId = SupplyTask[SupplyIdSum + i].Id;
-                        supplyTask.PackNo = SupplyTask[SupplyIdSum + i].PackNo;
-                        supplyTask.SortingLineCode = SupplyTask[SupplyIdSum + i].SortingLineCode;
-                        supplyTask.GroupNo = SupplyTask[SupplyIdSum + i].GroupNo;
-                        supplyTask.ChannelCode = SupplyTask[SupplyIdSum + i].ChannelCode;
-                        supplyTask.ChannelName = SupplyTask[SupplyIdSum + i].ChannelName;
-                        supplyTask.ProductCode = SupplyTask[SupplyIdSum + i].ProductCode;
-                        supplyTask.ProductName = SupplyTask[SupplyIdSum + i].ProductName;
-                        supplyTask.ProductBarcode = SupplyTask[SupplyIdSum + i].OneProjectBarcode;
-                        supplyTask.OriginPositionAddress = SupplyTask[SupplyIdSum + i].OriginPositionAddress;
-                        supplyTask.TargetSupplyAddress = SupplyTask[SupplyIdSum + i].SupplyAddress;
-                        supplyTask.Status = SupplyTask[SupplyIdSum + i].status;
+                        supplyTask.SupplyId = SortTask[OrderQuantity + i].Id;
+                        supplyTask.PackNo = SortTask[OrderQuantity + i].PackNo;
+                        supplyTask.SortingLineCode = SortTask[OrderQuantity + i].SortingLineCode;
+                        supplyTask.GroupNo = SortTask[OrderQuantity + i].GroupNo;
+                        supplyTask.ChannelCode = SortTask[OrderQuantity + i].ChannelCode;
+                        supplyTask.ChannelName = SortTask[OrderQuantity + i].ChannelName;
+                        supplyTask.ProductCode = SortTask[OrderQuantity + i].ProductCode;
+                        supplyTask.ProductName = SortTask[OrderQuantity + i].ProductName;
+                        supplyTask.ProductBarcode = SortTask[OrderQuantity + i].ProductBarcode;
+                        supplyTask.OriginPositionAddress = SortTask[OrderQuantity + i].OriginPositionAddress;
+                        supplyTask.TargetSupplyAddress = SortTask[OrderQuantity + i].SupplyAddress;
+                        supplyTask.Status = SortTask[OrderQuantity + i].status;
                         SupplyTaskRepository.Add(supplyTask);
                         SupplyTaskRepository.SaveChanges();
                     }

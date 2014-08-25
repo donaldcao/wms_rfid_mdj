@@ -14,7 +14,11 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
-            LoginDataShow(context);
+            #region 登录界面数据显示
+            CreateCities(context);
+            CreateServers(context);
+            CreateSystems(context); 
+            #endregion
 
             #region 基础权限管理系统
             CreateServer(context);
@@ -56,7 +60,8 @@ namespace THOK.Wms.Repository.Migrations
            context.Database.ExecuteSqlCommand(sql);
         }
 
-        private void LoginDataShow(AuthorizeContext context)
+        #region 登录界面数据显示
+        private void CreateCities(AuthorizeContext context)
         {
             context.Set<City>().AddOrUpdate(
             new City()
@@ -66,7 +71,10 @@ namespace THOK.Wms.Repository.Migrations
                 Description = "永州市",
                 IsActive = true
             });
-
+            context.SaveChanges();
+        }
+        private void CreateServers(AuthorizeContext context)
+        {
             City city = context.Set<City>().SingleOrDefault(c => c.CityID == new Guid("F8344F88-08AD-4F9A-8F45-EAD8BB471105"));
             context.Set<Server>().AddOrUpdate(
             new Server()
@@ -79,7 +87,10 @@ namespace THOK.Wms.Repository.Migrations
                 City = city,
                 City_CityID = city.CityID
             });
-
+            context.SaveChanges();
+        }
+        private void CreateSystems(AuthorizeContext context)
+        {
             context.Set<SystemInfo>().AddOrUpdate(
             new SystemInfo()
             {
@@ -110,7 +121,8 @@ namespace THOK.Wms.Repository.Migrations
                 Status = true
             });
             context.SaveChanges();
-        }
+        } 
+        #endregion
 
         #region 基础权限管理系统
         private void CreateServer(AuthorizeContext context)
@@ -5224,7 +5236,7 @@ namespace THOK.Wms.Repository.Migrations
                 },
                 new Function()
                 {
-                    FunctionID = new Guid("EAB101C1-8A93-454B-8913-C664C068919F"),
+                    FunctionID = new Guid("DB8B7FB7-E812-43C4-8BD1-8F6D4C4C5D5A"),
                     FunctionName = "查询",
                     ControlName = "search",
                     IndicateImage = "icon-search",

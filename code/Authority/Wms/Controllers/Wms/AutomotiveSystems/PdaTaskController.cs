@@ -21,10 +21,9 @@ namespace Wms.Controllers.WMS.AutomotiveSystems
         public ActionResult Index(string moduleID)
         {
             ViewBag.hasSearch = true;
-            //ViewBag.hasApply = true;
-            //ViewBag.hasCancel = true;
             ViewBag.hasFinish = true;
-            //ViewBag.hasBatch = true;
+            ViewBag.hasPrint = true;
+            ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
             return View();
         }

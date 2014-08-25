@@ -52,6 +52,7 @@ namespace Wms.Controllers.SMS.SupplyManage
             supplyTask.ProductCode = collection["ProductCode"] ?? "";
             supplyTask.ProductName = collection["ProductName"] ?? "";
             supplyTask.SortingLineCode = collection["SortingLineCode"] ?? "";
+            supplyTask.Status = collection["Status"] ?? "";
 
             var supplyTaskDetail = SupplyTaskServer.GetDetails(page, rows, supplyTask);
             return Json(supplyTaskDetail, "text", JsonRequestBehavior.AllowGet);

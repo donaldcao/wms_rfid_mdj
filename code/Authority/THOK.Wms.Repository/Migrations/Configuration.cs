@@ -3947,6 +3947,22 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-batch",
                     Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
                 },
+                new Function()
+                {
+                    FunctionID = new Guid("5056638E-69CD-4236-B60B-C4E89D6401E5"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("9A408FCE-3D2F-477F-93D1-4D4FDFD68AFD"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("287D79FA-5217-43DF-873A-8430888B8EDB")
+                },
                 // 出库作业按钮
                 new Function()
                 {
@@ -3988,6 +4004,22 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-batch",
                     Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
                 },
+                new Function()
+                {
+                    FunctionID = new Guid("C9C634BA-C628-4A19-8FB5-698849F24E7D"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("97FE8FAC-1B44-45BB-9259-B3A602353625"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("7331492B-A45F-4727-9656-1E2D1EF2DE05")
+                },
                 // 移库作业按钮
                 new Function()
                 {
@@ -4027,6 +4059,22 @@ namespace THOK.Wms.Repository.Migrations
                     FunctionName = "批量",
                     ControlName = "batch",
                     IndicateImage = "icon-batch",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("8C64423E-6B61-41C0-96C3-3E156DEDD1B5"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("D466CDBF-0F4F-4870-B5A8-06DD1ED61EF1"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("B071F22D-38EC-423B-8B90-145B697F7598")
                 },
                 // 盘点作业按钮
@@ -4071,6 +4119,22 @@ namespace THOK.Wms.Repository.Migrations
                     IndicateImage = "icon-batch",
                     Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
                 },
+                new Function()
+                {
+                    FunctionID = new Guid("2BEFBF62-6927-4F51-8AD0-7DC8C8C61BAC"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("B5A396DC-CD61-4A2E-BB31-157591481A32"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("737DDF67-4ADA-4F57-A239-8CEAFC0E3C0C")
+                },
                 //手持作业
                 new Function()
                 {
@@ -4086,6 +4150,22 @@ namespace THOK.Wms.Repository.Migrations
                     FunctionName = "完成",
                     ControlName = "finish",
                     IndicateImage = "icon-finish",
+                    Module_ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1")
+                },
+                 new Function()
+                {
+                    FunctionID = new Guid("22445A35-ACF2-450D-A82D-40F48586B112"),
+                    FunctionName = "打印",
+                    ControlName = "print",
+                    IndicateImage = "icon-print",
+                    Module_ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("EF73C643-5CB9-4CA0-B0D4-255AC7776CC2"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("D4C8834D-11D0-4CAE-A12F-E33709242AA1")
                 }
             );
@@ -5124,7 +5204,7 @@ namespace THOK.Wms.Repository.Migrations
                 //
                 new Function()
                  {
-                     FunctionID = new Guid("EAB101C1-8A93-4E6B-8931-C664C068919F"),
+                     FunctionID = new Guid("AE688DC3-2D1D-4271-ACB1-CBB553097FAE"),
                      FunctionName = "查询",
                      ControlName = "search",
                      IndicateImage = "icon-search",

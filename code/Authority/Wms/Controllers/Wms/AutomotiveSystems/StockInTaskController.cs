@@ -26,6 +26,8 @@ namespace Wms.Controllers.Wms.AutomotiveSystems
             ViewBag.hasCancel = true;
             ViewBag.hasFinish = true;
             ViewBag.hasBatch = true;
+            ViewBag.hasPrint = true;
+            ViewBag.hasHelp = true;
             ViewBag.ModuleID = moduleID;
             return View();
         }

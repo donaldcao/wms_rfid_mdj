@@ -5629,12 +5629,20 @@ namespace THOK.Wms.Repository.Migrations
                 },
                  new Function()
                  {
-                     FunctionID = new Guid("54F07A34-8910-45E0-9E3C-B444884AA388"),
+                     FunctionID = new Guid("54F07A34-8910-45E0-9E3C-B444884AA399"),
                      FunctionName = "打印",
                      ControlName = "print",
                      IndicateImage = "icon-print",
-                     Module_ModuleID = new Guid("ED0E6430-95C8-4F58-91A7-23E916C7B1DC")
+                     Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F92")
                  },
+                new Function()
+                {
+                    FunctionID = new Guid("4081DBD1-4E93-4172-88D9-DB87A2EE1C99"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-000064301F92")
+                },
                 //分拣补货查询
                 new Function()
                 {

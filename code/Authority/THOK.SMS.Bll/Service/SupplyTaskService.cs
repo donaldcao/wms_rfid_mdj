@@ -48,9 +48,9 @@ namespace THOK.SMS.Bll.Service
                 supplyTaskDetail3 = supplyTaskDetail2.Where(s => s.ProductCode.Contains(supplyTask.ProductCode)).OrderBy(s => s.Id);
             }
             var supplyTaskDetail4 = supplyTaskDetail3;
-            if (supplyTask.ChannelCode != null)
+            if (supplyTask.Status != null)
             {
-                supplyTaskDetail4 = supplyTaskDetail3.Where(s => s.ChannelCode.Contains(supplyTask.ChannelCode)).OrderBy(s => s.Id);
+                supplyTaskDetail4 = supplyTaskDetail3.Where(s => s.Status.Contains(supplyTask.Status)).OrderBy(s => s.Id);
             }
             var supplyTaskDetail5 = supplyTaskDetail4;
             if (supplyTask.SortingLineCode != "")

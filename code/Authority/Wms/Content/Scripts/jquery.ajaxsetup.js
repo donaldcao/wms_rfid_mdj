@@ -91,7 +91,10 @@ $(function () {
                 complete: function () {
                     p.children("div.datagrid-mask-msg").remove();
                     p.children("div.datagrid-mask").remove();
-                    $.ajaxSender.complete();
+                    if($.ajaxSender.complete)
+                    {
+                        $.ajaxSender.complete();
+                    }
                 },
                 success: function (responseText) {
                     var result = $.evalJSON(responseText);

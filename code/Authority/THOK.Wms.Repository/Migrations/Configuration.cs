@@ -5124,7 +5124,7 @@ namespace THOK.Wms.Repository.Migrations
                 //
                 new Function()
                  {
-                     FunctionID = new Guid("EAB101C1-8A93-4E6B-8931-C664C068919F"),
+                     FunctionID = new Guid("AE688DC3-2D1D-4271-ACB1-CBB553097FAE"),
                      FunctionName = "≤È—Ø",
                      ControlName = "search",
                      IndicateImage = "icon-search",

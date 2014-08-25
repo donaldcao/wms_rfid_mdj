@@ -41,8 +41,23 @@ namespace THOK.Common.SignalR
             }
         }
 
-        public void NotifyMessage()
+        public void NotifyStart()
         {
+            ProgressState.State = StateType.Start;
+            NotifyConnection(ProgressState.Clone());
+        }
+
+        public void NotifyMessage(StateType stateType,string msg)
+        {
+            ProgressState.State = stateType;
+            ProgressState.Messages.Add(msg);
+            NotifyConnection(ProgressState.Clone());
+        }
+
+        public void NotifyError(StateType stateType, string msg)
+        {
+            ProgressState.State = stateType;
+            ProgressState.Errors.Add(msg);
             NotifyConnection(ProgressState.Clone());
         }
 

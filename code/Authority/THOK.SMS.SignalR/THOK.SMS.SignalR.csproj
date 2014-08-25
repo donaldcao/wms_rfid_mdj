@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Connection\OptimizeSortOrderConnection.cs" />
     <Compile Include="Optimize\Interfaces\IOptimizeSortOrderService.cs" />
+    <Compile Include="Optimize\Interfaces\IOptimizeService.cs" />
     <Compile Include="Optimize\Model\ChannelAllotInfo.cs" />
     <Compile Include="Optimize\Model\ChannelGroupInfo.cs" />
     <Compile Include="Optimize\Model\PackInfo.cs" />

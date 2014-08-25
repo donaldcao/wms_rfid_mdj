@@ -43,10 +43,9 @@
                     case 7: //Confirm
                         break;
                     case 8: //Complete
-                        $.messager.confirm(g_MsgBoxTitle, progressState.Messages, function (r) {
+                        $.messager.confirm(g_MsgBoxTitle, progressState.Messages + progressState.Errors, function (r) {
                             g_connection.stop();
                             $.asyncProcessing.OnProgressComplete();
-                            $.asyncProcessing.HideProgressDialog(g_progressDialog);
                         });
                         break;
                     case 9: //Stop                    
@@ -71,8 +70,25 @@
             j_progressDialog.appendTo('body').show().dialog({
                 height: 280, width: 350, modal: true, resizable: false, closable: false, title: dlgTitle,
                 buttons: [{
-                    text: '取消',
-                    handler: function () { $.asyncProcessing.Stop(); }
+                    text: '停止',
+                    handler: function () {
+                        if (g_connection.state === $.connection.connectionState.connected) {
+                            $.asyncProcessing.Stop();
+                        }
+                        else {
+                            $.messager.confirm(g_MsgBoxTitle, "当前连接已中止！");
+                        }
+                    }
+                }, {
+                    text: '关闭',
+                    handler: function () {
+                        if (g_connection.state === $.connection.connectionState.disconnected) {
+                            $.asyncProcessing.HideProgressDialog(g_progressDialog);
+                        }
+                        else {
+                            $.messager.confirm(g_MsgBoxTitle, "当前事务处理中，无法关闭！");
+                        }
+                    }
                 }]
             });
             $.parser.parse(j_progressDialog);

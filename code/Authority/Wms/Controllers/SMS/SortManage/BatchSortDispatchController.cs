@@ -40,10 +40,10 @@ namespace Wms.Controllers.SMS.SortManage
         }
 
         [HttpPost]
-        public ActionResult Create(string dispatchId)
+        public ActionResult Create(string dispatchId,string productType)
         {
             string strResult = string.Empty;
-            bool bResult = SortBatchService.Add(dispatchId, out strResult);
+            bool bResult = SortBatchService.AddSortBatch(dispatchId,productType, out strResult);
             string msg = bResult ? "新增成功" : "新增失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

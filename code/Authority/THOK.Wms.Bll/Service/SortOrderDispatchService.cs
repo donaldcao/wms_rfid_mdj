@@ -207,11 +207,18 @@ namespace THOK.Wms.Bll.Service
         {
             int Id = int.Parse(id);
             var sortOrderDispatch = SortOrderDispatchRepository.GetQueryable().FirstOrDefault(s => s.ID == Id);
-            sortOrderDispatch.SortingLineCode =SortingLineCode;
-            sortOrderDispatch.UpdateTime = DateTime.Now;
+            if (sortOrderDispatch.WorkStatus != "1" && sortOrderDispatch.SortStatus != "1")
+            {
+                sortOrderDispatch.SortingLineCode = SortingLineCode;
+                sortOrderDispatch.UpdateTime = DateTime.Now;
 
-            SortOrderDispatchRepository.SaveChanges();
-            return true;
+                SortOrderDispatchRepository.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public object GetWorkStatus()
         {
@@ -256,7 +263,7 @@ namespace THOK.Wms.Bll.Service
             IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
             IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
 
-            var temp = sortDispatchQuery.Where(s => s.SortBatchId.Equals(0)&&s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+            var temp = sortDispatchQuery.Where(s => s.SortBatchId.Equals(0) && s.SortBatchAbnormalId.Equals(0) && s.SortBatchPiecesId.Equals(0) && s.SortBatchManualId.Equals(0) && s.SortStatus.Equals("1")).ToArray().AsEnumerable()
                                            .Join(sortOrderQuery,
                                                 dp => new { dp.OrderDate, dp.DeliverLineCode },
                                                 om => new { om.OrderDate, om.DeliverLineCode },
@@ -286,6 +293,167 @@ namespace THOK.Wms.Bll.Service
                                                 QuantitySum = r.Sum(q => q.QuantitySum)
                                             });
             return temp.ToArray();
+        }
+
+        public object GetNormalBatch()
+        {
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+
+            var temp = sortDispatchQuery.Where(s => s.SortBatchId.Equals(0) && s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+                                           .Join(sortOrderQuery,
+                                                dp => new { dp.OrderDate, dp.DeliverLineCode },
+                                                om => new { om.OrderDate, om.DeliverLineCode },
+                                                (dp, om) => new
+                                                {
+                                                    dp.ID,
+                                                    dp.OrderDate,
+                                                    dp.SortingLine,
+                                                    dp.DeliverLine,
+                                                    dp.IsActive,
+                                                    dp.UpdateTime,
+                                                    dp.SortStatus,
+                                                    om.QuantitySum
+                                                }
+                                           ).GroupBy(g => new { g.ID, g.OrderDate, g.DeliverLine, g.SortingLine, g.IsActive, g.UpdateTime, g.SortStatus })
+                                            .Select(r => new
+                                            {
+                                                r.Key.ID,
+                                                r.Key.OrderDate,
+                                                r.Key.SortingLine.SortingLineCode,
+                                                r.Key.SortingLine.SortingLineName,
+                                                r.Key.DeliverLine.DeliverLineCode,
+                                                r.Key.DeliverLine.DeliverLineName,
+                                                IsActive = r.Key.IsActive == "1" ? "可用" : "不可用",
+                                                UpdateTime = r.Key.UpdateTime.ToString("yyyy-MM-dd"),
+                                                SortStatus = r.Key.SortStatus == "1" ? "未分拣" : "已分拣",
+                                                QuantitySum = r.Sum(q => q.QuantitySum)
+                                            });
+            return temp.ToArray();
+        }
+
+        public object GetAbnormalBatch()
+        {
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+
+            var temp = sortDispatchQuery.Where(s => s.SortBatchAbnormalId.Equals(0) && s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+                                           .Join(sortOrderQuery,
+                                                dp => new { dp.OrderDate, dp.DeliverLineCode },
+                                                om => new { om.OrderDate, om.DeliverLineCode },
+                                                (dp, om) => new
+                                                {
+                                                    dp.ID,
+                                                    dp.OrderDate,
+                                                    dp.SortingLine,
+                                                    dp.DeliverLine,
+                                                    dp.IsActive,
+                                                    dp.UpdateTime,
+                                                    dp.SortStatus,
+                                                    om.QuantitySum
+                                                }
+                                           ).GroupBy(g => new { g.ID, g.OrderDate, g.DeliverLine, g.SortingLine, g.IsActive, g.UpdateTime, g.SortStatus })
+                                            .Select(r => new
+                                            {
+                                                r.Key.ID,
+                                                r.Key.OrderDate,
+                                                r.Key.SortingLine.SortingLineCode,
+                                                r.Key.SortingLine.SortingLineName,
+                                                r.Key.DeliverLine.DeliverLineCode,
+                                                r.Key.DeliverLine.DeliverLineName,
+                                                IsActive = r.Key.IsActive == "1" ? "可用" : "不可用",
+                                                UpdateTime = r.Key.UpdateTime.ToString("yyyy-MM-dd"),
+                                                SortStatus = r.Key.SortStatus == "1" ? "未分拣" : "已分拣",
+                                                QuantitySum = r.Sum(q => q.QuantitySum)
+                                            });
+            return temp.ToArray();
+        }
+
+        public object GetPieceBatch()
+        {
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+
+            var temp = sortDispatchQuery.Where(s => s.SortBatchPiecesId.Equals(0) && s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+                                           .Join(sortOrderQuery,
+                                                dp => new { dp.OrderDate, dp.DeliverLineCode },
+                                                om => new { om.OrderDate, om.DeliverLineCode },
+                                                (dp, om) => new
+                                                {
+                                                    dp.ID,
+                                                    dp.OrderDate,
+                                                    dp.SortingLine,
+                                                    dp.DeliverLine,
+                                                    dp.IsActive,
+                                                    dp.UpdateTime,
+                                                    dp.SortStatus,
+                                                    om.QuantitySum
+                                                }
+                                           ).GroupBy(g => new { g.ID, g.OrderDate, g.DeliverLine, g.SortingLine, g.IsActive, g.UpdateTime, g.SortStatus })
+                                            .Select(r => new
+                                            {
+                                                r.Key.ID,
+                                                r.Key.OrderDate,
+                                                r.Key.SortingLine.SortingLineCode,
+                                                r.Key.SortingLine.SortingLineName,
+                                                r.Key.DeliverLine.DeliverLineCode,
+                                                r.Key.DeliverLine.DeliverLineName,
+                                                IsActive = r.Key.IsActive == "1" ? "可用" : "不可用",
+                                                UpdateTime = r.Key.UpdateTime.ToString("yyyy-MM-dd"),
+                                                SortStatus = r.Key.SortStatus == "1" ? "未分拣" : "已分拣",
+                                                QuantitySum = r.Sum(q => q.QuantitySum)
+                                            });
+            return temp.ToArray();
+        }
+
+        public object GetManualBatch()
+        {
+            IQueryable<SortOrderDispatch> sortDispatchQuery = SortOrderDispatchRepository.GetQueryable();
+            IQueryable<SortOrder> sortOrderQuery = SortOrderRepository.GetQueryable();
+            IQueryable<SortingLine> sortingline = SortingLineRepository.GetQueryable();
+            if (sortingline.Where(s => s.IsActive == "1" && s.ProductType.Contains("4")).Count() > 0)
+            {
+                var temp = sortDispatchQuery.Where(s => s.SortBatchManualId.Equals(0) && s.SortStatus.Equals("1")).ToArray().AsEnumerable()
+                                               .Join(sortOrderQuery,
+                                                    dp => new { dp.OrderDate, dp.DeliverLineCode },
+                                                    om => new { om.OrderDate, om.DeliverLineCode },
+                                                    (dp, om) => new
+                                                    {
+                                                        dp.ID,
+                                                        dp.OrderDate,
+                                                        dp.SortingLine,
+                                                        dp.DeliverLine,
+                                                        dp.IsActive,
+                                                        dp.UpdateTime,
+                                                        dp.SortStatus,
+                                                        om.QuantitySum
+                                                    }
+                                               ).GroupBy(g => new { g.ID, g.OrderDate, g.DeliverLine, g.SortingLine, g.IsActive, g.UpdateTime, g.SortStatus })
+                                                .Select(r => new
+                                                {
+                                                    r.Key.ID,
+                                                    r.Key.OrderDate,
+                                                    r.Key.SortingLine.SortingLineCode,
+                                                    r.Key.SortingLine.SortingLineName,
+                                                    r.Key.DeliverLine.DeliverLineCode,
+                                                    r.Key.DeliverLine.DeliverLineName,
+                                                    IsActive = r.Key.IsActive == "1" ? "可用" : "不可用",
+                                                    UpdateTime = r.Key.UpdateTime.ToString("yyyy-MM-dd"),
+                                                    SortStatus = r.Key.SortStatus == "1" ? "未分拣" : "已分拣",
+                                                    QuantitySum = r.Sum(q => q.QuantitySum)
+                                                });
+                return temp.ToArray();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public int GetActiveSortingLine(string productType)
+        {
+            IQueryable<SortingLine> sortingline = SortingLineRepository.GetQueryable();
+            return sortingline.Where(s => s.IsActive == "1" && s.ProductType == productType).Count();
         }
 
         #endregion

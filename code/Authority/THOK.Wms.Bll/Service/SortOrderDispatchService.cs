@@ -155,19 +155,39 @@ namespace THOK.Wms.Bll.Service
             return true;
         }
 
-        public bool Delete(string id)
+        public bool Delete(string id, out string errorInfo)
         {
             int ID = Convert.ToInt32(id);
             var sortOrderDispatch = SortOrderDispatchRepository.GetQueryable()
                .FirstOrDefault(s => s.ID == ID);
-            if (sortOrderDispatch != null && sortOrderDispatch.SortBatchAbnormalId == 0 && sortOrderDispatch.SortBatchManualId == 0&& sortOrderDispatch.SortBatchPiecesId==0)
+            if (sortOrderDispatch.WorkStatus == "1")
             {
-                SortOrderDispatchRepository.Delete(sortOrderDispatch);
-                SortOrderDispatchRepository.SaveChanges();
+                if (sortOrderDispatch.SortStatus == "1")
+                {
+                    if (sortOrderDispatch != null && sortOrderDispatch.SortBatchAbnormalId == 0 && sortOrderDispatch.SortBatchManualId == 0 && sortOrderDispatch.SortBatchPiecesId == 0)
+                    {
+                        SortOrderDispatchRepository.Delete(sortOrderDispatch);
+                        SortOrderDispatchRepository.SaveChanges();
+                        errorInfo = "删除成功！";
+                        return true;
+                    }
+                    else
+                    {
+                        errorInfo = "删除失败！该线路已作业调度";
+                        return false;
+                    }
+                }
+                else
+                {
+                    errorInfo = "删除失败！该线路已分拣";
+                    return false;
+                }
             }
             else
+            {
+                errorInfo = "删除失败！该线路已作业"; 
                 return false;
-            return true;
+            }
         }
 
         public bool Save(SortOrderDispatch sortDispatch)

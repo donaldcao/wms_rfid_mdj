@@ -18,7 +18,7 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool Add(string SortingLineCode, string DeliverLineCodes,string orderDate);
 
-        bool Delete(string id);
+        bool Delete(string id,out string errorInfo);
 
         bool Save(SortOrderDispatch sortDispatch);
         bool Edit(string id, string SortingLineCode);

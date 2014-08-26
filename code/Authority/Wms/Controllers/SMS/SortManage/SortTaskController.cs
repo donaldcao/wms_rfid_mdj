@@ -15,10 +15,10 @@ namespace Wms.Controllers.SMS.SortManage
         [Dependency]
         public ISortTaskService SortTaskService { get; set; }
 
-        public ActionResult Index(int supplyCachePositionNo,int vacancyQuantity,DateTime orderdate,int batchNO)
+        public ActionResult CreateNewSupplyTask(int supplyCachePositionNo,int vacancyQuantity,DateTime orderdate,int batchNO)
         {
             string errorInfo = string.Empty;
-            bool bResult = SortTaskService.CreateSortSupply(supplyCachePositionNo,vacancyQuantity,orderdate, batchNO,out errorInfo);
+            bool bResult = SortTaskService.CreateNewSupplyTask(supplyCachePositionNo, vacancyQuantity, orderdate, batchNO, out errorInfo);
             return Json(new Result { IsSuccess = bResult, Message = errorInfo }, "application/json", JsonRequestBehavior.AllowGet);
         }
     }

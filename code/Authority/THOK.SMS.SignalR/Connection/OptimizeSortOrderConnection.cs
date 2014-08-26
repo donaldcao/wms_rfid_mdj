@@ -3,6 +3,7 @@ using Microsoft.Practices.Unity;
 using THOK.SMS.SignalR.Optimize.Interfaces;
 using THOK.Common.SignalR.Model;
 using THOK.Common.SignalR.Connection;
+using THOK.Common.SignalR;
 
 namespace THOK.SMS.SignalR.Connection
 {
@@ -19,6 +20,9 @@ namespace THOK.SMS.SignalR.Connection
         protected override void Execute(string connectionId, string data, ProgressState ps, CancellationToken cancellationToken, string userName)
         {
             ActionData ad = jns.Parse<ActionData>(data);
+            ((Notifier<OptimizeSortOrderConnection>)OptimizeSortOrderService).ConnectionId = connectionId;
+            ((Notifier<OptimizeSortOrderConnection>)OptimizeSortOrderService).ProgressState = ps;
+            ((Notifier<OptimizeSortOrderConnection>)OptimizeSortOrderService).CancellationToken = cancellationToken;
             OptimizeSortOrderService.Optimize(connectionId, ps, cancellationToken, ad.sortBatchId);
         }     
     }

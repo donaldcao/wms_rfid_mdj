@@ -1,0 +1,40 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var Id=null,
+            supplyId = null,
+            packNo = null,
+            sortingLineCode = null,
+            groupNo = null,
+            productCode = null,
+            productName = null,
+            channelCode = null,
+            channelName = null,
+            productBarcode = null,
+            originPositionAddress = null,
+            targetSupplyAddress = null,
+            status = null;
+
+
+        if ($('#SupplyId').val() == null) { supplyId = ""; } else { supplyId = $('#SupplyId').val() }
+        if ($('#PackNo').val() == null) { packNo = ""; } else { packNo = $('#PackNo').val() }
+        if ($('#searchSortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#searchSortingLineCode').val() }
+        if ($('#searchProductCode').val() == null) { productCode = ""; } else { productCode = $('#searchProductCode').val() }
+        if (document.getElementById("GroupNo") == null) { groupNo = ""; } else { groupNo = $('#GroupNo').combo('getValue'); }
+        if (document.getElementById("Status") == null) { status = ""; } else { status = $('#Status').combo('getValue'); }
+
+        window.location.href = "/SupplyTask/CreateExcelToClient/"
+                                + "?Id=" + Id
+                                + "&SupplyId=" + supplyId
+                                + "&PackNo=" + packNo
+                                + "&SortingLineCode=" + sortingLineCode
+                                + "&GroupNo=" + groupNo
+                                + "&ProductCode=" + productCode
+                                + "&ProductName=" + productName
+                                + "&ChannelCode=" + channelCode
+                                + "&ChannelName=" + channelName
+                                + "&ProductBarcode=" + productBarcode
+                                + "&OriginPositionAddress=" + originPositionAddress
+                                + "&TargetSupplyAddress=" + targetSupplyAddress
+                                + "&Status=" + status;
+    }
+</script>

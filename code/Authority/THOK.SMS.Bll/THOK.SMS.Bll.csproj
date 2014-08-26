@@ -65,6 +65,7 @@
     <Compile Include="Interfaces\ISortOrderAllotMasterService.cs" />
     <Compile Include="Interfaces\IHandSupplyService.cs" />
     <Compile Include="Interfaces\ISortTaskService.cs" />
+    <Compile Include="Interfaces\ISupplyTaskService.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Interfaces\ISupplyPositionService.cs" />
     <Compile Include="Interfaces\ISupplyPositionStorageService.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Service\SupplyPositionService.cs" />
     <Compile Include="Service\SupplyPositionStorageService.cs" />
     <Compile Include="Service\SortSupplyService.cs" />
+    <Compile Include="Service\SupplyTaskService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

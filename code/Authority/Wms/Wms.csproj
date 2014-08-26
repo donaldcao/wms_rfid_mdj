@@ -2539,6 +2539,10 @@
     <Content Include="Views\SupplyTask\_SearchPartial.cshtml" />
     <Content Include="Views\SupplyTask\_ProductPartial.cshtml" />
     <Content Include="Views\SupplyTask\_PrintPartial.cshtml" />
+    <Content Include="Views\StockInTask\_PrintPartial.cshtml" />
+    <Content Include="Views\StockOutTask\_PrintPartial.cshtml" />
+    <Content Include="Views\StockMoveTask\_PrintPartial.cshtml" />
+    <Content Include="Views\StockCheckTask\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

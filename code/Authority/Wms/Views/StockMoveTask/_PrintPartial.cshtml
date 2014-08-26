@@ -1,0 +1,10 @@
+﻿<script type="text/javascript">
+    function printClick() {
+        var billNo = null;
+        var row = $('#tbBillMoveMaster').datagrid('getSelected');
+        if (row) {
+            if ($('#billNo').val() == null) { billNo = ""; } else { billNo = $('#billNo').val(); }
+            window.location.href = "/StockMoveTask/CreateExcelToClient/?BillNo=" + row.BillNo;
+        }
+    }
+</script>

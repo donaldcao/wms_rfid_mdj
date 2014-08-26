@@ -31,6 +31,8 @@ namespace THOK.Wms.Allot.Interfaces
 
         bool EditAllot(string id, string status, string operater, out string strResult);
 
+        System.Data.DataTable OutBillAllotTable(string billNo, int page, int rows);
+
         object GetOutBillMaster();
     }
 }

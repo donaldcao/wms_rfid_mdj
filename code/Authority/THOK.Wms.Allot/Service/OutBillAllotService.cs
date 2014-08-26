@@ -755,6 +755,45 @@ namespace THOK.Wms.Allot.Service
             OutBillAllotRepository.SaveChanges();
             return result;
         }
+        public System.Data.DataTable OutBillAllotTable(string billNo, int page, int rows)
+        {
+            var query = OutBillAllotRepository.GetQueryable()
+                                .Where(a => a.BillNo == billNo && a.Status != "2")
+                                .OrderByDescending(a => a.Status == "1")
+                                .Select(i => i);
+            var temp = query.ToArray().Select(a => new
+            {
+                a.Product.ProductName,
+                a.Cell.CellName,
+                BillType = "出库",
+                PieceQuantity = Math.Floor(a.AllotQuantity / a.Product.UnitList.Unit01.Count),
+                BarQuantity = Math.Floor(a.AllotQuantity % a.Product.UnitList.Unit01.Count / a.Product.UnitList.Unit02.Count),
+                Status = WhatStatus(a.Status),
+                a.Operator
+            });
+            System.Data.DataTable dt = new System.Data.DataTable();
+            dt.Columns.Add("作业储位", typeof(string));
+            dt.Columns.Add("类型", typeof(string));
+            dt.Columns.Add("卷烟名称", typeof(string));
+            dt.Columns.Add("件数", typeof(decimal));
+            dt.Columns.Add("条数", typeof(decimal));
+            dt.Columns.Add("状态", typeof(string));
+            dt.Columns.Add("操作员", typeof(string));
+            foreach (var q in temp)
+            {
+                dt.Rows.Add
+                (
+                    q.CellName,
+                    q.BillType,
+                    q.ProductName,
+                    q.PieceQuantity,
+                    q.BarQuantity,
+                    q.Status,
+                    q.Operator
+                );
+            }
+            return dt;
+        }
         #endregion
     }
 }

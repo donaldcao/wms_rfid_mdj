@@ -25,5 +25,6 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool EditAllot(string id, string status, string operater, out string strResult);
 
+        System.Data.DataTable MoveBillDetailTable(string billNo, int page, int rows);
     }
 }

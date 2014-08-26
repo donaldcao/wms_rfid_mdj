@@ -19,7 +19,7 @@ namespace Wms.Controllers.SMS.SupplyManage
         [Dependency]
         public ISupplyTaskService SupplyTaskServer { get; set; }
         //
-        // GET: /SupplyTaskSearch/
+        // GET: /SupplyTask/
 
         public ActionResult Index(string moduleID)
         {
@@ -60,26 +60,34 @@ namespace Wms.Controllers.SMS.SupplyManage
         }
 
         //打印
+        #region /SupplyTask/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            int sortBatchId = Convert.ToInt32(Request.QueryString["SortBatchId"] );
-            int packNo = Convert.ToInt32(Request.QueryString["PackNo"]);
+            //int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"]);
+            //int PackNo = Convert.ToInt32(Request.QueryString["PackNo"]);
             string channelCode = Request.QueryString["ChannelCode"] ;
             string productCode = Request.QueryString["ProductCode"] ;
             string productName = Request.QueryString["ProductName"] ;
+            string sortingLineCode = Request.QueryString["SortingLineCode"];
+            //int groupNo = Convert.ToInt32(Request.QueryString["GroupNo"]);
+            string status = Request.QueryString["Status"];
             SupplyTask supplyTask = new SupplyTask();
-            supplyTask.SupplyId = sortBatchId;
-            supplyTask.PackNo = packNo;
+            //supplyTask.SupplyId = SupplyId;
+            //supplyTask.PackNo = PackNo;
             supplyTask.ChannelCode = channelCode;
             supplyTask.ProductCode = productCode;
             supplyTask.ProductName = productName;
+            supplyTask.SortingLineCode = sortingLineCode;
+            //supplyTask.GroupNo = groupNo;
+            supplyTask.Status = status;
 
             ExportParam ep = new ExportParam();
             ep.DT1 = SupplyTaskServer.GetSupplyTask(page, rows, supplyTask);
             ep.HeadTitle1 = "分拣补货查询";
             return PrintService.Print(ep);
         }
+        #endregion
     }
 }
 

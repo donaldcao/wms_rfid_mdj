@@ -91,8 +91,9 @@ namespace Wms.Controllers.Wms.SortingInfo
         // POST: /SortOrderDispatch/Delete/
         public ActionResult Delete(string id)
         {
-            bool bResult = SortOrderDispatchService.Delete(id);
-            string msg = bResult ? "删除成功" : "删除失败,该线路有卷烟已被优化，请编辑分拣线编码或者取消占用该线路的分拣线优化！";
+            string errorInfo = string.Empty;
+            bool bResult = SortOrderDispatchService.Delete(id, out errorInfo);
+            string msg = errorInfo;
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }
 

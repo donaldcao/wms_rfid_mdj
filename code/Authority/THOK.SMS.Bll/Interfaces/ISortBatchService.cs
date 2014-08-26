@@ -12,6 +12,8 @@ namespace THOK.SMS.Bll.Interfaces
 
         bool Add(string dispatchId, out string strResult);
 
+        bool AddSortBatch(string dispatchId,string productType, out string strResult);
+
         bool Edit(SortBatch sortBatch, string IsRemoveOptimization, out string strResult);
 
         bool Delete(string id, out string strResult);

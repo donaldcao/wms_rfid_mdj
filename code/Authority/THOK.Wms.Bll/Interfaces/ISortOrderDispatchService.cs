@@ -14,6 +14,16 @@ namespace THOK.Wms.Bll.Interfaces
 
         object GetBatchStatus();
 
+        object GetNormalBatch();
+
+        object GetAbnormalBatch();
+
+        object GetPieceBatch();
+
+        object GetManualBatch();
+
+        int GetActiveSortingLine(string productType);
+
         bool Add(string DeliverLineCodes, string orderDate);
 
         bool Add(string SortingLineCode, string DeliverLineCodes,string orderDate);

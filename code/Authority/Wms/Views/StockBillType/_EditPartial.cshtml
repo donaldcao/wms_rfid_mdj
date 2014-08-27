@@ -1,0 +1,46 @@
+﻿<script type="text/javascript">
+    function editClick(row) {
+        var row = $('#details').datagrid('getSelected');
+        if (row) {
+            editShowDialog(row);
+            editSetValue(row);
+            url = '/StockBillType/Edit/';
+
+        } else {
+            $.messager.alert('错误', '没有选择行！', 'info');
+        }
+    }
+    function editShowDialog(row) {
+        $('#dlg-add').dialog('open').dialog('setTitle', '编辑');
+        $('#addFm').form('load', row);
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+    }
+    function editSetValue(row) {
+        if (row.PositionType == '入库单') {
+            $('#billClass2').combo('setValue', '0001').combo('setText', row.BillClass);
+        }
+        if (row.PositionType == '出库单') {
+            $('#billClass2').combo('setValue', '0002').combo('setText', row.BillClass);
+        }
+        if (row.PositionType == '移库单') {
+            $('#billClass2').combo('setValue', '0003').combo('setText', row.BillClass);
+        }
+        if (row.PositionType == '盘点单') {
+            $('#billClass2').combo('setValue', '0004').combo('setText', row.BillClass);
+        }
+        if (row.PositionType == '损益单') {
+            $('#billClass2').combo('setValue', '0005').combo('setText', row.BillClass);
+        }
+        else {
+            $('#billClass2').combo('setValue', '0006').combo('setText', row.BillClass);
+        }
+        if (row.IsActive == '禁用') {
+            $('#isActive2').combo('setValue', '0').combo('setText', row.IsActive);
+        }
+        else {
+            $('#isActive2').combo('setValue', '1').combo('setText', row.IsActive);
+        }
+    }
+</script>

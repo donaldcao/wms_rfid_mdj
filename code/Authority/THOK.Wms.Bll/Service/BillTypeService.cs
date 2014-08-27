@@ -20,49 +20,60 @@ namespace THOK.Wms.Bll.Service
             get { return this.GetType(); }
         }
 
-
-        public object GetDetails(int page, int rows, string BillTypeCode, string BillTypeName, string BillClass, string IsActive)
+        public object GetDetails(int page, int rows, string billClass, string isActive)
         {
-            IQueryable<BillType> billtypeQuery = BillTypeRepository.GetQueryable();
-            var billtype = billtypeQuery.Where(b => b.BillClass == BillClass && b.BillTypeCode.Contains(BillTypeCode) && b.BillTypeName.Contains(BillTypeName) && b.IsActive.Contains(IsActive)).OrderBy(b => b.BillTypeCode).AsEnumerable().Select(b => new { b.BillTypeCode, b.BillTypeName, b.BillClass, b.Description,IsActive = b.IsActive == "1" ? "可用" : "不可用", UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") });
-
-            int total = billtype.Count();
-            billtype = billtype.Skip((page - 1) * rows).Take(rows);
-            return new { total, rows = billtype.ToArray() };
+            IQueryable<BillType> query = BillTypeRepository.GetQueryable();
+            var v1 = query.Where(a => a.BillClass.Contains(billClass)
+                && a.IsActive.Contains(isActive))
+                .OrderBy(a => a.BillTypeCode).AsEnumerable()
+                .Select(a => new
+                {
+                    a.BillTypeCode,
+                    a.BillTypeName,
+                    BillClass = a.BillClass == "0001" ? "入库单" : a.BillClass == "0002" ? "出库单" : a.BillClass == "0003" ? "移库单" : a.BillClass == "0004" ? "盘点单" : a.BillClass == "0005" ? "损益单" : a.BillClass == "0006" ? "分拣单" : "异常",
+                    a.Description,
+                    IsActive = a.IsActive == "1" ? "可用" : "禁用",
+                    UpdateTime = a.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss")
+                });
+            int total = v1.Count();
+            v1 = v1.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = v1.ToArray() };
+        }
         
-        }
-        public new bool Add(BillType billtype)
+        public new bool Add(BillType entity)
         {
-            var bi = new BillType();
-            bi.BillTypeCode = billtype.BillTypeCode;
-            bi.BillTypeName = billtype.BillTypeName;
-            bi.BillClass = billtype.BillClass;
-            bi.Description = billtype.Description;
-            bi.IsActive = billtype.IsActive;
-            bi.UpdateTime = DateTime.Now;
+            BillType en = new BillType();
+            en.BillTypeCode = entity.BillTypeCode;
+            en.BillTypeName = entity.BillTypeName;
+            en.BillClass = entity.BillClass;
+            en.Description = entity.Description;
+            en.IsActive = entity.IsActive;
+            en.UpdateTime = DateTime.Now;
 
-            BillTypeRepository.Add(bi);
+            BillTypeRepository.Add(en);
             BillTypeRepository.SaveChanges();
             return true;
         }
-        public bool Save(BillType billtype)
+
+        public bool Save(BillType entity)
         {
-            var br = BillTypeRepository.GetQueryable().FirstOrDefault(b => b.BillTypeCode == billtype.BillTypeCode);
-            br.BillTypeCode = billtype.BillTypeCode;
-            br.BillTypeName = billtype.BillTypeName;
-            br.BillClass = billtype.BillClass;
-            br.Description = billtype.Description;
-            br.IsActive = billtype.IsActive;
-            br.UpdateTime = DateTime.Now;
+            BillType en = BillTypeRepository.GetQueryable().FirstOrDefault(b => b.BillTypeCode == entity.BillTypeCode);
+            en.BillTypeCode = entity.BillTypeCode;
+            en.BillTypeName = entity.BillTypeName;
+            en.BillClass = entity.BillClass;
+            en.Description = entity.Description;
+            en.IsActive = entity.IsActive;
+            en.UpdateTime = DateTime.Now;
 
             BillTypeRepository.SaveChanges();
             return true;
         }
-        public bool Delete(string billtypeCode)
+        
+        public bool Delete(string billTypeCode)
         {
-            var billtype = BillTypeRepository.GetQueryable()
-                .FirstOrDefault(b => b.BillTypeCode == billtypeCode);
-            if (billtypeCode != null)
+            BillType billtype = BillTypeRepository.GetQueryable()
+                .FirstOrDefault(b => b.BillTypeCode == billTypeCode);
+            if (billTypeCode != null)
             {
                 BillTypeRepository.Delete(billtype);
                 BillTypeRepository.SaveChanges();
@@ -71,21 +82,19 @@ namespace THOK.Wms.Bll.Service
                 return false;
             return true;
         }
-
-        public System.Data.DataTable GetBillType(int page, int rows, string BillTypeCode, string BillTypeName, string BillClass, string IsActive)
+        
+        public System.Data.DataTable BillTypeTable(int page, int rows, string billClass, string isActive)
         {
             IQueryable<BillType> billtypeQuery = BillTypeRepository.GetQueryable();
-            var billtype = billtypeQuery.Where(b => b.BillClass == BillClass 
-                && b.BillTypeCode.Contains(BillTypeCode) 
-                && b.BillTypeName.Contains(BillTypeName) 
-                && b.IsActive.Contains(IsActive))
+            var billtype = billtypeQuery.Where(b => b.BillClass == billClass
+                && b.IsActive.Contains(isActive))
                 .OrderBy(b => b.BillTypeCode).AsEnumerable()
                 .Select(b => new { 
                     b.BillTypeCode, 
                     b.BillTypeName, 
                     b.BillClass, 
                     b.Description, 
-                    IsActive = b.IsActive == "1" ? "可用" : "不可用", 
+                    IsActive = b.IsActive == "1" ? "可用" : "禁用", 
                     UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") 
                 });
             System.Data.DataTable dt = new System.Data.DataTable();

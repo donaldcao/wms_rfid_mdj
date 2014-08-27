@@ -1,0 +1,68 @@
+﻿<script type="text/javascript">
+    function searchClick() {
+        serachClear();
+        searchInit();
+        $('#dlg-search').dialog('open').dialog('setTitle', '查询');
+    }
+    function searchByParams() {
+        var queryParams = $('#details').datagrid('options').queryParams;
+        queryParams.BillClass = $('#billClass1').combo('getValue');
+        queryParams.IsActive = $('#isActive1').combo('getValue');
+        $('#details').datagrid('options').queryParams = queryParams;
+        $('#details').datagrid({
+            pageNumber: 1,
+            pageSize: 50
+        });
+        $("#details").datagrid('reload');
+        $('#dlg-search').dialog('close');
+    }
+    function searchInit() {
+        $('#billClass1').combo({ editable: false, width: 129, panelHeight: 'auto' });
+        $('#isActive1').combo({ editable: false, width: 129, panelHeight: 'auto' });
+    }
+    function serachClear() {
+        $("input[type=text]").attr("value", "");
+        $('#billClass1').combo('setValue', "");
+        $('#isActive1').combo('setValue', "");
+    }
+</script>
+<style type="text/css">
+    #dlg-search{ width:280px; height:100px; padding:2px 2px; }
+    .c_div { padding:10px 10px; background:$fff; border:1px solid #ccc; }
+</style>
+<div id="dlg-search" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons-search">
+    <div class="easyui-layout" fit="true">
+		<div region="center" border="false" class="c_div" >   
+            <table width="250">
+              <tr>
+                <td>订单类型</td>
+                <td align="left">
+		            <select id="billClass1" class="easyui-combobox" style="width: 100px">
+                        <option value=""></option>
+		                <option value="0001">入库单</option>
+		                <option value="0002">出库单</option>
+                        <option value="0003">移库单</option>
+                        <option value="0004">盘点单</option>
+                        <option value="0005">损益单</option>
+                        <option value="0006">分拣单</option>
+	                </select>
+	            </td>
+              </tr>
+              <tr>
+                <td>是否可用</td>
+                <td align="left">
+		            <select id="isActive1" class="easyui-combobox" style="width: 100px">
+                        <option value=""></option>
+		                <option value="1">可用</option>
+		                <option value="0">禁用</option>
+	                </select>
+	            </td>
+              </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="dlg-buttons-search">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="searchByParams()">查询</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-search').dialog('close')">取消</a>
+</div>

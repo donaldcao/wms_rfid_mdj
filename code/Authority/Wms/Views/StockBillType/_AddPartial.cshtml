@@ -1,0 +1,101 @@
+﻿<script type="text/javascript">
+    var url;
+    function addClick() {
+        addShowDialog();
+        url = '/StockBillType/Create/';
+    }
+    function addShowDialog() {
+        $('#dlg-add').dialog('open').dialog('setTitle', '新增');
+        $('#addFm').form('clear');
+        $('#addFm .easyui-validatebox').validatebox({ required: true });
+        $('form input').removeAttr("disabled");
+        $('form textarea').removeAttr("disabled");
+    }
+    function save() {
+        $('#addFm').form('submit', {
+            url: url,
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (result) {
+                var result = eval('(' + result + ')');
+                if (result.success) {
+                    $.messager.show({ title: '成功', msg: result.msg });
+                    $('#dlg-add').dialog('close');
+                    $('#details').datagrid('reload');
+                }
+                else {
+                    $.messager.show({ title: '错误', msg: result.msg });
+                    $('#details').datagrid('reload');
+                }
+            }
+        });
+    }
+    $(function () {
+        addInit();
+    })
+    function addInit() {
+        $('#billClass2').combo({ required: true, editable: false, width: 130, panelHeight: 'auto' });
+        $('#isActive2').combo({ required: true, editable: false, width: 130, panelHeight: 'auto' });
+        $.extend($.fn.validatebox.defaults.rules, {
+            maxLength: {
+                validator: function (value, param) { return value.length <= param[0]; },
+                message: '最多输入 {0} 个字符'
+            }
+        });
+    }
+    
+</script>
+<style type="text/css">
+    #dlg-add { width: 300px; height: 200px; padding: 2px 2px;}
+    .c_add_table { width: 300px; padding: 0px 0px; }
+    .c_div { padding: 10px 10px; background: #fff; border: 1px solid #ccc;}
+</style>
+<div id="dlg-add" class="easyui-dialog" modal="true" closed="true" buttons="#dlg-buttons">
+	<div class="easyui-layout" fit="true">
+		<div region="center" border="false" class="c_div" >
+	        <form id="addFm" method="post" novalidate>
+                <table>
+                    <tr>
+                        <td>类型编码</td>
+                        <td><input id="billTypeCode2" name="BillTypeCode" class="easyui-validatebox" validType="maxLength[4]"></td>
+                    </tr>
+                    <tr>
+                        <td>类型名称</td>
+                        <td><input id="billTypeName2" name="BillTypeName" class="easyui-validatebox"></td>
+                    </tr>
+                    <tr>
+                        <td>订单类型</td>
+                        <td>
+		                    <select id="billClass2" name="BillClass" class="easyui-combobox">
+		                        <option value="0001">入库单</option>
+		                        <option value="0002">出库单</option>
+                                <option value="0003">移库单</option>
+                                <option value="0004">盘点单</option>
+                                <option value="0005">损益单</option>
+                                <option value="0006">分拣单</option>
+	                        </select>
+	                    </td>
+                    </tr>
+                    <tr>
+                        <td>是否可用</td>
+                        <td>
+                            <select id="isActive2" name="IsActive" class="easyui-combobox">
+		                        <option value="1">可用</option>
+		                        <option value="0">禁用</option>
+	                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>描述</td>
+                        <td><textarea id="description2" name="Description" style="width: 200px; height: 50px;"></textarea></td>
+                    </tr>
+                </table>
+	        </form>
+        </div>
+    </div>
+</div>
+<div id="dlg-buttons">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="save()">确定</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-add').dialog('close')">取消</a>
+</div>

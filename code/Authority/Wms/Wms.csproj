@@ -227,7 +227,6 @@
     <Compile Include="Controllers\WMS\SortingInfo\SortOrderDispatchController.cs" />
     <Compile Include="Controllers\WMS\SortingInfo\SortWorkDispatchController.cs" />
     <Compile Include="Controllers\WMS\StockMove\StockMoveBillController.cs" />
-    <Compile Include="Controllers\WMS\StockMove\StockMoveBillTypeController.cs" />
     <Compile Include="Controllers\WMS\Organization\CompanyController.cs" />
     <Compile Include="Controllers\WMS\Organization\DepartmentController.cs" />
     <Compile Include="Controllers\WMS\Organization\EmployeeController.cs" />
@@ -240,18 +239,15 @@
     <Compile Include="Controllers\Authority\ServerAdmin\CityController.cs" />
     <Compile Include="Controllers\Authority\ServerAdmin\ServerController.cs" />
     <Compile Include="Controllers\WMS\ProfitLossInfo\ProfitLossBillController.cs" />
-    <Compile Include="Controllers\WMS\ProfitLossInfo\ProfitLossBillTypeController.cs" />
     <Compile Include="Controllers\WMS\SortingInfo\SortingLineController.cs" />
     <Compile Include="Controllers\WMS\SortingInfo\SortingLowerLimitController.cs" />
     <Compile Include="Controllers\WMS\SortingInfo\SortingOrderController.cs" />
     <Compile Include="Controllers\WMS\StockCheckInfo\CheckBillController.cs" />
-    <Compile Include="Controllers\WMS\StockCheckInfo\CheckBillTypeController.cs" />
     <Compile Include="Controllers\WMS\StockIn\StockInBillAllotController.cs" />
     <Compile Include="Controllers\WMS\StockIn\StockInBillController.cs" />
-    <Compile Include="Controllers\WMS\StockIn\StockInBillTypeController.cs" />
     <Compile Include="Controllers\WMS\StockOut\StockOutBillAllotController.cs" />
     <Compile Include="Controllers\WMS\StockOut\StockOutBillController.cs" />
-    <Compile Include="Controllers\WMS\StockOut\StockOutBillTypeController.cs" />
+    <Compile Include="Controllers\WMS\StockBillType\StockBillTypeController.cs" />
     <Compile Include="Controllers\WMS\Upload\UploadController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\AreaController.cs" />
     <Compile Include="Controllers\WMS\WarehouseInfo\CellController.cs" />
@@ -1857,12 +1853,7 @@
     <Content Include="Views\Department\_PrintPartial.cshtml" />
     <Content Include="Views\CheckBill\Index.cshtml" />
     <Content Include="Views\CheckBillVerify\Index.cshtml" />
-    <Content Include="Views\CheckBillType\Index.cshtml" />
     <Content Include="Views\CheckBillConfirm\Index.cshtml" />
-    <Content Include="Views\CheckBillType\_AddPartial.cshtml" />
-    <Content Include="Views\CheckBillType\_DeletePartial.cshtml" />
-    <Content Include="Views\CheckBillType\_EditPartial.cshtml" />
-    <Content Include="Views\CheckBillType\_SearchPartial.cshtml" />
     <Content Include="Views\CheckBillConfirm\_ConfirmPartial.cshtml" />
     <Content Include="Views\CheckBillConfirm\_AntiConfirmPartial.cshtml" />
     <Content Include="Views\CheckBillVerify\_AntiTrialPartial.cshtml" />
@@ -2112,7 +2103,6 @@
     <Content Include="Views\SortingLine\Index.cshtml" />
     <Content Include="Views\SortingLowerLimit\Index.cshtml" />
     <Content Include="Views\SortingOrder\Index.cshtml" />
-    <Content Include="Views\ProfitLossBillType\Index.cshtml" />
     <Content Include="Views\ProfitLossBill\Index.cshtml" />
     <Content Include="Views\SortingOrder\_SearchPartial.cshtml" />
     <Content Include="Views\ProfitLossBillVerify\Index.cshtml" />
@@ -2134,10 +2124,6 @@
     <Content Include="Views\ProfitLossBillVerify\_DeletePartial.cshtml" />
     <Content Include="Views\ProfitLossBillVerify\_EditPartial.cshtml" />
     <Content Include="Views\ProfitLossBillVerify\_SearchPartial.cshtml" />
-    <Content Include="Views\ProfitLossBillType\_AddPartial.cshtml" />
-    <Content Include="Views\ProfitLossBillType\_DeletePartial.cshtml" />
-    <Content Include="Views\ProfitLossBillType\_EditPartial.cshtml" />
-    <Content Include="Views\ProfitLossBillType\_SearchPartial.cshtml" />
     <Content Include="Views\Job\Index.cshtml" />
     <Content Include="Views\Job\_AddPartial.cshtml" />
     <Content Include="Views\Job\_DeletePartial.cshtml" />
@@ -2147,10 +2133,8 @@
     <Content Include="Views\StockMoveBillCheck\Index.cshtml" />
     <Content Include="Views\StockMoveBill\Index.cshtml" />
     <Content Include="Views\StockMoveBillGenerate\Index.cshtml" />
-    <Content Include="Views\StockMoveBillType\Index.cshtml" />
     <Content Include="Views\StockInBillCheck\Index.cshtml" />
     <Content Include="Views\StockInBill\Index.cshtml" />
-    <Content Include="Views\StockInBillType\Index.cshtml" />
     <Content Include="Views\StockOutBillAllotConfirm\Index.cshtml" />
     <Content Include="Views\StockOutBillCheck\Index.cshtml" />
     <Content Include="Views\StockOutBill\Index.cshtml" />
@@ -2173,14 +2157,6 @@
     <Content Include="Views\StockDifferSearch\_SearchPartial.cshtml" />
     <Content Include="Views\SortOrderSearch\Index.cshtml" />
     <Content Include="Views\SortOrderSearch\_SearchPartial.cshtml" />
-    <Content Include="Views\StockMoveBillType\_AddPartial.cshtml" />
-    <Content Include="Views\StockInBillType\_AddPartial.cshtml" />
-    <Content Include="Views\StockMoveBillType\_SearchPartial.cshtml" />
-    <Content Include="Views\StockInBillType\_SearchPartial.cshtml" />
-    <Content Include="Views\StockMoveBillType\_EditPartial.cshtml" />
-    <Content Include="Views\StockMoveBillType\_DeletePartial.cshtml" />
-    <Content Include="Views\StockInBillType\_DeletePartial.cshtml" />
-    <Content Include="Views\StockInBillType\_EditPartial.cshtml" />
     <Content Include="Views\Product\_AddPartial.cshtml" />
     <Content Include="Views\Stockledger\_Detail.cshtml" />
     <Content Include="Views\Unit\_DeletePartial.cshtml" />
@@ -2222,11 +2198,6 @@
     <Content Include="Views\Shared\_FunctionPartial.cshtml" />
     <Content Include="Views\StockOutBill\_AllotPartial.cshtml" />
     <Content Include="Views\StockOutBill\_ProductPartial.cshtml" />
-    <Content Include="Views\StockOutBillType\Index.cshtml" />
-    <Content Include="Views\StockOutBillType\_AddPartial.cshtml" />
-    <Content Include="Views\StockOutBillType\_DeletePartial.cshtml" />
-    <Content Include="Views\StockOutBillType\_EditPartial.cshtml" />
-    <Content Include="Views\StockOutBillType\_SearchPartial.cshtml" />
     <Content Include="Views\StockOutBill\_AntiTrialPartial.cshtml" />
     <Content Include="Views\StockOutBill\_AuditPartial.cshtml" />
     <Content Include="Views\StockInBill\_AuditPartial.cshtml" />
@@ -2325,10 +2296,6 @@
     <Content Include="Views\Supplier\_PrintPartial.cshtml" />
     <Content Include="Views\Unit\_PrintPartial.cshtml" />
     <Content Include="Views\UnitList\_PrintPartial.cshtml" />
-    <Content Include="Views\StockInBillType\_PrintPartial.cshtml" />
-    <Content Include="Views\StockOutBillType\_PrintPartial.cshtml" />
-    <Content Include="Views\StockMoveBillType\_PrintPartial.cshtml" />
-    <Content Include="Views\ProfitLossBillType\_PrintPartial.cshtml" />
     <Content Include="Views\Stockledger\_PrintPartial.cshtml" />
     <Content Include="Views\SortingLine\_PrintPartial.cshtml" />
     <Content Include="Views\SortingLowerLimit\_PrintPartial.cshtml" />
@@ -2543,6 +2510,12 @@
     <Content Include="Views\StockOutTask\_PrintPartial.cshtml" />
     <Content Include="Views\StockMoveTask\_PrintPartial.cshtml" />
     <Content Include="Views\StockCheckTask\_PrintPartial.cshtml" />
+    <Content Include="Views\StockBillType\Index.cshtml" />
+    <Content Include="Views\StockBillType\_AddPartial.cshtml" />
+    <Content Include="Views\StockBillType\_EditPartial.cshtml" />
+    <Content Include="Views\StockBillType\_DeletePartial.cshtml" />
+    <Content Include="Views\StockBillType\_SearchPartial.cshtml" />
+    <Content Include="Views\StockBillType\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

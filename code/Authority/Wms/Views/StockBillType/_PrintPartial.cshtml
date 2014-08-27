@@ -8,7 +8,7 @@
         if ($('#BillTypeName').val() == null) { billTypeName = ""; } else { billTypeName = $('#BillTypeName').val(); }
         if (document.getElementById('IsActive') == null) { isActive = ""; } else { isActive = $('#IsActive').combo('getValue'); }
 
-        window.location.href = "/StockInBillType/CreateExcelToClient/"
+        window.location.href = "/StockBillType/CreateExcelToClient/"
                                 + "?billTypeCode=" + billTypeCode
                                 + "&billTypeName=" + billTypeName
                                 + "&isActive=" + isActive;

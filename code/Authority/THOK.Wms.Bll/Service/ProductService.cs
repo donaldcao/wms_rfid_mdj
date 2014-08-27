@@ -628,11 +628,11 @@ namespace THOK.Wms.Bll.Service
                 product.PieceBarcode = barBarcode;
                 product.UpdateTime = DateTime.Now;
             }
-            if (isAbnormity=="是")
+            if (isAbnormity == "是" || isAbnormity == "异型烟")
             {
                 isAbnormity = "1";
             }
-            else if (isAbnormity=="不是")
+            else if (isAbnormity == "不是" || isAbnormity == "正常烟")
             {
                 isAbnormity = "0";
             }

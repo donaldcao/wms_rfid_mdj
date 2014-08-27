@@ -49,7 +49,7 @@ namespace Wms.Controllers.Wms.Inventory
             string id = Request.QueryString["id"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CellHistoricalService.GetCellHistory(page, rows, beginDate, endDate, type, id);
+            ep.FirstTable = CellHistoricalService.GetCellHistory(page, rows, beginDate, endDate, type, id);
             ep.HeadTitle1 = "货位历史明细";
             return PrintService.Print(ep);
         }

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
-using THOK.Wms.Bll.Interfaces;
-using THOK.Common.WebUtil;
 using THOK.Security;
+using THOK.Common.WebUtil;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.Wms.Bll.Interfaces;
 using THOK.WCS.Bll.Service;
 using THOK.WCS.Bll.Interfaces;
 
-namespace Authority.Controllers.Wms.StockCheckInfo
+namespace Authority.Controllers.Wms.StockBill
 {
     [TokenAclAuthorize]
     public class CheckBillController : Controller
@@ -178,7 +178,7 @@ namespace Authority.Controllers.Wms.StockCheckInfo
             string orderByType = Request.QueryString["orderByType"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CheckBillDetailService.GetCheckBillDetail(page, rows, billNo, orderByType);
+            ep.FirstTable = CheckBillDetailService.GetCheckBillDetail(page, rows, billNo, orderByType);
             ep.HeadTitle1 = "盘点单明细";
             return PrintService.Print(ep);
         }

@@ -51,7 +51,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
             string productCode = Request.QueryString["ProductCode"] ?? "";
             string text = "分拣备货";
             ExportParam ep = new ExportParam();
-            ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode,text);
+            ep.FirstTable = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode,text);
             ep.HeadTitle1 = "分拣备货";
             return PrintService.Print(ep);
         }

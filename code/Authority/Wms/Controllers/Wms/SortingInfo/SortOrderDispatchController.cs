@@ -159,7 +159,7 @@ namespace Wms.Controllers.Wms.SortingInfo
             string SortStatus = Request.QueryString["SortStatus"];
           
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortOrderDispatchService.GetSortOrderDispatch(page, rows, orderDate,WorkStatus,SortStatus, sortingLineCode);
+            ep.FirstTable = SortOrderDispatchService.GetSortOrderDispatch(page, rows, orderDate,WorkStatus,SortStatus, sortingLineCode);
             ep.HeadTitle1 = "分拣线路调度";
             return PrintService.Print(ep);
         }

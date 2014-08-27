@@ -56,7 +56,7 @@ namespace Wms.Controllers.SMS.BaseInfo
             string isAbnormity = Request.QueryString["IsAbnormity"];
        
             ExportParam ep = new ExportParam();
-            ep.DT1 = ProductService.GetProductDetails(page, rows, productName, productCode, barBarcode, isAbnormity);
+            ep.FirstTable = ProductService.GetProductDetails(page, rows, productName, productCode, barBarcode, isAbnormity);
             ep.HeadTitle1 = "卷烟信息";
             return PrintService.Print(ep);
         }

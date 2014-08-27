@@ -97,7 +97,7 @@ namespace Authority.Controllers.Wms.SortingInfo
             string isActive = Request.QueryString["IsActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 =  SortingLowerlimitService.GetSortingLowerlimit(page, rows, sortingLineCode, sortingLineName, productName,productCode, isActive);
+            ep.FirstTable =  SortingLowerlimitService.GetSortingLowerlimit(page, rows, sortingLineCode, sortingLineName, productName,productCode, isActive);
             ep.HeadTitle1 = "备货区下限设置";
             return PrintService.Print(ep);
         }

@@ -146,7 +146,7 @@ namespace Wms.Controllers.WCS
             srm.CancelTask = CancelTask;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SRMService.GetSRM(page, rows, srm);
+            ep.FirstTable = SRMService.GetSRM(page, rows, srm);
             ep.HeadTitle1 = "堆垛机信息";
             return PrintService.Print(ep);
         }  

@@ -123,8 +123,8 @@ namespace Wms.Controllers.Wms.Inventory
             string areas = Request.QueryString["areas"] ?? null;
 
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();            
-            ep.DT1 = DailyBalanceService.GetInfoDetail(page, rows, warehouseCode, settleDate, unitType,areas);
-            ep.DT2 = DailyBalanceService.GetInfoChecking(page, rows, warehouseCode, settleDate, unitType);;
+            ep.FirstTable = DailyBalanceService.GetInfoDetail(page, rows, warehouseCode, settleDate, unitType,areas);
+            ep.SecondTable = DailyBalanceService.GetInfoChecking(page, rows, warehouseCode, settleDate, unitType);;
             ep.HeadTitle1 = "仓库库存日结明细";
             ep.HeadTitle2 = "仓库库存日结核对";
             ep.ContentModule = "DailyBalance";            

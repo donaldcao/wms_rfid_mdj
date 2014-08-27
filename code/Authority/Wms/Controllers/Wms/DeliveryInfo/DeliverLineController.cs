@@ -119,7 +119,7 @@ namespace Wms.Controllers.Wms.InterfaceInfo
             string DeliverLinename = Request.QueryString["DeliverLinename"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = DeliverLineService.GetDeliverLineInfo(page, rows, DeliverLineCode, DistCode, CustomCode, IsActive, DeliverLinename);
+            ep.FirstTable = DeliverLineService.GetDeliverLineInfo(page, rows, DeliverLineCode, DistCode, CustomCode, IsActive, DeliverLinename);
             ep.HeadTitle1 = "线路信息";
 
             return PrintService.Print(ep);

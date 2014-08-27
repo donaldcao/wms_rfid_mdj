@@ -96,7 +96,7 @@ namespace Wms.Controllers.Wms.WarehouseInfo
             string id = Request.QueryString["id"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CellService.GetCell(page, rows, type, id);
+            ep.FirstTable = CellService.GetCell(page, rows, type, id);
             ep.HeadTitle1 = "仓库信息";
             return PrintService.Print(ep);
         }

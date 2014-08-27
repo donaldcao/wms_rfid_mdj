@@ -118,7 +118,7 @@ namespace Wms.Controllers.WCS
              size.ID = SizeID;
              size.SizeName = SizeName;
              ExportParam ep = new ExportParam();
-             ep.DT1 = SizeService.GetSize(page, rows, size);
+             ep.FirstTable = SizeService.GetSize(page, rows, size);
              ep.HeadTitle1 = "件烟尺寸信息";
              return PrintService.Print(ep);
         }

@@ -123,7 +123,7 @@ namespace Wms.Controllers.Wms.WarehouseInfo
             string value = Request.QueryString["value"];
             
             ExportParam ep = new ExportParam();
-            ep.DT1 = CellService.GetCellByE(page, rows, queryString, value);
+            ep.FirstTable = CellService.GetCellByE(page, rows, queryString, value);
             ep.HeadTitle1 = "储位卷烟预设";
             return PrintService.Print(ep);
         } 

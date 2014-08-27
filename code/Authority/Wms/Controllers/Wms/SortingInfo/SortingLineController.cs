@@ -97,7 +97,7 @@ namespace Authority.Controllers.Wms.SortingInfo
             string IsActive = Request.QueryString["IsActive"] ?? "";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortingLineService.GetSortingLine(page, rows, sortingLineCode, sortingLineName, productType, SortingLineType, IsActive);
+            ep.FirstTable = SortingLineService.GetSortingLine(page, rows, sortingLineCode, sortingLineName, productType, SortingLineType, IsActive);
             ep.HeadTitle1 = "分拣设备信息";
             return PrintService.Print(ep);
         }

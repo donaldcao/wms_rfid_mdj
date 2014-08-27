@@ -49,7 +49,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
             string sortingLineCode = Request.QueryString["SortingLineCode"] ?? "";
           
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortBatchService.DeliverOrderSearchInfo(page, rows, orderDate, batchNo, sortingLineCode);
+            ep.FirstTable = SortBatchService.DeliverOrderSearchInfo(page, rows, orderDate, batchNo, sortingLineCode);
             ep.HeadTitle1 = "分拣配送";           
             return PrintService.Print(ep);
         }

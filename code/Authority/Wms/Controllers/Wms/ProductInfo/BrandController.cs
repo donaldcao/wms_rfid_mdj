@@ -87,7 +87,7 @@ namespace Authority.Controllers.Wms.ProductInfo
             string isActive = Request.QueryString["isActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = BrandService.GetBrand(page, rows, brandCode, brandName, isActive);
+            ep.FirstTable = BrandService.GetBrand(page, rows, brandCode, brandName, isActive);
             ep.HeadTitle1 = "卷烟品牌";
             return PrintService.Print(ep);
         }

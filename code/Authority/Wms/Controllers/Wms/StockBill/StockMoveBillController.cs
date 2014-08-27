@@ -4,16 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
-using THOK.Wms.Bll.Interfaces;
-using THOK.Wms.DbModel;
-using THOK.Common.WebUtil;
-using THOK.Wms.AutomotiveSystems.Models;
 using THOK.Security;
+using THOK.Common.WebUtil;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.Wms.AutomotiveSystems.Models;
+using THOK.Wms.Bll.Interfaces;
+using THOK.Wms.DbModel;
 using THOK.WCS.Bll.Interfaces;
 
-namespace Authority.Controllers.Wms.StockMove
+namespace Authority.Controllers.Wms.StockBill
 {
     [TokenAclAuthorize]
     public class StockMoveBillController : Controller
@@ -212,7 +212,7 @@ namespace Authority.Controllers.Wms.StockMove
             bool isGroup = Convert.ToBoolean(Request.QueryString["isGroup"]);
             string sortingName = string.Empty;
             ExportParam ep = new ExportParam();
-            ep.DT1 = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
+            ep.FirstTable = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
             ep.HeadTitle1 = sortingName + "移库单明细";
             return PrintService.Print(ep);
         }

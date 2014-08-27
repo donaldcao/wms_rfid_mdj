@@ -4,16 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
+using THOK.Security;
+using THOK.Common.WebUtil;
+using THOK.Authority.Bll.Interfaces;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
-using THOK.Common.WebUtil;
 using THOK.Wms.Download.Bll;
 using THOK.Wms.Download.Bll;
-using THOK.Authority.Bll.Interfaces;
-using THOK.Security;
 using THOK.WCS.Bll.Interfaces;
 
-namespace Authority.Controllers.Wms.StockIn
+namespace Authority.Controllers.Wms.StockBill
 {
     [TokenAclAuthorize]
     public class StockInBillController : Controller

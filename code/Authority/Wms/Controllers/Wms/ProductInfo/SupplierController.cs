@@ -86,7 +86,7 @@ namespace Authority.Controllers.ProductInfo
             string isActive = Request.QueryString["isActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SupplierService.GetSupplier(page, rows, supplierCode, supplierName, isActive);
+            ep.FirstTable = SupplierService.GetSupplier(page, rows, supplierCode, supplierName, isActive);
             ep.HeadTitle1 = "厂商信息";
             return PrintService.Print(ep);
         }

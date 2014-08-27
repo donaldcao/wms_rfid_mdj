@@ -135,7 +135,7 @@ namespace Authority.Controllers.ProductInfo
             string supplierCode = Request.QueryString["supplierCode"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ProductService.GetProduct(page, rows, productName, productCode, customCode, brandCode, uniformCode, abcTypeCode, shortCode, priceLevelCode, supplierCode);
+            ep.FirstTable = ProductService.GetProduct(page, rows, productName, productCode, customCode, brandCode, uniformCode, abcTypeCode, shortCode, priceLevelCode, supplierCode);
             ep.HeadTitle1 = "卷烟信息";
             return PrintService.Print(ep);
         }

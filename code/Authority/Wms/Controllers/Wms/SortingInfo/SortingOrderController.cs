@@ -95,7 +95,7 @@ namespace Authority.Controllers.Wms.SortingInfo
             string productCode = Request.QueryString["productCode"];
         
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortOrderService.GetSortOrder(page, rows, orderID, orderDate, productCode);
+            ep.FirstTable = SortOrderService.GetSortOrder(page, rows, orderID, orderDate, productCode);
             ep.HeadTitle1 = "分拣订单管理";
             return PrintService.Print(ep);
         }

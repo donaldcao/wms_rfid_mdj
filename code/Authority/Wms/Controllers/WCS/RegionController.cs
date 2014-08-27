@@ -117,7 +117,7 @@ namespace Wms.Controllers.WCS
              region.State = State;
 
              ExportParam ep = new ExportParam();
-             ep.DT1 = RegionService.GetRegion(page, rows, region);
+             ep.FirstTable = RegionService.GetRegion(page, rows, region);
              ep.HeadTitle1 = "区域信息";
              return PrintService.Print(ep);
         }  

@@ -3,42 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using THOK.Wms.Allot.Interfaces;
 using Microsoft.Practices.Unity;
-using THOK.Common.WebUtil;
-using THOK.Wms.Bll.Interfaces;
 using THOK.Security;
+using THOK.Common.WebUtil;
 using THOK.Common.NPOI.Models;
 using THOK.Common.NPOI.Service;
+using THOK.Wms.Allot.Interfaces;
+using THOK.Wms.Bll.Interfaces;
 
-namespace Authority.Controllers.Wms.StockIn
+namespace Authority.Controllers.Wms.StockBill
 {
     [TokenAclAuthorize]
-    public class StockInBillAllotController : Controller
+    public class StockOutBillAllotController : Controller
     {
         [Dependency]
-        public IInBillAllotService InBillAllotService { get; set; }
+        public IOutBillAllotService OutBillAllotService { get; set; }
         [Dependency]
-        public IInBillDetailService InBillDetailService { get; set; }
+        public IOutBillDetailService OutBillDetailService { get; set; }
 
         public ActionResult Search(string billNo, int page, int rows)
         {
-            var result = InBillAllotService.Search(billNo, page, rows);
+            var result = OutBillAllotService.Search(billNo, page, rows);
             return Json(result, "text", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AllotDelete(string billNo, long id)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotDelete(billNo, id, out strResult);
+            bool bResult = OutBillAllotService.AllotDelete(billNo, id, out strResult);
             string msg = bResult ? "删除分配明细成功" : "删除分配明细失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AllotEdit(string billNo, long id, string cellCode, decimal allotQuantity)
+        public ActionResult AllotEdit(string billNo, long id, string cellCode, decimal allotQuantity,string storageCode)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotEdit(billNo, id, cellCode, allotQuantity, out strResult);
+            bool bResult = OutBillAllotService.AllotEdit(billNo, id, cellCode, allotQuantity, out strResult, storageCode);
             string msg = bResult ? "修改分配成功" : "修改分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -46,7 +46,7 @@ namespace Authority.Controllers.Wms.StockIn
         public ActionResult AllotConfirm(string billNo)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotConfirm(billNo, out strResult);
+            bool bResult = OutBillAllotService.AllotConfirm(billNo, this.User.Identity.Name.ToString(), ref strResult);
             string msg = bResult ? "确认分配成功" : "确认分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -54,7 +54,7 @@ namespace Authority.Controllers.Wms.StockIn
         public ActionResult AllotCancelConfirm(string billNo)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotCancelConfirm(billNo, out strResult);
+            bool bResult = OutBillAllotService.AllotCancelConfirm(billNo, out strResult);
             string msg = bResult ? "取消分配确认成功" : "取消分配确认失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
@@ -62,38 +62,39 @@ namespace Authority.Controllers.Wms.StockIn
         public ActionResult AllotCancel(string billNo)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotCancel(billNo, out strResult);
+            bool bResult = OutBillAllotService.AllotCancel(billNo, out strResult);
             string msg = bResult ? "取消分配成功" : "取消分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AllotAdd(string billNo, long id, string cellCode, decimal allotQuantity)
+        public ActionResult AllotAdd(string billNo, long id, string productCode, string cellCode, decimal allotQuantity,string storageCode)
         {
             string strResult = string.Empty;
-            bool bResult = InBillAllotService.AllotAdd(billNo, id, cellCode, allotQuantity, out strResult);
+            bool bResult = OutBillAllotService.AllotAdd(billNo, id, productCode, cellCode, allotQuantity, out strResult, storageCode);
             string msg = bResult ? "添加分配成功" : "添加分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AllotAdds(string billNo, long id, string storageCode, string productname)
+        public ActionResult AllotAdds(string billNo, long id, string storageCode, string productName)
         {
             string strResult = string.Empty;
             decimal allotQuantity = 0;
-            bool bResult = InBillAllotService.AllotAdd(billNo, id, storageCode, productname, out strResult, out allotQuantity);
+            bool bResult = OutBillAllotService.AllotAdd(billNo, id, storageCode, productName, out strResult, out allotQuantity);
             string msg = bResult ? "" : "添加分配失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult, allotQuantity), "text", JsonRequestBehavior.AllowGet);
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult,allotQuantity), "text", JsonRequestBehavior.AllowGet);
         }
-        #region /StockInBillAllot/CreateExcelToClient/
+
+        #region /StockOutBillAllot/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
             string billNo = Request.QueryString["billNo"];
-            
+
             ExportParam ep = new ExportParam();
-            ep.DT1 = InBillDetailService.GetInBillDetail(page, rows, billNo);
-            ep.DT2 = InBillAllotService.AllotSearch(page, rows, billNo);;
-            ep.HeadTitle1 = "入库单据分配";
-            ep.HeadTitle2 = "入库单据分配明细";
+            ep.FirstTable = OutBillDetailService.GetOutBillDetail(page, rows, billNo);
+            ep.SecondTable = OutBillAllotService.AllotSearch(page, rows, billNo);
+            ep.HeadTitle1 = "出库单据分配";
+            ep.HeadTitle2 = "出库单据分配明细";
             return PrintService.Print(ep);
         }
         #endregion

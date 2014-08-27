@@ -53,8 +53,8 @@ namespace Authority.Controllers.Wms.Inventory
             string areaName;
             
             ExportParam ep = new ExportParam();
-            ep.DT1 = CurrentStockService.GetCurrentStock(page, rows, productCode, ware, area, unitType, out areaName, isAbnormity);
-            ep.DT2 = null;
+            ep.FirstTable = CurrentStockService.GetCurrentStock(page, rows, productCode, ware, area, unitType, out areaName, isAbnormity);
+            ep.SecondTable = null;
             ep.HeadTitle1 = "当前库存" + areaName;
             ep.HeadTitle2 = "";
             ep.ContentModule = null;

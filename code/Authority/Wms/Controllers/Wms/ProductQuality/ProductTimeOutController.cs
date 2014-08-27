@@ -54,8 +54,8 @@ namespace Wms.Controllers.Wms.ProductQuality
             }
             
             ExportParam ep = new ExportParam();
-            ep.DT1 = ProductWarningService.GetProductTimeOut(page, rows, productCode, assemblyTime);
-            ep.DT2 = null;
+            ep.FirstTable = ProductWarningService.GetProductTimeOut(page, rows, productCode, assemblyTime);
+            ep.SecondTable = null;
             ep.HeadTitle1 = "产品预警信息设置";
             ep.HeadTitle2 = "";
             ep.ContentModule = null;

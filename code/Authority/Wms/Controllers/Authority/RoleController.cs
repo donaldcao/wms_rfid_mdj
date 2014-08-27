@@ -118,7 +118,7 @@ namespace Authority.Controllers.Authority
             string isLock = Request.QueryString["isLock"] ?? "";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = RoleService.GetRoleConten(page, rows, roleName, meMo, isLock);
+            ep.FirstTable = RoleService.GetRoleConten(page, rows, roleName, meMo, isLock);
             ep.HeadTitle1 = "角色信息";
             return PrintService.Print(ep);
         }

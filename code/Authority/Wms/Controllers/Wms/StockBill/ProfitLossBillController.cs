@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
+using THOK.Security;
+using THOK.Common.WebUtil;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
-using THOK.Common.WebUtil;
-using THOK.Security;
 
-namespace Authority.Controllers.Wms.ProfitLossInfo
+namespace Authority.Controllers.Wms.StockBill
 {
     [TokenAclAuthorize]
     public class ProfitLossBillController : Controller
@@ -158,7 +158,7 @@ namespace Authority.Controllers.Wms.ProfitLossInfo
             string billNo = Request.QueryString["billNo"];
             
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
-            ep.DT1 = ProfitLossBillDetailService.GetProfitLoassBillDetail(page, rows, billNo);
+            ep.FirstTable = ProfitLossBillDetailService.GetProfitLoassBillDetail(page, rows, billNo);
             ep.HeadTitle1 = "损益单明细";
             System.IO.MemoryStream ms = THOK.Common.NPOI.Service.ExportExcel.ExportDT(ep);
             return new FileStreamResult(ms, "application/ms-excel");

@@ -115,7 +115,7 @@ namespace Authority.Controllers.Wms.Organization
             string isActive = Request.QueryString["isActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = JobService.GetJob(page, rows, jobCode, jobName, isActive);
+            ep.FirstTable = JobService.GetJob(page, rows, jobCode, jobName, isActive);
             ep.HeadTitle1 = "岗位信息";
             return PrintService.Print(ep);
         }  

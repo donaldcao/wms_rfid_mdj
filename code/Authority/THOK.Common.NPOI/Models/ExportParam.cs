@@ -33,9 +33,9 @@ namespace THOK.Common.NPOI.Models
         public string HeadTitle2 { get; set; }
 
         /// <summary>First DataTable</summary>
-        public System.Data.DataTable DT1 { get; set; }
+        public System.Data.DataTable FirstTable { get; set; }
         /// <summary>Second DataTable，if you do not give null</summary>
-        public System.Data.DataTable DT2 { get; set; }
+        public System.Data.DataTable SecondTable { get; set; }
 
         /// <summary>Big headline font</summary>
         public string BigHeadFont { get { return bigHeadFont; } set { bigHeadFont = value; } }

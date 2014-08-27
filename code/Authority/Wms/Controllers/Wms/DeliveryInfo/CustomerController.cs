@@ -95,7 +95,7 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             string DeliverLineCode = Request.QueryString["DeliverLineCode"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CustomerService.GetCustomerInfo(page, rows, CustomerCode, CustomerName, DeliverLineCode);
+            ep.FirstTable = CustomerService.GetCustomerInfo(page, rows, CustomerCode, CustomerName, DeliverLineCode);
             ep.HeadTitle1 = "客户信息";
 
             return PrintService.Print(ep);

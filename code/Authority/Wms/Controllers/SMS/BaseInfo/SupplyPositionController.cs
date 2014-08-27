@@ -81,7 +81,7 @@ namespace Wms.Controllers.SMS.BaseInfo
             entity.ProductCode = Request.QueryString["productCode"];
             entity.ProductName = Request.QueryString["productName"];
             ExportParam ep = new ExportParam();
-            ep.DT1 = SupplyPositionService.GetTable(page, rows, entity);
+            ep.FirstTable = SupplyPositionService.GetTable(page, rows, entity);
             ep.HeadTitle1 = "拆盘位置信息";
             return PrintService.Print(ep);
         }

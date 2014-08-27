@@ -86,7 +86,7 @@ namespace Wms.Controllers.WCS
             alarmInfo.Description = Description;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = AlarmInfoService.GetAlarmInfo(page, rows, alarmInfo);
+            ep.FirstTable = AlarmInfoService.GetAlarmInfo(page, rows, alarmInfo);
             ep.HeadTitle1 = "报警信息";
             return PrintService.Print(ep);
         }  

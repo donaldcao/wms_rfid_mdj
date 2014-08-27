@@ -124,7 +124,7 @@ namespace Wms.Controllers.WCS
             position.State = State;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = PositionService.GetPosition(page, rows, position);
+            ep.FirstTable = PositionService.GetPosition(page, rows, position);
             ep.HeadTitle1 = "位置信息";
             return PrintService.Print(ep);
         } 

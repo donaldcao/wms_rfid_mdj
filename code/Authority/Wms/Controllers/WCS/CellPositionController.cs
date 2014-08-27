@@ -103,7 +103,7 @@ namespace Wms.Controllers.WCS
             cp.CellCode = CellCode;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CellPositionService.GetCellPosition(page, rows, cp);
+            ep.FirstTable = CellPositionService.GetCellPosition(page, rows, cp);
             ep.HeadTitle1 = "货位位置信息";
             return PrintService.Print(ep);
         }

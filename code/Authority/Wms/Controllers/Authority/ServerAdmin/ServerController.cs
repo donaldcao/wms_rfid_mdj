@@ -100,7 +100,7 @@ namespace Authority.Controllers.ServerAdmin
             server.IsActive = isactive;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ServerService.GetServer(page, rows, server,isactiveIsNull);
+            ep.FirstTable = ServerService.GetServer(page, rows, server,isactiveIsNull);
             ep.HeadTitle1 = "服务器信息";
             return PrintService.Print(ep);
         }  

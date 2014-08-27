@@ -61,7 +61,7 @@ namespace Wms.Controllers.Wms.ProductQuality
             decimal maxLimited = 100000;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ProductWarningService.GetQuantityLimitsDetail(page, rows, productCode, minLimited, maxLimited,unitCode);
+            ep.FirstTable = ProductWarningService.GetQuantityLimitsDetail(page, rows, productCode, minLimited, maxLimited,unitCode);
             ep.HeadTitle1 = "产品超储短缺查询";
             return PrintService.Print(ep);
         }

@@ -440,7 +440,7 @@ namespace THOK.SMS.Bll.Service
                     foreach (var item in dispatchIds)
                     {
                         int id = Convert.ToInt32(item);
-                        var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id));
+                        var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id)&& a.OrderDate.Equals(orderDate));
                         if (sortOrderDispatch == null)
                         {
                             continue;

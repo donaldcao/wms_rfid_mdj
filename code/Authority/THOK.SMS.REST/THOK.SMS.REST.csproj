@@ -49,9 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\ITransportService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\ServiceBase.cs" />
+    <Compile Include="Service\TransportService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -64,6 +64,10 @@
     <ProjectReference Include="..\THOK.Common\THOK.Common.csproj">
       <Project>{2F9C4207-F8A0-4E55-A2CB-3514ADC0A437}</Project>
       <Name>THOK.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.SMS.DbModel\THOK.SMS.DbModel.csproj">
+      <Project>{90503686-2101-43DA-B8BA-473F0F3D7A41}</Project>
+      <Name>THOK.SMS.DbModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

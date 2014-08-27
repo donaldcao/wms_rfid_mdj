@@ -53,12 +53,64 @@ namespace Wms.Controllers.Wms.SortingInfo
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
         }
 
-        //查询未分配批次的线路调度数据
+        //查询未分配批次的线路调度数据 所有可调度作业
         // GET: /SortOrderDispatch/GetBatchStatus/
         public ActionResult GetBatchStatus()
         {
             var sortOrder = SortOrderDispatchService.GetBatchStatus();
             return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+        }
+        //正常分拣线作业调度
+        public ActionResult GetNormalBatch()
+        {
+            if (SortOrderDispatchService.GetActiveSortingLine("1") > 0)
+            {
+                var sortOrder = SortOrderDispatchService.GetNormalBatch();
+                return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, "text", JsonRequestBehavior.AllowGet);
+            }
+        }
+        //异性分拣线作业调度
+        public ActionResult GetAbnormalBatch()
+        {
+            if (SortOrderDispatchService.GetActiveSortingLine("2") > 0)
+            {
+                var sortOrder = SortOrderDispatchService.GetAbnormalBatch();
+                return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, "text", JsonRequestBehavior.AllowGet);
+            }
+        }
+        //整件分拣线作业调度
+        public ActionResult GetPieceBatch()
+        {
+            if (SortOrderDispatchService.GetActiveSortingLine("3") > 0)
+            {
+                var sortOrder = SortOrderDispatchService.GetPieceBatch();
+                return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, "text", JsonRequestBehavior.AllowGet);
+            }
+        }
+        //手工分拣线作业调度
+        public ActionResult GetManualBatch()
+        {
+            if (SortOrderDispatchService.GetActiveSortingLine("4") > 0)
+            {
+                var sortOrder = SortOrderDispatchService.GetManualBatch();
+                return Json(sortOrder, "text", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, "text", JsonRequestBehavior.AllowGet);
+            }
         }
 
         //新增线路调度

@@ -21,8 +21,14 @@
         if (row.PositionType == '正常拆盘位置') {
             $('#positionType2').combo('setValue', '01').combo('setText', row.PositionType);
         }
-        else {
+        else if (row.PositionType == '缓存补货拆盘位') {
             $('#positionType2').combo('setValue', '02').combo('setText', row.PositionType);
+        }
+        else if (row.PositionType == '叉车补货拆盘位') {
+            $('#positionType2').combo('setValue', '03').combo('setText', row.PositionType);
+        }
+        else {
+            $('#positionType2').combo('setValue', '04').combo('setText', row.PositionType);
         }
         if (row.IsActive == '禁用') {
             $('#isActive2').combo('setValue', '0').combo('setText', row.IsActive);

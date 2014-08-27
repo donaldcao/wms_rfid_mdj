@@ -46,7 +46,7 @@ namespace THOK.SMS.Bll.Service
             {
                 a.Id,
                 a.PositionName,
-                PositionType = a.PositionType == "01" ? "正常拆盘位置" : a.PositionType == "02" ? "混合拆盘位置" : "异常",
+                PositionType = a.PositionType == "01" ? "自动补货拆盘位" : a.PositionType == "02" ? "缓存补货拆盘位" : a.PositionType == "03" ? "叉车补货拆盘位" : a.PositionType == "04" ? "混合补货拆盘位" : "异常",
                 a.ProductCode,
                 a.ProductName,
                 a.PositionAddress,
@@ -193,7 +193,7 @@ namespace THOK.SMS.Bll.Service
             {
                 a.Id,
                 a.PositionName,
-                PositionType = a.PositionType == "01" ? "正常拆盘位置" : a.PositionType == "02" ? "混合拆盘位置" : "异常",
+                PositionType = a.PositionType == "01" ? "自动补货拆盘位" : a.PositionType == "02" ? "缓存补货拆盘位" : a.PositionType == "03" ? "叉车补货拆盘位" : a.PositionType == "04" ? "混合补货拆盘位" : "异常",
                 a.ProductCode,
                 a.ProductName,
                 a.PositionAddress,

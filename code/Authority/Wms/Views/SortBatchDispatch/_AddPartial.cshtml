@@ -10,10 +10,6 @@
         $('#ManualworkDispatchTable').datagrid({ url: '/SortOrderDispatch/GetManualBatch/' }); //加载线路分配信息
     }
 
-    function normalTask() {
-        $('#NormalworkDispatchTable').datagrid({ url: '/SortOrderDispatch/GetBatchStatus/' }); 
-    }
-
     function save() {
         var tabsRow = $('#checkTabs').tabs('getSelected');
         dispatchParameter = "";
@@ -67,9 +63,25 @@
     }
 
     function countSum() {
+        var tabsRow = $('#checkTabs').tabs('getSelected');
         var countSum = 0;
         var outQuantitySum = 0;
-        var rows = $('#workDispatchTable').datagrid('getRows');
+        var rows;
+        if (tabsRow.panel('options').id == "AllTask") {
+            rows = $('#workDispatchTable').datagrid('getRows')
+        }
+        else if (tabsRow.panel('options').id == "NormalTask") {
+            rows = $('#NormalworkDispatchTable').datagrid('getRows')
+        }
+        else if (tabsRow.panel('options').id == "AbnormalTask") {
+            rows = $('#AbnormalworkDispatchTable').datagrid('getRows')
+        }
+        else if (tabsRow.panel('options').id == "PieceTask") {
+            rows = $('#PieceworkDispatchTable').datagrid('getRows')
+        }
+        else if (tabsRow.panel('options').id == "Manual") {
+            rows = $('#ManualworkDispatchTable').datagrid('getRows')
+        }
         if (rows.length > 0) {
             for (var i = 0; i < rows.length; i++) {
                 countSum = parseInt(countSum) + rows[i].QuantitySum;
@@ -83,8 +95,24 @@
     }
 
     function SelectQuantity() {
+        var tabsRow = $('#checkTabs').tabs('getSelected');
         var quantitySum = 0;
-        var rows = $('#workDispatchTable').datagrid('getChecked');
+        var rows;
+        if (tabsRow.panel('options').id == "AllTask") {
+            rows = $('#workDispatchTable').datagrid('getChecked')
+        }
+        else if (tabsRow.panel('options').id == "NormalTask") {
+            rows = $('#NormalworkDispatchTable').datagrid('getChecked')
+        }
+        else if (tabsRow.panel('options').id == "AbnormalTask") {
+            rows = $('#AbnormalworkDispatchTable').datagrid('getChecked')
+        }
+        else if (tabsRow.panel('options').id == "PieceTask") {
+            rows = $('#PieceworkDispatchTable').datagrid('getChecked')
+        }
+        else if (tabsRow.panel('options').id == "Manual") {
+            rows = $('#ManualworkDispatchTable').datagrid('getChecked')
+        }
         if (rows.length > 0) {
             for (var i = 0; i < rows.length; i++) {
                 quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
@@ -96,10 +124,71 @@
     }
 
     $(function () {
+        $('#NormalworkDispatchTable').datagrid({
+            onClickRow: function () {
+                var quantitySum = 0;
+                var rows = $('#NormalworkDispatchTable').datagrid('getSelections');
+                countSum();
+                if (rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+                    }
+                    $('#checkQuantitySum').text(quantitySum);
+                } else {
+                    $('#checkQuantitySum').text(0);
+                }
+            }
+        });
+        $('#AbnormalworkDispatchTable').datagrid({
+            onClickRow: function () {
+                var quantitySum = 0;
+                var rows = $('#AbnormalworkDispatchTable').datagrid('getSelections');
+                countSum();
+                if (rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+                    }
+                    $('#checkQuantitySum').text(quantitySum);
+                } else {
+                    $('#checkQuantitySum').text(0);
+                }
+            }
+        });
+        $('#PieceworkDispatchTable').datagrid({
+            onClickRow: function () {
+                var quantitySum = 0;
+                var rows = $('#PieceworkDispatchTable').datagrid('getSelections');
+                countSum();
+                if (rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+                    }
+                    $('#checkQuantitySum').text(quantitySum);
+                } else {
+                    $('#checkQuantitySum').text(0);
+                }
+            }
+        });
+        $('#ManualworkDispatchTable').datagrid({
+            onClickRow: function () {
+                var quantitySum = 0;
+                var rows = $('#ManualworkDispatchTable').datagrid('getSelections');
+                countSum();
+                if (rows.length > 0) {
+                    for (var i = 0; i < rows.length; i++) {
+                        quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+                    }
+                    $('#checkQuantitySum').text(quantitySum);
+                } else {
+                    $('#checkQuantitySum').text(0);
+                }
+            }
+        });
         $('#workDispatchTable').datagrid({
             onClickRow: function () {
                 var quantitySum = 0;
                 var rows = $('#workDispatchTable').datagrid('getSelections');
+                countSum();
                 if (rows.length > 0) {
                     for (var i = 0; i < rows.length; i++) {
                         quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
@@ -114,6 +203,84 @@
             }
         })
     });
+        //        if (tabsRow.panel('options').id == "NormalTask") {
+        //            alert(NormalTask);
+        //            $('#NormalworkDispatchTable').datagrid({
+        //                onClickRow: function () {
+        //                    var quantitySum = 0;
+        //                    var rows = $('#NormalworkDispatchTable').datagrid('getSelections');
+        //                    if (rows.length > 0) {
+        //                        for (var i = 0; i < rows.length; i++) {
+        //                            quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+        //                        }
+        //                        $('#checkQuantitySum').text(quantitySum);
+        //                    } else {
+        //                        $('#checkQuantitySum').text(0);
+        //                    }
+        //                },
+        //                onLoadSuccess: function () {//数据加载完后执行
+        //                    countSum();
+        //                }
+        //            })
+        //        }
+        //        if (tabsRow.panel('options').id == "AbnormalTask") {
+        //            alert(AbnormalTask);
+        //            $('#AbnormalworkDispatchTable').datagrid({
+        //                onClickRow: function () {
+        //                    var quantitySum = 0;
+        //                    var rows = $('#AbnormalworkDispatchTable').datagrid('getSelections');
+        //                    if (rows.length > 0) {
+        //                        for (var i = 0; i < rows.length; i++) {
+        //                            quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+        //                        }
+        //                        $('#checkQuantitySum').text(quantitySum);
+        //                    } else {
+        //                        $('#checkQuantitySum').text(0);
+        //                    }
+        //                },
+        //                onLoadSuccess: function () {//数据加载完后执行
+        //                    countSum();
+        //                }
+        //            })
+        //        }
+        //        if (tabsRow.panel('options').id == "PieceTask") {
+        //            $('#PieceworkDispatchTable').datagrid({
+        //                onClickRow: function () {
+        //                    var quantitySum = 0;
+        //                    var rows = $('#PieceworkDispatchTable').datagrid('getSelections');
+        //                    if (rows.length > 0) {
+        //                        for (var i = 0; i < rows.length; i++) {
+        //                            quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+        //                        }
+        //                        $('#checkQuantitySum').text(quantitySum);
+        //                    } else {
+        //                        $('#checkQuantitySum').text(0);
+        //                    }
+        //                },
+        //                onLoadSuccess: function () {//数据加载完后执行
+        //                    countSum();
+        //                }
+        //            })
+        //        }
+        //        if (tabsRow.panel('options').id == "ManualTask") {
+        //            $('#ManualworkDispatchTable').datagrid({
+        //                onClickRow: function () {
+        //                    var quantitySum = 0;
+        //                    var rows = $('#ManualworkDispatchTable').datagrid('getSelections');
+        //                    if (rows.length > 0) {
+        //                        for (var i = 0; i < rows.length; i++) {
+        //                            quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;
+        //                        }
+        //                        $('#checkQuantitySum').text(quantitySum);
+        //                    } else {
+        //                        $('#checkQuantitySum').text(0);
+        //                    }
+        //                },
+        //                onLoadSuccess: function () {//数据加载完后执行
+        //                    countSum();
+        //                }
+        //            })
+        //        }
 </script>
 <div id="dlg" class="easyui-dialog" modal="true" style="width:780px; height:510px"
     closed="true" buttons="#dlg-buttons">
@@ -142,7 +309,7 @@
             </div>
            </div>
         </div>
-        <div title="正常作业" id="NormalTask"><div style=" width:70px; height:25px; margin-left:80px; margin-top:-30px; position:absolute; "  onclick="normalTask()"></div>
+        <div title="正常作业" id="NormalTask">
          <div class="easyui-layout" fit="true">
           <div id="Normal" region="center" fit="true" border="false" style="margin: 1px">
             <table id="NormalworkDispatchTable" class="easyui-datagrid" singleSelect="false" pagination="fasle" 

@@ -31,7 +31,7 @@ namespace THOK.Wms.Bll.Interfaces
         bool Delete(string id,out string errorInfo);
 
         bool Save(SortOrderDispatch sortDispatch);
-        bool Edit(string id, string SortingLineCode);
+        bool Edit(string id, string SortingLineCode, out string errorInfo);
 
         System.Data.DataTable GetSortOrderDispatch(int page, int rows, string OrderDate, string WorkStatus, string SortStatus, string SortingLineCode);
     }

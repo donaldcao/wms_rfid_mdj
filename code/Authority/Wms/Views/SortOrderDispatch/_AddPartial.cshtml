@@ -73,6 +73,7 @@
                     $('#details').datagrid('reload');
                 } else {
                     $.messager.alert(g_MsgBoxTitle, result.msg + '<br />' + result.data, "error");
+                    $('#dlg-edit').dialog('close');
                     $('#details').datagrid('reload');
                 }
             }

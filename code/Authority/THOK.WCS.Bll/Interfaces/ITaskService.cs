@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using THOK.WCS.DbModel;
 using THOK.WCS.Bll.Models;
 
@@ -13,6 +14,7 @@ namespace THOK.WCS.Bll.Interfaces
         bool Add(Task task, out string strResult);
         bool Save(Task task, out string strResult);
         bool Delete(string taskID, out string strResult);
+        DataTable DetailsTable(int page, int rows, Task task);
 
         bool CreateInBillTask(string billNo, out string errInfo);
         bool CreateOutBillTask(string billNo, out string errInfo);

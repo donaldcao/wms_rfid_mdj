@@ -30,15 +30,15 @@ namespace Authority.Controllers.Wms.StockMove
             ViewBag.ModuleID = moduleID;
             return View();
         }
-        public ActionResult Details(int page, int rows, FormCollection collection)
-        {
-            string BillTypeCode = collection["BillTypeCode"] ?? "";
-            string BillTypeName = collection["BillTypeName"] ?? "";
-            string BillClass = "0003";
-            string IsActive = collection["IsActive"] ?? "";
-            var brand = BillTypeService.GetDetails(page, rows, BillTypeCode, BillTypeName, BillClass, IsActive);
-            return Json(brand, "text", JsonRequestBehavior.AllowGet);
-        }
+        //public ActionResult Details(int page, int rows, FormCollection collection)
+        //{
+        //    string BillTypeCode = collection["BillTypeCode"] ?? "";
+        //    string BillTypeName = collection["BillTypeName"] ?? "";
+        //    string BillClass = "0003";
+        //    string IsActive = collection["IsActive"] ?? "";
+        //    var brand = BillTypeService.GetDetails(page, rows, BillTypeCode, BillTypeName, BillClass, IsActive);
+        //    return Json(brand, "text", JsonRequestBehavior.AllowGet);
+        //}
         public ActionResult Create(BillType billtype)
         {
             bool bResult = BillTypeService.Add(billtype);
@@ -59,19 +59,19 @@ namespace Authority.Controllers.Wms.StockMove
         }
 
         #region /StockMoveBillType/CreateExcelToClient/
-        public FileStreamResult CreateExcelToClient()
-        {
-            int page = 0, rows = 0;
-            string billTypeCode = Request.QueryString["billTypeCode"];
-            string billTypeName = Request.QueryString["billTypeName"];
-            string billClass = "0003";
-            string isActive = Request.QueryString["isActive"];
+        //public FileStreamResult CreateExcelToClient()
+        //{
+        //    int page = 0, rows = 0;
+        //    string billTypeCode = Request.QueryString["billTypeCode"];
+        //    string billTypeName = Request.QueryString["billTypeName"];
+        //    string billClass = "0003";
+        //    string isActive = Request.QueryString["isActive"];
 
-            ExportParam ep = new ExportParam();
-            ep.DT1 = BillTypeService.GetBillType(page, rows, billTypeCode, billTypeName, billClass, isActive);
-            ep.HeadTitle1 = "移库类型设置";
-            return PrintService.Print(ep);
-        }
+        //    ExportParam ep = new ExportParam();
+        //    ep.DT1 = BillTypeService.GetBillType(page, rows, billTypeCode, billTypeName, billClass, isActive);
+        //    ep.HeadTitle1 = "移库类型设置";
+        //    return PrintService.Print(ep);
+        //}
         #endregion
     }
 }

@@ -446,12 +446,12 @@ namespace THOK.SMS.Bll.Service
                             continue;
                         }
                         //正常分拣线
-                        if (productType == "1")
+                        if (productType == "1" || productType == "0")
                         {
                             sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
                         }
                         //异型烟分拣线
-                        else if (productType == "2")
+                        if (productType == "2" || productType == "0")
                         {
                             var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
                                 .Join(sortingLineQuery.Where(a => a.ProductType == "2" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
@@ -467,11 +467,11 @@ namespace THOK.SMS.Bll.Service
                                    .GroupBy(b => new { SortBatchAbnormalId = b.SortBatchAbnormalId })
                                    .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchAbnormalId }).FirstOrDefault(s => s.SortBatchAbnormalId.Equals(a.Id)).quantity
                                 }).OrderBy(a => a.quantity).ToArray();
-                            sortOrderDispatch.SortBatchAbnormalId = sortingLineCode.FirstOrDefault().Id;
+                            sortOrderDispatch.SortBatchAbnormalId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
                             SortOrderDispatchRepository.SaveChanges();
                         }
                         //整件分拣线
-                        else if (productType == "3")
+                        if (productType == "3" || productType == "0")
                         {
                             var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
                                   .Join(sortingLineQuery.Where(a => a.ProductType == "3" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
@@ -487,11 +487,11 @@ namespace THOK.SMS.Bll.Service
                                          .GroupBy(b => new { SortBatchPiecesId = b.SortBatchPiecesId })
                                          .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchPiecesId }).FirstOrDefault(s => s.SortBatchPiecesId.Equals(a.Id)).quantity
                                   }).OrderBy(a => a.quantity).ToArray();
-                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault().Id;
+                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
                             SortOrderDispatchRepository.SaveChanges();
                         }
                         //手工分拣线
-                        else if (productType == "4")
+                        if (productType == "4" || productType == "0")
                         {
                             var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
                                .Join(sortingLineQuery.Where(a => a.ProductType == "4" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
@@ -507,7 +507,7 @@ namespace THOK.SMS.Bll.Service
                                       .GroupBy(b => new { SortBatchManualId = b.SortBatchManualId })
                                       .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchManualId }).FirstOrDefault(s => s.SortBatchManualId.Equals(a.Id)).quantity
                                }).OrderBy(a => a.quantity).ToArray();
-                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault().Id;
+                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault()==null ? 0 : sortingLineCode.FirstOrDefault().Id;
                             SortOrderDispatchRepository.SaveChanges();
                         }
                     }

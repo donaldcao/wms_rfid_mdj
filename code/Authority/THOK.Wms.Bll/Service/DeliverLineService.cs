@@ -117,7 +117,7 @@ namespace THOK.Wms.Bll.Service
                 DeliverLineName = Value;
             }
             var deliverLineQuery = DeliverLineRepository.GetQueryable();
-            var deliverLine = deliverLineQuery.Where(c => c.DeliverLineCode.Contains(DeliverLineCode) && c.DeliverLineName.Contains(DeliverLineName))
+            var deliverLine = deliverLineQuery.Where(c => c.NewDeliverLineCode.Contains(DeliverLineCode) && c.DeliverLineName.Contains(DeliverLineName))
                 .OrderBy(c => c.DistCode)
                 .Select(c => c);
             int total = deliverLine.Count();
@@ -126,6 +126,7 @@ namespace THOK.Wms.Bll.Service
             var temp = deliverLine.ToArray().Select(c => new
             {
                 c.DeliverLineCode,
+                c.NewDeliverLineCode,
                 c.DeliverLineName,
                 c.DeliverOrder,
                 IsActive = c.IsActive == "1" ? "可用" : "不可用"

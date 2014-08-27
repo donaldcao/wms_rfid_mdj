@@ -28,9 +28,9 @@
 				<MaxPoolSize value ="" desc =""/>
 				<DataBaseSchemaFileName value ="" desc =""/>
 				<DataSource value ="" desc =""/>
-				<IP value ="10.56.192.104:50000" desc =""/>
-				<DataBaseName value ="v6db" desc =""/>
-				<User value ="THOK" desc =""/>
+				<IP value ="10.57.64.14:50000" desc =""/>
+				<DataBaseName value ="mdjv6db" desc =""/>
+				<User value ="thok" desc =""/>
 				<Password value ="mdjthok" desc =""/>
 			</DataConfiguration>
 		</key>
@@ -38,4 +38,3 @@
 	<property name="SlaveSuitDictionary">		
 	</property>
 </TransactionScopeFactoryProvider>
-

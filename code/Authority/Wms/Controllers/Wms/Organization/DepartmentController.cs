@@ -121,7 +121,7 @@ namespace Authority.Controllers.Organization
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = DepartmentService.GetDepartment(page, rows, departmentCode, departmentName, departmentLeaderId, companyId);
-            ep.HeadTitle1 = "部门信息";
+            ep.FirstHeadTitle = "部门信息";
             return PrintService.Print(ep);
         }
         #endregion

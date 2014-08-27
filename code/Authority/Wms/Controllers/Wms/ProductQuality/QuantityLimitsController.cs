@@ -62,7 +62,7 @@ namespace Wms.Controllers.Wms.ProductQuality
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = ProductWarningService.GetQuantityLimitsDetail(page, rows, productCode, minLimited, maxLimited,unitCode);
-            ep.HeadTitle1 = "产品超储短缺查询";
+            ep.FirstHeadTitle = "产品超储短缺查询";
             return PrintService.Print(ep);
         }
         #endregion

@@ -65,7 +65,7 @@ namespace Authority.Controllers.Wms.ComplexSearch
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = SortOrderSearchService.GetSortOrderSearchInfo(page, rows,OrderID,OrderDate,CustomerCode,CustomerName, DeliverLineCode);
-            ep.HeadTitle1 = "访销订单";
+            ep.FirstHeadTitle = "访销订单";
 
             return PrintService.Print(ep);
         }

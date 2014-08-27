@@ -92,8 +92,8 @@ namespace Authority.Controllers.Wms.StockBill
             ExportParam ep = new ExportParam();
             ep.FirstTable = InBillDetailService.GetInBillDetail(page, rows, billNo);
             ep.SecondTable = InBillAllotService.AllotSearch(page, rows, billNo);;
-            ep.HeadTitle1 = "入库单据分配";
-            ep.HeadTitle2 = "入库单据分配明细";
+            ep.FirstHeadTitle = "入库单据分配";
+            ep.SecondHeadTitle = "入库单据分配明细";
             return PrintService.Print(ep);
         }
         #endregion

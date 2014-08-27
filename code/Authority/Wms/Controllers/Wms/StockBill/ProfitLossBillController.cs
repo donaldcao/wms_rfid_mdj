@@ -159,7 +159,7 @@ namespace Authority.Controllers.Wms.StockBill
             
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
             ep.FirstTable = ProfitLossBillDetailService.GetProfitLoassBillDetail(page, rows, billNo);
-            ep.HeadTitle1 = "损益单明细";
+            ep.FirstHeadTitle = "损益单明细";
             System.IO.MemoryStream ms = THOK.Common.NPOI.Service.ExportExcel.ExportDT(ep);
             return new FileStreamResult(ms, "application/ms-excel");
         }

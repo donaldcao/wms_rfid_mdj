@@ -57,7 +57,7 @@ namespace Wms.Controllers.SMS.BaseInfo
        
             ExportParam ep = new ExportParam();
             ep.FirstTable = ProductService.GetProductDetails(page, rows, productName, productCode, barBarcode, isAbnormity);
-            ep.HeadTitle1 = "卷烟信息";
+            ep.FirstHeadTitle = "卷烟信息";
             return PrintService.Print(ep);
         }
     }

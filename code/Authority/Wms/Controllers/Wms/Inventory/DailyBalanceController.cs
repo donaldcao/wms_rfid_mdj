@@ -125,8 +125,8 @@ namespace Wms.Controllers.Wms.Inventory
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();            
             ep.FirstTable = DailyBalanceService.GetInfoDetail(page, rows, warehouseCode, settleDate, unitType,areas);
             ep.SecondTable = DailyBalanceService.GetInfoChecking(page, rows, warehouseCode, settleDate, unitType);;
-            ep.HeadTitle1 = "仓库库存日结明细";
-            ep.HeadTitle2 = "仓库库存日结核对";
+            ep.FirstHeadTitle = "仓库库存日结明细";
+            ep.SecondHeadTitle = "仓库库存日结核对";
             ep.ContentModule = "DailyBalance";            
             ep.ContentModuleColor = NPOI.HSSF.Util.HSSFColor.RED.index;
             System.IO.MemoryStream ms = THOK.Common.NPOI.Service.ExportExcel.ExportDT(ep);

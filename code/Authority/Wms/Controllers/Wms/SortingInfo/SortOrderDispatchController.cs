@@ -161,7 +161,7 @@ namespace Wms.Controllers.Wms.SortingInfo
           
             ExportParam ep = new ExportParam();
             ep.FirstTable = SortOrderDispatchService.GetSortOrderDispatch(page, rows, orderDate,WorkStatus,SortStatus, sortingLineCode);
-            ep.HeadTitle1 = "分拣线路调度";
+            ep.FirstHeadTitle = "分拣线路调度";
             return PrintService.Print(ep);
         }
         #endregion

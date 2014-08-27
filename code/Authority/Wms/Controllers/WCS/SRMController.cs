@@ -147,7 +147,7 @@ namespace Wms.Controllers.WCS
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = SRMService.GetSRM(page, rows, srm);
-            ep.HeadTitle1 = "堆垛机信息";
+            ep.FirstHeadTitle = "堆垛机信息";
             return PrintService.Print(ep);
         }  
     }

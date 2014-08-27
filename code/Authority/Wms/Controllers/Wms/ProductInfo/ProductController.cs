@@ -136,7 +136,7 @@ namespace Authority.Controllers.ProductInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = ProductService.GetProduct(page, rows, productName, productCode, customCode, brandCode, uniformCode, abcTypeCode, shortCode, priceLevelCode, supplierCode);
-            ep.HeadTitle1 = "卷烟信息";
+            ep.FirstHeadTitle = "卷烟信息";
             return PrintService.Print(ep);
         }
         #endregion

@@ -18,7 +18,7 @@ namespace THOK.Wms.Bll.Interfaces
 
         bool Save(Customer customer, out string strResult);
 
-        System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode,string CustomerName,string DeliverLineCode);
+        System.Data.DataTable CustomerTable(int page, int rows, string CustomerCode, string CustomerName, string DeliverLineCode);
 
         object GetDetails(int page, int rows, string customerCode, string customerName, string deliverLineCode);
     }

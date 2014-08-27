@@ -66,7 +66,7 @@ namespace Wms.Controllers.Wms.AutomotiveSystems
             string billNo = Request.QueryString["BillNo"].ToString();
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
             ep.FirstTable = InBillAllotService.InBillAllotTable(billNo, page, rows);
-            ep.HeadTitle1 = "入库作业";
+            ep.FirstHeadTitle = "入库作业";
             return THOK.Common.NPOI.Service.PrintService.Print(ep);
         }
     }

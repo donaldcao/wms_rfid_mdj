@@ -88,7 +88,7 @@ namespace Authority.Controllers.Wms.ProductInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = BrandService.GetBrand(page, rows, brandCode, brandName, isActive);
-            ep.HeadTitle1 = "卷烟品牌";
+            ep.FirstHeadTitle = "卷烟品牌";
             return PrintService.Print(ep);
         }
         #endregion

@@ -179,7 +179,7 @@ namespace Authority.Controllers.Wms.StockBill
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = CheckBillDetailService.GetCheckBillDetail(page, rows, billNo, orderByType);
-            ep.HeadTitle1 = "盘点单明细";
+            ep.FirstHeadTitle = "盘点单明细";
             return PrintService.Print(ep);
         }
 

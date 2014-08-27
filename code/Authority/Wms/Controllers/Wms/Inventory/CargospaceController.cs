@@ -61,7 +61,7 @@ namespace Authority.Controllers.Wms.Inventory
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = CargospaceService.GetCargospace(page, rows, type, id);
-            ep.HeadTitle1 = "货位库存查询";
+            ep.FirstHeadTitle = "货位库存查询";
             return PrintService.Print(ep);
         }
         #endregion

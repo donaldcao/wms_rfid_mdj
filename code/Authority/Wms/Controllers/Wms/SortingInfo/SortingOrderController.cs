@@ -96,7 +96,7 @@ namespace Authority.Controllers.Wms.SortingInfo
         
             ExportParam ep = new ExportParam();
             ep.FirstTable = SortOrderService.GetSortOrder(page, rows, orderID, orderDate, productCode);
-            ep.HeadTitle1 = "分拣订单管理";
+            ep.FirstHeadTitle = "分拣订单管理";
             return PrintService.Print(ep);
         }
         #endregion

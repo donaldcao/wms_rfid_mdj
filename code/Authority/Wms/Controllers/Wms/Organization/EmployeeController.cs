@@ -125,7 +125,7 @@ namespace Authority.Controllers.Organization
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = EmployeeService.GetEmployee(page, rows, employeeCode, employeeName, departmentId, jobId, status, isActive);
-            ep.HeadTitle1 = "员工信息";
+            ep.FirstHeadTitle = "员工信息";
             return PrintService.Print(ep);
         } 
         #endregion

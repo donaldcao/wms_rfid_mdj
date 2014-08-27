@@ -54,7 +54,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode, text);
-            ep.HeadTitle1 = "分拣烟道查询";
+            ep.FirstHeadTitle = "分拣烟道查询";
             return PrintService.Print(ep);
         }
     }

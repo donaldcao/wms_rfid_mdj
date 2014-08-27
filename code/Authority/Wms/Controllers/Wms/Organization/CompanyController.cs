@@ -118,7 +118,7 @@ namespace Authority.Controllers.Organization
             
             ExportParam ep = new ExportParam();
             ep.FirstTable = CompanyService.GetCompany(page, rows, companyCode, companyName, companyType, isActive);
-            ep.HeadTitle1 = "公司信息";
+            ep.FirstHeadTitle = "公司信息";
             return PrintService.Print(ep);
         }
         #endregion

@@ -77,7 +77,7 @@ namespace Authority.Controllers.Authority
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = SystemEventLogService.GetSystemEventLog(page, rows, eventLogTime, eventName, fromPC, operateUser, targetSystem);
-            ep.HeadTitle1 = "业务日志信息";
+            ep.FirstHeadTitle = "业务日志信息";
             return PrintService.Print(ep);
         }  
     }

@@ -110,7 +110,7 @@ namespace Authority.Controllers.ProductInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = UnitService.GetUnit(page, rows, unitCode, unitName, isActive);
-            ep.HeadTitle1 = "计量单位";
+            ep.FirstHeadTitle = "计量单位";
             return PrintService.Print(ep);
         }
         #endregion

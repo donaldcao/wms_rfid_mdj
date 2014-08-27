@@ -50,7 +50,7 @@ namespace Wms.Controllers.Wms.Inventory
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = CellHistoricalService.GetCellHistory(page, rows, beginDate, endDate, type, id);
-            ep.HeadTitle1 = "货位历史明细";
+            ep.FirstHeadTitle = "货位历史明细";
             return PrintService.Print(ep);
         }
     }

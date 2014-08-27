@@ -97,7 +97,7 @@ namespace Wms.Controllers.Wms.WarehouseInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = CellService.GetCell(page, rows, type, id);
-            ep.HeadTitle1 = "仓库信息";
+            ep.FirstHeadTitle = "仓库信息";
             return PrintService.Print(ep);
         }
         #endregion

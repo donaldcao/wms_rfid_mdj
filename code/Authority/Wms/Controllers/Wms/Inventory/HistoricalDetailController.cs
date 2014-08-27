@@ -43,7 +43,7 @@ namespace Authority.Controllers.Wms.Inventory
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = HistoricalDetailService.GetHistoryDetail(page, rows, warehouseCode, productCode, beginDate, endDate);
-            ep.HeadTitle1 = "库存历史明细";
+            ep.FirstHeadTitle = "库存历史明细";
             return PrintService.Print(ep);
         }
     }

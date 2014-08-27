@@ -110,7 +110,7 @@ namespace Authority.Controllers.Wms.ProductInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = UnitListService.GetUnitList(page, rows, unitlist);
-            ep.HeadTitle1 = "单位系列";
+            ep.FirstHeadTitle = "单位系列";
             return PrintService.Print(ep);
         }
         #endregion

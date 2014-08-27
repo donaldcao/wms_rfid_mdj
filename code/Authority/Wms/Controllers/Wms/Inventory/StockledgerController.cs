@@ -54,7 +54,7 @@ namespace Authority.Controllers.Wms.Inventory
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = StockledgerService.GetInfoDetail(page, rows, warehouseCode, productCode, settleDate);
-            ep.HeadTitle1 = "库存历史总账明细";
+            ep.FirstHeadTitle = "库存历史总账明细";
             return PrintService.Print(ep);
         }
     }

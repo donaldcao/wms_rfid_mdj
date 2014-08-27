@@ -98,7 +98,7 @@ namespace Authority.Controllers.Wms.SortingInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable =  SortingLowerlimitService.GetSortingLowerlimit(page, rows, sortingLineCode, sortingLineName, productName,productCode, isActive);
-            ep.HeadTitle1 = "备货区下限设置";
+            ep.FirstHeadTitle = "备货区下限设置";
             return PrintService.Print(ep);
         }
         #endregion

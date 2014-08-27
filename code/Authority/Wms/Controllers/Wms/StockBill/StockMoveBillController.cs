@@ -213,7 +213,7 @@ namespace Authority.Controllers.Wms.StockBill
             string sortingName = string.Empty;
             ExportParam ep = new ExportParam();
             ep.FirstTable = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
-            ep.HeadTitle1 = sortingName + "移库单明细";
+            ep.FirstHeadTitle = sortingName + "移库单明细";
             return PrintService.Print(ep);
         }
         #endregion

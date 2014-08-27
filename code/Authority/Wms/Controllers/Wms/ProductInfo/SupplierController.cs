@@ -87,7 +87,7 @@ namespace Authority.Controllers.ProductInfo
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = SupplierService.GetSupplier(page, rows, supplierCode, supplierName, isActive);
-            ep.HeadTitle1 = "厂商信息";
+            ep.FirstHeadTitle = "厂商信息";
             return PrintService.Print(ep);
         }
         #endregion

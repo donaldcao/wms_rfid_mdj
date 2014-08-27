@@ -50,7 +50,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
           
             ExportParam ep = new ExportParam();
             ep.FirstTable = SortBatchService.DeliverOrderSearchInfo(page, rows, orderDate, batchNo, sortingLineCode);
-            ep.HeadTitle1 = "分拣配送";           
+            ep.FirstHeadTitle = "分拣配送";           
             return PrintService.Print(ep);
         }
     }

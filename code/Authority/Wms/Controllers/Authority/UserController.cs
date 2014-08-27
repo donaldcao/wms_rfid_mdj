@@ -164,7 +164,7 @@ namespace Authority.Controllers.Authority
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = UserService.GetUser(page, rows, userName, chineseName, meMo);
-            ep.HeadTitle1 = "用户信息";
+            ep.FirstHeadTitle = "用户信息";
             return PrintService.Print(ep);
         }
         #endregion

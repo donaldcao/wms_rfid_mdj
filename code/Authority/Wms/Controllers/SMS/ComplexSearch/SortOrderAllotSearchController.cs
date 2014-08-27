@@ -63,7 +63,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
             string deliverLineCode = Request.QueryString["DeliverLineCode"];
             string OrderDate = Request.QueryString["OrderDate"];
             ep.FirstTable = SortOrderAllotMasterServer.GetSortOrderAllotMaster(page, rows, OrderDate, batchNo, deliverLineCode,sortingLineCode);
-            ep.HeadTitle1 = "分拣订单";
+            ep.FirstHeadTitle = "分拣订单";
             return PrintService.Print(ep);
         }
     }

@@ -73,7 +73,7 @@ namespace Wms.Controllers.WMS.StockBill
             string isActive = Request.QueryString["isActive"] ?? "";
             ExportParam ep = new ExportParam();
             ep.FirstTable = BillTypeService.BillTypeTable(page, rows, billClass, isActive);
-            ep.HeadTitle1 = "订单类型";
+            ep.FirstHeadTitle = "订单类型";
             return PrintService.Print(ep);
         }
     }

@@ -93,8 +93,8 @@ namespace Authority.Controllers.Wms.StockBill
             ExportParam ep = new ExportParam();
             ep.FirstTable = OutBillDetailService.GetOutBillDetail(page, rows, billNo);
             ep.SecondTable = OutBillAllotService.AllotSearch(page, rows, billNo);
-            ep.HeadTitle1 = "出库单据分配";
-            ep.HeadTitle2 = "出库单据分配明细";
+            ep.FirstHeadTitle = "出库单据分配";
+            ep.SecondHeadTitle = "出库单据分配明细";
             return PrintService.Print(ep);
         }
         #endregion

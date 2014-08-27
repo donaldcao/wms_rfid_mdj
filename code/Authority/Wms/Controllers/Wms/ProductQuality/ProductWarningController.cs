@@ -102,7 +102,7 @@ namespace Wms.Controllers.Wms.ProductQuality
             
             ExportParam ep = new ExportParam();
             ep.FirstTable = ProductWarningService.GetProductWarning(page, rows, productCode, minLimited, maxLimited, assemblyTime);
-            ep.HeadTitle1 = "产品预警信息设置";
+            ep.FirstHeadTitle = "产品预警信息设置";
             return PrintService.Print(ep);
         }
         #endregion

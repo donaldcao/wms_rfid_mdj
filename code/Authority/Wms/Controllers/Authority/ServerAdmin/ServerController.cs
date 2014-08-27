@@ -101,7 +101,7 @@ namespace Authority.Controllers.ServerAdmin
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = ServerService.GetServer(page, rows, server,isactiveIsNull);
-            ep.HeadTitle1 = "服务器信息";
+            ep.FirstHeadTitle = "服务器信息";
             return PrintService.Print(ep);
         }  
     }

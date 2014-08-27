@@ -68,7 +68,7 @@ namespace Authority.Controllers.Wms.Inventory
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = DistributionService.GetDistribution(page, rows, type, id, unitType, productCode);
-            ep.HeadTitle1 = "库存分布查询";
+            ep.FirstHeadTitle = "库存分布查询";
             return PrintService.Print(ep);
         }
         #endregion

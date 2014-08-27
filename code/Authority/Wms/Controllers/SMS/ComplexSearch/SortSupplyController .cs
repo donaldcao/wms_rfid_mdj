@@ -84,7 +84,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = SortSupplyServer.GetSortSupply(page, rows, sortSupply);
-            ep.HeadTitle1 = "分拣补货查询";
+            ep.FirstHeadTitle = "分拣补货查询";
             return PrintService.Print(ep);
         }
     }

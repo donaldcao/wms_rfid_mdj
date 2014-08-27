@@ -98,7 +98,7 @@ namespace Authority.Controllers.ServerAdmin
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = CityService.GetCity(page, rows, city,activeIsNull);
-            ep.HeadTitle1 = "地市信息";
+            ep.FirstHeadTitle = "地市信息";
             return PrintService.Print(ep);
         }  
         

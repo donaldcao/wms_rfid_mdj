@@ -36,7 +36,7 @@ namespace THOK.Common.NPOI.Service
             try
             {
                 #region HttpResponse
-                THOK.Common.NPOI.Common.ExportExcelHelper.BrowserLoad(ep.HeadTitle1);
+                THOK.Common.NPOI.Common.ExportExcelHelper.BrowserLoad(ep.FirstHeadTitle);
                 #endregion
 
                 #region Init
@@ -67,12 +67,12 @@ namespace THOK.Common.NPOI.Service
                 #region Get column width
                 int[] arrColWidth1 = new int[0];
                 int[] arrColWidth2 = new int[0];
-                if (ep.FirstTable != null && ep.HeadTitle1 != null)
+                if (ep.FirstTable != null && ep.FirstHeadTitle != null)
                 {
                     arrColWidth1 = new int[ep.FirstTable.Columns.Count];
                     GetColumnWidth(ep.FirstTable, arrColWidth1);
                 }
-                if (ep.SecondTable != null && ep.HeadTitle2 != null)
+                if (ep.SecondTable != null && ep.SecondHeadTitle != null)
                 {
                     arrColWidth2 = new int[ep.SecondTable.Columns.Count];
                     GetColumnWidth(ep.SecondTable, arrColWidth2);
@@ -80,7 +80,7 @@ namespace THOK.Common.NPOI.Service
                 #endregion
 
                 #region Create excel table one
-                if (ep.FirstTable != null && ep.HeadTitle1 != null)
+                if (ep.FirstTable != null && ep.FirstHeadTitle != null)
                 {
                     int dt1count = ep.FirstTable.Rows.Count;
 
@@ -103,7 +103,7 @@ namespace THOK.Common.NPOI.Service
                         {
                             sheetNum = sheetNum.Substring(0, a.ToString().Length - 1);
                         }
-                        string headTitle1_sheetNum = ep.HeadTitle1 + sheetNum;
+                        string headTitle1_sheetNum = ep.FirstHeadTitle + sheetNum;
                         sheet = workbook.CreateSheet(headTitle1_sheetNum) as HSSFSheet;
                         #endregion
 
@@ -133,7 +133,7 @@ namespace THOK.Common.NPOI.Service
                                 {
                                     HSSFRow headerRow = sheet.CreateRow(0) as HSSFRow;
                                     headerRow.HeightInPoints = Convert.ToInt16(ep.BigHeadSize * 1.4);
-                                    headerRow.CreateCell(0).SetCellValue(ep.HeadTitle1);
+                                    headerRow.CreateCell(0).SetCellValue(ep.FirstHeadTitle);
                                     headerRow.GetCell(0).CellStyle = headStyle;
                                     CellRangeAddress region = new CellRangeAddress(0, 0, 0, newdt1.Columns.Count - 1);
                                     sheet.AddMergedRegion(region);
@@ -189,7 +189,7 @@ namespace THOK.Common.NPOI.Service
                 #endregion
 
                 #region Create excel table two
-                if (ep.SecondTable != null && ep.HeadTitle2 != null)
+                if (ep.SecondTable != null && ep.SecondHeadTitle != null)
                 {
                     int dt2count = ep.SecondTable.Rows.Count;
                     if (dt2count % sheetCount == 0)
@@ -209,7 +209,7 @@ namespace THOK.Common.NPOI.Service
                         {
                             strA = strA.Substring(0, a.ToString().Length - 1);
                         }
-                        string headText2strA = ep.HeadTitle2 + strA;
+                        string headText2strA = ep.SecondHeadTitle + strA;
 
                         #region 填充数据
                         foreach (DataRow row in newdt2.Rows)
@@ -227,7 +227,7 @@ namespace THOK.Common.NPOI.Service
                                 {
                                     headerRow = sheet.CreateRow(0) as HSSFRow;
                                     headerRow.HeightInPoints = Convert.ToInt16(ep.BigHeadSize * 1.4);
-                                    headerRow.CreateCell(0).SetCellValue(ep.HeadTitle2);
+                                    headerRow.CreateCell(0).SetCellValue(ep.SecondHeadTitle);
                                     headerRow.GetCell(0).CellStyle = headStyle;
                                     CellRangeAddress region = new CellRangeAddress(0, 0, 0, newdt2.Columns.Count - 1);
                                     sheet.AddMergedRegion(region);

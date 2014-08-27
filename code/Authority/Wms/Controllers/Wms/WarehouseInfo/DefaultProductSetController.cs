@@ -124,7 +124,7 @@ namespace Wms.Controllers.Wms.WarehouseInfo
             
             ExportParam ep = new ExportParam();
             ep.FirstTable = CellService.GetCellByE(page, rows, queryString, value);
-            ep.HeadTitle1 = "储位卷烟预设";
+            ep.FirstHeadTitle = "储位卷烟预设";
             return PrintService.Print(ep);
         } 
         #endregion

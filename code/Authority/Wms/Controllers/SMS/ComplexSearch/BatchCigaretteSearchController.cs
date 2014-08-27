@@ -52,7 +52,7 @@ namespace Wms.Controllers.SMS.ComplexSearch
             string text = "分拣备货";
             ExportParam ep = new ExportParam();
             ep.FirstTable = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode,text);
-            ep.HeadTitle1 = "分拣备货";
+            ep.FirstHeadTitle = "分拣备货";
             return PrintService.Print(ep);
         }
     }

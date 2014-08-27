@@ -119,7 +119,7 @@ namespace Authority.Controllers.Authority
 
             ExportParam ep = new ExportParam();
             ep.FirstTable = RoleService.GetRoleConten(page, rows, roleName, meMo, isLock);
-            ep.HeadTitle1 = "角色信息";
+            ep.FirstHeadTitle = "角色信息";
             return PrintService.Print(ep);
         }
         #endregion

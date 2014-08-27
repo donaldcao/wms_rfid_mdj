@@ -109,8 +109,8 @@ namespace Authority.Controllers.ProductInfo
             string isActive = Request.QueryString["isActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = UnitService.GetUnit(page, rows, unitCode, unitName, isActive);
-            ep.HeadTitle1 = "计量单位";
+            ep.FirstTable = UnitService.GetUnit(page, rows, unitCode, unitName, isActive);
+            ep.FirstHeadTitle = "计量单位";
             return PrintService.Print(ep);
         }
         #endregion

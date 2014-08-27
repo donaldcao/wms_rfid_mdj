@@ -86,7 +86,7 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
         }
 
-
+        // GET: /Customer/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
@@ -95,9 +95,8 @@ namespace Wms.Controllers.Wms.DeliveryInfo
             string DeliverLineCode = Request.QueryString["DeliverLineCode"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CustomerService.GetCustomerInfo(page, rows, CustomerCode, CustomerName, DeliverLineCode);
-            ep.HeadTitle1 = "客户信息";
-
+            ep.FirstTable = CustomerService.CustomerTable(page, rows, CustomerCode, CustomerName, DeliverLineCode);
+            ep.FirstHeadTitle = "客户信息";
             return PrintService.Print(ep);
         }
     }

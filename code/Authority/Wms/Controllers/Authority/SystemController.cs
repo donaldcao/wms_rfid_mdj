@@ -95,8 +95,8 @@ namespace Authority.Controllers.Authority
             system.Status = isactive;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SystemService.GetSystem(page, rows, system,isactiveIsNull);
-            ep.HeadTitle1 = "系统信息";
+            ep.FirstTable = SystemService.GetSystem(page, rows, system,isactiveIsNull);
+            ep.FirstHeadTitle = "系统信息";
             return PrintService.Print(ep);
         }  
     }

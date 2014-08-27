@@ -140,8 +140,8 @@ namespace Wms.Controllers.WCS
             productSize.AreaNo = AreaNo;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ProductSizeService.GetProductSize(page, rows, productSize);
-            ep.HeadTitle1 = "卷烟件烟尺寸信息";
+            ep.FirstTable = ProductSizeService.GetProductSize(page, rows, productSize);
+            ep.FirstHeadTitle = "卷烟件烟尺寸信息";
             return PrintService.Print(ep);
         }  
     }

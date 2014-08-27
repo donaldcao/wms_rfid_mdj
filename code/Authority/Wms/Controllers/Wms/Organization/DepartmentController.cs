@@ -120,8 +120,8 @@ namespace Authority.Controllers.Organization
             string companyId = Request.QueryString["companyId"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = DepartmentService.GetDepartment(page, rows, departmentCode, departmentName, departmentLeaderId, companyId);
-            ep.HeadTitle1 = "部门信息";
+            ep.FirstTable = DepartmentService.GetDepartment(page, rows, departmentCode, departmentName, departmentLeaderId, companyId);
+            ep.FirstHeadTitle = "部门信息";
             return PrintService.Print(ep);
         }
         #endregion

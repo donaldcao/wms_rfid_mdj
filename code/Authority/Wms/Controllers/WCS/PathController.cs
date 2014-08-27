@@ -143,8 +143,8 @@ namespace Wms.Controllers.WCS
                 path.State = State;
 
                 ExportParam ep = new ExportParam();
-                ep.DT1 = PathService.GetPath(page, rows, path);
-                ep.HeadTitle1 = "路径信息";
+                ep.FirstTable = PathService.GetPath(page, rows, path);
+                ep.FirstHeadTitle = "路径信息";
                 return PrintService.Print(ep);
             }
             #endregion

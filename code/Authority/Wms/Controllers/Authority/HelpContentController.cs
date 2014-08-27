@@ -114,8 +114,8 @@ namespace Authority.Controllers.Authority
             string isActive = Request.QueryString["isActive"] ?? "";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = HelpContentService.GetHelpConten(page, rows, contentCode, contentName, nodeType, fatherNodeID, moduleID, isActive);
-            ep.HeadTitle1 = "帮助目录";
+            ep.FirstTable = HelpContentService.GetHelpConten(page, rows, contentCode, contentName, nodeType, fatherNodeID, moduleID, isActive);
+            ep.FirstHeadTitle = "帮助目录";
             return PrintService.Print(ep);
         }
         #endregion

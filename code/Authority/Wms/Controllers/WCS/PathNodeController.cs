@@ -115,8 +115,8 @@ namespace Wms.Controllers.WCS
             string id = Request.QueryString["id"];
 
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
-            ep.DT1 =  PathNodeService.GetPathNode(page, rows, id);
-            ep.HeadTitle1 = "路径节点信息";
+            ep.FirstTable =  PathNodeService.GetPathNode(page, rows, id);
+            ep.FirstHeadTitle = "路径节点信息";
             System.IO.MemoryStream ms = THOK.Common.NPOI.Service.ExportExcel.ExportDT(ep);
             return new FileStreamResult(ms, "application/ms-excel");
         }

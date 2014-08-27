@@ -163,8 +163,8 @@ namespace Authority.Controllers.Authority
             string meMo = Request.QueryString["meMo"] ?? "";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = UserService.GetUser(page, rows, userName, chineseName, meMo);
-            ep.HeadTitle1 = "用户信息";
+            ep.FirstTable = UserService.GetUser(page, rows, userName, chineseName, meMo);
+            ep.FirstHeadTitle = "用户信息";
             return PrintService.Print(ep);
         }
         #endregion

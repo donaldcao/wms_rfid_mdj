@@ -117,8 +117,8 @@ namespace Authority.Controllers.Wms.SortingInfo
             string dispatchStatus = Request.QueryString["dispatchStatus"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SortWorkDispatchService.GetSortWorkDispatch(page, rows, orderDate, sortingLineCode, dispatchStatus);
-            ep.HeadTitle1 = "分拣作业调度";
+            ep.FirstTable = SortWorkDispatchService.GetSortWorkDispatch(page, rows, orderDate, sortingLineCode, dispatchStatus);
+            ep.FirstHeadTitle = "分拣作业调度";
             return PrintService.Print(ep);
         }
         #endregion

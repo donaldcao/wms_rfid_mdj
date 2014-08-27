@@ -53,8 +53,8 @@ namespace Authority.Controllers.Wms.Inventory
             string settleDate = Request.QueryString["settleDate"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = StockledgerService.GetInfoDetail(page, rows, warehouseCode, productCode, settleDate);
-            ep.HeadTitle1 = "库存历史总账明细";
+            ep.FirstTable = StockledgerService.GetInfoDetail(page, rows, warehouseCode, productCode, settleDate);
+            ep.FirstHeadTitle = "库存历史总账明细";
             return PrintService.Print(ep);
         }
     }

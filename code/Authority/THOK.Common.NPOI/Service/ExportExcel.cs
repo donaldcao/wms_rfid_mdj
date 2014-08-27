@@ -36,7 +36,7 @@ namespace THOK.Common.NPOI.Service
             try
             {
                 #region HttpResponse
-                THOK.Common.NPOI.Common.ExportExcelHelper.BrowserLoad(ep.HeadTitle1);
+                THOK.Common.NPOI.Common.ExportExcelHelper.BrowserLoad(ep.FirstHeadTitle);
                 #endregion
 
                 #region Init
@@ -67,22 +67,22 @@ namespace THOK.Common.NPOI.Service
                 #region Get column width
                 int[] arrColWidth1 = new int[0];
                 int[] arrColWidth2 = new int[0];
-                if (ep.DT1 != null && ep.HeadTitle1 != null)
+                if (ep.FirstTable != null && ep.FirstHeadTitle != null)
                 {
-                    arrColWidth1 = new int[ep.DT1.Columns.Count];
-                    GetColumnWidth(ep.DT1, arrColWidth1);
+                    arrColWidth1 = new int[ep.FirstTable.Columns.Count];
+                    GetColumnWidth(ep.FirstTable, arrColWidth1);
                 }
-                if (ep.DT2 != null && ep.HeadTitle2 != null)
+                if (ep.SecondTable != null && ep.SecondHeadTitle != null)
                 {
-                    arrColWidth2 = new int[ep.DT2.Columns.Count];
-                    GetColumnWidth(ep.DT2, arrColWidth2);
+                    arrColWidth2 = new int[ep.SecondTable.Columns.Count];
+                    GetColumnWidth(ep.SecondTable, arrColWidth2);
                 }
                 #endregion
 
                 #region Create excel table one
-                if (ep.DT1 != null && ep.HeadTitle1 != null)
+                if (ep.FirstTable != null && ep.FirstHeadTitle != null)
                 {
-                    int dt1count = ep.DT1.Rows.Count;
+                    int dt1count = ep.FirstTable.Rows.Count;
 
                     #region 判断多少页
                     if (dt1count % sheetCount == 0)
@@ -103,7 +103,7 @@ namespace THOK.Common.NPOI.Service
                         {
                             sheetNum = sheetNum.Substring(0, a.ToString().Length - 1);
                         }
-                        string headTitle1_sheetNum = ep.HeadTitle1 + sheetNum;
+                        string headTitle1_sheetNum = ep.FirstHeadTitle + sheetNum;
                         sheet = workbook.CreateSheet(headTitle1_sheetNum) as HSSFSheet;
                         #endregion
 
@@ -115,7 +115,7 @@ namespace THOK.Common.NPOI.Service
                         int rowIndex1 = 0;
 
                         #region 内容分页
-                        DataTable newdt1 = THOK.Common.NPOI.Common.ExportExcelHelper.SetPage(ep.DT1, a + 1, sheetCount);
+                        DataTable newdt1 = THOK.Common.NPOI.Common.ExportExcelHelper.SetPage(ep.FirstTable, a + 1, sheetCount);
                         #endregion
 
                         #region 填充数据
@@ -133,7 +133,7 @@ namespace THOK.Common.NPOI.Service
                                 {
                                     HSSFRow headerRow = sheet.CreateRow(0) as HSSFRow;
                                     headerRow.HeightInPoints = Convert.ToInt16(ep.BigHeadSize * 1.4);
-                                    headerRow.CreateCell(0).SetCellValue(ep.HeadTitle1);
+                                    headerRow.CreateCell(0).SetCellValue(ep.FirstHeadTitle);
                                     headerRow.GetCell(0).CellStyle = headStyle;
                                     CellRangeAddress region = new CellRangeAddress(0, 0, 0, newdt1.Columns.Count - 1);
                                     sheet.AddMergedRegion(region);
@@ -189,9 +189,9 @@ namespace THOK.Common.NPOI.Service
                 #endregion
 
                 #region Create excel table two
-                if (ep.DT2 != null && ep.HeadTitle2 != null)
+                if (ep.SecondTable != null && ep.SecondHeadTitle != null)
                 {
-                    int dt2count = ep.DT2.Rows.Count;
+                    int dt2count = ep.SecondTable.Rows.Count;
                     if (dt2count % sheetCount == 0)
                     {
                         page = dt2count / sheetCount;
@@ -203,13 +203,13 @@ namespace THOK.Common.NPOI.Service
                     for (int a = 0; a < page; a++)
                     {
                         int rowIndex2 = 0;
-                        DataTable newdt2 = THOK.Common.NPOI.Common.ExportExcelHelper.SetPage(ep.DT2, a + 1, sheetCount);
+                        DataTable newdt2 = THOK.Common.NPOI.Common.ExportExcelHelper.SetPage(ep.SecondTable, a + 1, sheetCount);
                         string strA = a.ToString();
                         if (a == 0)
                         {
                             strA = strA.Substring(0, a.ToString().Length - 1);
                         }
-                        string headText2strA = ep.HeadTitle2 + strA;
+                        string headText2strA = ep.SecondHeadTitle + strA;
 
                         #region 填充数据
                         foreach (DataRow row in newdt2.Rows)
@@ -227,7 +227,7 @@ namespace THOK.Common.NPOI.Service
                                 {
                                     headerRow = sheet.CreateRow(0) as HSSFRow;
                                     headerRow.HeightInPoints = Convert.ToInt16(ep.BigHeadSize * 1.4);
-                                    headerRow.CreateCell(0).SetCellValue(ep.HeadTitle2);
+                                    headerRow.CreateCell(0).SetCellValue(ep.SecondHeadTitle);
                                     headerRow.GetCell(0).CellStyle = headStyle;
                                     CellRangeAddress region = new CellRangeAddress(0, 0, 0, newdt2.Columns.Count - 1);
                                     sheet.AddMergedRegion(region);

@@ -10,7 +10,7 @@ using THOK.Common.NPOI.Service;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
 
-namespace Wms.Controllers.WMS.StockBillType
+namespace Wms.Controllers.WMS.StockBill
 {
     public class StockBillTypeController : Controller
     {
@@ -72,8 +72,8 @@ namespace Wms.Controllers.WMS.StockBillType
             string billClass = Request.QueryString["billClass"] ?? "";
             string isActive = Request.QueryString["isActive"] ?? "";
             ExportParam ep = new ExportParam();
-            ep.DT1 = BillTypeService.BillTypeTable(page, rows, billClass, isActive);
-            ep.HeadTitle1 = "订单类型";
+            ep.FirstTable = BillTypeService.BillTypeTable(page, rows, billClass, isActive);
+            ep.FirstHeadTitle = "订单类型";
             return PrintService.Print(ep);
         }
     }

@@ -83,8 +83,8 @@ namespace Wms.Controllers.SMS.SupplyManage
             supplyTask.Status = status;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = SupplyTaskServer.GetSupplyTask(page, rows, supplyTask);
-            ep.HeadTitle1 = "分拣补货查询";
+            ep.FirstTable = SupplyTaskServer.GetSupplyTask(page, rows, supplyTask);
+            ep.FirstHeadTitle = "分拣补货查询";
             return PrintService.Print(ep);
         }
         #endregion

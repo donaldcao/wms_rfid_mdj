@@ -124,8 +124,8 @@ namespace Authority.Controllers.Organization
             string isActive = Request.QueryString["isActive"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = EmployeeService.GetEmployee(page, rows, employeeCode, employeeName, departmentId, jobId, status, isActive);
-            ep.HeadTitle1 = "员工信息";
+            ep.FirstTable = EmployeeService.GetEmployee(page, rows, employeeCode, employeeName, departmentId, jobId, status, isActive);
+            ep.FirstHeadTitle = "员工信息";
             return PrintService.Print(ep);
         } 
         #endregion

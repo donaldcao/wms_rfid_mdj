@@ -53,8 +53,8 @@ namespace Wms.Controllers.SMS.ComplexSearch
             string text = "分拣烟道";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode, text);
-            ep.HeadTitle1 = "分拣烟道查询";
+            ep.FirstTable = ChannelAllotServer.GetChannelAllot(page, rows, orderDate, batchNo, sortingLineCode, productCode, text);
+            ep.FirstHeadTitle = "分拣烟道查询";
             return PrintService.Print(ep);
         }
     }

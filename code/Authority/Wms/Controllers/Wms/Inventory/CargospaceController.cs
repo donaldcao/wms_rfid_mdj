@@ -60,8 +60,8 @@ namespace Authority.Controllers.Wms.Inventory
             string id = Request.QueryString["id"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = CargospaceService.GetCargospace(page, rows, type, id);
-            ep.HeadTitle1 = "货位库存查询";
+            ep.FirstTable = CargospaceService.GetCargospace(page, rows, type, id);
+            ep.FirstHeadTitle = "货位库存查询";
             return PrintService.Print(ep);
         }
         #endregion

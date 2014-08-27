@@ -137,8 +137,8 @@ namespace Wms.Controllers.WCS
             if (allotID != null && allotID != "")
                 task.AllotID = Convert.ToInt32(allotID);
             THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
-            ep.DT1 = TaskService.DetailsTable(page, rows, task);
-            ep.HeadTitle1 = "任务作业";
+            ep.FirstTable = TaskService.DetailsTable(page, rows, task);
+            ep.FirstHeadTitle = "任务作业";
             return THOK.Common.NPOI.Service.PrintService.Print(ep);
         }
     }

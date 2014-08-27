@@ -23,16 +23,6 @@ namespace THOK.Wms.Bll.Service
             get { return this.GetType(); }
         }
 
-
-        #region ICustomerService 成员
-
-
-
-        #endregion
-
-        #region ICustomerService 成员
-
-
         public object GetDetails(int page, int rows, string CustomerCode, string CustomerName, string CompanyCode, string SaleRegionCode, string CustomerType, string CityOrCountryside, string LicenseCode, string IsActive)
         {
             var customerQuery = CustomerRepository.GetQueryable();
@@ -86,11 +76,6 @@ namespace THOK.Wms.Bll.Service
             return new { total, rows = temp.ToArray() };
         }
 
-        #endregion
-
-        #region ICustomerService 成员
-
-
         public bool Add(Customer customer, out string strResult)
         {
             strResult = string.Empty;
@@ -142,11 +127,6 @@ namespace THOK.Wms.Bll.Service
             return result;
         }
 
-        #endregion
-
-        #region ICustomerService 成员
-
-
         public object C_Details(int page, int rows, string QueryString, string Value)
         {
             string CustomerCode = "";
@@ -172,7 +152,6 @@ namespace THOK.Wms.Bll.Service
 
             var temp = customer.ToArray().Select(c => new
             {
-
                 CustomerCode = c.CustomerCode,
                 CustomCode = c.CustomCode,
                 CustomerName = c.CustomerName,
@@ -181,10 +160,6 @@ namespace THOK.Wms.Bll.Service
             });
             return new { total, rows = temp.ToArray() };
         }
-
-        #endregion
-
-        #region ICustomerService 成员
 
         public bool Delete(string CustomerCode)
         {
@@ -199,11 +174,6 @@ namespace THOK.Wms.Bll.Service
                 return false;
             return true;
         }
-
-        #endregion
-
-        #region ICustomerService 成员
-
 
         public bool Save(Customer customer, out string strResult)
         {
@@ -250,9 +220,6 @@ namespace THOK.Wms.Bll.Service
             return true;
         }
 
-        #endregion
-
-        #region 插入数据到虚拟表
         public DataSet Insert(Customer customer)
         {
             DataSet ds = this.GenerateEmptyTables();
@@ -286,9 +253,7 @@ namespace THOK.Wms.Bll.Service
             ds.Tables["DWV_IORG_CUSTOMER"].Rows.Add(inbrddr);
             return ds;
         }
-        #endregion
 
-        #region 创建一个空的客户信息表
         private DataSet GenerateEmptyTables()
         {
             DataSet ds = new DataSet();
@@ -321,42 +286,37 @@ namespace THOK.Wms.Bll.Service
             inbrtable.Columns.Add("update_time");
             return ds;
         }
-        #endregion
 
-
-        #region
-        //分拣系统客户信息打印模块
-        public System.Data.DataTable GetCustomerInfo(int page, int rows, string CustomerCode, string CustomerName, string DeliverLineCode)
+        public System.Data.DataTable CustomerTable(int page, int rows, string customerCode, string customerName, string deliverLineCode)
         {
+            IQueryable<Customer> query = CustomerRepository.GetQueryable();
+            IQueryable <DeliverLine> deliverQuery = DeliverLineRepository.GetQueryable();
 
-            var customerQuery = CustomerRepository.GetQueryable();
-            var deliverQuery = DeliverLineRepository.GetQueryable();
-
-            var customer = customerQuery.OrderBy(a => a.CustomerCode).Select(a => a);
-
-            if (DeliverLineCode!=string.Empty&&DeliverLineCode!="") {
-                customer = customer.Where(a => a.DeliverLineCode==DeliverLineCode);            
-            }
-            if (CustomerName != string.Empty && CustomerName != "")
+            IQueryable<Customer> query1 = query;
+            if (!string.IsNullOrEmpty(customerName))
             {
-                customer = customer.Where(a => a.CustomerName.Contains(CustomerName));
+                query1 = query.Where(a => a.CustomerName.Contains(customerName));
             }
-            if (CustomerCode != string.Empty && CustomerCode != "")
+            IQueryable<Customer> query2 = query1;
+            if (!string.IsNullOrEmpty(customerCode))
             {
-                customer = customer.Where(a => a.CustomerCode.Contains(CustomerCode));
+                query2 = query1.Where(a => a.CustomerCode.Contains(customerCode));
             }
-
-            var customerinfo = customer.ToArray().Select(c => new
+            IQueryable<Customer> query3 = query2;
+            if (!string.IsNullOrEmpty(deliverLineCode))
             {
-                c.CustomerCode,
-                c.CustomerName,
-                c.DeliverLineCode,
-                DeliverLineName = deliverQuery.FirstOrDefault(a => a.DeliverLineCode == c.DeliverLineCode).DeliverLineName,
-                c.DeliverOrder,
-                c.Address,
-                IsActive = c.IsActive == "1" ? "可用" : "不可用",
-                c.UpdateTime
-
+                query3 = query2.Where(a => a.DeliverLineCode == deliverLineCode);
+            }
+            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.DeliverLineCode, (a, b) => new
+            {
+                a.CustomerCode,
+                a.CustomerName,
+                a.DeliverLineCode,
+                a.DeliverOrder,
+                a.Address,
+                a.IsActive,
+                a.UpdateTime,
+                b.DeliverLineName
             });
             System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("客户编码", typeof(string));
@@ -367,60 +327,62 @@ namespace THOK.Wms.Bll.Service
             dt.Columns.Add("送货地址", typeof(string));
             dt.Columns.Add("是否可用", typeof(string));
             dt.Columns.Add("更新时间", typeof(string));
-
-            foreach (var item in customerinfo)
+            foreach (var a in v1)
             {
-                dt.Rows.Add(
-                item.CustomerCode,
-                item.CustomerName,
-                item.DeliverLineCode,
-                item.DeliverLineName,
-                item.DeliverOrder,
-                item.Address,
-                item.IsActive,
-                item.UpdateTime);
+                dt.Rows.Add
+                (
+                    a.CustomerCode,
+                    a.CustomerName,
+                    a.DeliverLineCode,
+                    a.DeliverOrder,
+                    a.Address,
+                    a.IsActive,
+                    a.UpdateTime,
+                    a.DeliverLineName
+                );
             }
             return dt;
         }
 
-
-        #endregion
-
-
         //分拣查询客户信息
         public object GetDetails(int page, int rows, string customerCode, string customerName, string deliverLineCode)
         {
-            var customerQuery = CustomerRepository.GetQueryable();
-            var deliverLineQuery = DeliverLineRepository.GetQueryable();
-           
-            if (customerCode != "")
-            {
-                customerQuery = customerQuery.Where(c => c.CustomCode.Contains(customerCode));
-            }
-            if (customerName != "")
-            {
-                customerQuery = customerQuery.Where(c => c.CustomerName.Contains(customerName));
-            }
-            if (deliverLineCode != "")
-            {
-                customerQuery = customerQuery.Where(c => c.DeliverLineCode == deliverLineCode);
-            }
-            var customer = customerQuery.Select(c => new
-            {
-                c.CustomerCode,
-                c.CustomerName,
-                c.DeliverOrder,
-                c.DeliverLineCode,
-                DeliverLineName = deliverLineQuery.FirstOrDefault(a=>a.DeliverLineCode==c.DeliverLineCode).DeliverLineName,
-                c.Address,
-                c.IsActive,
-                c.UpdateTime
-            });
-            customer = customer.OrderBy(c => c.CustomerCode);
-            int total = customer.Count();
-            customer = customer.Skip((page - 1) * rows).Take(rows);
+            IQueryable<Customer> query = CustomerRepository.GetQueryable();
+            IQueryable<DeliverLine> deliverQuery = DeliverLineRepository.GetQueryable();
 
-            var customerArray = customer.ToArray().Select(c => new
+            IQueryable<Customer> query1 = query;
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                query1 = query.Where(a => a.CustomerName.Contains(customerName));
+            }
+            IQueryable<Customer> query2 = query1;
+            if (!string.IsNullOrEmpty(customerCode))
+            {
+                query2 = query1.Where(a => a.CustomerCode.Contains(customerCode));
+            }
+            IQueryable<Customer> query3 = query2;
+            if (!string.IsNullOrEmpty(deliverLineCode))
+            {
+                query3 = query2.Where(a => a.DeliverLineCode == deliverLineCode);
+            }
+            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.DeliverLineCode, (a, b) => new
+            {
+                a.CustomerCode,
+                a.CustomerName,
+                a.DeliverLineCode,
+                a.DeliverOrder,
+                a.Address,
+                a.IsActive,
+                a.UpdateTime,
+                b.DeliverLineName
+            })
+            .OrderBy(a => a.CustomerCode)
+            .Select(a => a);
+
+            int total = v1.Count();
+            v1 = v1.Skip((page - 1) * rows).Take(rows);
+
+            var customerArray = v1.ToArray().Select(c => new
             {
                 c.CustomerCode,
                 c.CustomerName,

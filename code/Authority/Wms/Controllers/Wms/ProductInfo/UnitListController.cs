@@ -109,8 +109,8 @@ namespace Authority.Controllers.Wms.ProductInfo
             unitlist.IsActive = isActive;
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = UnitListService.GetUnitList(page, rows, unitlist);
-            ep.HeadTitle1 = "单位系列";
+            ep.FirstTable = UnitListService.GetUnitList(page, rows, unitlist);
+            ep.FirstHeadTitle = "单位系列";
             return PrintService.Print(ep);
         }
         #endregion

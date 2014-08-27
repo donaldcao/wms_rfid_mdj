@@ -85,17 +85,18 @@ namespace THOK.Wms.Bll.Service
         
         public System.Data.DataTable BillTypeTable(int page, int rows, string billClass, string isActive)
         {
-            IQueryable<BillType> billtypeQuery = BillTypeRepository.GetQueryable();
-            var billtype = billtypeQuery.Where(b => b.BillClass == billClass
-                && b.IsActive.Contains(isActive))
-                .OrderBy(b => b.BillTypeCode).AsEnumerable()
-                .Select(b => new { 
-                    b.BillTypeCode, 
-                    b.BillTypeName, 
-                    b.BillClass, 
-                    b.Description, 
-                    IsActive = b.IsActive == "1" ? "可用" : "禁用", 
-                    UpdateTime = b.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") 
+            IQueryable<BillType> query = BillTypeRepository.GetQueryable();
+            var v1 = query.Where(a => a.BillClass.Contains(billClass)
+                && a.IsActive.Contains(isActive))
+                .OrderBy(a => a.BillTypeCode).AsEnumerable()
+                .Select(a => new
+                {
+                    a.BillTypeCode,
+                    a.BillTypeName,
+                    BillClass = a.BillClass == "0001" ? "入库单" : a.BillClass == "0002" ? "出库单" : a.BillClass == "0003" ? "移库单" : a.BillClass == "0004" ? "盘点单" : a.BillClass == "0005" ? "损益单" : a.BillClass == "0006" ? "分拣单" : "异常",
+                    a.Description,
+                    IsActive = a.IsActive == "1" ? "可用" : "禁用",
+                    UpdateTime = a.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss")
                 });
             System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("订单类型编码", typeof(string));
@@ -104,17 +105,17 @@ namespace THOK.Wms.Bll.Service
             dt.Columns.Add("描述", typeof(string));
             dt.Columns.Add("是否可用", typeof(string));
             dt.Columns.Add("更新时间", typeof(string));
-            foreach (var item in billtype)
+            foreach (var a in v1)
             {
                 dt.Rows.Add
-                    (
-                        item.BillTypeCode,
-                        item.BillTypeName,
-                        item.BillClass,
-                        item.Description,
-                        item.IsActive,
-                        item.UpdateTime
-                    );
+                (
+                    a.BillTypeCode,
+                    a.BillTypeName,
+                    a.BillClass,
+                    a.Description,
+                    a.IsActive,
+                    a.UpdateTime
+                );
             }
             return dt;
         }

@@ -104,8 +104,8 @@ namespace Wms.Controllers.Wms.DeliveryInfo
 
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = DeliverDistService.GetDeliverDistInfo(page, rows,DistCode,CustomCode,DistName,IsActive);
-            ep.HeadTitle1 = "区域信息";
+            ep.FirstTable = DeliverDistService.GetDeliverDistInfo(page, rows,DistCode,CustomCode,DistName,IsActive);
+            ep.FirstHeadTitle = "区域信息";
 
             return PrintService.Print(ep);
         }

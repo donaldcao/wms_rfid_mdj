@@ -77,8 +77,8 @@ namespace Authority.Controllers.Authority
             string functionName = Request.QueryString["functionName"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ExceptionalLogService.GetExceptionalLog(page, rows, catchTime, moduleName, functionName);
-            ep.HeadTitle1 = "错误日志信息";
+            ep.FirstTable = ExceptionalLogService.GetExceptionalLog(page, rows, catchTime, moduleName, functionName);
+            ep.FirstHeadTitle = "错误日志信息";
             return PrintService.Print(ep);
         } 
     }

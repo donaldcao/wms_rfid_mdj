@@ -89,8 +89,8 @@ namespace Wms.Controllers.SMS.BaseInfo
 
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ChannelService.GetChannel(page, rows, ProductCode, SortingLineCode, ChannelType, GroupNo, IsActive);
-            ep.HeadTitle1 = "烟道信息";
+            ep.FirstTable = ChannelService.GetChannel(page, rows, ProductCode, SortingLineCode, ChannelType, GroupNo, IsActive);
+            ep.FirstHeadTitle = "烟道信息";
             return PrintService.Print(ep);
         }
     }

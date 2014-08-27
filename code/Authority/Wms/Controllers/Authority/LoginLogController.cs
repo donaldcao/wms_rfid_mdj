@@ -95,8 +95,8 @@ namespace Authority.Controllers.Authority
             string logoutTime = Request.QueryString["logoutTime"];
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = LoginLogService.GetLoginLog(page, rows, loginPC, loginTime, logoutTime);
-            ep.HeadTitle1 = "登录日志信息";
+            ep.FirstTable = LoginLogService.GetLoginLog(page, rows, loginPC, loginTime, logoutTime);
+            ep.FirstHeadTitle = "登录日志信息";
             return PrintService.Print(ep);
         }  
     }

@@ -77,8 +77,8 @@ namespace Wms.Controllers.SMS.BaseInfo
             entity.ProductCode = Request.QueryString["productCode"];
             entity.ProductName = Request.QueryString["productName"];
             ExportParam ep = new ExportParam();
-            ep.DT1 = SupplyPositionStorageService.GetTable(page, rows, entity);
-            ep.HeadTitle1 = "拆盘位置库存";
+            ep.FirstTable = SupplyPositionStorageService.GetTable(page, rows, entity);
+            ep.FirstHeadTitle = "拆盘位置库存";
             return PrintService.Print(ep);
         }
     }

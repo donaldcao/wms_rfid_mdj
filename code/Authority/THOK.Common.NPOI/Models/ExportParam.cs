@@ -28,14 +28,14 @@ namespace THOK.Common.NPOI.Models
 
         #region Method
         /// <summary>First excel table sheet1's title</summary>
-        public string HeadTitle1 { get; set; }
-        /// <summary>First excel table sheet2's title</summary>
-        public string HeadTitle2 { get; set; }
+        public string FirstHeadTitle { get; set; }
+        /// <summary>Second excel table sheet2's title</summary>
+        public string SecondHeadTitle { get; set; }
 
         /// <summary>First DataTable</summary>
-        public System.Data.DataTable DT1 { get; set; }
+        public System.Data.DataTable FirstTable { get; set; }
         /// <summary>Second DataTable，if you do not give null</summary>
-        public System.Data.DataTable DT2 { get; set; }
+        public System.Data.DataTable SecondTable { get; set; }
 
         /// <summary>Big headline font</summary>
         public string BigHeadFont { get { return bigHeadFont; } set { bigHeadFont = value; } }

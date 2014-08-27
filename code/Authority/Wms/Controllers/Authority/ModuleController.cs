@@ -140,8 +140,8 @@ namespace Authority.Controllers.Authority
             }
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = ModuleService.GetModules(page, rows, module,systemIdIsNull);
-            ep.HeadTitle1 = "模块信息";
+            ep.FirstTable = ModuleService.GetModules(page, rows, module,systemIdIsNull);
+            ep.FirstHeadTitle = "模块信息";
             return PrintService.Print(ep);
         }  
     }

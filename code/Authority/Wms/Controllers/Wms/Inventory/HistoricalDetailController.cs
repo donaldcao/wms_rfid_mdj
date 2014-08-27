@@ -42,8 +42,8 @@ namespace Authority.Controllers.Wms.Inventory
             string endDate = Request.QueryString["endDate"] ?? "";
 
             ExportParam ep = new ExportParam();
-            ep.DT1 = HistoricalDetailService.GetHistoryDetail(page, rows, warehouseCode, productCode, beginDate, endDate);
-            ep.HeadTitle1 = "库存历史明细";
+            ep.FirstTable = HistoricalDetailService.GetHistoryDetail(page, rows, warehouseCode, productCode, beginDate, endDate);
+            ep.FirstHeadTitle = "库存历史明细";
             return PrintService.Print(ep);
         }
     }

@@ -650,7 +650,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 {
                     var packInfos = sortOrderAllotMasters.Where(s => s.OrderId == sortOrder.OrderID)
                                                    .OrderBy(s => s.PackNo)
-                                                   .Select(s => new PackInfo { Id = s.Id, PackNo = s.PackNo, Quantity = s.Quantity, SortOrderAllot = s })
+                                                   .Select(s => new PackageInfo { Id = s.Id, PackNo = s.PackNo, Quantity = s.Quantity, SortOrderAllot = s })
                                                    .ToArray();
 
                     var sortOrderDetailInfos = sortOrderDetails.Where(s => s.OrderID == sortOrder.OrderID && s.SortQuantity > 0)

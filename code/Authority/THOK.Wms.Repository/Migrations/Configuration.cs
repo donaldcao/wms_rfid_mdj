@@ -14,6 +14,8 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
+            Clear(context);
+
             #region 登录界面数据显示
             CreateCities(context);
             CreateServers(context);
@@ -3834,7 +3836,7 @@ namespace THOK.Wms.Repository.Migrations
                 new Module()
                 {
                     ModuleID = new Guid("EA86ECE1-BFE3-42CD-9071-A7131A9280FD"),
-                    ModuleName = "仓库作业管理",
+                    ModuleName = "手动作业管理",
                     ShowOrder = 11,
                     ModuleURL = "",
                     IndicateImage = "icon-son_Bill_Type",
@@ -4191,7 +4193,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF5-AD8A-4D50-8DB9-71D36EF77F90"),
-                        ModuleName = "作业任务管理",
+                        ModuleName = "自动作业管理",
                         ShowOrder = 12,
                         ModuleURL = "",
                         IndicateImage = "icon-Menu_Jurisdiction",
@@ -4203,7 +4205,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module
                     {
                         ModuleID = new Guid("145A95C4-C37D-48EE-96F1-6EDEAFE70A7E"),
-                        ModuleName = "任务管理",
+                        ModuleName = "作业任务管理",
                         ShowOrder = 20,
                         ModuleURL = "/TaskManage/",
                         IndicateImage = "icon-son_SortWork",
@@ -4215,7 +4217,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003311C7B1DC"),
-                        ModuleName = "堆垛机信息",
+                        ModuleName = "堆垛设备信息",
                         ShowOrder = 1,
                         ModuleURL = "/SRM/",
                         IndicateImage = "icon-son_SortWork",
@@ -4228,7 +4230,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003312C7B1DC"),
-                        ModuleName = "区域信息",
+                        ModuleName = "作业区域信息",
                         ShowOrder = 2,
                         ModuleURL = "/Region/",
                         IndicateImage = "icon-son_SortWork",
@@ -4240,7 +4242,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003313C7B1DC"),
-                        ModuleName = "位置信息",
+                        ModuleName = "作业位置信息",
                         ShowOrder = 3,
                         ModuleURL = "/Position/",
                         IndicateImage = "icon-son_SortWork",
@@ -4252,7 +4254,7 @@ namespace THOK.Wms.Repository.Migrations
                     new Module()
                     {
                         ModuleID = new Guid("ED0E6EF0-AC3C-4F58-91A7-003314C7B1DC"),
-                        ModuleName = "路径信息",
+                        ModuleName = "作业路径信息",
                         ShowOrder = 4,
                         ModuleURL = "/Path/",
                         IndicateImage = "icon-son_SortWork",
@@ -4716,7 +4718,7 @@ namespace THOK.Wms.Repository.Migrations
 
         private void CreateSystemParameter(AuthorizeContext context)
         {
-            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("ED0E6EF0-9DEB-4CDE-8DCF-702D5B666AA8"));
+            SystemInfo system = context.Set<SystemInfo>().SingleOrDefault(s => s.SystemID == new Guid("E8344F88-08AD-4F9A-8F45-EAD8BB471104"));
             context.Set<Module>().AddOrUpdate(
                     new Module()
                     {

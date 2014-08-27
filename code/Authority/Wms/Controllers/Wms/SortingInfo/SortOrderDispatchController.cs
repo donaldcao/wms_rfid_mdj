@@ -134,9 +134,10 @@ namespace Wms.Controllers.Wms.SortingInfo
         // POST: /SortOrderDispatch/Edit/
         public ActionResult Edit(string id, string SortingLineCode)
         {
-            bool bResult = SortOrderDispatchService.Edit(id, SortingLineCode);
-            string msg = bResult ? "修改成功" : "修改失败";
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+            string errorInfo = string.Empty;
+            bool bResult = SortOrderDispatchService.Edit(id, SortingLineCode, out errorInfo);
+            string msg = errorInfo;
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, ""), "text", JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -146,7 +147,7 @@ namespace Wms.Controllers.Wms.SortingInfo
             string errorInfo = string.Empty;
             bool bResult = SortOrderDispatchService.Delete(id, out errorInfo);
             string msg = errorInfo;
-            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, null), "text", JsonRequestBehavior.AllowGet);
+            return Json(JsonMessageHelper.getJsonMessage(bResult, msg, ""), "text", JsonRequestBehavior.AllowGet);
         }
 
         #region /SortOrderDispatch/CreateExcelToClient/

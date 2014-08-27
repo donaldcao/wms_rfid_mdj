@@ -164,7 +164,7 @@ namespace THOK.Wms.Bll.Service
             {
                 if (sortOrderDispatch.SortStatus == "1")
                 {
-                    if (sortOrderDispatch != null && sortOrderDispatch.SortBatchAbnormalId == 0 && sortOrderDispatch.SortBatchManualId == 0 && sortOrderDispatch.SortBatchPiecesId == 0)
+                    if (sortOrderDispatch.SortBatchId == 0 && sortOrderDispatch.SortBatchAbnormalId == 0 && sortOrderDispatch.SortBatchManualId == 0 && sortOrderDispatch.SortBatchPiecesId == 0)
                     {
                         SortOrderDispatchRepository.Delete(sortOrderDispatch);
                         SortOrderDispatchRepository.SaveChanges();
@@ -203,21 +203,28 @@ namespace THOK.Wms.Bll.Service
             SortOrderDispatchRepository.SaveChanges();
             return true;
         }
-        public bool Edit(string id, string SortingLineCode)
+        public bool Edit(string id, string SortingLineCode, out string errorInfo)
         {
             int Id = int.Parse(id);
             var sortOrderDispatch = SortOrderDispatchRepository.GetQueryable().FirstOrDefault(s => s.ID == Id);
-            if (sortOrderDispatch.WorkStatus != "1" && sortOrderDispatch.SortStatus != "1")
+            if (sortOrderDispatch.WorkStatus != "1" || sortOrderDispatch.SortStatus != "1")
+            {
+                errorInfo = "修改失败，该线路已分拣或已作业！";
+                return false;
+            }
+            else if (sortOrderDispatch.SortBatchId != 0)
+            {
+                errorInfo = "修改失败，该线路已被正常分拣线调度！";
+                return false;
+            }
+            else
             {
                 sortOrderDispatch.SortingLineCode = SortingLineCode;
                 sortOrderDispatch.UpdateTime = DateTime.Now;
 
                 SortOrderDispatchRepository.SaveChanges();
+                errorInfo = "修改成功";
                 return true;
-            }
-            else
-            {
-                return false;
             }
         }
         public object GetWorkStatus()

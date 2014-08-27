@@ -30,6 +30,8 @@ namespace THOK.Wms.Allot.Interfaces
 
         bool EditAllot(string id, string status, string operater, out string strResult);
 
+        System.Data.DataTable InBillAllotTable(string billNo, int page, int rows);
+
         object GetInBillMaster();
     }
 }

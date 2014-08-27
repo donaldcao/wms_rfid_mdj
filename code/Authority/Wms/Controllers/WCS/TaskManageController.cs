@@ -25,8 +25,8 @@ namespace Wms.Controllers.WCS
             ViewBag.hasAdd = true;
             ViewBag.hasEdit = true;
             ViewBag.hasDelete = true;
-            //ViewBag.hasPrint = true;
-            //ViewBag.hasHelp = true;
+            ViewBag.hasPrint = true;
+            ViewBag.hasHelp = true;
             ViewBag.hasEmpty = true;
             ViewBag.ModuleID = moduleID;
             return View();
@@ -100,6 +100,46 @@ namespace Wms.Controllers.WCS
             bool bResult = TaskService.ClearTask(out errorInfo);
             string msg = bResult ? "清空成功" : "清空失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, errorInfo), "text", JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /TaskManage/CreateExcelToClient/
+        public FileStreamResult CreateExcelToClient()
+        {
+            int page = 0, rows = 0;
+            Task task = new Task();
+            task.TaskType = Request.QueryString["taskType"] ?? "";
+            task.ProductCode = Request.QueryString["productCode"] ?? "";
+            task.ProductName = Request.QueryString["productName"] ?? "";
+            task.OriginCellCode = Request.QueryString["originCellCode"] ?? "";
+            task.TargetCellCode = Request.QueryString["targetCellCode"] ?? "";
+            task.CurrentPositionState = Request.QueryString["currentPositionState"] ?? "";
+            task.State = Request.QueryString["state"] ?? "";
+            task.TagState = Request.QueryString["tagState"] ?? "";
+            task.OrderID = Request.QueryString["orderID"] ?? "";
+            task.OrderType = Request.QueryString["orderType"] ?? "";
+            task.DownloadState = Request.QueryString["downloadState"] ?? "";
+            string id = Request.QueryString["id"] ?? "";
+            string pathID = Request.QueryString["pathId"] ?? "";
+            string originPositionID = Request.QueryString["originPositionId"] ?? "";
+            string targetPositionID = Request.QueryString["targetPositionId"] ?? "";
+            string currentPositionID = Request.QueryString["currentPositionId"] ?? "";
+            string allotID = Request.QueryString["allotId"] ?? "";
+            if (id != null && id != "")
+                task.ID = Convert.ToInt32(id);
+            if (pathID != null && pathID != "") 
+                task.PathID = Convert.ToInt32(pathID);
+            if (originPositionID != null && originPositionID != "") 
+                task.OriginPositionID = Convert.ToInt32(originPositionID);
+            if (targetPositionID != null && targetPositionID != "") 
+                task.TargetPositionID = Convert.ToInt32(targetPositionID);
+            if (currentPositionID != null && currentPositionID != "") 
+                task.CurrentPositionID = Convert.ToInt32(currentPositionID);
+            if (allotID != null && allotID != "")
+                task.AllotID = Convert.ToInt32(allotID);
+            THOK.Common.NPOI.Models.ExportParam ep = new THOK.Common.NPOI.Models.ExportParam();
+            ep.DT1 = TaskService.DetailsTable(page, rows, task);
+            ep.HeadTitle1 = "任务作业";
+            return THOK.Common.NPOI.Service.PrintService.Print(ep);
         }
     }
 }

@@ -85,7 +85,7 @@
     <Compile Include="Optimize\Interfaces\IOptimizeService.cs" />
     <Compile Include="Optimize\Model\ChannelAllotInfo.cs" />
     <Compile Include="Optimize\Model\ChannelGroupInfo.cs" />
-    <Compile Include="Optimize\Model\PackInfo.cs" />
+    <Compile Include="Optimize\Model\PackageInfo.cs" />
     <Compile Include="Optimize\Model\SortOrderDetailInfo.cs" />
     <Compile Include="Optimize\Service\OptimizeSortOrderService.cs" />
     <Compile Include="Optimize\Service\OptimizeService.cs" />

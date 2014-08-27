@@ -1,5 +1,44 @@
-﻿@{
-    ViewBag.Title = "_PrintPartial";
-}
-
-<h2>_PrintPartial</h2>
+﻿<script type="text/javascript">
+    function printClick() {
+        var taskType = null, productCode = null, productName = null, originCellCode = null
+        , targetCellCode = null, currentPositionState = null, state = null, tagState = null, orderID = null
+        , orderType = null, downloadState = null, id = null, pathId = null, originPositionId = null
+        , targetPositionId = null, currentPositionId = null, allotId = null;
+        if (document.getElementById('taskType1') == null) { taskType = ""; } else { taskType = $('#taskType1').combo('getValue'); }
+        if ($('#taskType1').val() == null) { taskType = ""; } else { taskType = $('#taskType1').val() }
+        if ($('#productCode1').val() == null) { productCode = ""; } else { productCode = $('#productCode1').val() }
+        if ($('#productName1').val() == null) { productName = ""; } else { productName = $('#productName1').val() }
+        if ($('#originCellCode1').val() == null) { originCellCode = ""; } else { originCellCode = $('#originCellCode1').val() }
+        if ($('#targetCellCode1').val() == null) { targetCellCode = ""; } else { targetCellCode = $('#targetCellCode1').val() }
+        if ($('#currentPositionState1').val() == null) { currentPositionState = ""; } else { currentPositionState = $('#currentPositionState1').val() }
+        if (document.getElementById('state1') == null) { state = ""; } else { state = $('#state1').combo('getValue'); }
+        if (document.getElementById('tagState1') == null) { tagState = ""; } else { tagState = $('#tagState1').combo('getValue'); }
+        if ($('#orderID1').val() == null) { orderID = ""; } else { orderID = $('#orderID1').val() }
+        if (document.getElementById('orderType1') == null) { orderType = ""; } else { orderType = $('#orderType1').combo('getValue'); }
+        if (document.getElementById('downloadState1') == null) { downloadState = ""; } else { downloadState = $('#downloadState1').combo('getValue'); }
+        if ($('#id1').val() == null) { id = ""; } else { id = $('#id1').val() }
+        if ($('#pathId1').val() == null) { pathId = ""; } else { pathId = $('#pathId1').val() }
+        if ($('#originPositionId1').val() == null) { originPositionId = ""; } else { originPositionId = $('#originPositionId1').val() }
+        if ($('#targetPositionId1').val() == null) { targetPositionId = ""; } else { targetPositionId = $('#targetPositionId1').val() }
+        if ($('#currentPositionId1').val() == null) { currentPositionId = ""; } else { currentPositionId = $('#currentPositionId1').val() }
+        if ($('#allotId1').val() == null) { allotId = ""; } else { allotId = $('#allotId1').val() }
+        window.location.href = "/TaskManage/CreateExcelToClient/"
+        + "?taskType=" + taskType
+        + "&productCode=" + productCode
+        + "&productName" + productName
+        + "&originCellCode" + originCellCode
+        + "&targetCellCode" + targetCellCode
+        + "&currentPositionState" + currentPositionState
+        + "&state" + state
+        + "&tagState" + tagState
+        + "&orderID" + orderID
+        + "&orderType" + orderType
+        + "&downloadState" + downloadState
+        + "&id" + id
+        + "&pathId" + pathId
+        + "&originPositionId" + originPositionId
+        + "&targetPositionId" + targetPositionId
+        + "&currentPositionId" + currentPositionId
+        + "&allotId" + allotId;
+    }
+</script>

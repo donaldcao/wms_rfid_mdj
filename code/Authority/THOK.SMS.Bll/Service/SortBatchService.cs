@@ -468,7 +468,6 @@ namespace THOK.SMS.Bll.Service
                                    .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchAbnormalId }).FirstOrDefault(s => s.SortBatchAbnormalId.Equals(a.Id)).quantity
                                 }).OrderBy(a => a.quantity).ToArray();
                             sortOrderDispatch.SortBatchAbnormalId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
-                            SortOrderDispatchRepository.SaveChanges();
                         }
                         //整件分拣线
                         if (productType == "3" || productType == "0")
@@ -488,7 +487,6 @@ namespace THOK.SMS.Bll.Service
                                          .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchPiecesId }).FirstOrDefault(s => s.SortBatchPiecesId.Equals(a.Id)).quantity
                                   }).OrderBy(a => a.quantity).ToArray();
                             sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
-                            SortOrderDispatchRepository.SaveChanges();
                         }
                         //手工分拣线
                         if (productType == "4" || productType == "0")
@@ -508,15 +506,15 @@ namespace THOK.SMS.Bll.Service
                                       .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchManualId }).FirstOrDefault(s => s.SortBatchManualId.Equals(a.Id)).quantity
                                }).OrderBy(a => a.quantity).ToArray();
                             sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault()==null ? 0 : sortingLineCode.FirstOrDefault().Id;
-                            SortOrderDispatchRepository.SaveChanges();
                         }
+                        SortOrderDispatchRepository.SaveChanges();
                     }
                     foreach (var sortingLineCode in sortingLineQuery.Where(a => a.ProductType.Equals("1")).Select(a => a.SortingLineCode))
                     {
                         var sortOrderDispatchDetail = sortOrderDispatchQuery.Where(a => a.OrderDate.Equals(orderDate) && a.SortStatus.Equals("1") && a.SortingLineCode.Equals(sortingLineCode) && a.SortBatchId > 0)
                             .Join(deliverLineQuery, dis => dis.DeliverLineCode, line => line.DeliverLineCode,
-                            (dis, line) => new { dis.ID, DeliverLineOrder = line.DeliverOrder, line.DistCode })
-                            .Join(deliverDistQuery, a => a.DistCode, dist => dist.DistCode,
+                            (dis, line) => new { dis.ID, DeliverLineOrder = line.DeliverOrder, line.NewDeliverLineCode })
+                            .Join(deliverDistQuery, a => a.NewDeliverLineCode, dist => dist.DistCode,
                             (a, dist) => new { a.ID, a.DeliverLineOrder, DeliverDistOrder = dist.DeliverOrder })
                             .OrderBy(a => new { a.DeliverDistOrder, a.DeliverLineOrder })
                             .Select(a => new { a.ID, a.DeliverLineOrder, a.DeliverDistOrder }).ToArray();

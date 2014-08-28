@@ -75,11 +75,11 @@ namespace Authority.Controllers.Wms.StockBill
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AllotAdds(string billNo, long id, string storageCode, string productname)
+        public ActionResult AllotAdds(string billNo, long id, string storageCode, string productCode)
         {
             string strResult = string.Empty;
             decimal allotQuantity = 0;
-            bool bResult = InBillAllotService.AllotAdd(billNo, id, storageCode, productname, out strResult, out allotQuantity);
+            bool bResult = InBillAllotService.AllotAdd(billNo, id, storageCode, productCode, out strResult, out allotQuantity);
             string msg = bResult ? "" : "添加分配失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult, allotQuantity), "text", JsonRequestBehavior.AllowGet);
         }

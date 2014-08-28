@@ -472,7 +472,7 @@ namespace THOK.Wms.Allot.Service
 
         #region 手动分配入库单
 
-        public bool AllotAdd(string billNo, long id, string storageCode, string productname, out string strResult, out decimal allotQuantity)
+        public bool AllotAdd(string billNo, long id, string storageCode, string productCode, out string strResult, out decimal allotQuantity)
         {
             allotQuantity = 0;
 
@@ -503,9 +503,15 @@ namespace THOK.Wms.Allot.Service
                         return false;
                     }   
 
-                    if (cell.IsMultiBrand != "1" && cell.Storages.Any(s => s.Quantity > 0 && s.ProductCode != productname))
+                    if (cell.IsMultiBrand != "1" && cell.Storages.Any(s => s.Quantity + s.InFrozenQuantity > 0 && s.ProductCode != productCode))
                     {
                         strResult = "该货位是单一品牌货位，已存在其他产品，不能放入该产品！";
+                        return false;
+                    }
+
+                    if (storage.ProductCode != productCode && storage.Quantity + storage.InFrozenQuantity > 0)
+                    {
+                        strResult = "已存在其他产品，不能放入该产品！";
                         return false;
                     }
 

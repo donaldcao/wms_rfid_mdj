@@ -136,9 +136,9 @@ namespace THOK.WMS.DownloadWms.Bll
                 inbrddr["pack_type_code"] = "";
                 inbrddr["price_level_code"] = "";
                 inbrddr["statistic_type"] = "";
-                inbrddr["piece_barcode"] = row["BARCODE_PIECE"];
-                inbrddr["bar_barcode"] = row["BARCODE_BAR"];
-                inbrddr["package_barcode"] = row["BARCODE_PACKAGE"];
+                inbrddr["piece_barcode"] = row["BARCODE_PIECE"].ToString().Length == 13 ? row["BARCODE_PIECE"] : 0;
+                inbrddr["bar_barcode"] = row["BARCODE_BAR"].ToString().Length == 13 ? row["BARCODE_BAR"] : 0;
+                inbrddr["package_barcode"] = row["BARCODE_PACKAGE"].ToString().Length == 13 ? row["BARCODE_PACKAGE"] : 0;
                 inbrddr["one_project_barcode"] = row["BARCODE_ONE_PROJECT"];
                 inbrddr["buy_price"] = row["BUY_PRICE"];
                 inbrddr["trade_price"] = row["TRADE_PRICE"];

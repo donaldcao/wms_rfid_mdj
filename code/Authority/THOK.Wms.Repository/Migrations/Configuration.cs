@@ -4751,6 +4751,42 @@ namespace THOK.Wms.Repository.Migrations
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0300")
+                    },
+                     new Module()
+                    {
+                        ModuleID = new Guid("A705073F-3C39-4AED-BB8F-F131C38CBD80"),
+                        ModuleName = "…Ë±∏◊¥Ã¨≤È—Ø",
+                        ShowOrder = 5,
+                        ModuleURL = "",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("A705073F-3C39-4AED-BB8F-F131C38CBD80")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("F1A78070-8ACA-4B55-96E1-F0CB9EE55B41"),
+                        ModuleName = "‘À––◊¥Ã¨≤È—Ø",
+                        ShowOrder = 1,
+                        ModuleURL = "/SmsDeviceState/",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("A705073F-3C39-4AED-BB8F-F131C38CBD80")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("9F401A8E-91B3-4FB1-9492-E6375B44D3A5"),
+                        ModuleName = "π ’œ◊¥Ã¨≤È—Ø",
+                        ShowOrder = 2,
+                        ModuleURL = "/SmsDeviceFault/",
+                        IndicateImage = "icon-Menu_Organization",
+                        DeskTopImage = "image-Menu_Organization",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("A705073F-3C39-4AED-BB8F-F131C38CBD80")
                     }
             );
             context.SaveChanges();
@@ -5417,6 +5453,56 @@ namespace THOK.Wms.Repository.Migrations
                     ControlName = "help",
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("D8432F88-08AD-4FDA-8F45-EAD3B2AE0305")
+                },
+                //‘À––◊¥Ã¨≤È—Ø
+                new Function()
+                {
+                    FunctionID = new Guid("E756F081-CA3C-480F-BC7B-09EFD55FDE0E"),
+                    FunctionName = "≤È—Ø",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("F1A78070-8ACA-4B55-96E1-F0CB9EE55B41")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("6E028A8E-92AF-4701-9484-778ECB10B8D9"),
+                     FunctionName = "¥Ú”°",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("F1A78070-8ACA-4B55-96E1-F0CB9EE55B41")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("3A181837-B6AD-480A-B1BE-CD1C9C4E0DDF"),
+                    FunctionName = "∞Ô÷˙",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("F1A78070-8ACA-4B55-96E1-F0CB9EE55B41")
+                },
+                //π ’œ◊¥Ã¨≤È—Ø
+                new Function()
+                {
+                    FunctionID = new Guid("5D35936D-71F3-4877-ADBB-A6D40B37BDFB"),
+                    FunctionName = "≤È—Ø",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("9F401A8E-91B3-4FB1-9492-E6375B44D3A5")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("1ED6068B-96CD-4BF7-ACE0-790E70579412"),
+                     FunctionName = "¥Ú”°",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("9F401A8E-91B3-4FB1-9492-E6375B44D3A5")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("F322873B-994A-44E6-A79C-82C1AFF583AB"),
+                    FunctionName = "∞Ô÷˙",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("9F401A8E-91B3-4FB1-9492-E6375B44D3A5")
                 }
             );
            context.SaveChanges();

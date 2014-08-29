@@ -106,21 +106,19 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 2) + 22, "正在拆分" + "分拣订单", new Random().Next(1, 5));
                     OrderSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails);
 
-                    if (sortingLine.ProductType == "1" || sortingLine.ProductType == "3")
-                    {
-                        ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
-                        SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
-                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在优化" + "出烟分配", new Random().Next(1, 5));
-                        OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
+                    ChannelAllot[] channelAllots = ChannelAllotRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
+                    SortOrderAllotMaster[] sortOrderAllotMasters = SortOrderAllotMasterRepository.GetQueryable().Where(c => c.SortBatchId == sortBatchId).ToArray();
+                    StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 42, "正在优化" + "出烟分配", new Random().Next(1, 5));
+                    OrderDetailSplitOptimize(ConnectionId, ps, cancellationToken, sortBatchId, deliverLineCodes, sortOrders, sortOrderDetails, channelAllots, sortOrderAllotMasters);
 
-                        StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(10, 55));
-                        Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
-                        SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
-                                                                                                     .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType == "5")
-                                                                                                     .OrderBy(s => s.SortOrderAllotMaster.PackNo)
-                                                                                                     .ToArray();
-                        HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
-                    }
+                    StateTypeForProcessing(ps, "数据优化", new Random().Next(1, 5) + 90, "正在优化" + "手工补货", new Random().Next(10, 55));
+                    Channel[] mixChannels = channels.Where(c => c.ChannelType == "5").OrderBy(c => c.SortAddress).ToArray();
+                    SortOrderAllotDetail[] sortOrderAllotDetails = SortOrderAllotDetailRepository.GetQueryable()
+                                                                                                 .Where(c => c.SortOrderAllotMaster.SortBatchId == sortBatchId && c.Channel.ChannelType == "5")
+                                                                                                 .OrderBy(s => s.SortOrderAllotMaster.PackNo)
+                                                                                                 .ToArray();
+                    HandSupplyOptimize(ConnectionId, ps, cancellationToken, sortBatchId, sortOrderAllotDetails, mixChannels);
+
                     ps.Messages.Clear();
                     ps.Messages.Add("优化成功！");
                     sortBatch.Status = "02";

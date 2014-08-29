@@ -110,8 +110,8 @@ namespace Wms.Controllers.SMS.DeviceState
             string BeginTime = Request.QueryString["BeginTime"];
             string EndTime = Request.QueryString["EndTime"];
             string UseTime = Request.QueryString["UseTime"];
-            ep.DT1 = SmsDeviceStateServer.GetSmsDeviceState(page, rows, DeviceCode, DeviceType, StateCode, BeginTime, EndTime, UseTime);
-            ep.HeadTitle1 = "运行状态查询";
+            ep.FirstTable = SmsDeviceStateServer.GetSmsDeviceState(page, rows, DeviceCode, DeviceType, StateCode, BeginTime, EndTime, UseTime);
+            ep.FirstHeadTitle = "运行状态查询";
             return PrintService.Print(ep);
         }
 

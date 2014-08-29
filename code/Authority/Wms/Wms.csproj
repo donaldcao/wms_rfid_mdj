@@ -176,6 +176,7 @@
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\SortOrderAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\SortSupplyController .cs" />
+    <Compile Include="Controllers\SMS\DeviceStatus\SmsDeviceStateController.cs" />
     <Compile Include="Controllers\SMS\SortManage\BatchSortDispatchController.cs" />
     <Compile Include="Controllers\SMS\SortManage\SortTaskController.cs" />
     <Compile Include="Controllers\SMS\SupplyManage\SupplyTaskController .cs" />
@@ -1708,6 +1709,7 @@
     <Folder Include="Content\Scripts\ckfinder\userfiles\flash\" />
     <Folder Include="Content\Scripts\ckfinder\userfiles\images\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\SortingOrderOptimize\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THOK.Authority.Bll\THOK.Authority.Bll.csproj">
@@ -2516,6 +2518,9 @@
     <Content Include="Views\StockBillType\_DeletePartial.cshtml" />
     <Content Include="Views\StockBillType\_SearchPartial.cshtml" />
     <Content Include="Views\StockBillType\_PrintPartial.cshtml" />
+    <Content Include="Views\SmsDeviceState\Index.cshtml" />
+    <Content Include="Views\SmsDeviceState\_SearchPartial.cshtml" />
+    <Content Include="Views\SmsDeviceState\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

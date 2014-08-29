@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ISmsDeviceStateService.cs" />
     <Compile Include="Interfaces\ISortBatchService.cs" />
     <Compile Include="Interfaces\IChannelAllotService.cs" />
     <Compile Include="Interfaces\IChannelService.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Interfaces\ISupplyPositionStorageService.cs" />
     <Compile Include="Interfaces\ISortSupplyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\SmsDeviceStateService.cs" />
     <Compile Include="Service\SortBatchService.cs" />
     <Compile Include="Service\ChannelAllotService.cs" />
     <Compile Include="Service\ChannelService.cs" />

@@ -16,14 +16,15 @@
         createTable(treeNode.type, treeNode.id);
     }
     function productName(val, row) {
-        var s = '<div class="item" id="' + row.ID + '"><p style="color:red;">' + row.ProductName + '</p><p style="color:White;width:0px;height:0px">' + row.BillQuantity + '</p><p style="color:White;width:0px;height:0px">' + row.AllotQuantity + '</p><p style="color:White;width:0px;height:0px">' + row.UnitName + '</p></div>';
+        var s = '<div class="item" id="' + row.ID + '" productCode="' + row.ProductCode + '"><p style="color:red;">' + row.ProductName + '</p><p style="color:White;width:0px;height:0px">' + row.BillQuantity + '</p><p style="color:White;width:0px;height:0px">' + row.AllotQuantity + '</p><p style="color:White;width:0px;height:0px">' + row.UnitName + '</p></div>';
      return s;
  }
  var detailId;
- var productnames;
+ var productcode;
+ var productname;
  var allotQuantity;
  var row;
- var UnitName;
+ var unitName;
  $(function () {
      $('#inAllotBillDetail').datagrid('options').onLoadSuccess = function () {
          $('.item').draggable({
@@ -35,21 +36,20 @@
              },
              cursor: 'pointer',
              onStartDrag: function () {
-                 var id = $(this).attr('id');
-                 var ProductName = $(this).find('p:eq(0)').html();
-                 var BillQuantity = $(this).find('p:eq(1)').html();
-                 var AllotQuantity = $(this).find('p:eq(2)').html();
-                 UnitName = $(this).find('p:eq(3)').html();
-                 detailId = id;
-                 productnames = ProductName;
-                 allotQuantity = BillQuantity - AllotQuantity;
+                 detailId = $(this).attr('id');
+                 productcode = $(this).attr('productCode');
+                 productname = $(this).find('p:eq(0)').html();
+                 var billQuantity = $(this).find('p:eq(1)').html();
+                 var allotQuantity = $(this).find('p:eq(2)').html();
+                 unitName = $(this).find('p:eq(3)').html();
+                 allotQuantity = billQuantity - allotQuantity;
              }
          });
      }
      $.ajaxSender.send('/DefaultProductSet/CellCodeSet/',
                             {
-                            'productId': ''
-                        },
+                                'productId': ''
+                            },
                     function (data) {
                         $.fn.zTree.init($("#warehouseTree"), setting, data);
                     });
@@ -121,10 +121,10 @@
                                                                        billNo: billNo,
                                                                        id: detailId,
                                                                        storageCode: id,
-                                                                       productname: productnames
+                                                                       productCode: productcode
                                                                    },
                                                                    function (data) {
-                                                                       document.getElementById(id).innerHTML = cellname + '<br />' + productnames + '<br />' + data + UnitName;
+                                                                       document.getElementById(id).innerHTML = cellname + '<br />' + productname + '<br />' + data + unitName;
                                                                        document.getElementById(id).style.backgroundColor = "red";
                                                                    });
                  $('#inAllotBillDetail').datagrid('reload');

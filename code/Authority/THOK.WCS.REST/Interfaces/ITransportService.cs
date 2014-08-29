@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace THOK.SMS.REST.Interfaces
+namespace THOK.WCS.REST.Interfaces
 {
     public interface ITransportService
     {

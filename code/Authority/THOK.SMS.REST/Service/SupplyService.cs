@@ -1,6 +1,6 @@
-﻿using THOK.WCS.REST.Interfaces;
+﻿using THOK.SMS.REST.Interfaces;
 
-namespace THOK.WCS.REST.Service
+namespace THOK.SMS.REST.Service
 {
     public class SupplyService :ISupplyService
     {

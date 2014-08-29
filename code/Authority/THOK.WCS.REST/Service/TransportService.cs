@@ -1,6 +1,6 @@
-﻿using THOK.SMS.REST.Interfaces;
+﻿using THOK.WCS.REST.Interfaces;
 
-namespace THOK.SMS.REST.Service
+namespace THOK.WCS.REST.Service
 {
     public class TransportService :ITransportService
     {

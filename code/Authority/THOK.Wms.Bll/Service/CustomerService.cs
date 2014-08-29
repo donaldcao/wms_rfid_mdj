@@ -307,7 +307,7 @@ namespace THOK.Wms.Bll.Service
             {
                 query3 = query2.Where(a => a.DeliverLineCode == deliverLineCode);
             }
-            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.DeliverLineCode, (a, b) => new
+            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.NewDeliverLineCode, (a, b) => new
             {
                 a.CustomerCode,
                 a.CustomerName,
@@ -365,7 +365,7 @@ namespace THOK.Wms.Bll.Service
             {
                 query3 = query2.Where(a => a.DeliverLineCode == deliverLineCode);
             }
-            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.DeliverLineCode, (a, b) => new
+            var v1 = query3.Join(deliverQuery, a => a.DeliverLineCode, b => b.NewDeliverLineCode, (a, b) => new
             {
                 a.CustomerCode,
                 a.CustomerName,

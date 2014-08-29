@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace THOK.WCS.REST.Interfaces
+namespace THOK.SMS.REST.Interfaces
 {
     public interface ISupplyService
     {

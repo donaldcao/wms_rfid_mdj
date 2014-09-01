@@ -61,6 +61,7 @@
     <Compile Include="Mapping\SRMMap.cs" />
     <Compile Include="Mapping\TaskHistoryMap.cs" />
     <Compile Include="Mapping\TaskMap.cs" />
+    <Compile Include="Mapping\WcsDeviceStateMap.cs" />
     <Compile Include="Path.cs" />
     <Compile Include="PathNode.cs" />
     <Compile Include="Position.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="SRM.cs" />
     <Compile Include="Task.cs" />
     <Compile Include="TaskHistory.cs" />
+    <Compile Include="WcsDeviceState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -158,6 +158,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new SupplyPositionStorageMap());
             modelBuilder.Configurations.Add(new SupplyTaskMap());
             modelBuilder.Configurations.Add(new SmsDeviceStateMap());
+            modelBuilder.Configurations.Add(new SmsDeviceFaultMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

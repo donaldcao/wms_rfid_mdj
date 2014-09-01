@@ -53,6 +53,7 @@
     <Compile Include="ChannelAllot.cs" />
     <Compile Include="Mapping\ChannelAllotMap.cs" />
     <Compile Include="Mapping\ChannelMap.cs" />
+    <Compile Include="Mapping\SmsDeviceFaultMap.cs" />
     <Compile Include="Mapping\SmsDeviceStateMap.cs" />
     <Compile Include="Mapping\SortBatchMap.cs" />
     <Compile Include="Mapping\SortOrderAllotDetailMap.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Mapping\SupplyPositionStorageMap.cs" />
     <Compile Include="Mapping\SupplyTaskMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsDeviceFault.cs" />
     <Compile Include="SmsDeviceState.cs" />
     <Compile Include="SortBatch.cs" />
     <Compile Include="SortOrderAllotDetail.cs" />

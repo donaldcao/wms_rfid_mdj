@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityRepository\SmsDeviceFaultRepository.cs" />
     <Compile Include="EntityRepository\SmsDeviceStateRepository.cs" />
     <Compile Include="EntityRepository\SortBatchRepository.cs" />
     <Compile Include="EntityRepository\ChannelAllotRepository.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="EntityRepository\SupplyPositionRepository.cs" />
     <Compile Include="EntityRepository\SupplyPositionStorageRepository.cs" />
     <Compile Include="EntityRepository\SupplyTaskRepository.cs" />
+    <Compile Include="Interfaces\ISmsDeviceFaultRepository.cs" />
     <Compile Include="Interfaces\ISmsDeviceStateRepository.cs" />
     <Compile Include="Interfaces\ISortBatchRepository.cs" />
     <Compile Include="Interfaces\IChannelAllotRepository.cs" />

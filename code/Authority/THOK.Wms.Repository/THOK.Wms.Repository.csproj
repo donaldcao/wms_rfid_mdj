@@ -106,6 +106,14 @@
     <Compile Include="Migrations\201409010850349_add_wcs_device_state.Designer.cs">
       <DependentUpon>201409010850349_add_wcs_device_state.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201409010902233_add_wcs_device_fault.cs" />
+    <Compile Include="Migrations\201409010902233_add_wcs_device_fault.Designer.cs">
+      <DependentUpon>201409010902233_add_wcs_device_fault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201409010913337_add_sms_alarm_info.cs" />
+    <Compile Include="Migrations\201409010913337_add_sms_alarm_info.Designer.cs">
+      <DependentUpon>201409010913337_add_sms_alarm_info.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -184,6 +192,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201409010850349_add_wcs_device_state.resx">
       <DependentUpon>201409010850349_add_wcs_device_state.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409010902233_add_wcs_device_fault.resx">
+      <DependentUpon>201409010902233_add_wcs_device_fault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409010913337_add_sms_alarm_info.resx">
+      <DependentUpon>201409010913337_add_sms_alarm_info.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

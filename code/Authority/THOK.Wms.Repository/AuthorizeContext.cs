@@ -133,6 +133,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new TaskHistoryMap());
             modelBuilder.Configurations.Add(new AlarmInfoMap());
             modelBuilder.Configurations.Add(new WcsDeviceStateMap());
+            modelBuilder.Configurations.Add(new WcsDeviceFaultMap());
 
             #endregion
 
@@ -160,6 +161,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new SupplyTaskMap());
             modelBuilder.Configurations.Add(new SmsDeviceStateMap());
             modelBuilder.Configurations.Add(new SmsDeviceFaultMap());
+            modelBuilder.Configurations.Add(new SmsAlarmInfoMap());
             #endregion
 
             modelBuilder.Configurations.Add(new SystemParameterMap());

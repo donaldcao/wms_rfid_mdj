@@ -724,12 +724,18 @@ namespace THOK.SMS.Bll.Service
                     txtFile += ".Order";
 
                     CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
-                    CreateZipFile(NoOneProFilePath, txtFile, zipFile);
-                    SendZipFile(NoOneProIP, NoOneProPort, zipFile);
-                    sortBatch.Status = "03";
-                    SortBatchRepository.SaveChanges();
-                    DeleteFiles(NoOneProFilePath);
-                    result = true;
+                    if (CreateZipFile(NoOneProFilePath, txtFile, zipFile,out strResult))
+                    {
+                        SendZipFile(NoOneProIP, NoOneProPort, zipFile);
+                        sortBatch.Status = "03";
+                        SortBatchRepository.SaveChanges();
+                        DeleteFiles(NoOneProFilePath);
+                        result = true;
+                    }
+                    else
+                    {
+                        result = false;
+                    }
 
                 }
                 else
@@ -794,34 +800,44 @@ namespace THOK.SMS.Bll.Service
         /// <summary>
         /// 创建压缩文件
         /// </summary>
-        public void CreateZipFile(string NoOneProFilePath,string txtFile, string zipFile)
+        public bool CreateZipFile(string NoOneProFilePath,string txtFile, string zipFile,out string strResult)
         {
-            String the_rar;
-            RegistryKey the_Reg;
-            Object the_Obj;
-            String the_Info;
-            ProcessStartInfo the_StartInfo;
-            Process zipProcess;
-
-            the_Reg = Registry.ClassesRoot.OpenSubKey("Applications\\WinRAR.exe\\Shell\\Open\\Command");
-            the_Obj = the_Reg.GetValue("");
-            the_rar = the_Obj.ToString();
-            the_Reg.Close();
-            the_rar = the_rar.Substring(1, the_rar.Length - 7);
-            the_Info = " a    " + zipFile + "  " + txtFile;
-            the_StartInfo = new ProcessStartInfo();
-            the_StartInfo.WorkingDirectory = NoOneProFilePath;
-            the_StartInfo.FileName = the_rar;
-            the_StartInfo.Arguments = the_Info;
-            the_StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            zipProcess = new Process();
-            zipProcess.StartInfo = the_StartInfo;
-            zipProcess.Start();
-
-            //等待压缩文件进程退出
-            while (!zipProcess.HasExited)
+            try
             {
-                System.Threading.Thread.Sleep(100);
+                String the_rar;
+                RegistryKey the_Reg;
+                Object the_Obj;
+                String the_Info;
+                ProcessStartInfo the_StartInfo;
+                Process zipProcess;
+
+                the_Reg = Registry.ClassesRoot.OpenSubKey("Applications\\WinRAR.exe\\Shell\\Open\\Command");
+                the_Obj = the_Reg.GetValue("");
+                the_rar = the_Obj.ToString();
+                the_Reg.Close();
+                the_rar = the_rar.Substring(1, the_rar.Length - 7);
+                the_Info = " a    " + zipFile + "  " + txtFile;
+                the_StartInfo = new ProcessStartInfo();
+                the_StartInfo.WorkingDirectory = NoOneProFilePath;
+                the_StartInfo.FileName = the_rar;
+                the_StartInfo.Arguments = the_Info;
+                the_StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                zipProcess = new Process();
+                zipProcess.StartInfo = the_StartInfo;
+                zipProcess.Start();
+
+                //等待压缩文件进程退出
+                while (!zipProcess.HasExited)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                strResult = "创建压缩文件成功";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                strResult = "创建压缩文件失败";
+                return false;
             }
         }
 

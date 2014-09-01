@@ -10,7 +10,7 @@ namespace THOK.WCS.DbModel.Mapping
     public class WcsDeviceStateMap : EntityMappingBase<WcsDeviceState>
     {
         public WcsDeviceStateMap()
-            : base("Sms")
+            : base("Wcs")
         {
             // Primary Key
             this.HasKey(t => t.Id);

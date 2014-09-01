@@ -8,7 +8,7 @@ namespace THOK.Wms.Repository.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.sms_wcs_device_state",
+                "dbo.wcs_wcs_device_state",
                 c => new
                     {
                         id = c.Int(nullable: false, identity: true),
@@ -26,7 +26,7 @@ namespace THOK.Wms.Repository.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.sms_wcs_device_state");
+            DropTable("dbo.wcs_wcs_device_state");
         }
     }
 }

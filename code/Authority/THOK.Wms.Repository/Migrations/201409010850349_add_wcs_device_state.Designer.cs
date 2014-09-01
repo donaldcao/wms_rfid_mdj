@@ -13,7 +13,7 @@ namespace THOK.Wms.Repository.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201409010717051_add_wcs_device_state"; }
+            get { return "201409010850349_add_wcs_device_state"; }
         }
         
         string IMigrationMetadata.Source

@@ -31,7 +31,7 @@
             dispatchRows = $('#PieceworkDispatchTable').datagrid('getSelections');
              productType="3";
         }
-        else if (tabsRow.panel('options').id == "Manual") {
+         else if (tabsRow.panel('options').id == "ManualTask") {
             dispatchRows = $('#ManualworkDispatchTable').datagrid('getSelections');
              productType="4";
          }
@@ -79,7 +79,7 @@
         else if (tabsRow.panel('options').id == "PieceTask") {
             rows = $('#PieceworkDispatchTable').datagrid('getRows')
         }
-        else if (tabsRow.panel('options').id == "Manual") {
+        else if (tabsRow.panel('options').id == "ManualTask") {
             rows = $('#ManualworkDispatchTable').datagrid('getRows')
         }
         if (rows.length > 0) {
@@ -110,7 +110,7 @@
         else if (tabsRow.panel('options').id == "PieceTask") {
             rows = $('#PieceworkDispatchTable').datagrid('getChecked')
         }
-        else if (tabsRow.panel('options').id == "Manual") {
+        else if (tabsRow.panel('options').id == "ManualTask") {
             rows = $('#ManualworkDispatchTable').datagrid('getChecked')
         }
         if (rows.length > 0) {
@@ -173,7 +173,7 @@
             onClickRow: function () {
                 var quantitySum = 0;
                 var rows = $('#ManualworkDispatchTable').datagrid('getSelections');
-                countSum();
+                countSum(); 
                 if (rows.length > 0) {
                     for (var i = 0; i < rows.length; i++) {
                         quantitySum = parseInt(quantitySum) + rows[i].QuantitySum;

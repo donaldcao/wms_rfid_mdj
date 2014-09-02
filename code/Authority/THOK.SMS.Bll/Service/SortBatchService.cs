@@ -382,7 +382,7 @@ namespace THOK.SMS.Bll.Service
                               so => so.OrderID,
                               (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity, sod.ProductCode })
                               .GroupBy(a => new { a.OrderDate, a.DeliverLineCode })
-                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.RealQuantity) });
+                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.RealQuantity/50)*50 });
             var sortingManual = sortOrderDetailRepository.Where(s => s.Product.IsAbnormity == "0")
                               .Join(sortOrderRepository,
                               sod => sod.OrderID,
@@ -486,7 +486,7 @@ namespace THOK.SMS.Bll.Service
                                          .GroupBy(b => new { SortBatchPiecesId = b.SortBatchPiecesId })
                                          .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchPiecesId }).FirstOrDefault(s => s.SortBatchPiecesId.Equals(a.Id)).quantity
                                   }).OrderBy(a => a.quantity).ToArray();
-                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
+                            sortOrderDispatch.SortBatchPiecesId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
                         }
                         //手工分拣线
                         if (productType == "4" || productType == "0")

@@ -210,15 +210,17 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
                                                                    .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
                                                                    .ToArray();
-                    SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity %= 50);
+                    SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity =d.RealQuantity% 50);
                     return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
                 }
                 else
                 {
                     var orderIds = sortOrders.Select(s => s.OrderID);
-                    return SortOrderDetailRepository.GetQueryable()
+                     var SortOrderDetail= SortOrderDetailRepository.GetQueryable()
                                                     .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
                                                     .ToArray();
+                    SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.RealQuantity);
+                    return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
                 }
             }
             if (productType == "2")
@@ -234,7 +236,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
                                                                    .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
                                                                    .ToArray();
-                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.SortQuantity / 50 * 50);
+                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = decimal.Truncate(d.RealQuantity / 50) * 50);
                 return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
             }
             if (productType == "4")
@@ -243,7 +245,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                 var SortOrderDetail = SortOrderDetailRepository.GetQueryable()
                                                                    .Where(d => orderIds.Contains(d.OrderID) && d.Product.IsAbnormity == "0")
                                                                    .ToArray();
-                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.RealQuantity - d.SortQuantity);
+                SortOrderDetail.AsParallel().ForAll(d => d.SortQuantity = d.DemandQuantity - d.RealQuantity);
                 return SortOrderDetail.Where(d => d.SortQuantity > 0).ToArray();
             }
             else

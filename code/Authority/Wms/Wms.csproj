@@ -183,6 +183,8 @@
     <Compile Include="Controllers\SMS\SortManage\SortTaskController.cs" />
     <Compile Include="Controllers\SMS\SupplyManage\SupplyTaskController .cs" />
     <Compile Include="Controllers\WCS\TaskRestController.cs" />
+    <Compile Include="Controllers\WCS\WcsDeviceFaultController.cs" />
+    <Compile Include="Controllers\WCS\WcsDeviceStateController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\PdaTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockCheckTaskController.cs" />
     <Compile Include="Controllers\WMS\AutomotiveSystems\StockInTaskController.cs" />
@@ -2526,6 +2528,12 @@
     <Content Include="Views\SmsDeviceFault\Index.cshtml" />
     <Content Include="Views\SmsDeviceFault\_SearchPartial.cshtml" />
     <Content Include="Views\SmsDeviceFault\_PrintPartial.cshtml" />
+    <Content Include="Views\WcsDeviceState\Index.cshtml" />
+    <Content Include="Views\WcsDeviceState\_SearchPartial.cshtml" />
+    <Content Include="Views\WcsDeviceState\_PrintPartial.cshtml" />
+    <Content Include="Views\WcsDeviceFault\_PrintPartial.cshtml" />
+    <Content Include="Views\WcsDeviceFault\_SearchPartial.cshtml" />
+    <Content Include="Views\WcsDeviceFault\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

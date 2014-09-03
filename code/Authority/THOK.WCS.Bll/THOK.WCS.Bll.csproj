@@ -67,6 +67,8 @@
     <Compile Include="Interfaces\IProductSizeService.cs" />
     <Compile Include="Interfaces\IRegionService.cs" />
     <Compile Include="Interfaces\ISizeService.cs" />
+    <Compile Include="Interfaces\IWcsDeviceFaultService.cs" />
+    <Compile Include="Interfaces\IWcsDeviceStateService.cs" />
     <Compile Include="Interfaces\ISRMService.cs" />
     <Compile Include="Interfaces\ITaskService.cs" />
     <Compile Include="Models\Inspur.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Service\SizeService.cs" />
     <Compile Include="Service\SRMService.cs" />
     <Compile Include="Service\TaskService.cs" />
+    <Compile Include="Service\WcsDeviceFaultService.cs" />
+    <Compile Include="Service\WcsDeviceStateService.cs" />
     <Compile Include="Web References\MdjInspurWmsService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

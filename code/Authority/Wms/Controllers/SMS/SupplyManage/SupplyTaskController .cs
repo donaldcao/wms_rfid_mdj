@@ -64,22 +64,17 @@ namespace Wms.Controllers.SMS.SupplyManage
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            //int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"]);
-            //int PackNo = Convert.ToInt32(Request.QueryString["PackNo"]);
+
             string channelCode = Request.QueryString["ChannelCode"] ;
             string productCode = Request.QueryString["ProductCode"] ;
             string productName = Request.QueryString["ProductName"] ;
             string sortingLineCode = Request.QueryString["SortingLineCode"];
-            //int groupNo = Convert.ToInt32(Request.QueryString["GroupNo"]);
             string status = Request.QueryString["Status"];
             SupplyTask supplyTask = new SupplyTask();
-            //supplyTask.SupplyId = SupplyId;
-            //supplyTask.PackNo = PackNo;
             supplyTask.ChannelCode = channelCode;
             supplyTask.ProductCode = productCode;
             supplyTask.ProductName = productName;
             supplyTask.SortingLineCode = sortingLineCode;
-            //supplyTask.GroupNo = groupNo;
             supplyTask.Status = status;
 
             ExportParam ep = new ExportParam();

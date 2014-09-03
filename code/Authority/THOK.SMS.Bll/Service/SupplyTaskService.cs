@@ -70,7 +70,7 @@ namespace THOK.SMS.Bll.Service
                     s.SupplyId,
                     s.PackNo,
                     s.SortingLineCode,
-                    SortingLineName = sortingLineQuery.Where(sl => sl.SortingLineCode == sl.SortingLineCode).Select(sl => sl.SortingLineName),
+                    SortingLineName = sortingLineQuery.Where(sl => sl.SortingLineCode == s.SortingLineCode).Select(sl => sl.SortingLineName),
                     GroupNo = s.GroupNo == 1 ? "A线" : "B线",
                     s.ProductCode,
                     s.ProductName,
@@ -88,18 +88,16 @@ namespace THOK.SMS.Bll.Service
         {
             IQueryable<SupplyTask> SupplyTasksQuery = SupplyTaskRepository.GetQueryable();
             IQueryable<Channel> channel = ChannelRepository.GetQueryable();
-            //IQueryable<> sortingLineQuery = SortingLineRepository.GetQueryable();
-            var supplyTasksDetail = SupplyTaskRepository.GetQueryable();
-            var supplyTasks = supplyTasksDetail.Where(s => s.SupplyId == supplyTask.SupplyId);
-            int total = supplyTasks.Count();
-            var supplyTasksArray = supplyTasks.OrderBy(s => s.Id).AsEnumerable()
+            var sortingLineQuery = SortingLineRepository.GetQueryable();
+
+            var supplyTasksArray = SupplyTasksQuery.OrderBy(s => s.Id).AsEnumerable()
                 .Select(s => new
                 {
                     s.Id,
                     s.SupplyId,
                     s.PackNo,
                     s.SortingLineCode,
-                    //SortingLineName = sortingLineQuery.Where(sl => sl.SortingLineCode == sl.SortingLineCode).Select(sl => sl.SortingLineName),
+                    SortingLineName = sortingLineQuery.Where(sl => sl.SortingLineCode == s.SortingLineCode).Select(sl => sl.SortingLineName),
                     GroupNo = s.GroupNo == 1 ? "A线" : "B线",
                     s.ChannelCode,
                     s.ChannelName,
@@ -114,8 +112,9 @@ namespace THOK.SMS.Bll.Service
             dt.Columns.Add("Id", typeof(int));
             dt.Columns.Add("补货编码", typeof(int));
             dt.Columns.Add("烟包包号", typeof(int));
-            dt.Columns.Add("分拣线代码", typeof(string));
-            dt.Columns.Add("分拣线组号", typeof(int));
+            dt.Columns.Add("分拣线编码", typeof(string));
+            dt.Columns.Add("分拣线名称", typeof(string));
+            dt.Columns.Add("分拣线组号", typeof(string));
             dt.Columns.Add("烟道代码", typeof(string));
             dt.Columns.Add("烟道名称", typeof(string));
             dt.Columns.Add("商品代码", typeof(string));
@@ -132,11 +131,12 @@ namespace THOK.SMS.Bll.Service
                     item.SupplyId,
                     item.PackNo,
                     item.SortingLineCode,
+                    item.SortingLineName.ToArray().Length <= 0 ? "" : item.SortingLineName.ToArray()[0],
                     item.GroupNo,
-                    item.ProductCode,
-                    item.ProductName,
                     item.ChannelCode,
                     item.ChannelName,
+                    item.ProductCode,
+                    item.ProductName,
                     item.ProductBarcode,
                     item.OriginPositionAddress,
                     item.TargetSupplyAddress,

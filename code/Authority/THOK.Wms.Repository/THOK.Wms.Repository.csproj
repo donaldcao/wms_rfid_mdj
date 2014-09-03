@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201409010913337_add_sms_alarm_info.Designer.cs">
       <DependentUpon>201409010913337_add_sms_alarm_info.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201409031304097_add_status_to_sms_sort_supply.cs" />
+    <Compile Include="Migrations\201409031304097_add_status_to_sms_sort_supply.Designer.cs">
+      <DependentUpon>201409031304097_add_status_to_sms_sort_supply.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -198,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201409010913337_add_sms_alarm_info.resx">
       <DependentUpon>201409010913337_add_sms_alarm_info.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409031304097_add_status_to_sms_sort_supply.resx">
+      <DependentUpon>201409031304097_add_status_to_sms_sort_supply.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

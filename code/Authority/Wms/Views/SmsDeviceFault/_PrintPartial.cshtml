@@ -10,7 +10,7 @@
         if ($('#EndTime').val() == null) { EndTime = ""; } else { EndTime = $('#EndTime').val(); }
         if ($('#searchStateCode').val() == null) { StateCode = ""; } else { StateCode = $('#searchStateCode').val(); }
 
-        window.location.href = "/SmsDeviceState/CreateExcelToClient/"
+        window.location.href = "/SmsDeviceFault/CreateExcelToClient/"
                                 + "?DeviceCode=" + $("#DeviceCode").val()
                                 + "&BeginTime=" + $('#BeginTime').datebox('getValue')
                                 + "&EndTime=" + $('#EndTime').datebox('getValue')

@@ -10,6 +10,6 @@ namespace THOK.WCS.Bll.Interfaces
     {
         object GetDetails(int page, int rows, string DeviceCode, string DeviceType, string FaultCode, string BeginTime, string EndTime, string UseTime);
 
-        System.Data.DataTable GetWcsDeviceFault(int page, int rows, string DeviceCode, string DeviceType, string FaultCode, string BeginTime, string EndTime, string UseTime);
+        System.Data.DataTable GetWcsDeviceFault(int page, int rows, WcsDeviceFault wdf);
     }
 }

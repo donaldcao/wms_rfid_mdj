@@ -59,62 +59,29 @@ namespace THOK.SMS.Bll.Service
                 int useTime = Convert.ToInt32(UseTime);
                 smsDeviceStateDetail6 = smsDeviceStateDetail5.Where(s => s.UseTime.Equals(useTime));
             }
-            var v1 = smsDeviceStateDetail6.OrderBy(a => a.Id).Select(t => t);
-            int total = v1.Count();
-            v1 = v1.Skip((page - 1) * rows).Take(rows);
 
-            var smsDeviceStatesArray = v1.ToArray().Select(s => new
+            var smsDeviceStatesArray = smsDeviceStateDetail6.OrderBy(s => s.Id).AsEnumerable()
+                .Select(s => new
                 {
                     s.Id,
                     s.DeviceCode,
                     s.DeviceName,
                     s.DeviceType,
                     StateCode = s.StateCode == "1" ? "正常运行" : s.StateCode =="2" ? "正常停机" : s.StateCode == "3" ? "故障运行" : s.StateCode == "4" ? "故障停机":"异常",
-                    BeginTime = s.BeginTime.ToString("yyyy-MM-dd"),
-                    EndTime = s.EndTime.ToString("yyyy-MM-dd"),
+                    BeginTime = s.BeginTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    EndTime = s.EndTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     s.UseTime
                 });
-            return new { total, rows = smsDeviceStatesArray };
+            int total = smsDeviceStatesArray.Count();
+            smsDeviceStatesArray = smsDeviceStatesArray.Skip((page - 1) * rows).Take(rows);
+            return new { total, rows = smsDeviceStatesArray.ToArray() };
         }
 
-        public DataTable GetSmsDeviceState(int page, int rows, string DeviceCode, string DeviceType, string StateCode, string BeginTime, string EndTime, string UseTime)
+        public DataTable GetSmsDeviceState(int page, int rows, SmsDeviceState sds)
         {
             IQueryable<SmsDeviceState> smsDeviceStateQuery = SmsDeviceStateRepository.GetQueryable();
-            IQueryable<SmsDeviceState> smsDeviceStateDetail1 = smsDeviceStateQuery;
-            if (DeviceCode != "")
-            {
-                smsDeviceStateDetail1 = smsDeviceStateQuery.Where(s => s.DeviceCode == DeviceCode);
-            }
-            IQueryable<SmsDeviceState> smsDeviceStateDetail2 = smsDeviceStateDetail1;
-            if (!string.IsNullOrEmpty(EndTime))
-            {
-                DateTime endTime = Convert.ToDateTime(EndTime);
-                smsDeviceStateDetail2 = smsDeviceStateDetail1.Where(s => s.EndTime.Equals(endTime));
-            }
-            IQueryable<SmsDeviceState> smsDeviceStateDetail3 = smsDeviceStateDetail2;
-            if (DeviceType != "")
-            {
-                smsDeviceStateDetail3 = smsDeviceStateDetail2.Where(s => s.DeviceType.Contains(DeviceType));
-            }
-            IQueryable<SmsDeviceState> smsDeviceStateDetail4 = smsDeviceStateDetail3;
-            if (StateCode != "")
-            {
-                smsDeviceStateDetail4 = smsDeviceStateDetail3.Where(s => s.StateCode.Contains(StateCode));
-            }
-            IQueryable<SmsDeviceState> smsDeviceStateDetail5 = smsDeviceStateDetail4;
-            if (BeginTime != string.Empty && BeginTime != null)
-            {
-                DateTime beginTime = Convert.ToDateTime(BeginTime);
-                smsDeviceStateDetail5 = smsDeviceStateDetail4.Where(s => s.BeginTime.Equals(beginTime));
-            }
-            IQueryable<SmsDeviceState> smsDeviceStateDetail6 = smsDeviceStateDetail5;
-            if (UseTime != null && UseTime != "")
-            {
-                int useTime = Convert.ToInt32(UseTime);
-                smsDeviceStateDetail6 = smsDeviceStateDetail5.Where(s => s.UseTime.Equals(useTime));
-            }
-            var v1 = smsDeviceStateDetail6.OrderBy(a => a.Id).Select(t => t);
-            var smsDeviceStatesArray = v1.OrderBy(s => s.Id).AsEnumerable()
+
+            var smsDeviceStatesArray = smsDeviceStateQuery.OrderBy(s => s.Id).AsEnumerable()
                 .Select(s => new
                 {
                     s.Id,
@@ -125,8 +92,8 @@ namespace THOK.SMS.Bll.Service
                     BeginTime = s.BeginTime.ToString("yyyy-MM-dd"),
                     EndTime = s.EndTime.ToString("yyyy-MM-dd"),
                     s.UseTime
-                }).ToArray();
-            DataTable dt = new DataTable();
+                });
+            System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("Id", typeof(int));
             dt.Columns.Add("设备代码", typeof(string));
             dt.Columns.Add("设备名称", typeof(string));

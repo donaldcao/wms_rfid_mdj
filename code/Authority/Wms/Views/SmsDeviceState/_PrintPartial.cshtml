@@ -1,9 +1,6 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var DeviceCode = null,
-        StateCode = null,
-        BeginTime = null,
-        EndTime = null;
+        var DeviceCode = null, StateCode = null, BeginTime = null, EndTime = null;
 
         if ($('#DeviceCode').val() == null) { DeviceCode = ""; } else { DeviceCode = $('#DeviceCode').val(); }
         if ($('#BeginTime').val() == null) { BeginTime = ""; } else { BeginTime = $('#BeginTime').val(); }
@@ -14,7 +11,6 @@
                                 + "?DeviceCode=" + $("#DeviceCode").val()
                                 + "&BeginTime=" + $('#BeginTime').datebox('getValue')
                                 + "&EndTime=" + $('#EndTime').datebox('getValue')
-                                + "&BatchNo=" + $('#BatchNo').val()
                                 + "&StateCode=" + $("#searchStateCode").val();
     }
 </script>

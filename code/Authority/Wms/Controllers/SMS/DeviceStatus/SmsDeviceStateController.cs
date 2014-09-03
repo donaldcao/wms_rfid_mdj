@@ -47,61 +47,10 @@ namespace Wms.Controllers.SMS.DeviceState
 
         }
 
-
-        //public ActionResult Details(int page, int rows, FormCollection collection)
-        //{
-        //    SmsDeviceState smsDeviceState = new SmsDeviceState();
-        //    string UseTime = collection["UseTime"] ?? "";
-        //    if (UseTime != "" && UseTime != null)
-        //    {
-        //        smsDeviceState.UseTime = Convert.ToInt32(UseTime);
-        //    }
-        //    smsDeviceState.DeviceCode = collection["DeviceCode"] ?? "";
-        //    smsDeviceState.DeviceName = collection["DeviceName"] ?? "";
-        //    smsDeviceState.DeviceType = collection["DeviceType"] ?? "";
-        //    smsDeviceState.StateCode = collection["StateCode"] ?? "";
-        //    smsDeviceState.BeginTime = collection["BeginTime"] ?? "";
-        //    smsDeviceState.EndTime = collection["EndTime"] ?? "";
-
-        //    var smsDeviceStateDetail = SmsDeviceStateServer.GetDetails(page, rows, smsDeviceState);
-        //    return Json(smsDeviceStateDetail, "text", JsonRequestBehavior.AllowGet);
-
-        //}
-
-        //打印
-        //#region /SmsDeviceState/CreateExcelToClient/
-        //public FileStreamResult CreateExcelToClient()
-        //{
-        //    int page = 0, rows = 0;
-        //    //int SupplyId = Convert.ToInt32(Request.QueryString["SupplyId"]);
-        //    //int PackNo = Convert.ToInt32(Request.QueryString["PackNo"]);
-        //    string channelCode = Request.QueryString["ChannelCode"];
-        //    string productCode = Request.QueryString["ProductCode"];
-        //    string productName = Request.QueryString["ProductName"];
-        //    string sortingLineCode = Request.QueryString["SortingLineCode"];
-        //    //int groupNo = Convert.ToInt32(Request.QueryString["GroupNo"]);
-        //    string status = Request.QueryString["Status"];
-        //    SmsDeviceState smsDeviceState = new SmsDeviceState();
-        //    //smsDeviceState.SupplyId = SupplyId;
-        //    //smsDeviceState.PackNo = PackNo;
-        //    smsDeviceState.ChannelCode = channelCode;
-        //    smsDeviceState.ProductCode = productCode;
-        //    smsDeviceState.ProductName = productName;
-        //    smsDeviceState.SortingLineCode = sortingLineCode;
-        //    //smsDeviceState.GroupNo = groupNo;
-        //    smsDeviceState.Status = status;
-
-        //    ExportParam ep = new ExportParam();
-        //    ep.DT1 = SmsDeviceStateServer.GetSmsDeviceState(page, rows, smsDeviceState);
-        //    ep.HeadTitle1 = "分拣补货查询";
-        //    return PrintService.Print(ep);
-        //}
-        //#endregion
-
+        #region /SmsDeviceState/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            ExportParam ep = new ExportParam();
 
             string DeviceCode = Request.QueryString["DeviceCode"];
             string DeviceName = Request.QueryString["DeviceName"];
@@ -110,11 +59,16 @@ namespace Wms.Controllers.SMS.DeviceState
             string BeginTime = Request.QueryString["BeginTime"];
             string EndTime = Request.QueryString["EndTime"];
             string UseTime = Request.QueryString["UseTime"];
-            ep.FirstTable = SmsDeviceStateServer.GetSmsDeviceState(page, rows, DeviceCode, DeviceType, StateCode, BeginTime, EndTime, UseTime);
+            SmsDeviceState sds = new SmsDeviceState();
+            sds.DeviceCode = DeviceCode;
+            sds.DeviceType = DeviceType;
+ 
+            ExportParam ep = new ExportParam();
+            ep.FirstTable = SmsDeviceStateServer.GetSmsDeviceState(page, rows,sds);
             ep.FirstHeadTitle = "运行状态查询";
             return PrintService.Print(ep);
         }
-
+        #endregion
     }
 }
 

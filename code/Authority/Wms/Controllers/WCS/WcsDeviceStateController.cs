@@ -47,10 +47,10 @@ namespace Wms.Controllers.WCS.DeviceState
 
         }
 
+        #region /WcsDeviceState/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            ExportParam ep = new ExportParam();
 
             string DeviceCode = Request.QueryString["DeviceCode"];
             string DeviceName = Request.QueryString["DeviceName"];
@@ -59,11 +59,16 @@ namespace Wms.Controllers.WCS.DeviceState
             string BeginTime = Request.QueryString["BeginTime"];
             string EndTime = Request.QueryString["EndTime"];
             string UseTime = Request.QueryString["UseTime"];
-            ep.FirstTable = WcsDeviceStateServer.GetWcsDeviceState(page, rows, DeviceCode, DeviceType, StateCode, BeginTime, EndTime, UseTime);
+            WcsDeviceState wds = new WcsDeviceState();
+            wds.DeviceCode = DeviceCode;
+            wds.DeviceType = DeviceType;
+
+            ExportParam ep = new ExportParam();
+            ep.FirstTable = WcsDeviceStateServer.GetWcsDeviceState(page, rows, wds);
             ep.FirstHeadTitle = "运行状态查询";
             return PrintService.Print(ep);
         }
-
+        #endregion
     }
 }
 

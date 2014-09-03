@@ -29,6 +29,9 @@ namespace THOK.SMS.DbModel.Mapping
                 .HasMaxLength(20);
             this.Property(t => t.ProductName)
                 .HasMaxLength(50);
+            this.Property(t => t.Status)
+                .IsRequired()
+                .HasMaxLength(1);
 
             // Table & Column Mappings
             this.Property(t => t.Id).HasColumnName(ColumnMap.Value.To("Id"));
@@ -37,6 +40,7 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.ChannelCode).HasColumnName(ColumnMap.Value.To("ChannelCode"));
             this.Property(t => t.ProductCode).HasColumnName(ColumnMap.Value.To("ProductCode"));
             this.Property(t => t.ProductName).HasColumnName(ColumnMap.Value.To("ProductName"));
+            this.Property(t => t.Status).HasColumnName(ColumnMap.Value.To("Status"));
 
             // Relationships
             this.HasRequired(t => t.SortBatch)

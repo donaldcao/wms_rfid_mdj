@@ -13,6 +13,7 @@ namespace THOK.SMS.DbModel
         public string ChannelCode { get; set; }
         public string ProductCode { get; set; }
         public string ProductName { get; set; }
+        public string Status { get; set; }
 
         public SortBatch SortBatch { get; set; }
         public Channel Channel { get; set; }

@@ -169,6 +169,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\ChannelInfoController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\ProductInfoController.cs" />
+    <Compile Include="Controllers\SMS\BaseInfo\SmsAlarmInfoController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\SupplyPositionController.cs" />
     <Compile Include="Controllers\SMS\BaseInfo\SupplyPositionStorageController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\BatchCigaretteSearchController.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Controllers\SMS\ComplexSearch\DeliverOrderSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\SortOrderAllotSearchController.cs" />
     <Compile Include="Controllers\SMS\ComplexSearch\SortSupplyController .cs" />
+    <Compile Include="Controllers\SMS\DeviceStatus\SmsDeviceFaultController.cs" />
     <Compile Include="Controllers\SMS\DeviceStatus\SmsDeviceStateController.cs" />
     <Compile Include="Controllers\SMS\SortManage\BatchSortDispatchController.cs" />
     <Compile Include="Controllers\SMS\SortManage\SortTaskController.cs" />
@@ -2521,6 +2523,9 @@
     <Content Include="Views\SmsDeviceState\Index.cshtml" />
     <Content Include="Views\SmsDeviceState\_SearchPartial.cshtml" />
     <Content Include="Views\SmsDeviceState\_PrintPartial.cshtml" />
+    <Content Include="Views\SmsDeviceFault\Index.cshtml" />
+    <Content Include="Views\SmsDeviceFault\_SearchPartial.cshtml" />
+    <Content Include="Views\SmsDeviceFault\_PrintPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

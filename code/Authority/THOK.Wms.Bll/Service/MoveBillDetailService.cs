@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
+using Microsoft.Practices.Unity;
 using THOK.Wms.Bll.Interfaces;
 using THOK.Wms.DbModel;
-using Microsoft.Practices.Unity;
 using THOK.Wms.Dal.Interfaces;
 using THOK.Wms.SignalR;
 using THOK.Wms.SignalR.Common;
@@ -43,8 +44,6 @@ namespace THOK.Wms.Bll.Service
         }
 
         public string resultStr = "";//错误信息字符串
-
-        #region IMoveBillDetail 成员
 
         /// <summary>
         /// 判断处理状态
@@ -424,9 +423,73 @@ namespace THOK.Wms.Bll.Service
             return result;
         }
 
-        #endregion
+        public DataTable GetDetailsTable(int page, int rows, string billNo)
+        {
+            billNo = billNo.Remove(billNo.LastIndexOf(","), 1);
+            DataTable dt = new DataTable();
+            if (billNo != "" && billNo != null)
+            {
+                IQueryable<MoveBillDetail> MoveBillDetailQuery = MoveBillDetailRepository.GetQueryable();
+                var moveBillDetail = MoveBillDetailQuery.Where(i => i.BillNo.Contains(billNo)).OrderBy(i => i.BillNo).Select(i => i);
+                IQueryable<SystemParameter> systemParQuery = SystemParameterRepository.GetQueryable();
+                var isWholePallet = SystemParameterRepository.GetQueryable().Where(s => s.ParameterName == "IsWholePallet").Select(s => s.ParameterValue).FirstOrDefault();//是否整托盘
 
-        #region IMoveBillDetail 成员
+                var temp = moveBillDetail.ToArray().AsEnumerable().Select(i => new
+                {
+                    i.ID,
+                    i.BillNo,
+                    i.ProductCode,
+                    i.Product.ProductName,
+                    i.OutCellCode,
+                    OutCellName = i.OutCell.CellName,
+                    i.OutStorageCode,
+                    i.InCellCode,
+                    InCellName = i.InCell.CellName,
+                    i.InStorageCode,
+                    i.UnitCode,
+                    i.Unit.UnitName,
+                    RealQuantity = i.RealQuantity / i.Unit.Count,
+                    OperatePersonID = i.OperatePersonID == null ? string.Empty : i.OperatePersonID.ToString(),
+                    EmployeeName = i.OperatePerson == null ? string.Empty : i.OperatePerson.EmployeeName,
+                    StartTime = i.StartTime == null ? null : ((DateTime)i.StartTime).ToString("yyyy-MM-dd HH:mm:ss"),
+                    FinishTime = i.FinishTime == null ? null : ((DateTime)i.FinishTime).ToString("yyyy-MM-dd HH:mm:ss"),
+                    IsWholePallet = isWholePallet,
+                    Status = WhatStatus(i.Status)
+                });
+                dt.Columns.Add("编号", typeof(string));
+                dt.Columns.Add("移出储位名称", typeof(string));
+                dt.Columns.Add("移入储位名称", typeof(string));
+                dt.Columns.Add("产品代码", typeof(string));
+                dt.Columns.Add("产品名称", typeof(string));
+                dt.Columns.Add("单位编码", typeof(string));
+                dt.Columns.Add("单位名称", typeof(string));
+                dt.Columns.Add("数量", typeof(string));
+                dt.Columns.Add("作业人员", typeof(string));
+                dt.Columns.Add("作业状态", typeof(string));
+                foreach (var m in temp)
+                {
+                    dt.Rows.Add
+                    (
+                          m.ID
+                        , m.OutCellName
+                        , m.InCellName
+                        , m.ProductCode
+                        , m.ProductName
+                        , m.UnitCode
+                        , m.UnitName
+                        , m.RealQuantity
+                        , m.EmployeeName
+                        , m.Status
+                    );
+                }
+                if (moveBillDetail.Count() > 0)
+                {
+                    dt.Rows.Add(null, null, null, null, null, null, "总数：", moveBillDetail.Sum(m => m.RealQuantity));
+                }
+            }
+            return dt;
+        }
+
         /// <summary>获得移库细单信息</summary>
         public System.Data.DataTable GetMoveBillDetail(int page, int rows, string BillNo, bool isAbnormity, bool isGroup,out string sortingName)
         {
@@ -578,7 +641,6 @@ namespace THOK.Wms.Bll.Service
             }
             return dt;
         }
-        #endregion
 
         #region 车载系统
         public string SwitchStatus(string status)

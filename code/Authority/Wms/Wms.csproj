@@ -2534,6 +2534,14 @@
     <Content Include="Views\WcsDeviceFault\_SearchPartial.cshtml" />
     <Content Include="Views\WcsDeviceFault\Index.cshtml" />
     <Content Include="Views\SortSupply\_ChannelPartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\_AddPartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\_DeletePartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\_EditPartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\_PrintPartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\_SearchPartial.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\AddPage.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\Index.cshtml" />
+    <Content Include="Views\SmsAlarmInfo\SearchPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

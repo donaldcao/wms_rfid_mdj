@@ -21,7 +21,6 @@ namespace THOK.SMS.Bll.Service
             get { return this.GetType(); }
         }
 
-
         public object GetDetails(int page, int rows, string AlarmCode, string Description)
         {
             IQueryable<SmsAlarmInfo> smsAlarmInfoQuery = SmsAlarmInfoRepository.GetQueryable();
@@ -46,6 +45,99 @@ namespace THOK.SMS.Bll.Service
                     s.Description,
                 });
             return new { total, rows = smsAlarmInfosArray };
+        }
+
+        public bool Add(SmsAlarmInfo alarmInfo, out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+            var al = SmsAlarmInfoRepository.GetQueryable().FirstOrDefault(a => a.AlarmCode == alarmInfo.AlarmCode);
+            if (al == null)
+            {
+                SmsAlarmInfo alarm = new SmsAlarmInfo();
+                try
+                {
+                    alarm.AlarmCode = alarmInfo.AlarmCode;
+                    alarm.Description = alarmInfo.Description;
+                    SmsAlarmInfoRepository.Add(alarm);
+                    SmsAlarmInfoRepository.SaveChanges();
+                    result = true;
+                }
+                catch (Exception e)
+                {
+                    strResult = "原因：" + e.Message;
+                }
+            }
+            else
+            {
+                strResult = "原因：报警编码已存在";
+            }
+            return result;
+        }
+
+        public bool Save(SmsAlarmInfo alarmInfo, out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+            var alarmInfos = SmsAlarmInfoRepository.GetQueryable().FirstOrDefault(s => s.AlarmCode == alarmInfo.AlarmCode);
+            if (alarmInfos != null)
+            {
+                alarmInfos.Description = alarmInfo.Description;
+                SmsAlarmInfoRepository.SaveChanges();
+                result = true;
+            }
+            else
+            {
+                strResult = "原因：找不到相应数据";
+            }
+            return result;
+        }
+
+        public bool Delete(string code, out string strResult)
+        {
+            strResult = string.Empty;
+            bool result = false;
+            var alarmInfo = SmsAlarmInfoRepository.GetQueryable().FirstOrDefault(a => a.AlarmCode == code);
+            if (alarmInfo != null)
+            {
+                SmsAlarmInfoRepository.Delete(alarmInfo);
+                SmsAlarmInfoRepository.SaveChanges();
+                result = true;
+            }
+            else
+            {
+                strResult = "原因：没有找到相应数据";
+            }
+            return result;
+        }
+
+        public System.Data.DataTable GetAlarmInfo(int page, int rows, SmsAlarmInfo alarmInfo)
+        {
+            IQueryable<SmsAlarmInfo> alarmInfoQuery = SmsAlarmInfoRepository.GetQueryable();
+
+            var alarmInfoDetail = alarmInfoQuery.Where(a =>
+                a.AlarmCode.Contains(alarmInfo.AlarmCode)
+                && a.Description.Contains(alarmInfo.Description))
+                .OrderBy(a => a.AlarmCode);
+            var alarmInfo_Detail = alarmInfoDetail.ToArray().Select(a => new
+            {
+                a.AlarmCode,
+                a.Description
+            });
+
+            System.Data.DataTable dt = new System.Data.DataTable();
+
+            dt.Columns.Add("报警编码", typeof(string));
+            dt.Columns.Add("描述", typeof(string));
+            foreach (var s in alarmInfo_Detail)
+            {
+                dt.Rows.Add
+                    (
+                        s.AlarmCode,
+                        s.Description
+                    );
+            }
+            return dt;
         }
     }
 }

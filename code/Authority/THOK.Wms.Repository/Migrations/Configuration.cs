@@ -4344,7 +4344,7 @@ namespace THOK.Wms.Repository.Migrations
                 //报警信息
                 new Function()
                 {
-                    FunctionID = new Guid("EAB101C1-8A93-4E4B-8943-C164C068911F"),
+                    FunctionID = new Guid("689492BF-43E8-4ED7-87DE-911F233C7BA4"),
                     FunctionName = "查询",
                     ControlName = "search",
                     IndicateImage = "icon-search",
@@ -4352,7 +4352,7 @@ namespace THOK.Wms.Repository.Migrations
                 },
                 new Function()
                 {
-                    FunctionID = new Guid("938034C4-5622-43A1-8444-28BF22ADEFB2"),
+                    FunctionID = new Guid("E232585A-E7FA-431F-B9EE-F29826DFBDC4"),
                     FunctionName = "新增",
                     ControlName = "add",
                     IndicateImage = "icon-add",
@@ -4360,7 +4360,7 @@ namespace THOK.Wms.Repository.Migrations
                 },
                 new Function()
                 {
-                    FunctionID = new Guid("A6EAC93E-9618-4B19-8645-13645D1FC303"),
+                    FunctionID = new Guid("7ABADC27-57B7-41DA-8929-5F7F1AC9BCEC"),
                     FunctionName = "编辑",
                     ControlName = "edit",
                     IndicateImage = "icon-edit",
@@ -4368,7 +4368,7 @@ namespace THOK.Wms.Repository.Migrations
                 },
                  new Function()
                  {
-                     FunctionID = new Guid("C8A9E599-D257-4058-9E46-D47C8D1744BB"),
+                     FunctionID = new Guid("90867491-7FEF-4109-BB86-A0E416974324"),
                      FunctionName = "删除",
                      ControlName = "delete",
                      IndicateImage = "icon-remove",
@@ -4376,7 +4376,7 @@ namespace THOK.Wms.Repository.Migrations
                  },
                  new Function()
                  {
-                     FunctionID = new Guid("EAB101C2-8A93-4E4B-8947-C562C06D959F"),
+                     FunctionID = new Guid("FEAC32C4-5EBB-4AC3-ABB9-2484A3A6A8D8"),
                      FunctionName = "打印",
                      ControlName = "print",
                      IndicateImage = "icon-print",
@@ -4384,7 +4384,7 @@ namespace THOK.Wms.Repository.Migrations
                  },
                 new Function()
                 {
-                    FunctionID = new Guid("938034C4-5645-43A1-8448-36BF28DDEF64"),
+                    FunctionID = new Guid("B3A6950C-4EF8-444B-8BCF-79F0BF45CCEF"),
                     FunctionName = "帮助",
                     ControlName = "help",
                     IndicateImage = "icon-help",
@@ -4666,6 +4666,18 @@ namespace THOK.Wms.Repository.Migrations
                         ModuleURL = "/Customer/",
                         IndicateImage = "icon-son_Employee",
                         DeskTopImage = "image-son_Employee",
+                        System = system,
+                        System_SystemID = system.SystemID,
+                        ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
+                    },
+                    new Module()
+                    {
+                        ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C"),
+                        ModuleName = "设备报警信息",
+                        ShowOrder = 8,
+                        ModuleURL = "/SmsAlarmInfo/",
+                        IndicateImage = "icon-son_SortWork",
+                        DeskTopImage = "image-son_SortWork",
                         System = system,
                         System_SystemID = system.SystemID,
                         ParentModule_ModuleID = new Guid("71D36437-AD8A-4D50-8DB9-71D364301F9D")
@@ -5589,6 +5601,55 @@ namespace THOK.Wms.Repository.Migrations
                     ControlName = "help",
                     IndicateImage = "icon-help",
                     Module_ModuleID = new Guid("9F401A8E-91B3-4FB1-9492-E6375B44D3A5")
+                },
+                //报警信息
+                new Function()
+                {
+                    FunctionID = new Guid("EAB101C1-8A93-4E4B-8943-C164C068911F"),
+                    FunctionName = "查询",
+                    ControlName = "search",
+                    IndicateImage = "icon-search",
+                    Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("938034C4-5622-43A1-8444-28BF22ADEFB2"),
+                    FunctionName = "新增",
+                    ControlName = "add",
+                    IndicateImage = "icon-add",
+                    Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
+                },
+                new Function()
+                {
+                    FunctionID = new Guid("A6EAC93E-9618-4B19-8645-13645D1FC303"),
+                    FunctionName = "编辑",
+                    ControlName = "edit",
+                    IndicateImage = "icon-edit",
+                    Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
+                },
+                 new Function()
+                 {
+                     FunctionID = new Guid("C8A9E599-D257-4058-9E46-D47C8D1744BB"),
+                     FunctionName = "删除",
+                     ControlName = "delete",
+                     IndicateImage = "icon-remove",
+                     Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
+                 },
+                 new Function()
+                 {
+                     FunctionID = new Guid("EAB101C2-8A93-4E4B-8947-C562C06D959F"),
+                     FunctionName = "打印",
+                     ControlName = "print",
+                     IndicateImage = "icon-print",
+                     Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
+                 },
+                new Function()
+                {
+                    FunctionID = new Guid("938034C4-5645-43A1-8448-36BF28DDEF64"),
+                    FunctionName = "帮助",
+                    ControlName = "help",
+                    IndicateImage = "icon-help",
+                    Module_ModuleID = new Guid("72D21D89-39C5-4CC1-8778-2193F5EFCC2C")
                 }
             );
            context.SaveChanges();

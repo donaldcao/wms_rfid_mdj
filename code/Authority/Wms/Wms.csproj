@@ -2506,7 +2506,6 @@
     <Content Include="Views\SortSupply\_PrintPartial.cshtml" />
     <Content Include="Views\SortSupply\_ProductPartial.cshtml" />
     <Content Include="Views\SortSupply\_SearchPartial.cshtml" />
-    <Content Include="Views\SortSupply\_SortingLinePartial.cshtml" />
     <Content Include="Views\SupplyTask\Index.cshtml" />
     <Content Include="Views\SupplyTask\_SortingLinePartial.cshtml" />
     <Content Include="Views\SupplyTask\_SearchPartial.cshtml" />
@@ -2534,6 +2533,7 @@
     <Content Include="Views\WcsDeviceFault\_PrintPartial.cshtml" />
     <Content Include="Views\WcsDeviceFault\_SearchPartial.cshtml" />
     <Content Include="Views\WcsDeviceFault\Index.cshtml" />
+    <Content Include="Views\SortSupply\_ChannelPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

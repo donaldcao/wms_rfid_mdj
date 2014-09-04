@@ -1,19 +1,19 @@
 ﻿<script type="text/javascript">
     function printClick() {
-        var orderCode = null,
-            batchNo = null,
-            sortingLineCode = null,
+        var sortBatchId = null,
+            packNo = null,
+            channelCode = null,
             productCode = null;
 
-        if ($('#OrderDate').datebox('getValue') == null) { orderCode = ""; } else { orderCode = $('#OrderDate').datebox('getValue') }
-        if ($('#BatchNo').val() == null) { batchNo = ""; } else { batchNo = $('#BatchNo').val() }
-        if ($('#searchSortingLineCode').val() == null) { sortingLineCode = ""; } else { sortingLineCode = $('#searchSortingLineCode').val() }
+        if ($('#SortBatchId').datebox('getValue') == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').datebox('getValue') }
+        if ($('#PackNo').val() == null) { packNo = ""; } else { packNo = $('#PackNo').val() }
+        if ($('#ChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#ChannelCode').val() }
         if ($('#searchProductCode').val() == null) { productCode = ""; } else { productCode = $('#searchProductCode').val() }
 
-        window.location.href = "/ChannelAllotSearch/CreateExcelToClient/"
-                                + "?OrderDate=" + orderCode
-                                + "&BatchNo=" + batchNo
-                                + "&SortingLineCode=" + sortingLineCode
-                                + "&ProductCode=" + productCode;
+        window.location.href = "/SortSupply/CreateExcelToClient/"
+                                + "?SortBatchId=" + sortBatchId
+                                + "&PackNo=" + packNo
+                                + "&ChannelCode=" + channelCode
+                                + "&searchProductCode=" + productCode;
     }
 </script>

@@ -18,11 +18,11 @@
         $('#details').datagrid("reload");
         $('#dlg-search').dialog("close");
     }
-    //分拣线查询
-    function SortingLineSearchClick() {
-        $('#dlg-SortingLine').dialog('open').dialog('setTitle', '选择分拣线');
-        $('#SortingLineDetails').datagrid({ url: '/SortingLine/Details/' });
-        $("#SortingLineDetails").datagrid('load');
+    //烟道查询
+    function ChannelSearchClick() {
+        $('#dlg-Channel').dialog('open').dialog('setTitle', '选择烟道');
+        $('#ChannelDetails').datagrid({ url: '/ChannelInfo/Details/' });
+        $("#ChannelDetails").datagrid('load');
     }
     //卷烟查询
     function ProductSearchClick() {
@@ -55,21 +55,21 @@
                 </tr>
                 <tr>
                     <td style="text-align: right">
-                        分拣线代码:
+                        烟道代码:
                     </td>
                     <td align="left" style="width: 170px;">
-                        <input id="searchSortingLineCode" name="SortingLineCode" class="easyui-validatebox"
+                        <input id="searchChannelCode" name="ChannelCode" class="easyui-validatebox"
                             readonly="readonly" />
-                        <a href="#" id="SortingLineSearch" class="easyui-linkbutton" iconcls="icon-search"
-                            plain="true" onclick="SortingLineSearchClick()"></a>
+                        <a href="#" id="ChannelCodeSearch" class="easyui-linkbutton" iconcls="icon-search"
+                            plain="true" onclick="ChannelSearchClick()"></a>
                     </td>
                 </tr>
                 <tr>
                     <td style="text-align: right">
-                        分拣线名称:
+                        烟道名称:
                     </td>
                     <td align="left">
-                        <input type="text" name="SortingLineName" class="easyui-validatebox" id="searchSortingLineName"
+                        <input type="text" name="ChannelName" class="easyui-validatebox" id="searchChannelName"
                             readonly="true" />
                     </td>
                 </tr>
@@ -103,4 +103,4 @@
         取消</a>
 </div>
 @Html.Partial("_ProductPartial")
-@Html.Partial("_SortingLinePartial")
+@Html.Partial("_ChannelPartial")

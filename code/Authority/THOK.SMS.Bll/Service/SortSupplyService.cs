@@ -1,12 +1,12 @@
 ﻿using System;
-using THOK.SMS.DbModel;
-using THOK.SMS.Dal.Interfaces;
-using THOK.SMS.Bll.Interfaces;
+using System.Data;
 using System.Linq;
 using Microsoft.Practices.Unity;
 using THOK.Common.Entity;
-using System.Data;
+using THOK.SMS.Bll.Interfaces;
 using THOK.SMS.Dal.EntityRepository;
+using THOK.SMS.Dal.Interfaces;
+using THOK.SMS.DbModel;
 
 namespace THOK.SMS.Bll.Service
 {
@@ -21,7 +21,6 @@ namespace THOK.SMS.Bll.Service
         {
             get { return this.GetType(); }
         }
-
 
         public object GetDetails(int page, int rows, SortSupply sortSupply)
         {
@@ -67,19 +66,17 @@ namespace THOK.SMS.Bll.Service
         {
             IQueryable<SortSupply> sortSupplysQuery = SortSupplyRepository.GetQueryable();
             IQueryable<Channel> channel = ChannelRepository.GetQueryable();
-            var sortSupplysDetail = SortSupplyRepository.GetQueryable();
-            var sortSupplys = sortSupplysDetail.Where(s => s.SortBatchId == sortSupply.SortBatchId);
-            int total = sortSupplys.Count();
-            var sortSupplysArray = sortSupplys.OrderBy(s => s.Id).AsEnumerable()
+
+            var sortSupplysArray = sortSupplysQuery.OrderBy(s => s.Id).AsEnumerable()
                 .Select(s => new
                 {
                     s.Id,
                     s.SortBatchId,
                     s.PackNo,
-                    s.ProductCode,
-                    s.ProductName,
                     s.ChannelCode,
-                    s.Channel.ChannelName
+                    s.Channel.ChannelName,
+                    s.ProductCode,
+                    s.ProductName
                 });
             System.Data.DataTable dt = new System.Data.DataTable();
             dt.Columns.Add("分拣批次ID", typeof(int));
@@ -95,10 +92,10 @@ namespace THOK.SMS.Bll.Service
                     item.Id,
                     item.SortBatchId,
                     item.PackNo,
-                    item.ProductCode,
-                    item.ProductName,
                     item.ChannelCode,
-                    item.ChannelName
+                    item.ChannelName,
+                    item.ProductCode,
+                    item.ProductName
                     );
             }
             return dt;

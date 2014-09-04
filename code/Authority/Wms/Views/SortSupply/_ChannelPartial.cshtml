@@ -1,0 +1,70 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#ChannelDetails').datagrid({
+            //双击赋值
+            onDblClickRow: function () {
+                channelSave();
+            }
+        })
+    });
+
+    //保存选择
+    function channelSave() {
+        var selectedRow = $('#ChannelDetails').datagrid('getSelected');
+        if (selectedRow) {
+            if (selectedRow.IsActive == '启用') {
+                //查询赋值
+                $('#searchChannelCode').val(selectedRow.ChannelCode);
+                $('#searchChannelName').val(selectedRow.ChannelName);
+                $('#dlg-Channel').dialog('close');
+            } else {
+                $.messager.alert('提示', '请选择已启用分拣线！！', 'warning');
+            }
+        }
+    }
+
+    //查询
+    function ChannelQueryClick() {
+        var queryParams = $('#ChannelDetails').datagrid('options').queryParams;
+        if ($("#queryChannelType").combo("getValue") == "ChannelCode") {
+            queryParams.ChannelCode = $("#ChannelInfo").val();
+        } else if ($("#queryChannelType").combo("getValue") == "ChannelName") {
+            queryParams.ChannelName = $("#ChannelInfo").val();
+        }
+        $('#ChannelDetails').datagrid('options').queryParams = queryParams;
+        $('#ChannelDetails').datagrid({
+            pageNumber: 1
+        });
+    }
+</script>
+<div id="dlg-Channel" class="easyui-dialog" modal="true" style="width:500px;height:410;padding:2px 2px" closed="true"
+  buttons="#dlg-buttons-Channel">
+  <div id="btnChannelQuery">
+  <form id="fm-Channel">
+    <select id="queryChannelType" class="easyui-combobox" style="width:100px;" editable="false" panelHeight="45px">
+        <option value="ChannelCode">烟道代码</option>
+        <option value="ChannelName">烟道名称</option>
+    </select>
+    <input id="ChannelInfo" class="easyui-validatebox"/>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-search" plain="true" onclick="ChannelQueryClick()">查询</a>
+  </form>
+  </div>
+  <div split="true" border="false" style="width:480px;height:310px;">
+    <table id="ChannelDetails" class="easyui-datagrid" border="false" toolbar="#btnChannelQuery" pageSize="10"
+      singleselect="true" fit="true" fitcolumns="true" pagination="true" rownumbers="true">
+      <thead>
+        <tr>
+          <th field="ChannelCode" width="70">烟道代码</th>
+          <th field="ChannelName" width="100">烟道名称</th>
+          <th field="IsActive" width="40">是否启用</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<div id="dlg-buttons-Channel">
+    <a href="#" class="easyui-linkbutton" iconcls="icon-ok" onclick="ChannelSave()">确定</a>
+    <a href="#" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#dlg-Channel').dialog('close')">
+        取消</a>
+</div>

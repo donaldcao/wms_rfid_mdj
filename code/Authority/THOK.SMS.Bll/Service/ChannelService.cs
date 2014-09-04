@@ -92,6 +92,15 @@ namespace THOK.SMS.Bll.Service
             {
                 channelDetails = channelDetails.Where(a => a.ProductCode == channel.ProductCode);
             }
+            //烟道
+            if (channel.ChannelCode != null && channel.ChannelCode != string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.ChannelCode == channel.ChannelCode);
+            }
+            if (channel.ChannelName != null && channel.ChannelName != string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.ChannelName == channel.ChannelName);
+            }
             channelDetails = channelDetails.OrderBy(c => c.SortingLineCode).ThenBy(c => c.GroupNo).ThenBy(c => c.SortAddress);
             int total = channelDetails.Count();
             var channelArray = channelDetails.Skip((page - 1) * rows).Take(rows).ToArray();

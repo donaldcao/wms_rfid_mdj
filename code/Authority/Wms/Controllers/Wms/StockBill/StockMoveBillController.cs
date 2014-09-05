@@ -203,7 +203,7 @@ namespace Authority.Controllers.Wms.StockBill
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
 
-        #region /StockMoveBill/CreateExcelToClient/
+        // GET: /StockMoveBill/CreateExcelToClient/
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
@@ -212,11 +212,12 @@ namespace Authority.Controllers.Wms.StockBill
             bool isGroup = Convert.ToBoolean(Request.QueryString["isGroup"]);
             string sortingName = string.Empty;
             ExportParam ep = new ExportParam();
-            ep.FirstTable = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
-            ep.FirstHeadTitle = sortingName + "移库单明细";
+            ep.DT1 = MoveBillDetailService.GetDetailsTable(page, rows, billNo);
+            ep.DT2 = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
+            ep.HeadTitle1 = "移库单明细";
+            ep.HeadTitle2 = sortingName + "移库单明细";
             return PrintService.Print(ep);
         }
-        #endregion
 
         public ActionResult MoveBillMasterHistory(DateTime datetime)
         {

@@ -2002,30 +2002,32 @@ namespace THOK.WCS.Bll.Service
                             InBillAllotRepository.SaveChanges();
 
                             #region 反馈给浪潮的xml数据信息
-
-                            try
+                            var systemParamter = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName == "InspurWebServiceIsActive");
+                            if (systemParamter.ParameterValue == "1" && systemParamter != null)
                             {
-                                InspurService inspurService = new InspurService();
-                                Inspur inspur = new Inspur();
-                                inspur.Param = "";
-                                inspur.User = inAllot.InBillMaster.OperatePerson.EmployeeName;
-                                inspur.Time = inAllot.InBillMaster.UpdateTime.ToString();
-                                inspur.BillNo = inAllot.BillNo;
-                                inspur.ProductCode = inAllot.ProductCode;
-                                inspur.RealQuantity = inAllot.InBillDetail.RealQuantity;
-
-                                MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new MdjInspurWmsService.LwmWarehouseWorkServiceService();
-                                LWWSS.lwmStroeInProgFeedback(inspurService.BillProgressFeedback(inspur, "in"));
-                                if (inAllot.InBillDetail.RealQuantity == inAllot.InBillDetail.AllotQuantity)
+                                try
                                 {
-                                    LWWSS.lwmStoreInComplete(inspurService.BillFinished(inspur, "in"));
+                                    InspurService inspurService = new InspurService();
+                                    Inspur inspur = new Inspur();
+                                    inspur.Param = "";
+                                    inspur.User = inAllot.InBillMaster.OperatePerson.EmployeeName;
+                                    inspur.Time = inAllot.InBillMaster.UpdateTime.ToString();
+                                    inspur.BillNo = inAllot.BillNo;
+                                    inspur.ProductCode = inAllot.ProductCode;
+                                    inspur.RealQuantity = inAllot.InBillDetail.RealQuantity;
+
+                                    MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new MdjInspurWmsService.LwmWarehouseWorkServiceService();
+                                    LWWSS.lwmStroeInProgFeedback(inspurService.BillProgressFeedback(inspur, "in"));
+                                    if (inAllot.InBillDetail.RealQuantity == inAllot.InBillDetail.AllotQuantity)
+                                    {
+                                        LWWSS.lwmStoreInComplete(inspurService.BillFinished(inspur, "in"));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    errorInfo = "Into Storage progress feedback to Inspur Failed！" + ex.Message;
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                errorInfo = "Into Storage progress feedback to Inspur Failed！" + ex.Message;
-                            }
-
                             #endregion 反馈给浪潮的xml数据信息
 
                             scope.Complete();
@@ -2104,30 +2106,32 @@ namespace THOK.WCS.Bll.Service
                             OutBillAllotRepository.SaveChanges();
 
                             #region 反馈给浪潮的xml数据信息
-
-                            try
+                            var systemParamter = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName == "InspurWebServiceIsActive");
+                            if (systemParamter.ParameterValue == "1" && systemParamter != null)
                             {
-                                InspurService inspurService = new InspurService();
-                                Inspur inspur = new Inspur();
-                                inspur.Param = "";
-                                inspur.User = outAllot.OutBillMaster.OperatePerson.EmployeeName;
-                                inspur.Time = outAllot.OutBillMaster.UpdateTime.ToString();
-                                inspur.BillNo = outAllot.BillNo;
-                                inspur.ProductCode = outAllot.ProductCode;
-                                inspur.RealQuantity = outAllot.OutBillDetail.RealQuantity;
-
-                                MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new MdjInspurWmsService.LwmWarehouseWorkServiceService();
-                                LWWSS.lwmStoreOutProgFeedback(inspurService.BillProgressFeedback(inspur, "out"));
-                                if (outAllot.OutBillDetail.RealQuantity == outAllot.OutBillDetail.AllotQuantity)
+                                try
                                 {
-                                    LWWSS.lwmStoreOutComplete(inspurService.BillFinished(inspur, "out"));
+                                    InspurService inspurService = new InspurService();
+                                    Inspur inspur = new Inspur();
+                                    inspur.Param = "";
+                                    inspur.User = outAllot.OutBillMaster.OperatePerson.EmployeeName;
+                                    inspur.Time = outAllot.OutBillMaster.UpdateTime.ToString();
+                                    inspur.BillNo = outAllot.BillNo;
+                                    inspur.ProductCode = outAllot.ProductCode;
+                                    inspur.RealQuantity = outAllot.OutBillDetail.RealQuantity;
+
+                                    MdjInspurWmsService.LwmWarehouseWorkServiceService LWWSS = new MdjInspurWmsService.LwmWarehouseWorkServiceService();
+                                    LWWSS.lwmStoreOutProgFeedback(inspurService.BillProgressFeedback(inspur, "out"));
+                                    if (outAllot.OutBillDetail.RealQuantity == outAllot.OutBillDetail.AllotQuantity)
+                                    {
+                                        LWWSS.lwmStoreOutComplete(inspurService.BillFinished(inspur, "out"));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    errorInfo = "Out Storage progress feedback to Inspur Failed！" + ex.Message;
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                errorInfo = "Out Storage progress feedback to Inspur Failed！" + ex.Message;
-                            }
-
                             #endregion 反馈给浪潮的xml数据信息
 
                             scope.Complete();

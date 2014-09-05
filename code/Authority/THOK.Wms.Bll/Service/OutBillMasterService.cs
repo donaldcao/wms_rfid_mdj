@@ -37,6 +37,9 @@ namespace THOK.Wms.Bll.Service
         [Dependency]
         public IUnitListRepository UnitListRespository { get; set; }
 
+        [Dependency]
+        public ISortWorkDispatchRepository SortWorkDispatchRepository { get; set; }
+
         UploadBll upload = new UploadBll();
 
         protected override Type LogPrefix
@@ -448,6 +451,12 @@ namespace THOK.Wms.Bll.Service
             bool result = false;
             errorInfo = string.Empty;
             var outbm = OutBillMasterRepository.GetQueryable().FirstOrDefault(i => i.BillNo == billNo);
+
+            if (SortWorkDispatchRepository.GetQueryable().Where(s => s.OutBillNo == billNo).Count() > 0)
+            {
+                errorInfo = "该出库单由分拣作业调度操作！";
+                return false;
+            }
             if (outbm != null && outbm.Status == "5")
             {
                 using (TransactionScope scope = new TransactionScope())

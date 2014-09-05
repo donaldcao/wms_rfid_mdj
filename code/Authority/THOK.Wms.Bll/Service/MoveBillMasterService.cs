@@ -28,6 +28,8 @@ namespace THOK.Wms.Bll.Service
         public IMoveBillCreater MoveBillCreater { get; set; }
         [Dependency]
         public IStorageLocker Locker { get; set; }
+        [Dependency]
+        public ISortWorkDispatchRepository SortWorkDispatchRepository { get; set; }
 
         protected override Type LogPrefix
         {
@@ -365,6 +367,13 @@ namespace THOK.Wms.Bll.Service
             bool result = false;
             strResult = string.Empty;
             var mbm = MoveBillMasterRepository.GetQueryable().FirstOrDefault(m => m.BillNo == BillNo);
+
+            if (SortWorkDispatchRepository.GetQueryable().Where(s => s.MoveBillNo == BillNo).Count() > 0)
+            {
+                strResult = "该移库单由分拣作业调度操作！";
+                return false;
+            }
+            
             if (mbm != null && mbm.Status == "3")
             {
                 using (TransactionScope scope = new TransactionScope())

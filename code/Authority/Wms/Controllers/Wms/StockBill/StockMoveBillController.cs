@@ -212,10 +212,10 @@ namespace Authority.Controllers.Wms.StockBill
             bool isGroup = Convert.ToBoolean(Request.QueryString["isGroup"]);
             string sortingName = string.Empty;
             ExportParam ep = new ExportParam();
-            ep.DT1 = MoveBillDetailService.GetDetailsTable(page, rows, billNo);
-            ep.DT2 = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
-            ep.HeadTitle1 = "移库单明细";
-            ep.HeadTitle2 = sortingName + "移库单明细";
+            ep.FirstTable = MoveBillDetailService.GetDetailsTable(page, rows, billNo);
+            ep.SecondTable = MoveBillDetailService.GetMoveBillDetail(page, rows, billNo, isAbnormity, isGroup, out sortingName);
+            ep.FirstHeadTitle = "移库单明细";
+            ep.SecondHeadTitle = sortingName + "移库单明细";
             return PrintService.Print(ep);
         }
 

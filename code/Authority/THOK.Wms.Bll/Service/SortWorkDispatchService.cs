@@ -357,7 +357,7 @@ namespace THOK.Wms.Bll.Service
                     var moveDetail = MoveBillDetailRepository.GetQueryable()
                         .Where(m => m.BillNo == sortWork.MoveBillNo && m.Status != "2");
 
-                    if (moveDetail.Any())
+                    if (moveDetail.Any() && sortWork.MoveBillMaster.Status != "4")
                     {
                         var sourceStorages = moveDetail.Select(m => m.OutStorage).ToArray();
                         var targetStorages = moveDetail.Select(m => m.InStorage).ToArray();

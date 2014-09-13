@@ -97,7 +97,7 @@ namespace THOK.Wms.Download.Bll
                 }
             }
             return tag;
-        } 
+        }
         #endregion
 
         /// <summary>
@@ -257,25 +257,27 @@ namespace THOK.Wms.Download.Bll
                 masterrow["company_code"] = row["ORG_CODE"].ToString().Trim();//所属单位编号
                 masterrow["sale_region_code"] = row["SALE_REG_CODE"].ToString().Trim();//营销部编号
                 masterrow["order_date"] = row["ORDER_DATE"].ToString().Trim();//订单日期
-                masterrow["order_type"] = row["ORDER_TYPE"].ToString().Trim();//订单类型
+                masterrow["order_type"] = "1";// row["ORDER_TYPE"].ToString().Trim();//订单类型
                 masterrow["customer_code"] = row["CUST_CODE"].ToString().Trim();//客户编号
                 masterrow["customer_name"] = row["CUST_NAME"].ToString().Trim();//客户名称
+                masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();
                 masterrow["quantity_sum"] = Convert.ToDecimal(row["QUANTITY_SUM"].ToString());//总数量
                 masterrow["amount_sum"] = Convert.ToDecimal(row["AMOUNT_SUM"].ToString());//总金额
                 masterrow["detail_num"] = Convert.ToInt32(row["DETAIL_NUM"].ToString());//明细数
                 masterrow["deliver_order"] = 0; //配车顺序
-                masterrow["DeliverDate"] = row["ORDER_DATE"].ToString();//配送日期
+                masterrow["deliver_date"] = row["ORDER_DATE"].ToString();//配送日期
                 masterrow["description"] = row["DIST_BILL_ID"].ToString();
                 masterrow["is_active"] = row["ISACTIVE"].ToString().Trim();//送货线路编码
-                masterrow["update_time"] = DateTime.Now;
-                masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();
-                masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString();
                 masterrow["status"] = "0";
+                masterrow["update_time"] = DateTime.Now;
+
+                // masterrow["dist_bill_id"] = row["DIST_BILL_ID"].ToString();
+
 
                 ds.Tables["DWV_OUT_ORDER"].Rows.Add(masterrow);
             }
             return ds;
-        } 
+        }
         #endregion
 
         /// <summary>
@@ -480,19 +482,21 @@ namespace THOK.Wms.Download.Bll
             mastertable.Columns.Add("order_type");
             mastertable.Columns.Add("customer_code");
             mastertable.Columns.Add("customer_name");
+            mastertable.Columns.Add("deliver_line_code");
             mastertable.Columns.Add("quantity_sum");
             mastertable.Columns.Add("amount_sum");
             mastertable.Columns.Add("detail_num");
             mastertable.Columns.Add("deliver_order");
-            mastertable.Columns.Add("DeliverDate");
+            mastertable.Columns.Add("deliver_date");
             mastertable.Columns.Add("description");
             mastertable.Columns.Add("is_active");
-            mastertable.Columns.Add("update_time");
-            mastertable.Columns.Add("deliver_line_code");
-            mastertable.Columns.Add("dist_bill_id");
             mastertable.Columns.Add("status");
+            mastertable.Columns.Add("update_time");
 
-           // mastertable.Columns.Add("sort_quantity_sum");
+            //  mastertable.Columns.Add("dist_bill_id");
+
+
+            // mastertable.Columns.Add("sort_quantity_sum");
 
             DataTable detailtable = ds.Tables.Add("DWV_OUT_ORDER_DETAIL");
             detailtable.Columns.Add("order_detail_id");

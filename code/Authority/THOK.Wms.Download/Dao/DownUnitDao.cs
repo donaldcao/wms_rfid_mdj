@@ -28,8 +28,10 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetUnitInfo(string unitCode)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
             string sql = "";
             dbTypeName = this.SalesSystemDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             switch (dbTypeName)
             {
                 case "mdjyc-db2"://Äµµ¤½­ÑÌ²Ýdb2
@@ -43,9 +45,9 @@ namespace THOK.Wms.Download.Dao
                                         WHERE (B.BRAND_N <> 'NULL' OR B.BRAND_N !='') AND {0}", unitCode);
                     break;
                 case "gzyc-oracle"://¹óÖÝÑÌ²Ýoracle
-                    sql = string.Format(@"SELECT U.*,U.BRAND_CODE AS BARNDCODE FROM V_WMS_BRAND_UNIT U
-                                        LEFT JOIN  V_WMS_BRAND B ON U.BRAND_CODE =B.BRAND_CODE
-                                        WHERE {0}", unitCode);
+                    sql = string.Format(@"SELECT U.*,U.BRAND_CODE AS BARNDCODE FROM {1} U
+                                        LEFT JOIN {2}  B ON U.BRAND_CODE =B.BRAND_CODE
+                                        WHERE {0}", unitCode, string.Format(downInterFaceViewName, "V_WMS_BRAND_UNIT"), string.Format(downInterFaceViewName, "V_WMS_BRAND"));
                     break;
                 default://Ä¬ÈÏ¹ãÎ÷ÑÌ²Ý
                     string.Format(@"SELECT U.*,B.BRAND_N AS BARNDCODE FROM V_WMS_BRAND_UNIT U

@@ -46,6 +46,8 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetInBillDetail(string inBillNoList)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             string sql = "";
             dbTypeName = this.SalesSystemDao();
             switch (dbTypeName)
@@ -57,7 +59,7 @@ namespace THOK.Wms.Download.Dao
                     sql = string.Format("SELECT A.*,B.BRAND_N AS BRANDCODE FROM V_WMS_IN_ORDER_DETAIL A LEFT JOIN V_WMS_BRAND B ON A.BRAND_CODE=B.BRAND_CODE WHERE {0} ", inBillNoList);
                     break;
                 case "gzyc-oracle"://贵州烟草oracle
-                    sql = string.Format("SELECT V_WMS_IN_ORDER_DETAIL.*,BRAND_CODE AS BRANDCODE FROM V_WMS_IN_ORDER_DETAIL WHERE {0} ", inBillNoList);
+                    sql = string.Format("SELECT A.*,BRAND_CODE AS BRANDCODE FROM {1} A WHERE {0} ", inBillNoList, string.Format(downInterFaceViewName, "V_WMS_IN_ORDER_DETAIL"));
                     break;
                 default://默认广西烟草
                     sql = string.Format("SELECT A.*,B.BRAND_N AS BRANDCODE FROM V_WMS_IN_ORDER_DETAIL A LEFT JOIN V_WMS_BRAND B ON A.BRAND_CODE=B.BRAND_CODE WHERE {0} ", inBillNoList);

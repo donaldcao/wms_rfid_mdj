@@ -28,6 +28,8 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetSortingOrder(string orderid)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             string sql = "";
             dbTypeName = this.SalesSystemDao();
             switch (dbTypeName)
@@ -41,8 +43,9 @@ namespace THOK.Wms.Download.Dao
                                         LEFT JOIN V_WMS_DIST_BILL B ON A.DIST_BILL_ID=B.DIST_BILL_ID WHERE {0} AND A.QUANTITY_SUM>0", orderid);
                     break;
                 case "gzyc-oracle"://贵州烟草oracle
-                    sql = string.Format(@"SELECT a.*,b.DIST_BILL_ID,b.DELIVERYMAN_CODE,b.DELIVERYMAN_NAME,ORDER_ID AS ORDERID FROM V_WMS_SORT_ORDER A
-                                        LEFT JOIN V_WMS_DIST_BILL B ON A.DIST_BILL_ID=B.DIST_BILL_ID WHERE {0} AND A.QUANTITY_SUM>0", orderid);
+                    sql = string.Format(@"SELECT a.*,b.DIST_BILL_ID,b.DELIVERYMAN_CODE,b.DELIVERYMAN_NAME,ORDER_ID AS ORDERID FROM {1} A
+                                        LEFT JOIN {2} B ON A.DIST_BILL_ID=B.DIST_BILL_ID WHERE {0} AND A.QUANTITY_SUM>0", orderid,
+                                        string.Format(downInterFaceViewName, "V_WMS_SORT_ORDER"), string.Format(downInterFaceViewName, "V_WMS_DIST_BILL"));
                     break;
                 default://默认广西烟草
                     sql = string.Format(@"SELECT a.*,b.DIST_BILL_ID,b.DELIVERYMAN_CODE,b.DELIVERYMAN_NAME,SUBSTR(A.ORDER_ID,3,8) AS ORDERID FROM V_WMS_SORT_ORDER A
@@ -59,6 +62,8 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetSortingOrderDetail(string orderid)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             string sql = "";
             dbTypeName = this.SalesSystemDao();
             switch (dbTypeName)
@@ -74,9 +79,10 @@ namespace THOK.Wms.Download.Dao
                                         LEFT JOIN V_WMS_SORT_ORDER C ON A.ORDER_ID=C.ORDER_ID WHERE {0} ", orderid);
                     break;
                 case "gzyc-oracle"://贵州烟草oracle
-                    sql = string.Format(@"SELECT A.* ,A.ORDER_ID AS ORDERID,B.BRAND_CODE AS BRANDCODE FROM V_WMS_SORT_ORDER_DETAIL A
-                                        LEFT JOIN V_WMS_BRAND B ON A.BRAND_CODE=B.BRAND_CODE
-                                        LEFT JOIN V_WMS_SORT_ORDER C ON A.ORDER_ID=C.ORDER_ID WHERE {0} ", orderid);
+                    sql = string.Format(@"SELECT A.* ,A.ORDER_ID AS ORDERID,B.BRAND_CODE AS BRANDCODE FROM {1} A
+                                        LEFT JOIN {2} B ON A.BRAND_CODE=B.BRAND_CODE
+                                        LEFT JOIN {3} C ON A.ORDER_ID=C.ORDER_ID WHERE {0} ", orderid, string.Format(downInterFaceViewName, "V_WMS_SORT_ORDER_DETAIL"),
+                                           string.Format(downInterFaceViewName, "V_WMS_BRAND"), string.Format(downInterFaceViewName, "V_WMS_SORT_ORDER"));
                     break;
                 default://默认广西烟草
                     sql = string.Format(@"SELECT A.* ,SUBSTR(A.ORDER_ID,3,8) AS ORDERID,B.BRAND_N AS BRANDCODE FROM V_WMS_SORT_ORDER_DETAIL A

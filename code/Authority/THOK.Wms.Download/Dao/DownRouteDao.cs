@@ -14,17 +14,19 @@ namespace THOK.Wms.Download.Dao
         /// </summary>
         public DataTable GetRouteInfo(string routeCodeList)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             string sql = "";
             try
             {
-                sql = string.Format(@"SELECT * FROM V_WMS_DIST_BILL A
-                LEFT JOIN V_WMS_DELIVER_LINE B ON A.DELIVER_LINE_CODE=B.DELIVER_LINE_CODE");
+                sql = string.Format(@"SELECT * FROM {0} A  LEFT JOIN {1} B ON A.DELIVER_LINE_CODE=B.DELIVER_LINE_CODE",
+                    string.Format(downInterFaceViewName, "V_WMS_DIST_BILL"), string.Format(downInterFaceViewName, "V_WMS_DELIVER_LINE"));
                 return this.ExecuteQuery(sql).Tables[0];
             }
             catch (Exception)
             {
-                sql = string.Format(@"SELECT * FROM V_DWV_ORD_DIST_BILL A
-                LEFT JOIN V_WMS_DELIVER_LINE B ON A.DELIVER_LINE_CODE=B.DELIVER_LINE_CODE");
+                sql = string.Format(@"SELECT * FROM {0} A LEFT JOIN {1} B ON A.DELIVER_LINE_CODE=B.DELIVER_LINE_CODE",
+                    string.Format(downInterFaceViewName, "V_DWV_ORD_DIST_BILL"), string.Format(downInterFaceViewName, "V_WMS_DELIVER_LINE"));
                 return this.ExecuteQuery(sql).Tables[0];
             }
         }

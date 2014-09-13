@@ -200,9 +200,9 @@ namespace THOK.SMS.Bll.Service
                               .Join(sortOrderRepository,
                               sod => sod.OrderID,
                               so => so.OrderID,
-                              (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity,sod.DemandQuantity, sod.ProductCode })
+                              (sod, so) => new { so.OrderDate, so.DeliverLineCode, sod.RealQuantity, sod.DemandQuantity, sod.ProductCode })
                               .GroupBy(a => new { a.OrderDate, a.DeliverLineCode })
-                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.DemandQuantity-s.RealQuantity) });
+                              .Select(a => new { a.Key.DeliverLineCode, quantity = a.Sum(s => s.DemandQuantity - s.RealQuantity) });
             foreach (var orderDate in sortOrderDispatchArray)
             {
                 try
@@ -255,21 +255,21 @@ namespace THOK.SMS.Bll.Service
                         if (sortOrderDispatch.SortBatchAbnormalId == 0)
                         {
                             var sortingLineAbnormal = sortingLineQuery.Where(a => a.ProductType == "2" && a.IsActive == "1").Select(a => a.SortingLineCode);
-                            if (sortingLineAbnormal.ToArray().Count()>0)
+                            if (sortingLineAbnormal.ToArray().Count() > 0)
                             {
                                 var sortingLineCode = sortBatchQuery.Where(a => a.OrderDate.Equals(date) && a.Status == "01")
                                     .Join(sortingLineQuery.Where(a => a.ProductType == "2" && a.IsActive == "1"), a => a.SortingLineCode, b => b.SortingLineCode, (a, b) => new { a.Id })
                                     .Select(a => new
                                     {
-                                     a.Id,
-                                     quantity = sortOrderDispatchQuery.FirstOrDefault(b => b.SortBatchAbnormalId.Equals(a.Id)) == null ? 0 :
-                                     sortingAbnormal
-                                     .Join(sortOrderDispatchQuery,
-                                     b => b.DeliverLineCode,
-                                     c => c.DeliverLineCode,
-                                    (b,c) => new { b.DeliverLineCode, c.SortBatchAbnormalId, b.quantity })
-                                    .GroupBy(b=> new { SortBatchAbnormalId = b.SortBatchAbnormalId })
-                                    .Select(b=> new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchAbnormalId }).FirstOrDefault(s=>s.SortBatchAbnormalId.Equals(a.Id)).quantity
+                                        a.Id,
+                                        quantity = sortOrderDispatchQuery.FirstOrDefault(b => b.SortBatchAbnormalId.Equals(a.Id)) == null ? 0 :
+                                        sortingAbnormal
+                                        .Join(sortOrderDispatchQuery,
+                                        b => b.DeliverLineCode,
+                                        c => c.DeliverLineCode,
+                                       (b, c) => new { b.DeliverLineCode, c.SortBatchAbnormalId, b.quantity })
+                                       .GroupBy(b => new { SortBatchAbnormalId = b.SortBatchAbnormalId })
+                                       .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchAbnormalId }).FirstOrDefault(s => s.SortBatchAbnormalId.Equals(a.Id)).quantity
                                     }).OrderBy(a => a.quantity).ToArray();
                                 sortOrderDispatch.SortBatchAbnormalId = sortingLineCode.FirstOrDefault().Id;
                                 SortOrderDispatchRepository.SaveChanges();
@@ -294,7 +294,7 @@ namespace THOK.SMS.Bll.Service
                                        (b, c) => new { b.DeliverLineCode, c.SortBatchPiecesId, b.quantity })
                                        .GroupBy(b => new { SortBatchPiecesId = b.SortBatchPiecesId })
                                        .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchPiecesId }).FirstOrDefault(s => s.SortBatchPiecesId.Equals(a.Id)).quantity
-                                       }).OrderBy(a => a.quantity).ToArray();
+                                   }).OrderBy(a => a.quantity).ToArray();
                                 sortOrderDispatch.SortBatchPiecesId = sortingLineCode.FirstOrDefault().Id;
                                 SortOrderDispatchRepository.SaveChanges();
                             }
@@ -355,7 +355,7 @@ namespace THOK.SMS.Bll.Service
             return result;
         }
 
-        public bool AddSortBatch(string dispatchId,string productType ,out string strResult)
+        public bool AddSortBatch(string dispatchId, string productType, out string strResult)
         {
             strResult = string.Empty;
             bool result = false;
@@ -406,7 +406,7 @@ namespace THOK.SMS.Bll.Service
                         sortingLineDetailquery = sortingLineDetailquery.Where(a => a.IsActive.Equals("1") && a.ProductType == productType
                             && !sortBatchQuery.Where(b => b.OrderDate.Equals(date) && b.Status.Equals("01")).Select(b => b.SortingLineCode).Contains(a.SortingLineCode));
                     }
-                    var sortingLineDetail = sortingLineDetailquery.Select(s=>s.SortingLineCode);
+                    var sortingLineDetail = sortingLineDetailquery.Select(s => s.SortingLineCode);
                     //更新批次分拣表
                     foreach (var item in sortingLineDetail)
                     {
@@ -440,7 +440,7 @@ namespace THOK.SMS.Bll.Service
                     foreach (var item in dispatchIds)
                     {
                         int id = Convert.ToInt32(item);
-                        var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id)&& a.OrderDate.Equals(orderDate));
+                        var sortOrderDispatch = sortOrderDispatchQuery.FirstOrDefault(a => a.ID.Equals(id) && a.OrderDate.Equals(orderDate));
                         if (sortOrderDispatch == null)
                         {
                             continue;
@@ -505,7 +505,7 @@ namespace THOK.SMS.Bll.Service
                                       .GroupBy(b => new { SortBatchManualId = b.SortBatchManualId })
                                       .Select(b => new { quantity = b.Sum(s => s.quantity), b.Key.SortBatchManualId }).FirstOrDefault(s => s.SortBatchManualId.Equals(a.Id)).quantity
                                }).OrderBy(a => a.quantity).ToArray();
-                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault()==null ? 0 : sortingLineCode.FirstOrDefault().Id;
+                            sortOrderDispatch.SortBatchManualId = sortingLineCode.FirstOrDefault() == null ? 0 : sortingLineCode.FirstOrDefault().Id;
                         }
                         SortOrderDispatchRepository.SaveChanges();
                     }
@@ -555,7 +555,7 @@ namespace THOK.SMS.Bll.Service
                         .Where(s => s.SortOrderAllotMaster.SortBatchId == sortBatch.Id).Delete();
                     SortOrderAllotMasterRepository.GetQueryable()
                         .Where(a => a.SortBatchId == sortBatch.Id).Delete();
-                    
+
                     //删除烟道分配表
                     HandSupplyRepository.GetQueryable()
                         .Where(a => a.SortBatchId == sortBatch.Id).Delete();
@@ -719,8 +719,8 @@ namespace THOK.SMS.Bll.Service
                 var NoOneProFilePath = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProFilePath")).ParameterValue;
                 if (sortBatch.Status == "02")  //02 已优化
                 {
-                    string txtFile = NoOneProFilePath + "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
-                    string zipFile = txtFile + ".zip";
+                    string txtFile = "RetailerOrder" + System.DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string zipFile = NoOneProFilePath + txtFile + ".zip";
                     txtFile += ".Order";
 
                     CreateDataFile(sortingLine.ProductType, sortBatchId, txtFile, zipFile);
@@ -755,40 +755,60 @@ namespace THOK.SMS.Bll.Service
         /// </summary>
         /// <param name="orderDate"></param>
         /// <param name="batchNo"></param>
-        private void CreateDataFile(string productType,int sortBatchId, string txtFile, string zipFile)
+        private void CreateDataFile(string productType, int sortBatchId, string txtFile, string zipFile)
         {
-            FileStream file = new FileStream(txtFile, FileMode.Create);
-            StreamWriter writer = new StreamWriter(file, Encoding.UTF8);           
+            var systemParameterQuery = SystemParameterRepository.GetQueryable().ToArray();
+            var NoOneProFilePath = systemParameterQuery.FirstOrDefault(s => s.ParameterName.Equals("NoOneProFilePath")).ParameterValue;
+
+            FileStream file = new FileStream(NoOneProFilePath + txtFile, FileMode.Create);
+            StreamWriter writer = new StreamWriter(file, Encoding.UTF8);
 
             var deliverLineQuery = DeliverLineRepository.GetQueryable();
             var productQuery = SortOrderAllotDetailRepository.GetQueryable();
 
             //正常分拣打码
-            var uploadOrder = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId == sortBatchId).Select(c => new
-            {
-                c.Id,
-                c.SortBatchId,
-                c.PackNo,
-                c.OrderId,
-                c.DeliverLineCode,
-                DeliverLineName = deliverLineQuery.Where(b => b.DeliverLineCode == c.DeliverLineCode).FirstOrDefault().DeliverLineName,
-                ProductCode = productQuery.Where(d => d.MasterId == c.Id).FirstOrDefault().ProductCode,
-                ProductName = productQuery.Where(d => d.MasterId == c.Id).FirstOrDefault().ProductName,
-                c.CustomerCode,
-                c.CustomerName,
-                c.CustomerOrder,
-                c.CustomerDeliverOrder,
-                c.CustomerInfo,
-                c.Quantity,
-                c.ExportNo,
-                c.FinishTime,
-                c.StartTime,
-                c.Status
-            }).ToArray();
-
+            var uploadOrder = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId == sortBatchId).Join(productQuery, a => a.Id, b => b.MasterId,
+                (a, b) => new
+                {
+                    a.OrderId,
+                    a.CustomerCode,
+                    a.CustomerName,
+                    b.ProductCode,
+                    b.ProductName,
+                    b.Quantity,
+                    a.SortBatch.BatchNo,
+                    a.CustomerOrder,
+                    a.DeliverLineCode,
+                    DeliverLineName = deliverLineQuery.Where(c => c.DeliverLineCode == a.DeliverLineCode).FirstOrDefault().DeliverLineName,
+                    a.SortBatch.OrderDate,
+                    a.SortBatch.NoOneProjectSortDate,
+                    a.SortBatch.SortingLineCode
+                }).GroupBy(c => new { c.OrderId, c.CustomerCode, c.CustomerName, c.ProductCode, c.ProductName, c.BatchNo, c.CustomerOrder, c.DeliverLineCode, c.DeliverLineName, c.OrderDate, c.NoOneProjectSortDate, c.SortingLineCode })
+                .ToArray()
+                .OrderBy(a => a.Key.CustomerOrder)
+                .Select(a => new
+                {
+                    a.Key.OrderId,
+                    a.Key.CustomerCode,
+                    a.Key.CustomerName,
+                    a.Key.ProductCode,
+                    a.Key.ProductName,
+                    Quantity = a.Sum(b => b.Quantity),
+                    a.Key.BatchNo,
+                    a.Key.CustomerOrder,
+                    a.Key.DeliverLineCode,
+                    a.Key.DeliverLineName,
+                    OrderDate = a.Key.OrderDate.ToString("yyyy-MM-dd"),
+                    NoOneProjectSortDate = a.Key.NoOneProjectSortDate.ToString("yyyy-MM-dd"),
+                    a.Key.SortingLineCode
+                }).ToArray();
+            int i = 1;
             foreach (var row in uploadOrder)
             {
-                string rowData = row.ToString().Trim() + ";";
+                string rowData = (i++).ToString() + "," + row.OrderId + "," + row.CustomerCode + "," + row.CustomerName + "," + row.ProductCode + ","
+                    + row.ProductName + "," + row.Quantity + "," + row.BatchNo + "," + row.CustomerOrder + ","
+                    + row.DeliverLineCode + "," + row.DeliverLineName + "," + row.OrderDate + "," + row.NoOneProjectSortDate + ","
+                    + row.SortingLineCode + ",1;";
                 writer.WriteLine(rowData);
                 writer.Flush();
             }
@@ -844,8 +864,9 @@ namespace THOK.SMS.Bll.Service
         /// <summary>
         /// 发送压缩文件给中软一号工程
         /// </summary>
-        public void SendZipFile(string NoOneProIP,string NoOneProPort,string zipFile)
+        public void SendZipFile(string NoOneProIP, string NoOneProPort, string zipFile)
         {
+
             TcpClient client = new TcpClient();
             client.Connect(NoOneProIP, Convert.ToInt32(NoOneProPort));
             NetworkStream stream = client.GetStream();
@@ -927,8 +948,8 @@ namespace THOK.SMS.Bll.Service
 
         //分拣配送打印
         public System.Data.DataTable DeliverOrderSearchInfo(int page, int rows, string orderDate, string batchNo, string sortingLineCode)
-        {           
-            var sortDispatch = SortOrderDispatchRepository.GetQueryable().Where(a=>a.SortBatchId>0);
+        {
+            var sortDispatch = SortOrderDispatchRepository.GetQueryable().Where(a => a.SortBatchId > 0);
             var sortBatchQuery = SortBatchRepository.GetQueryable();
             var sortLineQuery = SortingLineRepository.GetQueryable();
             var deliverLineQuery = DeliverLineRepository.GetQueryable();
@@ -951,13 +972,13 @@ namespace THOK.SMS.Bll.Service
             var batchsort = sortDispatch.ToArray().OrderByDescending(b => b.SortBatchId).Select(a => new
             {
                 OrderDate = sortBatchQuery.Where(s => s.Id == a.SortBatchId).FirstOrDefault().OrderDate.ToString("yyyy-MM-dd"),
-               a.SortingLineCode,
-               SortingLineName = sortLineQuery.FirstOrDefault(b=>b.SortingLineCode==a.SortingLineCode).SortingLineName,
-               a.DeliverLineCode,
-               DeliverLineName=deliverLineQuery.FirstOrDefault(c=>c.DeliverLineCode==a.DeliverLineCode).DeliverLineName,
-               a.DeliverLineNo,
-               SortStatus=a.SortStatus=="1"?"未分拣":"已分拣",
-               IsActive=a.IsActive=="1"?"可用":"不可用"
+                a.SortingLineCode,
+                SortingLineName = sortLineQuery.FirstOrDefault(b => b.SortingLineCode == a.SortingLineCode).SortingLineName,
+                a.DeliverLineCode,
+                DeliverLineName = deliverLineQuery.FirstOrDefault(c => c.DeliverLineCode == a.DeliverLineCode).DeliverLineName,
+                a.DeliverLineNo,
+                SortStatus = a.SortStatus == "1" ? "未分拣" : "已分拣",
+                IsActive = a.IsActive == "1" ? "可用" : "不可用"
             });
 
             var batch = batchsort.OrderByDescending(a => a.OrderDate).ToArray()
@@ -971,7 +992,7 @@ namespace THOK.SMS.Bll.Service
                    a.DeliverLineName,
                    a.DeliverLineNo,
                    a.SortStatus,
-                   a.IsActive                 
+                   a.IsActive
                }).ToArray();
 
             System.Data.DataTable dt = new System.Data.DataTable();

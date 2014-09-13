@@ -116,6 +116,7 @@ namespace THOK.Wms.Repository
             modelBuilder.Configurations.Add(new DailyBalanceHistoryMap());
 
             modelBuilder.Configurations.Add(new XmlValueMap());
+            modelBuilder.Configurations.Add(new OrdDistBillMap());
 
             #endregion
 

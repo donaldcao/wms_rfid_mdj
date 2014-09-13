@@ -19,5 +19,13 @@ namespace THOK.Wms.Download.Dao
             }
             return d;
         }
+
+        public string FindDownInterFaceViewName()
+        {
+            DataTable table = ExecuteQuery("select parameter_value from auth_system_parameter where parameter_name='DownInterFaceViewName'").Tables[0];
+            if (table.Rows.Count <= 0)
+                return "{0}";
+            return table.Rows[0]["parameter_value"].ToString();
+        }
     }
 }

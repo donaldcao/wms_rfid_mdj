@@ -57,7 +57,7 @@
                     最大容量:
                 </td>
                 <td align="left" style="width: 130px;">
-                    <input id="details-ChannelCapacity" name="ChannelCapacity" class="easyui-numberbox" required="true"" />
+                    <input id="details-ChannelCapacity" name="ChannelCapacity" class="easyui-numberbox" required="true" />
                 </td>
                 <td style="text-align:right; width: 60px;">
                     Led屏号:
@@ -77,7 +77,7 @@
                     剩余数量:
                 </td>
                 <td align="left" style="width: 130px;">
-                    <input id="details-RemainQuantity" name="RemainQuantity" class="easyui-numberbox" required="true"" />
+                    <input id="details-RemainQuantity" name="RemainQuantity" class="easyui-numberbox" required="true"/>
                 </td>
                 <td style="text-align:right; width: 60px;">
                     X 坐标:
@@ -156,8 +156,9 @@
                 <td style="text-align:right; width: 60px;">
                     高:
                 </td>
-                <td align="left" style="width: 130px;">
-                    <input id="details-Height" name="Height" class="easyui-numberbox" required="true"/>
+              <td align="left" style="width: 130px;">
+                <input id="details-Height" name="Height" class="easyui-numberbox" required="true"/>
+              </td>
             </tr>
             <tr>
                 <td style="text-align:right; width: 80px;">
@@ -167,7 +168,18 @@
                     <input id="productCode2" name="ProductCode" class="easyui-validatebox" style="display: none;" />
                     <input id="productName2" name="ProductName" readonly="true" />
                     <a href="#" onclick="productQuery()" class="easyui-linkbutton" iconcls="icon-search" plain="true"></a>
-                </td>  
+                </td>
+
+              <td style="text-align:right; width: 80px;">
+                是否留烟:
+              </td>
+              <td align="left" style="width: 130px;">
+                <select id="details-IsAccept" name="IsAcceptRemainQuantity" class="easyui-combobox" style="width: 130px"
+                    editable="false" panelheight="45" required="true">
+                  <option value="False">不留烟</option>
+                  <option value="True">留烟</option>
+                </select>
+              </td>
              </tr>
              <tr>
                 <td style="text-align:right; width: 80px;">

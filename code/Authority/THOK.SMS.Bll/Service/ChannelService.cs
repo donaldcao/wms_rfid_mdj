@@ -101,9 +101,17 @@ namespace THOK.SMS.Bll.Service
             {
                 channelDetails = channelDetails.Where(a => a.ChannelName == channel.ChannelName);
             }
+
+            //是否留烟
+            if (channel.IsAcceptRemainQuantity.ToString() != null && channel.IsAcceptRemainQuantity.ToString() != string.Empty)
+            {
+                channelDetails = channelDetails.Where(a => a.IsAcceptRemainQuantity.ToString() == channel.IsAcceptRemainQuantity.ToString());
+            }
+
             channelDetails = channelDetails.OrderBy(c => c.SortingLineCode).ThenBy(c => c.GroupNo).ThenBy(c => c.SortAddress);
             int total = channelDetails.Count();
             var channelArray = channelDetails.Skip((page - 1) * rows).Take(rows).ToArray();
+
             var channelSkip = channelArray.Select(c => new
             {
                 c.ChannelCode,
@@ -124,7 +132,8 @@ namespace THOK.SMS.Bll.Service
                 c.SortAddress,
                 GroupNo = c.GroupNo == 1 ? "A线" : "B线",
                 c.OrderNo,
-                IsActive = c.IsActive == "1" ? "启用" : "不启用"
+                IsActive = c.IsActive == "1" ? "启用" : "不启用",
+                IsAcceptRemainQuantity = c.IsAcceptRemainQuantity.ToString()== "False" ? "不留烟" : "留烟" //false=0 不留烟
             });
             return new { total, rows = channelSkip.ToArray() };
         }
@@ -195,6 +204,7 @@ namespace THOK.SMS.Bll.Service
                     newChannel.Width = channel.Width;
                     newChannel.X = channel.X;
                     newChannel.Y = channel.Y;
+                    newChannel.IsAcceptRemainQuantity = channel.IsAcceptRemainQuantity;
                     ChannelRepository.SaveChanges();
                     result = true;
                 }

@@ -1,38 +1,44 @@
 ﻿<script type="text/javascript">
-    function editClick() {
-        var selectedRow = $('#details').datagrid('getSelected');
-        if (selectedRow) {
-            $("#dlg-details").dialog("open").dialog("setTitle", "编辑");
-            url = '/ChannelInfo/Edit/';
-            $('#fm').form('load', selectedRow);
-            $('form input').removeAttr("disabled");
-            $('#details-ChannelCode').attr('readonly', 'true');
-            switch (selectedRow.ChannelType) {
-                case "立式机":
-                    $('#details-ChannelType').combo('setValue', 2).combo('setText', selectedRow.ChannelType);
-                    break;
-                case "通道机":
-                    $('#details-ChannelType').combo('setValue', 3).combo('setText', selectedRow.ChannelType);
-                    break;
-                case "卧式机":
-                    $('#details-ChannelType').combo('setValue', 4).combo('setText', selectedRow.ChannelType);
-                    break;
-                case "混合烟道":
-                    $('#details-ChannelType').combo('setValue', 5).combo('setText', selectedRow.ChannelType);
-                    break;
-            }
-            if (selectedRow.GroupNo == 'A线') {
-                $('#details-GroupNo').combo('setValue', 1).combo('setText', selectedRow.GroupNo);
-            } else {
-                $('#details-GroupNo').combo('setValue', 2).combo('setText', selectedRow.GroupNo);
-            }
-            if (selectedRow.IsActive == '启用') {
-                $('#details-Status').combo('setValue', 1).combo('setText', selectedRow.IsActive);
-            } else {
-                $('#details-Status').combo('setValue', 0).combo('setText', selectedRow.IsActive);
-            }
-        } else {
-            $.messager.alert('提示', '没有选择行！', 'info');
-        }
-    }
+  function editClick() {
+  var selectedRow = $('#details').datagrid('getSelected');
+  if (selectedRow) {
+  $("#dlg-details").dialog("open").dialog("setTitle", "编辑");
+  url = '/ChannelInfo/Edit/';
+  $('#fm').form('load', selectedRow);
+  $('form input').removeAttr("disabled");
+  $('#details-ChannelCode').attr('readonly', 'true');
+  switch (selectedRow.ChannelType) {
+  case "立式机":
+  $('#details-ChannelType').combo('setValue', 2).combo('setText', selectedRow.ChannelType);
+  break;
+  case "通道机":
+  $('#details-ChannelType').combo('setValue', 3).combo('setText', selectedRow.ChannelType);
+  break;
+  case "卧式机":
+  $('#details-ChannelType').combo('setValue', 4).combo('setText', selectedRow.ChannelType);
+  break;
+  case "混合烟道":
+  $('#details-ChannelType').combo('setValue', 5).combo('setText', selectedRow.ChannelType);
+  break;
+  }
+  if (selectedRow.GroupNo == 'A线') {
+  $('#details-GroupNo').combo('setValue', 1).combo('setText', selectedRow.GroupNo);
+  } else {
+  $('#details-GroupNo').combo('setValue', 2).combo('setText', selectedRow.GroupNo);
+  }
+  if (selectedRow.IsActive == '启用') {
+  $('#details-Status').combo('setValue', 1).combo('setText', selectedRow.IsActive);
+  } else {
+  $('#details-Status').combo('setValue', 0).combo('setText', selectedRow.IsActive);
+  }
+
+  if (selectedRow.IsAcceptRemainQuantity == '不留烟') {
+  $('#details-IsAccept').combo('setValue', False).combo('setText', selectedRow.IsAcceptRemainQuantity);
+  } else {
+  $('#details-IsAccept').combo('setValue', True).combo('setText', selectedRow.IsAcceptRemainQuantity);
+  }
+  } else {
+  $.messager.alert('提示', '没有选择行！', 'info');
+  }
+  }
 </script>

@@ -14,7 +14,7 @@ namespace THOK.Wms.Repository.Migrations
 
         protected override void Seed(THOK.Wms.Repository.AuthorizeContext context)
         {
-            Clear(context);
+            //Clear(context);
 
             #region 登录界面数据显示
             CreateCities(context);

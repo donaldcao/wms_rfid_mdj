@@ -108,6 +108,7 @@
     <Compile Include="Mapping\MoveBillMasterHistoryMap.cs" />
     <Compile Include="Mapping\MoveBillMasterMap.cs" />
     <Compile Include="Mapping\NavicertMap.cs" />
+    <Compile Include="Mapping\OrdDistBillMap.cs" />
     <Compile Include="Mapping\OutBillAllotHistoryMap.cs" />
     <Compile Include="Mapping\OutBillAllotMap.cs" />
     <Compile Include="Mapping\OutBillDetailHistoryMap.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="MoveBillMaster.cs" />
     <Compile Include="MoveBillMasterHistory.cs" />
     <Compile Include="Navicert.cs" />
+    <Compile Include="OrdDistBill.cs" />
     <Compile Include="OutBillAllot.cs" />
     <Compile Include="OutBillAllotHistory.cs" />
     <Compile Include="OutBillDetail.cs" />

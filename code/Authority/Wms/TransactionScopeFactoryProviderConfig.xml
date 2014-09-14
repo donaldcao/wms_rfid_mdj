@@ -13,7 +13,7 @@
 				<DataBaseSchemaFileName value ="" desc =""/>
 				<DataSource value ="" desc =""/>
 				<IP value ="." desc =""/>
-				<DataBaseName value ="wms_rfid_db" desc =""/>
+				<DataBaseName value ="wms_rfid_db2" desc =""/>
 				<User value ="sa" desc =""/>
 				<Password value ="123456" desc =""/>
 			</DataConfiguration>

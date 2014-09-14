@@ -16,7 +16,9 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetCustomerInfo(string customerCode)
         {
-            string sql = string.Format("SELECT * FROM V_WMS_CUSTOMER WHERE {0}", customerCode);
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
+            string sql = string.Format("SELECT * FROM {1} WHERE {0}", customerCode, string.Format(downInterFaceViewName, "V_WMS_CUSTOMER"));
             return this.ExecuteQuery(sql).Tables[0];
         }
 

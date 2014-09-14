@@ -11,7 +11,9 @@ namespace THOK.Wms.Download.Dao
     {
         public DataTable GetDistStationInfo(string distCode)
         {
-            string sql = string.Format("SELECT * FROM V_WMS_DIST_STATION WHERE DIST_STA_CODE NOT IN({0})", distCode);
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
+            string sql = string.Format("SELECT * FROM {1} WHERE DIST_STA_CODE NOT IN({0})", distCode, string.Format(downInterFaceViewName, "V_WMS_DIST_STATION"));
             return this.ExecuteQuery(sql).Tables[0];
         }
 

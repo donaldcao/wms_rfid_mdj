@@ -17,15 +17,17 @@ namespace THOK.Wms.Download.Dao
 
         public DataTable GetDistCarBillInfo(string distCarCode)
         {
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
             string sql = "";
             try
             {
-                sql = string.Format("SELECT * FROM V_WMS_DIST_BILL WHERE {0}", distCarCode);
+                sql = string.Format("SELECT * FROM {1} WHERE {0}", distCarCode, string.Format(downInterFaceViewName, "V_WMS_DIST_BILL"));
                 return this.ExecuteQuery(sql).Tables[0];
             }
             catch (Exception)
             {
-                sql = string.Format("SELECT * FROM V_DWV_ORD_DIST_BILL WHERE {0}", distCarCode);
+                sql = string.Format("SELECT * FROM {1} WHERE {0}", distCarCode, string.Format(downInterFaceViewName, "V_DWV_ORD_DIST_BILL"));
                 return this.ExecuteQuery(sql).Tables[0];
             }
         }

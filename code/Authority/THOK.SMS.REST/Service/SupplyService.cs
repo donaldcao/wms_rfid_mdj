@@ -177,6 +177,8 @@ namespace THOK.SMS.REST.Service
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
+                    //todo:同步仓储拆盘位到补货拆盘位
+
                     var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
                     var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();

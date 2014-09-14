@@ -19,20 +19,20 @@
 			</DataConfiguration>
 		</key>
 		<key name="YXConnection">
-			<DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
-				<DataBaseType value ="DB2"  desc =""/>
-				<ORMappingType value ="Emit" desc =""/>
-				<CommandTimeoutInSecs value ="10000" desc =""/>
-				<ConnectionLifetimeInSecs value ="" desc =""/>
-				<MinPoolSize value ="" desc =""/>
-				<MaxPoolSize value ="" desc =""/>
-				<DataBaseSchemaFileName value ="" desc =""/>
-				<DataSource value ="" desc =""/>
-				<IP value ="10.57.64.14:50000" desc =""/>
-				<DataBaseName value ="mdjv6db" desc =""/>
-				<User value ="thok" desc =""/>
-				<Password value ="mdjthok" desc =""/>
-			</DataConfiguration>
+      <DataConfiguration type="DBRabbit.Config.DataConfiguration,DBRabbit.dll">
+        <DataBaseType desc="" value="Oracle"/>
+        <ORMappingType desc="" value="Emit"/>
+        <CommandTimeoutInSecs desc="" value="1000000"/>
+        <ConnectionLifetimeInSecs desc="" value=""/>
+        <MinPoolSize desc="" value=""/>
+        <MaxPoolSize desc="" value=""/>
+        <DataBaseSchemaFileName desc="" value=""/>
+        <DataSource desc="" value="(DESCRIPTION =(ADDRESS_LIST=(ADDRESS=(PROTOCOL = TCP)(HOST = 10.95.1.109)(PORT = 1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SID=gzv3db1)))"/>
+        <IP desc="" value=""/>
+        <DataBaseName desc="" value=""/>
+        <User desc="" value="asccjk"/>
+        <Password desc="" value="asccjk"/>
+      </DataConfiguration>
 		</key>
 	</property>
 	<property name="SlaveSuitDictionary">		

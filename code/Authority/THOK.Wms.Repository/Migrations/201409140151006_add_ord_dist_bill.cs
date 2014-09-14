@@ -21,14 +21,10 @@ namespace THOK.Wms.Repository.Migrations
                 .PrimaryKey(t => t.dist_bill_id);
             
             AlterColumn("dbo.wms_sort_order", "deliver_date", c => c.String(nullable: false, maxLength: 14));
-            AlterColumn("dbo.wms_sort_order", "is_active", c => c.String(nullable: false, maxLength: 1));
-            AlterColumn("dbo.wms_sort_order", "status", c => c.String(nullable: false, maxLength: 1));
         }
         
         public override void Down()
         {
-            AlterColumn("dbo.wms_sort_order", "status", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
-            AlterColumn("dbo.wms_sort_order", "is_active", c => c.String(nullable: false, maxLength: 1, fixedLength: true));
             AlterColumn("dbo.wms_sort_order", "deliver_date", c => c.String(nullable: false, maxLength: 14, fixedLength: true));
             DropTable("dbo.wms_ord_dist_bill");
             RenameColumn(table: "dbo.wms_sort_order", name: "deliver_date", newName: "DeliverDate");

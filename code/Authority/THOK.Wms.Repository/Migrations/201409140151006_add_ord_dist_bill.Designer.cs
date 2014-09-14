@@ -13,7 +13,7 @@ namespace THOK.Wms.Repository.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201409130810587_add_ord_dist_bill"; }
+            get { return "201409140151006_add_ord_dist_bill"; }
         }
         
         string IMigrationMetadata.Source

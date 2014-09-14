@@ -51,6 +51,10 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.SupplyAddress)
                 .IsRequired();
             this.Property(t => t.SupplyCachePosition);
+
+            this.Property(t => t.IsAcceptRemainQuantity)
+                .IsRequired();
+
             this.Property(t => t.IsActive)
                 .IsRequired()
                 .IsFixedLength()
@@ -77,6 +81,7 @@ namespace THOK.SMS.DbModel.Mapping
             this.Property(t => t.SortAddress).HasColumnName(ColumnMap.Value.To("SortAddress"));
             this.Property(t => t.SupplyAddress).HasColumnName(ColumnMap.Value.To("SupplyAddress"));
             this.Property(t => t.SupplyCachePosition).HasColumnName(ColumnMap.Value.To("SupplyCachePosition"));
+            this.Property(t => t.IsAcceptRemainQuantity).HasColumnName(ColumnMap.Value.To("IsAcceptRemainQuantity"));
             this.Property(t => t.IsActive).HasColumnName(ColumnMap.Value.To("IsActive"));
             this.Property(t => t.UpdateTime).HasColumnName(ColumnMap.Value.To("UpdateTime"));
 

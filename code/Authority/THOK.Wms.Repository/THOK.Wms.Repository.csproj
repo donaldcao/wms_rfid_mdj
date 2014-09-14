@@ -122,6 +122,10 @@
     <Compile Include="Migrations\201409140151006_add_ord_dist_bill.Designer.cs">
       <DependentUpon>201409140151006_add_ord_dist_bill.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201409140505575_add_isacceptremainquantity_to_sms_channel.cs" />
+    <Compile Include="Migrations\201409140505575_add_isacceptremainquantity_to_sms_channel.Designer.cs">
+      <DependentUpon>201409140505575_add_isacceptremainquantity_to_sms_channel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryContext\AuthorityRepositoryContext.cs" />
@@ -212,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201409140151006_add_ord_dist_bill.resx">
       <DependentUpon>201409140151006_add_ord_dist_bill.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201409140505575_add_isacceptremainquantity_to_sms_channel.resx">
+      <DependentUpon>201409140505575_add_isacceptremainquantity_to_sms_channel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

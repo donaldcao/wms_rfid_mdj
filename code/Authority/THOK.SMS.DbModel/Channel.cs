@@ -31,6 +31,7 @@ namespace THOK.SMS.DbModel
         public int SortAddress { get; set; }
         public int SupplyAddress { get; set; }
         public int SupplyCachePosition { get; set; }
+        public bool IsAcceptRemainQuantity { get; set; }
         public string IsActive { get; set; }
         public DateTime UpdateTime { get; set; }
 

@@ -639,18 +639,20 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                                  .Select(g => new ChannelGroupInfo { ChannelGroup = g, Quantity = 0 })
                                                  .ToArray();
 
-            var channelAllotInfos = channelAllots.Select(c => new ChannelAllotInfo
-            {
-                Id = c.Id,
-                ChannelCode = c.ChannelCode,
-                GroupNo = c.Channel.GroupNo,
-                OrderNo = c.Channel.OrderNo,
-                ProductCode = c.ProductCode,
-                Quantity = ((c.Quantity - c.Channel.RemainQuantity) / 50) * 50,
-                RemainQuantity = c.Channel.RemainQuantity + ((c.Quantity - c.Channel.RemainQuantity) % 50),
-                ChannelCapacity = c.Channel.ChannelCapacity
-            })
-                .ToArray();
+            var channelAllotInfos = channelAllots.Select(c => new ChannelAllotInfo{
+                    Id = c.Id,
+                    ChannelCode = c.ChannelCode,
+                    GroupNo = c.Channel.GroupNo,
+                    OrderNo = c.Channel.OrderNo,
+                    ProductCode = c.ProductCode,
+                    Quantity = c.Channel.IsAcceptRemainQuantity && c.ProductCode == c.Channel.ProductCode 
+                        ? (int)Math.Ceiling((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50
+                        : (int)Math.Floor((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50,
+                    RemainQuantity = c.Channel.IsAcceptRemainQuantity && c.ProductCode == c.Channel.ProductCode 
+                        ? c.Channel.RemainQuantity
+                        : ((c.Quantity - c.Channel.RemainQuantity) % 50),
+                    ChannelCapacity = c.Channel.ChannelCapacity
+                }).ToArray();
 
             int psCount = deliverLineCodes.Count();
             int PsTemp = 0;

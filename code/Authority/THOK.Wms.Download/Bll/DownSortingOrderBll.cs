@@ -257,7 +257,7 @@ namespace THOK.Wms.Download.Bll
                 masterrow["company_code"] = row["ORG_CODE"].ToString().Trim();//所属单位编号
                 masterrow["sale_region_code"] = row["SALE_REG_CODE"].ToString().Trim();//营销部编号
                 masterrow["order_date"] = row["ORDER_DATE"].ToString().Trim();//订单日期
-                masterrow["order_type"] = "1";// row["ORDER_TYPE"].ToString().Trim();//订单类型
+                masterrow["order_type"] =  row["ORDER_TYPE"].ToString().Trim();//订单类型
                 masterrow["customer_code"] = row["CUST_CODE"].ToString().Trim();//客户编号
                 masterrow["customer_name"] = row["CUST_NAME"].ToString().Trim();//客户名称
                 masterrow["deliver_line_code"] = row["DIST_BILL_ID"].ToString();

@@ -750,6 +750,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                             addSortSupply.ChannelCode = channelAllotInfo.ChannelCode;
                                             addSortSupply.ProductCode = channelAllotInfo.ProductCode;
                                             addSortSupply.ProductName = sortOrderDetailInfo.ProductName;
+                                            addSortSupply.Status = "0";
                                             SortSupplyRepository.Add(addSortSupply);
 
                                             channelAllotInfo.Quantity -= 50;

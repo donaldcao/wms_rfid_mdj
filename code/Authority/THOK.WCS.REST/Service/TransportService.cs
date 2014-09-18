@@ -194,7 +194,7 @@ namespace THOK.WCS.REST.Service
                     }
                     TaskRepository.SaveChanges();
                     scope.Complete();
-                    return null;
+                    return srmTask;
                 }
             }
             catch (Exception ex)

@@ -118,7 +118,7 @@ namespace THOK.SMS.REST.Service
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
-                    var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
+                    var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryableIncludeSupplyPosition();
                     var supplyTaskQuery = SupplyTaskRepository.GetQueryable();
 
                     var unAssignOriginPositionAddressTasks = supplyTaskQuery.Where(s => s.OriginPositionAddress == 0).OrderBy(s => s.Id);
@@ -131,6 +131,7 @@ namespace THOK.SMS.REST.Service
                                 || s.SupplyPosition.SortingLineCodes.Contains(task.SortingLineCode))
                             && (string.IsNullOrEmpty(s.SupplyPosition.TargetSupplyAddresses)
                                 || s.SupplyPosition.TargetSupplyAddresses.Contains(task.TargetSupplyAddress.ToString())))
+                            .ToArray()
                             .OrderBy(s => s.Quantity).FirstOrDefault();
 
                         var supplyPositions = supplyPositionQuery.Where(s => s.ProductCode == task.ProductCode
@@ -177,13 +178,11 @@ namespace THOK.SMS.REST.Service
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
-                    //todo:同步仓储拆盘位到补货拆盘位
-
                     var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
                     var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();
 
-                    var supplyPositions = supplyPositionQuery.Where(s => s.PositionType == "02" && s.PositionType == "03"
+                    var supplyPositions = supplyPositionQuery.Where(s => s.PositionType != "04" 
                         && s.IsActive == "1");
 
                     foreach (var supplyPosition in supplyPositions)

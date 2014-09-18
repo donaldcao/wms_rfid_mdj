@@ -6,15 +6,15 @@ using THOK.WCS.REST.Models;
 
 namespace Wms.Controllers.REST.WCS
 {
-    public class SupplyController : Controller
+    public class TransportController : Controller
     {
         [Dependency]
         public ITransportService TransportService { get; set; }
 
-        public ActionResult CreateSupplyTask(string srmName, int travelPos, int liftPos)
+        public ActionResult GetSrmTask(string name, int travelPos, int liftPos)
         {
             string errorInfo = string.Empty;
-            var result = TransportService.GetSrmTask(srmName, travelPos, liftPos, out errorInfo);
+            var result = TransportService.GetSrmTask(name, travelPos, liftPos, out errorInfo);
             return Json(new RestResult { IsSuccess = result != null, Message = errorInfo, Data = result }, "application/json", JsonRequestBehavior.AllowGet);
         }
 

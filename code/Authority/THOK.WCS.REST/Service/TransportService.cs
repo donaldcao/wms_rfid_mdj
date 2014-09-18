@@ -82,13 +82,13 @@ namespace THOK.WCS.REST.Service
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
                         .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = p})
                         .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
-                        .Join(productSizeQuery, r => r.Task.ProductCode, p => p.ProductCode, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = r.TargetPosition,ProductSize = p })
-                        .Where(r => r.Task.State == "01" 
-                            && r.CurrentPosition.State == "02" 
+                        //.Join(productSizeQuery, r => r.Task.ProductCode, p => p.ProductCode, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = r.TargetPosition, ProductSize = p })
+                        .Where(r => r.Task.State == "01"
+                            && r.Task.CurrentPositionState == "02"
                             && r.CurrentPosition.AbleStockOut
                             && r.CurrentPosition.ID != r.TargetPosition.ID
                             && r.CurrentPosition.SRMName.Contains(srmName)
-                            && ((new string []{"01","05"}).Contains(r.TargetPosition.PositionType) || !r.TargetPosition.HasGoods)
+                            && ((new string[] { "01", "05" }).Contains(r.TargetPosition.PositionType) || !r.TargetPosition.HasGoods)
                         )
                         .OrderBy(r=>r.Task.TaskLevel)
                         .ThenBy(r => Math.Abs(travelPos - r.CurrentPosition.TravelPos))
@@ -158,12 +158,12 @@ namespace THOK.WCS.REST.Service
                         srmTask.Quantity = task.Task.Quantity;
                         srmTask.TaskQuantity = task.Task.TaskQuantity;
 
-                        if (task.ProductSize != null)
-                        {
-                            srmTask.Length = task.ProductSize.Length;
-                            srmTask.Width = task.ProductSize.Width;
-                            srmTask.Length = task.ProductSize.Length;
-                        }                          
+                        //if (task.ProductSize != null)
+                        //{
+                        //    srmTask.Length = task.ProductSize.Length;
+                        //    srmTask.Width = task.ProductSize.Width;
+                        //    srmTask.Length = task.ProductSize.Length;
+                        //}                          
                         
                         srmTask.TravelPos1 = task.CurrentPosition.TravelPos;
                         srmTask.LiftPos1 = task.CurrentPosition.LiftPos;

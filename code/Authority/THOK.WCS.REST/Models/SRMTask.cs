@@ -5,7 +5,6 @@ using System.Text;
 
 namespace THOK.WCS.REST.Models
 {
-    [Serializable]
     public class SRMTask
     {
         public int ID { get; set; }

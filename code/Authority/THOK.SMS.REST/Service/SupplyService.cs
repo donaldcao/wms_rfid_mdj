@@ -62,7 +62,8 @@ namespace THOK.SMS.REST.Service
                               b.ProductCode,
                               b.ProductName,
                               b.PieceBarcode,
-                              a.Channel.SupplyAddress})
+                              a.Channel.SupplyAddress,
+                              SortSupply = a})
                          .OrderBy(s => s.Id);
 
                     int unDownToPlcQuantity = supplyTaskQuery
@@ -94,6 +95,7 @@ namespace THOK.SMS.REST.Service
                             supplyTask.TargetSupplyAddress = sortSupply.SupplyAddress;
                             supplyTask.Status = "0";
                             SupplyTaskRepository.Add(supplyTask);
+                            sortSupply.SortSupply.Status = "1";
                             count--;
                         }
                     }

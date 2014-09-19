@@ -187,7 +187,7 @@ namespace THOK.WCS.REST.Service
                         srmTask.HasGetRequest = task.CurrentPosition.HasGetRequest;
                         srmTask.HasPutRequest = nextPosition.HasPutRequest;
 
-                        srmTask.Barcode = ""; //?
+                        srmTask.Barcode = "888888"; //?
                         task.Task.State = "02";
 
                         break;
@@ -217,6 +217,7 @@ namespace THOK.WCS.REST.Service
                     if (task != null)
                     {
                         task.State = "01";
+                        TaskRepository.SaveChanges();
                         scope.Complete();
                         return true;
                     }
@@ -246,6 +247,7 @@ namespace THOK.WCS.REST.Service
                     if (task != null)
                     {
                         task.State = "04";
+                        TaskRepository.SaveChanges();
                         scope.Complete();
                         return true;
                     }

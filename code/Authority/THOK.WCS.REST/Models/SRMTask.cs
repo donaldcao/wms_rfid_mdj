@@ -14,6 +14,12 @@ namespace THOK.WCS.REST.Models
         public string OrderType { get; set; }
         public int AllotID { get; set; }
 
+        public string ProductNmae { get; set; }
+        public string OriginCellName { get; set; }
+        public string TargetCellName { get; set; }
+        public int PiecesQutity { get; set; }
+        public int BarQutity { get; set; }
+
         public string OriginCellCode { get; set; }
         public string TargetCellCode { get; set; }
         public string OriginStorageCode { get; set; }

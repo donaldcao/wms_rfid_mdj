@@ -90,7 +90,7 @@ namespace THOK.WCS.REST.Service
                             && r.CurrentPosition.SRMName.Contains(srmName)
                             && ((new string[] { "01", "05" }).Contains(r.TargetPosition.PositionType) || !r.TargetPosition.HasGoods)
                         )
-                        .OrderBy(r=>r.Task.TaskLevel)
+                        .OrderBy(r => r.Task.TaskLevel)
                         .ThenBy(r => Math.Abs(travelPos - r.CurrentPosition.TravelPos))
                         .ThenBy(r => Math.Abs(liftPos - r.CurrentPosition.LiftPos));
 
@@ -167,9 +167,9 @@ namespace THOK.WCS.REST.Service
                         
                         srmTask.TravelPos1 = task.CurrentPosition.TravelPos;
                         srmTask.LiftPos1 = task.CurrentPosition.LiftPos;
-                        srmTask.TravelPos2 = task.TargetPosition.TravelPos;
-                        srmTask.LiftPos2 = task.TargetPosition.LiftPos;
-                        srmTask.RealLiftPos2 = task.TargetPosition.LiftPos;//?
+                        srmTask.TravelPos2 = nextPosition.TravelPos;
+                        srmTask.LiftPos2 = nextPosition.LiftPos;
+                        srmTask.RealLiftPos2 = nextPosition.LiftPos;//?
 
                         srmTask.CurrentPositionName = task.CurrentPosition.PositionName;
                         srmTask.CurrentPositionType = task.CurrentPosition.PositionType;
@@ -243,10 +243,54 @@ namespace THOK.WCS.REST.Service
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var taskQuery = TaskRepository.GetQueryable();
-                    var task = taskQuery.Where(t => t.ID == taskid).FirstOrDefault();
+                    var pathQuery = PathRepository.GetQueryable();
+                    var positionQuery = PositionRepository.GetQueryable();
+                    var task = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
+                        .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
+                        .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = p })
+                        .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
+                        .Where(r => r.Task.ID == taskid && r.Task.State == "02")
+                        .FirstOrDefault();
+
                     if (task != null)
                     {
-                        task.State = "04";
+                        Position nextPosition = null;
+
+                        IDictionary<int, Position> pathNodePositions = new Dictionary<int, Position>();
+                        pathNodePositions.Add(pathNodePositions.Count + 1, task.OriginPosition);
+                        foreach (var pathNode in task.Path.PathNodes.OrderBy(p => p.PathNodeOrder).ToArray())
+                        {
+                            pathNodePositions.Add(pathNodePositions.Count + 1, pathNode.Position);
+                        }
+                        pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
+
+                        int currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID).Max(p => p.Key);
+
+                        if (currentPositionIndex <= 0)
+                        {
+                            return false;
+                        }
+
+                        if (currentPositionIndex + 1 <= pathNodePositions.Max(p => p.Key))
+                        {
+                            nextPosition = pathNodePositions[currentPositionIndex + 1];
+                        }
+
+                        if (nextPosition != null && nextPosition.ID != task.TargetPosition.ID)
+                        {
+                            task.Task.CurrentPositionID = nextPosition.ID;
+                            task.Task.State = "01";
+                        }
+                        else if (nextPosition != null && nextPosition.ID == task.TargetPosition.ID)
+                        {
+                            task.Task.CurrentPositionID = task.TargetPosition.ID;
+                            task.Task.State = "04";
+                        }
+                        else
+                        {
+                            task.Task.State = "04";
+                        }
+
                         TaskRepository.SaveChanges();
                         scope.Complete();
                         return true;

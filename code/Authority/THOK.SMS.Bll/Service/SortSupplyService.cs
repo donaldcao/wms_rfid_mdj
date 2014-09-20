@@ -66,8 +66,16 @@ namespace THOK.SMS.Bll.Service
         {
             IQueryable<SortSupply> sortSupplysQuery = SortSupplyRepository.GetQueryable();
             IQueryable<Channel> channel = ChannelRepository.GetQueryable();
-
-            var sortSupplysArray = sortSupplysQuery.OrderBy(s => s.Id).AsEnumerable()
+            var sortSupplys = sortSupplysQuery.Where(a => a.ChannelCode.Contains(sortSupply.ChannelCode) && a.ProductCode.Contains(sortSupply.ProductCode));
+            if (sortSupply.PackNo > 0)
+            {
+                sortSupplys = sortSupplys.Where(a => a.PackNo.Equals(sortSupply.PackNo));
+            }
+            if (sortSupply.SortBatchId > 0)
+            {
+                sortSupplys = sortSupplys.Where(a => a.SortBatchId.Equals(sortSupply.SortBatchId));
+            }
+            var sortSupplysArray = sortSupplys.OrderBy(s => s.Id)
                 .Select(s => new
                 {
                     s.Id,
@@ -77,10 +85,11 @@ namespace THOK.SMS.Bll.Service
                     s.Channel.ChannelName,
                     s.ProductCode,
                     s.ProductName
-                });
+                }).ToArray();
             System.Data.DataTable dt = new System.Data.DataTable();
-            dt.Columns.Add("分拣批次ID", typeof(int));
-            dt.Columns.Add("烟包包号", typeof(int));
+            dt.Columns.Add("ID", typeof(string));
+            dt.Columns.Add("分拣批次ID", typeof(string));
+            dt.Columns.Add("烟包包号", typeof(string));
             dt.Columns.Add("烟道代码", typeof(string));
             dt.Columns.Add("烟道名称", typeof(string));
             dt.Columns.Add("商品代码", typeof(string));

@@ -4,16 +4,14 @@
             packNo = null,
             channelCode = null,
             productCode = null;
-
-        if ($('#SortBatchId').datebox('getValue') == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').datebox('getValue') }
+        if ($('#SortBatchId').val() == null) { sortBatchId = ""; } else { sortBatchId = $('#SortBatchId').val() }
         if ($('#PackNo').val() == null) { packNo = ""; } else { packNo = $('#PackNo').val() }
-        if ($('#ChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#ChannelCode').val() }
+        if ($('#searchChannelCode').val() == null) { channelCode = ""; } else { channelCode = $('#searchChannelCode').val() }
         if ($('#searchProductCode').val() == null) { productCode = ""; } else { productCode = $('#searchProductCode').val() }
-
         window.location.href = "/SortSupply/CreateExcelToClient/"
                                 + "?SortBatchId=" + sortBatchId
                                 + "&PackNo=" + packNo
                                 + "&ChannelCode=" + channelCode
-                                + "&searchProductCode=" + productCode;
+                                + "&ProductCode=" + productCode;
     }
 </script>

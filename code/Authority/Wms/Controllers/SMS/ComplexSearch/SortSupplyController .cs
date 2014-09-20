@@ -57,8 +57,10 @@ namespace Wms.Controllers.SMS.ComplexSearch
         public FileStreamResult CreateExcelToClient()
         {
             int page = 0, rows = 0;
-            int sortBatchId = Convert.ToInt32(Request.QueryString["SortBatchId"] );
-            int packNo = Convert.ToInt32(Request.QueryString["PackNo"]);
+            int sortBatchId;
+            Int32.TryParse(Request.QueryString["SortBatchId"], out sortBatchId);
+            int packNo;
+            Int32.TryParse(Request.QueryString["PackNo"], out packNo);
             string channelCode = Request.QueryString["ChannelCode"] ;
             string productCode = Request.QueryString["ProductCode"] ;
             string productName = Request.QueryString["ProductName"] ;

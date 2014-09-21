@@ -16,6 +16,9 @@ namespace THOK.WCS.REST.Service
     {
         [Dependency]
         public ITaskRepository TaskRepository { get; set; }
+
+        [Dependency]
+        public IProductRepository ProductRepository { get; set; }
         
         [Dependency]
         public IProductSizeRepository ProductSizeRepository { get; set; }
@@ -63,6 +66,119 @@ namespace THOK.WCS.REST.Service
         [Dependency]
         public ISortWorkDispatchRepository SortWorkDispatchRepository { get; set; }
 
+        public bool Arrive(string positionName,string barcode, out string error)
+        {
+            error = string.Empty;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var taskQuery = TaskRepository.GetQueryable();
+                    var productQuery = ProductRepository.GetQueryable();
+                    var positionQuery = PositionRepository.GetQueryable();
+
+                    var task = taskQuery.Join(productQuery, t => t.ProductCode, p => p.ProductCode, (t, p) => new { Task = t, Product = p })
+                        .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Product = r.Product, CurrentPosition = p })
+                        .Where(r => r.CurrentPosition.PositionName == positionName && r.Task.CurrentPositionState == "01"
+                            && r.Task.State == "01" && r.Product.PieceBarcode.Contains(barcode))
+                        .OrderByDescending(r=>r.Task.TaskQuantity)
+                        .FirstOrDefault();
+
+                    if (task != null)
+                    {
+                        task.Task.CurrentPositionState = "01";
+                        TaskRepository.SaveChanges();
+                        scope.Complete();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }      
+        }
+
+        public bool Arrive(string positionName, int taskid, out string error)
+        {
+            error = string.Empty;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var taskQuery = TaskRepository.GetQueryable();
+                    var pathQuery = PathRepository.GetQueryable();
+                    var positionQuery = PositionRepository.GetQueryable();
+                    var task = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
+                        .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
+                        .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = p })
+                        .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
+                        .Where(r => r.Task.ID == taskid && r.Task.State == "01")
+                        .FirstOrDefault();
+
+                    if (task != null)
+                    {
+                        Position nextPosition = null;
+
+                        IDictionary<int, Position> pathNodePositions = new Dictionary<int, Position>();
+                        pathNodePositions.Add(pathNodePositions.Count + 1, task.OriginPosition);
+                        foreach (var pathNode in task.Path.PathNodes.OrderBy(p => p.PathNodeOrder).ToArray())
+                        {
+                            pathNodePositions.Add(pathNodePositions.Count + 1, pathNode.Position);
+                        }
+                        pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
+
+                        int currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID).Max(p => p.Key);
+
+                        if (currentPositionIndex <= 0)
+                        {
+                            return false;
+                        }
+
+                        if (currentPositionIndex + 1 <= pathNodePositions.Max(p => p.Key))
+                        {
+                            nextPosition = pathNodePositions[currentPositionIndex + 1];
+                        }
+
+                        if (nextPosition != null && nextPosition.ID != task.TargetPosition.ID && nextPosition.PositionName == positionName)
+                        {
+                            task.Task.CurrentPositionID = nextPosition.ID;
+                            task.Task.State = "01";
+                        }
+                        else if (nextPosition != null && nextPosition.ID == task.TargetPosition.ID && nextPosition.PositionName == positionName)
+                        {
+                            task.Task.CurrentPositionID = task.TargetPosition.ID;
+                            task.Task.State = "04";
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                        TaskRepository.SaveChanges();
+                        scope.Complete();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }      
+        }
+
         public SRMTask GetSrmTask(string srmName, int travelPos, int liftPos, out string error)
         {
             error = string.Empty; 
@@ -76,13 +192,13 @@ namespace THOK.WCS.REST.Service
                     var pathQuery = PathRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();
                     var productSizeQuery = ProductSizeRepository.GetQueryable();
+                    var cellQuery = CellRepository.GetQueryable();
                     var storageQuery = StorageRepository.GetQueryable();
                                         
                     var tasks = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
                         .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = p})
                         .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
-                        //.Join(productSizeQuery, r => r.Task.ProductCode, p => p.ProductCode, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = r.TargetPosition, ProductSize = p })
                         .Where(r => r.Task.State == "01"
                             && r.Task.CurrentPositionState == "02"
                             && r.CurrentPosition.AbleStockOut
@@ -158,18 +274,20 @@ namespace THOK.WCS.REST.Service
                         srmTask.Quantity = task.Task.Quantity;
                         srmTask.TaskQuantity = task.Task.TaskQuantity;
 
-                        //if (task.ProductSize != null)
-                        //{
-                        //    srmTask.Length = task.ProductSize.Length;
-                        //    srmTask.Width = task.ProductSize.Width;
-                        //    srmTask.Length = task.ProductSize.Length;
-                        //}                          
-                        
+                        var productSize = productSizeQuery.Where(p => p.ProductCode == task.Task.ProductCode).FirstOrDefault();
+                        if (productSize != null)
+                        {
+                            srmTask.Length = productSize.Length;
+                            srmTask.Width = productSize.Width;
+                            srmTask.Length = productSize.Length;
+                        }
+
+                        int targetStorageQuantity = Convert.ToInt32(storageQuery.Where(s => s.StorageCode == task.Task.TargetStorageCode).Sum(s => s.Quantity));
                         srmTask.TravelPos1 = task.CurrentPosition.TravelPos;
                         srmTask.LiftPos1 = task.CurrentPosition.LiftPos;
                         srmTask.TravelPos2 = nextPosition.TravelPos;
                         srmTask.LiftPos2 = nextPosition.LiftPos;
-                        srmTask.RealLiftPos2 = nextPosition.LiftPos;//?
+                        srmTask.RealLiftPos2 = nextPosition.LiftPos + (task.Task.TaskType == "02" ? (targetStorageQuantity * 150) : 0);
 
                         srmTask.CurrentPositionName = task.CurrentPosition.PositionName;
                         srmTask.CurrentPositionType = task.CurrentPosition.PositionType;
@@ -188,6 +306,15 @@ namespace THOK.WCS.REST.Service
                         srmTask.HasPutRequest = nextPosition.HasPutRequest;
 
                         srmTask.Barcode = "888888"; //?
+
+                        srmTask.ProductName = task.Task.ProductName;
+                        var originCell = cellQuery.Where(c => c.CellCode == task.Task.OriginCellCode).FirstOrDefault();
+                        var targetCell = cellQuery.Where(c => c.CellCode == task.Task.TargetCellCode).FirstOrDefault();
+                        srmTask.OriginCellName = originCell != null ? originCell.CellName : "";
+                        srmTask.TargetCellName = targetCell != null ? targetCell.CellName : "";
+                        srmTask.PiecesQutity = task.Task.TaskQuantity;
+                        srmTask.BarQutity = 0;
+
                         task.Task.State = "02";
 
                         break;

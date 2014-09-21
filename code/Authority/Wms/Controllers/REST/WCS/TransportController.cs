@@ -11,6 +11,20 @@ namespace Wms.Controllers.REST.WCS
         [Dependency]
         public ITransportService TransportService { get; set; }
 
+        public ActionResult Arrive(string positionName, string barcode)
+        {
+            string errorInfo = string.Empty;
+            bool bResult = TransportService.Arrive(positionName, barcode, out errorInfo);
+            return Json(new RestResult { IsSuccess = bResult, Message = errorInfo }, "application/json", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Arrive(string positionName, int taskid)
+        {
+            string errorInfo = string.Empty;
+            bool bResult = TransportService.Arrive(positionName, taskid, out errorInfo);
+            return Json(new RestResult { IsSuccess = bResult, Message = errorInfo }, "application/json", JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult GetSrmTask(string name, int travelPos, int liftPos)
         {
             string errorInfo = string.Empty;

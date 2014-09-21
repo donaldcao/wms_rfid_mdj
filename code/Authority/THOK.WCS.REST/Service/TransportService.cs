@@ -76,6 +76,7 @@ namespace THOK.WCS.REST.Service
                     var pathQuery = PathRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();
                     var productSizeQuery = ProductSizeRepository.GetQueryable();
+                    var cellQuery = CellRepository.GetQueryable();
                     var storageQuery = StorageRepository.GetQueryable();
                                         
                     var tasks = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
@@ -189,6 +190,15 @@ namespace THOK.WCS.REST.Service
                         srmTask.HasPutRequest = nextPosition.HasPutRequest;
 
                         srmTask.Barcode = "888888"; //?
+
+                        srmTask.ProductName = task.Task.ProductName;
+                        var originCell = cellQuery.Where(c => c.CellCode == task.Task.OriginCellCode).FirstOrDefault();
+                        var targetCell = cellQuery.Where(c => c.CellCode == task.Task.TargetCellCode).FirstOrDefault();
+                        srmTask.OriginCellName = originCell != null ? originCell.CellName : "";
+                        srmTask.TargetCellName = targetCell != null ? targetCell.CellName : "";
+                        srmTask.PiecesQutity = task.Task.TaskQuantity;
+                        srmTask.BarQutity = 0;
+
                         task.Task.State = "02";
 
                         break;

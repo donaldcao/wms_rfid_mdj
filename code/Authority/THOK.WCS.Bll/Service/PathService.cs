@@ -164,11 +164,17 @@ namespace THOK.WCS.Bll.Service
         public bool Delete(int pathId)
         {
             var pa = PathRepository.GetQueryable().FirstOrDefault(p => p.ID == pathId);
-            var pathnode = PathNodeRepository.GetQueryable().FirstOrDefault(p => p.PathID == pathId);
+            var pathnodes = PathNodeRepository.GetQueryable().Where(p => p.PathID == pathId).Select(a=>a);
             if (pa!= null)
             {
-                PathNodeRepository.Delete(pathnode);
-                PathNodeRepository.SaveChanges();
+                if (pathnodes.Count() > 0)
+                {
+                    foreach (var node in pathnodes)
+                    {
+                        PathNodeRepository.Delete(node);
+                    }
+                    PathNodeRepository.SaveChanges();
+                }
 
                 PathRepository.Delete(pa);
                 PathRepository.SaveChanges();

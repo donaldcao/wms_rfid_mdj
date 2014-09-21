@@ -82,7 +82,6 @@ namespace THOK.WCS.REST.Service
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
                         .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = p})
                         .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path,OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
-                        //.Join(productSizeQuery, r => r.Task.ProductCode, p => p.ProductCode, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = r.TargetPosition, ProductSize = p })
                         .Where(r => r.Task.State == "01"
                             && r.Task.CurrentPositionState == "02"
                             && r.CurrentPosition.AbleStockOut
@@ -158,18 +157,20 @@ namespace THOK.WCS.REST.Service
                         srmTask.Quantity = task.Task.Quantity;
                         srmTask.TaskQuantity = task.Task.TaskQuantity;
 
-                        //if (task.ProductSize != null)
-                        //{
-                        //    srmTask.Length = task.ProductSize.Length;
-                        //    srmTask.Width = task.ProductSize.Width;
-                        //    srmTask.Length = task.ProductSize.Length;
-                        //}                          
-                        
+                        var productSize = productSizeQuery.Where(p => p.ProductCode == task.Task.ProductCode).FirstOrDefault();
+                        if (productSize != null)
+                        {
+                            srmTask.Length = productSize.Length;
+                            srmTask.Width = productSize.Width;
+                            srmTask.Length = productSize.Length;
+                        }
+
+                        int targetStorageQuantity = Convert.ToInt32(storageQuery.Where(s => s.StorageCode == task.Task.TargetStorageCode).Sum(s => s.Quantity));
                         srmTask.TravelPos1 = task.CurrentPosition.TravelPos;
                         srmTask.LiftPos1 = task.CurrentPosition.LiftPos;
                         srmTask.TravelPos2 = nextPosition.TravelPos;
                         srmTask.LiftPos2 = nextPosition.LiftPos;
-                        srmTask.RealLiftPos2 = nextPosition.LiftPos;//?
+                        srmTask.RealLiftPos2 = nextPosition.LiftPos + (task.Task.TaskType == "02" ? (targetStorageQuantity * 150) : 0);
 
                         srmTask.CurrentPositionName = task.CurrentPosition.PositionName;
                         srmTask.CurrentPositionType = task.CurrentPosition.PositionType;

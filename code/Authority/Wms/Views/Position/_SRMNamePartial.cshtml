@@ -1,11 +1,5 @@
 ﻿<script type="text/javascript">   
     $(function () {
-        $('#sRMDetail').datagrid({
-            //双击赋值
-            onDblClickRow: function () {
-                sRMSave();
-            }
-        })
         //属性初始化
         $('#queryTypeSRM').combo({
             required: true,
@@ -16,10 +10,13 @@
     });
     //选中赋值
     function sRMSave() {
-        var sRMRow = $('#sRMDetail').datagrid('getSelected');
-        if (sRMRow) {
-//          $('#inputSRMID').val(sRMRow.ID);
-            $('#inputSRMName').val(sRMRow.SRMName);
+        var sRMRow = $('#sRMDetail').datagrid('getSelections');
+        if (sRMRow.length > 0) {
+            var srmName = "";
+            for (var i = 0; i < sRMRow.length; i++) {
+                srmName += sRMRow[i].SRMName + ",";
+            }
+            $('#inputSRMName').val(srmName.substring(0, srmName.length - 1));
             $('#sRMData').dialog('close');
             editKey = true;
         }
@@ -47,9 +44,10 @@
     </div>
     <div split="true" border="false" style="width: 486px; height: 320px;">
         <table id="sRMDetail" class="easyui-datagrid" border="false" toolbar="#btn-query"
-            singleselect="true" fit="true" fitcolumns="true" pagination="true" rownumbers="true">
+            singleselect="false" fit="true" fitcolumns="true" pagination="true" rownumbers="true">
             <thead>
                 <tr>
+                    <th checkbox="true" field="check"></th>
                     <th field="ID" hidden="true" width="60">
                         ID
                     </th>

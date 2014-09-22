@@ -1133,6 +1133,8 @@ namespace THOK.WCS.Bll.Service
                         inTask.TagState = "01";
                         inTask.Quantity = Convert.ToInt32(inBillAllot.Storage.Quantity / inBillAllot.Product.Unit.Count);
                         inTask.TaskQuantity = Convert.ToInt32(inBillAllot.AllotQuantity / inBillAllot.Product.Unit.Count);
+                        inTask.PiecesQutity = inTask.TaskQuantity;
+                        inTask.BarQutity = Convert.ToInt32((inBillAllot.AllotQuantity % inBillAllot.Product.Unit.Count) / inBillAllot.Product.UnitList.Unit02.Count);
                         inTask.OperateQuantity = 0;
                         inTask.OrderID = inBillAllot.BillNo;
                         inTask.OrderType = "01";
@@ -1223,6 +1225,8 @@ namespace THOK.WCS.Bll.Service
                         outTask.TagState = "01";
                         outTask.Quantity = Convert.ToInt32(outBillAllot.Storage.Quantity / outBillAllot.Product.Unit.Count);
                         outTask.TaskQuantity = Convert.ToInt32(outBillAllot.AllotQuantity / outBillAllot.Product.Unit.Count);
+                        outTask.PiecesQutity = outTask.TaskQuantity;
+                        outTask.BarQutity = Convert.ToInt32((outBillAllot.AllotQuantity % outBillAllot.Product.Unit.Count) / outBillAllot.Product.UnitList.Unit02.Count);
                         outTask.OperateQuantity = 0;
                         outTask.OrderID = outBillAllot.BillNo;
                         outTask.OrderType = "03";
@@ -1313,6 +1317,8 @@ namespace THOK.WCS.Bll.Service
                         moveTask.TagState = "01";
                         moveTask.Quantity = Convert.ToInt32(moveBillDetail.OutStorage.Quantity / moveBillDetail.Product.Unit.Count);
                         moveTask.TaskQuantity = Convert.ToInt32(moveBillDetail.RealQuantity / moveBillDetail.Product.Unit.Count);
+                        moveTask.PiecesQutity = moveTask.TaskQuantity;
+                        moveTask.BarQutity = Convert.ToInt32((moveBillDetail.RealQuantity % moveBillDetail.Product.Unit.Count) / moveBillDetail.Product.UnitList.Unit02.Count);
                         moveTask.OperateQuantity = 0;
                         moveTask.OrderID = moveBillDetail.BillNo;
                         moveTask.OrderType = "02";
@@ -1393,6 +1399,8 @@ namespace THOK.WCS.Bll.Service
                     moveTask.TagState = "01";
                     moveTask.Quantity = Convert.ToInt32(moveBillDetail.OutStorage.Quantity / moveBillDetail.Product.Unit.Count);
                     moveTask.TaskQuantity = Convert.ToInt32(moveBillDetail.RealQuantity / moveBillDetail.Product.Unit.Count);
+                    moveTask.PiecesQutity = moveTask.TaskQuantity;
+                    moveTask.BarQutity = Convert.ToInt32((moveBillDetail.RealQuantity % moveBillDetail.Product.Unit.Count) / moveBillDetail.Product.UnitList.Unit02.Count);
                     moveTask.OperateQuantity = 0;
                     moveTask.OrderID = moveBillDetail.BillNo;
                     moveTask.OrderType = "02";
@@ -1491,6 +1499,8 @@ namespace THOK.WCS.Bll.Service
                         checkTask.TagState = "01";
                         checkTask.Quantity = Convert.ToInt32(checkItem.Storage.Quantity / checkItem.Product.Unit.Count);
                         checkTask.TaskQuantity = Convert.ToInt32(checkItem.RealQuantity / checkItem.Product.Unit.Count);
+                        checkTask.PiecesQutity = checkTask.TaskQuantity;
+                        checkTask.BarQutity = Convert.ToInt32((checkItem.RealQuantity % checkItem.Product.Unit.Count) / checkItem.Product.UnitList.Unit02.Count);
                         checkTask.OperateQuantity = 0;
                         checkTask.OrderID = checkItem.BillNo;
                         checkTask.OrderType = "04";
@@ -1577,6 +1587,8 @@ namespace THOK.WCS.Bll.Service
                         moveTask.TagState = "01";
                         moveTask.Quantity = Convert.ToInt32(moveBillDetail.OutStorage.Quantity / moveBillDetail.Product.Unit.Count);
                         moveTask.TaskQuantity = Convert.ToInt32(moveBillDetail.RealQuantity / moveBillDetail.Product.Unit.Count);
+                        moveTask.PiecesQutity = moveTask.TaskQuantity;
+                        moveTask.BarQutity = Convert.ToInt32((moveBillDetail.RealQuantity % moveBillDetail.Product.Unit.Count) / moveBillDetail.Product.UnitList.Unit02.Count);
                         moveTask.OperateQuantity = 0;
                         moveTask.OrderID = moveBillDetail.BillNo;
                         moveTask.OrderType = "02";
@@ -1627,7 +1639,7 @@ namespace THOK.WCS.Bll.Service
             var positionQuery = PositionRepository.GetQueryable().Where(i => i.SRMName == position.SRMName && i.AbleStockInPallet && i.ID != position.ID);
             if (positionQuery == null)
             {
-                errorInfo = string.Format("请检查：堆垛机[{0}]区域的位置[{1}]，必须允许叠空托盘！", position.SRMName, position.PositionName);
+                errorInfo = string.Format("请检查：堆垛机[{0}]位置[{1}]的区域内，必须有允许叠空托盘的位置！", position.SRMName, position.PositionName);
                 return false;
             }
             var cellPositionQuery = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID != position.ID && positionQuery.Contains(i.StockInPosition));
@@ -1640,12 +1652,14 @@ namespace THOK.WCS.Bll.Service
             Cell originCell = CellRepository.GetQueryable().Where(i => i.CellCode == originCellPosition.CellCode).FirstOrDefault();
 
             var emptyPalletCount = SystemParameterRepository.GetQueryable().Where(i => i.ParameterName == "EmptyPalletCount").FirstOrDefault();
-            int epcValue = Convert.ToInt32(emptyPalletCount.ParameterValue);
+            
             if (emptyPalletCount == null)
             {
                 errorInfo = "请检查：系统参数是否存在参数名：EmptyPalletCount！";
                 return false;
             }
+            int epcValue = Convert.ToInt32(emptyPalletCount.ParameterValue);
+
             var cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
                     && i.IsActive == "1"
                     && cellPositionQuery.Any(p => p.CellCode == i.CellCode)

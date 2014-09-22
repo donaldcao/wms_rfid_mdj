@@ -9,6 +9,7 @@ using System.Linq;
 using THOK.WCS.DbModel;
 using System.Collections;
 using System.Collections.Generic;
+using THOK.WCS.Bll.Interfaces;
 
 namespace THOK.WCS.REST.Service
 {
@@ -66,6 +67,9 @@ namespace THOK.WCS.REST.Service
         [Dependency]
         public ISortWorkDispatchRepository SortWorkDispatchRepository { get; set; }
 
+        [Dependency]
+        public ITaskService TaskService { get; set; }
+
         public bool Arrive(string positionName,string barcode, out string error)
         {
             error = string.Empty;
@@ -87,7 +91,7 @@ namespace THOK.WCS.REST.Service
 
                     if (task != null)
                     {
-                        task.Task.CurrentPositionState = "01";
+                        task.Task.CurrentPositionState = "02";
                         TaskRepository.SaveChanges();
                         scope.Complete();
                         return true;
@@ -135,10 +139,14 @@ namespace THOK.WCS.REST.Service
                         }
                         pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
 
-                        int currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID).Max(p => p.Key);
+                        var currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID)
+                            .Select(p => p.Key)
+                            .OrderByDescending(k => k)
+                            .FirstOrDefault();
 
                         if (currentPositionIndex <= 0)
                         {
+                            error = "当前任务的当前位置不的任务路径上！";
                             return false;
                         }
 
@@ -159,6 +167,7 @@ namespace THOK.WCS.REST.Service
                         }
                         else
                         {
+                            error = "当前任务路径的下个位置与到达的位置不符！";
                             return false;
                         }
 
@@ -168,6 +177,7 @@ namespace THOK.WCS.REST.Service
                     }
                     else
                     {
+                        error = "当前任务不存在！";
                         return false;
                     }
                 }
@@ -225,7 +235,10 @@ namespace THOK.WCS.REST.Service
                         }
                         pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
 
-                        int currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID).Max(p => p.Key);
+                        var currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID)
+                            .Select(p=>p.Key)
+                            .OrderByDescending(k=>k)
+                            .FirstOrDefault();
 
                         if (currentPositionIndex <= 0)
                         {
@@ -282,12 +295,14 @@ namespace THOK.WCS.REST.Service
                             srmTask.Length = productSize.Length;
                         }
 
-                        int targetStorageQuantity = Convert.ToInt32(storageQuery.Where(s => s.StorageCode == task.Task.TargetStorageCode).Sum(s => s.Quantity));
+                        var targetStorage = storageQuery.Where(s => s.StorageCode == task.Task.TargetStorageCode).FirstOrDefault();
+                        int targetQuantity = targetStorage != null ? Convert.ToInt32(targetStorage.Quantity) : 0;
+
                         srmTask.TravelPos1 = task.CurrentPosition.TravelPos;
                         srmTask.LiftPos1 = task.CurrentPosition.LiftPos;
                         srmTask.TravelPos2 = nextPosition.TravelPos;
                         srmTask.LiftPos2 = nextPosition.LiftPos;
-                        srmTask.RealLiftPos2 = nextPosition.LiftPos + (task.Task.TaskType == "02" ? (targetStorageQuantity * 150) : 0);
+                        srmTask.RealLiftPos2 = nextPosition.LiftPos + (task.Task.TaskType == "02" ? (targetQuantity * 150) : 0);
 
                         srmTask.CurrentPositionName = task.CurrentPosition.PositionName;
                         srmTask.CurrentPositionType = task.CurrentPosition.PositionType;
@@ -313,7 +328,7 @@ namespace THOK.WCS.REST.Service
                         srmTask.OriginCellName = originCell != null ? originCell.CellName : "";
                         srmTask.TargetCellName = targetCell != null ? targetCell.CellName : "";
                         srmTask.PiecesQutity = task.Task.TaskQuantity;
-                        srmTask.BarQutity = 0;
+                        srmTask.BarQutity = task.Task.BarQutity;
 
                         task.Task.State = "02";
 
@@ -350,6 +365,7 @@ namespace THOK.WCS.REST.Service
                     }
                     else
                     {
+                        error = "当前任务不存在！";
                         return false;
                     }
                 }
@@ -391,10 +407,14 @@ namespace THOK.WCS.REST.Service
                         }
                         pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
 
-                        int currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID).Max(p => p.Key);
+                        var currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID)
+                            .Select(p => p.Key)
+                            .OrderByDescending(k => k)
+                            .FirstOrDefault();
 
                         if (currentPositionIndex <= 0)
                         {
+                            error = "当前任务的当前位置不的任务路径上！";
                             return false;
                         }
 
@@ -415,18 +435,20 @@ namespace THOK.WCS.REST.Service
                         }
                         else
                         {
-                            task.Task.State = "04";
+                            task.Task.State = "04";                            
                         }
 
                         TaskRepository.SaveChanges();
                         scope.Complete();
-                        return true;
                     }
                     else
                     {
+                        error = "当前任务不存在！";
                         return false;
                     }
                 }
+                TaskService.FinishTask(taskid, out error);
+                return true;
             }
             catch (Exception ex)
             {

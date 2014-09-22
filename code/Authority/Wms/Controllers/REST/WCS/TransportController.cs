@@ -11,7 +11,7 @@ namespace Wms.Controllers.REST.WCS
         [Dependency]
         public ITransportService TransportService { get; set; }
 
-        public ActionResult Arrive(string positionName, string barcode)
+        public ActionResult BarcodeArrive(string positionName, string barcode)
         {
             string errorInfo = string.Empty;
             bool bResult = TransportService.Arrive(positionName, barcode, out errorInfo);

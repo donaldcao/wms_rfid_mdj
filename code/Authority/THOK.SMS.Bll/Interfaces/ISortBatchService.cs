@@ -22,6 +22,8 @@ namespace THOK.SMS.Bll.Interfaces
        
         bool UpLoad(SortBatch sortbatch, out string strResult);
 
+        bool FindSumUpLoadQuantity(int sortBatchId, out string strResult);
+
 
         //分拣配送
         object GetDetails(int page, int rows, string orderDate, string batchNo, string sortingLineCode);

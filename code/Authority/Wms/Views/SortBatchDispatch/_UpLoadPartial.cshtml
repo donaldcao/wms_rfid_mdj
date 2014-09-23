@@ -3,21 +3,30 @@
         var row = $('#details').datagrid('getSelected');
         if (row) {
             if (row.Status == "已优化") {
-                $.messager.confirm('温馨提示', '上传所选记录?', function (r) {
-                    if (r) {
-                        $.ajax({
-                            url: '/SortBatchDispatch/UpLoad/', type: "POST", dataType: "text",
-                            data: { 'id': row.Id },
-                            success: function (responseText) {
-                                var result = $.evalJSON(responseText);
-                                if (result.success) {
-                                    $.messager.alert("温馨提示", result.msg, "info");
-                                    $('#details').datagrid('reload');
-                                } else {
-                                    $.messager.alert("错误", result.msg + '<br />' + result.data, "error");
+                $.ajax({
+                    url: '/SortBatchDispatch/FindSumUpLoadQuantity/', type: "POST", dataType: "text",
+                    data: { 'sortbatchId': row.Id },
+                    success: function (responseData) {
+                        var data = $.evalJSON(responseData);
+                        if (data.success) {
+                            $.messager.confirm('温馨提示', '本次上传卷烟条数为：' + data.data, function (r) {
+                                if (r) {
+                                    $.ajax({
+                                        url: '/SortBatchDispatch/UpLoad/', type: "POST", dataType: "text",
+                                        data: { 'id': row.Id },
+                                        success: function (responseText) {
+                                            var result = $.evalJSON(responseText);
+                                            if (result.success) {
+                                                $.messager.alert("温馨提示", result.msg, "info");
+                                                $('#details').datagrid('reload');
+                                            } else {
+                                                $.messager.alert("错误", result.msg + '<br />' + result.data, "error");
+                                            }
+                                        }
+                                    });
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
             }

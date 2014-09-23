@@ -72,5 +72,14 @@ namespace Wms.Controllers.SMS.SortManage
             string msg = bResult ? "上传成功" : "上传失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult FindSumUpLoadQuantity(string sortbatchId)
+        {
+            string strResult = string.Empty;
+            int batchId;
+            Int32.TryParse(sortbatchId, out batchId);
+            bool bResult = SortBatchService.FindSumUpLoadQuantity(batchId, out strResult);
+            return Json(JsonMessageHelper.getJsonMessage(bResult, "", strResult), "text", JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -816,6 +816,22 @@ namespace THOK.SMS.Bll.Service
             file.Close();
         }
 
+        public bool FindSumUpLoadQuantity(int sortBatchId, out string strResult)
+        {
+            var sortOrderAllotDetailQuery = SortOrderAllotDetailRepository.GetQueryable();
+            int sumQuantity = SortOrderAllotMasterRepository.GetQueryable().Where(a => a.SortBatchId == sortBatchId).Join(sortOrderAllotDetailQuery, a => a.Id, b => b.MasterId,
+                (a, b) => new
+                {
+                    a.OrderId,
+                    a.CustomerCode,
+                    a.CustomerName,
+                    b.ProductCode,
+                    b.ProductName,
+                    b.Quantity
+                }).Sum(a => a.Quantity);
+            strResult = sumQuantity.ToString();
+            return true;
+        }
 
         /// <summary>
         /// 创建压缩文件

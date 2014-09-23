@@ -17,7 +17,7 @@ namespace THOK.Wms.Repository.Migrations
             //Clear(context);
 
             #region 登录界面数据显示
-            CreateCities(context);
+            //CreateCities(context);
             CreateServers(context);
             CreateSystems(context); 
             #endregion

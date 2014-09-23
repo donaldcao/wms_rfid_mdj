@@ -98,6 +98,7 @@ namespace THOK.WCS.REST.Service
                     }
                     else
                     {
+                        error = "not found task!";
                         return false;
                     }
                 }
@@ -157,12 +158,16 @@ namespace THOK.WCS.REST.Service
 
                         if (nextPosition != null && nextPosition.ID != task.TargetPosition.ID && nextPosition.PositionName == positionName)
                         {
+                            task.CurrentPosition.HasGoods = false;
                             task.Task.CurrentPositionID = nextPosition.ID;
+                            nextPosition.HasGoods = true;
                             task.Task.State = "01";
                         }
                         else if (nextPosition != null && nextPosition.ID == task.TargetPosition.ID && nextPosition.PositionName == positionName)
                         {
+                            task.CurrentPosition.HasGoods = false;
                             task.Task.CurrentPositionID = task.TargetPosition.ID;
+                            nextPosition.HasGoods = true;
                             task.Task.State = "04";
                         }
                         else
@@ -383,6 +388,7 @@ namespace THOK.WCS.REST.Service
 
             try
             {
+                TaskService.FinishTask(taskid, out error);
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var taskQuery = TaskRepository.GetQueryable();
@@ -425,12 +431,16 @@ namespace THOK.WCS.REST.Service
 
                         if (nextPosition != null && nextPosition.ID != task.TargetPosition.ID)
                         {
+                            task.CurrentPosition.HasGoods = false;
                             task.Task.CurrentPositionID = nextPosition.ID;
+                            nextPosition.HasGoods = true;
                             task.Task.State = "01";
                         }
                         else if (nextPosition != null && nextPosition.ID == task.TargetPosition.ID)
                         {
+                            task.CurrentPosition.HasGoods = false;
                             task.Task.CurrentPositionID = task.TargetPosition.ID;
+                            nextPosition.HasGoods = true;
                             task.Task.State = "04";
                         }
                         else

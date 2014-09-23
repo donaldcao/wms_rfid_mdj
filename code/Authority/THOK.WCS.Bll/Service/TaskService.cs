@@ -1616,116 +1616,117 @@ namespace THOK.WCS.Bll.Service
         {
             bool result = false;
             errorInfo = string.Empty;
-            var systemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(i => i.ParameterName == "EmptyPallet");
-            if (systemParam == null)
-            {
-                errorInfo = "请检查：系统参数是否存在参数名：EmptyPallet，并且该值是否存在卷烟信息表中！";
-                return false;
-            }
-            string palletCode = systemParam.ParameterValue;
-
-            var position = PositionRepository.GetQueryable().Where(i => (i.ID == positionID || i.PositionName == positionName) && (i.PositionType == "02" || i.PositionType == "03" || i.PositionType == "04")).FirstOrDefault();
-            if (position == null && !position.HasGoods)
-            {
-                errorInfo = "请检查：位置信息不能为空，位置上是否有空托盘，并且位置类型必须是大品种出库位、小品种出库位、异型烟出库位！";
-                return false;
-            }
-            var task = TaskRepository.GetQueryable().Where(t => t.State != "04" && t.OrderType == "05" && t.OriginPositionID == position.ID).FirstOrDefault();
-            if (task != null)
-            {
-                errorInfo = string.Format("已生成一个任务号[{0}]，位置[{1}]已有任务在执行中！", task.ID, position.PositionName);
-                return true;
-            }
-            var positionQuery = PositionRepository.GetQueryable().Where(i => i.SRMName == position.SRMName && i.AbleStockInPallet && i.ID != position.ID);
-            if (positionQuery == null)
-            {
-                errorInfo = string.Format("请检查：堆垛机[{0}]位置[{1}]的区域内，必须有允许叠空托盘的位置！", position.SRMName, position.PositionName);
-                return false;
-            }
-            var cellPositionQuery = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID != position.ID && positionQuery.Contains(i.StockInPosition));
-            if (cellPositionQuery == null)
-            {
-                errorInfo = string.Format("请检查：位置[{0}]必须在货位位置表中存在！", position.PositionName);
-                return false;
-            }
-            CellPosition originCellPosition = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID == position.ID).FirstOrDefault();
-            Cell originCell = CellRepository.GetQueryable().Where(i => i.CellCode == originCellPosition.CellCode).FirstOrDefault();
-
-            var emptyPalletCount = SystemParameterRepository.GetQueryable().Where(i => i.ParameterName == "EmptyPalletCount").FirstOrDefault();
-            
-            if (emptyPalletCount == null)
-            {
-                errorInfo = "请检查：系统参数是否存在参数名：EmptyPalletCount！";
-                return false;
-            }
-            int epcValue = Convert.ToInt32(emptyPalletCount.ParameterValue);
-
-            var cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
-                    && i.IsActive == "1"
-                    && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
-                    && (i.Storages.Any(s => s.ProductCode == palletCode
-                        && s.Quantity + s.InFrozenQuantity < epcValue && s.OutFrozenQuantity == 0)));
-            if (!cellQuery.Any())
-            {
-                cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
-                    && i.IsActive == "1"
-                    && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
-                    && (i.Storages.Count == 0 || i.Storages.Any(s => string.IsNullOrEmpty(s.LockTag)
-                        && s.Quantity == 0 && s.InFrozenQuantity == 0)));
-            }
-            if (cellQuery == null)
-            {
-                errorInfo = "叠空托盘的目标货位以及个数，请检查：该货位必须是单一货位，" + palletCode + "是否存在于卷烟信息表中。"
-                          + "分析引导："
-                          + "1.此货位的数量+入库冻结量<托盘的最大托盘个数，并且出库冻结量必须=0；"
-                          + "2.LockTag必须未锁定，库存数量和入库冻结量必须=0";
-                return false;
-            }
-            var cell = cellQuery.ToArray().OrderBy(c => c.Layer).ThenBy(c => Math.Abs(c.Col - c.Shelf.CellCols / 2)).FirstOrDefault();
-            if (cell == null)
-            {
-                errorInfo = "未找到目标货位！";
-                return false;
-            }
-            var cellPosition = CellPositionRepository.GetQueryable().Where(cp => cp.CellCode == cell.CellCode).FirstOrDefault();
-            if (cellPosition == null)
-            {
-                errorInfo = string.Format("未找到[{0}]的货位位置！", cell.CellName);
-            }
-
-            if (!cell.Storages.Any())
-            {
-                var storage = new Storage()
-                {
-                    Cell = cell,
-                    StorageCode = Guid.NewGuid().ToString(),
-                    CellCode = cell.CellCode,
-                    IsLock = "0",
-                    IsActive = "0",
-                    StorageTime = DateTime.Now,
-                    UpdateTime = DateTime.Now
-                };
-                lock (cell.Storages)
-                {
-                    cell.Storages.Add(storage);
-                }
-            }
-            var targetStorage = cell.Storages.FirstOrDefault();
-            if (targetStorage == null)
-            {
-                errorInfo = "未找到目标货位的库存或者货位位置不存在！";
-            }
-            var path = PathRepository.GetQueryable()
-                .Where(p => p.OriginRegion.ID == cellPosition.StockOutPosition.Region.ID
-                    && p.TargetRegion.ID == position.Region.ID)
-                    .FirstOrDefault();
-            if (path == null)
-            {
-                errorInfo = string.Format("从 [{0}] 到 [{1}] 未找到路径!", cellPosition.StockOutPosition.PositionName, position.PositionName);
-                return false;
-            }
             try
             {
+                var systemParam = SystemParameterRepository.GetQueryable().FirstOrDefault(i => i.ParameterName == "EmptyPallet");
+                if (systemParam == null)
+                {
+                    errorInfo = "请检查：系统参数是否存在参数名：EmptyPallet，并且该值是否存在卷烟信息表中！";
+                    return false;
+                }
+                string palletCode = systemParam.ParameterValue;
+
+                var position = PositionRepository.GetQueryable().Where(i => (i.ID == positionID || i.PositionName == positionName) && (i.PositionType == "02" || i.PositionType == "03" || i.PositionType == "04")).FirstOrDefault();
+                if (position == null || !position.HasGoods)
+                {
+                    errorInfo = "请检查：位置信息不能为空，位置上是否有空托盘，并且位置类型必须是大品种出库位、小品种出库位、异型烟出库位！";
+                    return false;
+                }
+                var task = TaskRepository.GetQueryable().Where(t => t.State != "04" && t.OrderType == "05" && t.OriginPositionID == position.ID).FirstOrDefault();
+                if (task != null)
+                {
+                    errorInfo = string.Format("已生成一个任务号[{0}]，位置[{1}]已有任务在执行中！", task.ID, position.PositionName);
+                    return true;
+                }
+                var positionQuery = PositionRepository.GetQueryable().Where(i => i.SRMName == position.SRMName && i.AbleStockInPallet && i.ID != position.ID);
+                if (positionQuery == null)
+                {
+                    errorInfo = string.Format("请检查：堆垛机[{0}]位置[{1}]的区域内，必须有允许叠空托盘的位置！", position.SRMName, position.PositionName);
+                    return false;
+                }
+                var cellPositionQuery = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID != position.ID && positionQuery.Contains(i.StockInPosition));
+                if (cellPositionQuery == null)
+                {
+                    errorInfo = string.Format("请检查：位置[{0}]必须在货位位置表中存在！", position.PositionName);
+                    return false;
+                }
+                CellPosition originCellPosition = CellPositionRepository.GetQueryable().Where(i => i.StockOutPositionID == position.ID).FirstOrDefault();
+                Cell originCell = CellRepository.GetQueryable().Where(i => i.CellCode == originCellPosition.CellCode).FirstOrDefault();
+
+                var emptyPalletCount = SystemParameterRepository.GetQueryable().Where(i => i.ParameterName == "EmptyPalletCount").FirstOrDefault();
+
+                if (emptyPalletCount == null)
+                {
+                    errorInfo = "请检查：系统参数是否存在参数名：EmptyPalletCount！";
+                    return false;
+                }
+                int epcValue = Convert.ToInt32(emptyPalletCount.ParameterValue);
+
+                var cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
+                        && i.IsActive == "1"
+                        && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
+                        && (i.Storages.Any(s => s.ProductCode == palletCode
+                            && s.Quantity + s.InFrozenQuantity < epcValue && s.OutFrozenQuantity == 0)));
+                if (!cellQuery.Any())
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(i => i.IsSingle == "1"
+                        && i.IsActive == "1"
+                        && cellPositionQuery.Any(p => p.CellCode == i.CellCode)
+                        && (i.Storages.Count == 0 || i.Storages.Any(s => string.IsNullOrEmpty(s.LockTag)
+                            && s.Quantity == 0 && s.InFrozenQuantity == 0)));
+                }
+                if (cellQuery == null)
+                {
+                    errorInfo = "叠空托盘的目标货位以及个数，请检查：该货位必须是单一货位，" + palletCode + "是否存在于卷烟信息表中。"
+                              + "分析引导："
+                              + "1.此货位的数量+入库冻结量<托盘的最大托盘个数，并且出库冻结量必须=0；"
+                              + "2.LockTag必须未锁定，库存数量和入库冻结量必须=0";
+                    return false;
+                }
+                var cell = cellQuery.ToArray().OrderBy(c => c.Layer).ThenBy(c => Math.Abs(c.Col - c.Shelf.CellCols / 2)).FirstOrDefault();
+                if (cell == null)
+                {
+                    errorInfo = "未找到目标货位！";
+                    return false;
+                }
+                var cellPosition = CellPositionRepository.GetQueryable().Where(cp => cp.CellCode == cell.CellCode).FirstOrDefault();
+                if (cellPosition == null)
+                {
+                    errorInfo = string.Format("未找到[{0}]的货位位置！", cell.CellName);
+                }
+
+                if (!cell.Storages.Any())
+                {
+                    var storage = new Storage()
+                    {
+                        Cell = cell,
+                        StorageCode = Guid.NewGuid().ToString(),
+                        CellCode = cell.CellCode,
+                        IsLock = "0",
+                        IsActive = "0",
+                        StorageTime = DateTime.Now,
+                        UpdateTime = DateTime.Now
+                    };
+                    lock (cell.Storages)
+                    {
+                        cell.Storages.Add(storage);
+                    }
+                }
+                var targetStorage = cell.Storages.FirstOrDefault();
+                if (targetStorage == null)
+                {
+                    errorInfo = "未找到目标货位的库存或者货位位置不存在！";
+                }
+                var path = PathRepository.GetQueryable()
+                    .Where(p => p.OriginRegion.ID == cellPosition.StockOutPosition.Region.ID
+                        && p.TargetRegion.ID == position.Region.ID)
+                        .FirstOrDefault();
+                if (path == null)
+                {
+                    errorInfo = string.Format("从 [{0}] 到 [{1}] 未找到路径!", cellPosition.StockOutPosition.PositionName, position.PositionName);
+                    return false;
+                }
+
                 targetStorage.ProductCode = palletCode;
                 targetStorage.InFrozenQuantity += 1;
                 var newTask = new Task();
@@ -1746,6 +1747,8 @@ namespace THOK.WCS.Bll.Service
                 newTask.TagState = "01";//拟不使用
                 newTask.Quantity = 1;
                 newTask.TaskQuantity = 1;
+                newTask.PiecesQutity = 1;
+                newTask.BarQutity = 0;
                 newTask.OperateQuantity = 0;
                 newTask.OrderID = "";
                 newTask.OrderType = "05";
@@ -2017,7 +2020,7 @@ namespace THOK.WCS.Bll.Service
 
                             #region 反馈给浪潮的xml数据信息
                             var systemParamter = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName == "InspurWebServiceIsActive");
-                            if (systemParamter.ParameterValue == "1" && systemParamter != null)
+                            if (systemParamter != null && systemParamter.ParameterValue == "1")
                             {
                                 try
                                 {
@@ -2121,7 +2124,7 @@ namespace THOK.WCS.Bll.Service
 
                             #region 反馈给浪潮的xml数据信息
                             var systemParamter = SystemParameterRepository.GetQueryable().FirstOrDefault(s => s.ParameterName == "InspurWebServiceIsActive");
-                            if (systemParamter.ParameterValue == "1" && systemParamter != null)
+                            if (systemParamter != null && systemParamter.ParameterValue == "1" )
                             {
                                 try
                                 {
@@ -2624,8 +2627,9 @@ namespace THOK.WCS.Bll.Service
                         return true;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    errorInfo = ex.Message;
                     return true;
                 }
             }

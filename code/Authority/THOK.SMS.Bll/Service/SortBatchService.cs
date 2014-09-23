@@ -776,14 +776,14 @@ namespace THOK.SMS.Bll.Service
                     b.ProductCode,
                     b.ProductName,
                     b.Quantity,
-                    a.SortBatch.BatchNo,
+                    a.SortBatch.NoOneProjectBatchNo,
                     a.CustomerOrder,
                     a.DeliverLineCode,
                     DeliverLineName = deliverLineQuery.Where(c => c.DeliverLineCode == a.DeliverLineCode).FirstOrDefault().DeliverLineName,
                     a.SortBatch.OrderDate,
                     a.SortBatch.NoOneProjectSortDate,
                     a.SortBatch.SortingLineCode
-                }).GroupBy(c => new { c.OrderId, c.CustomerCode, c.CustomerName, c.ProductCode, c.ProductName, c.BatchNo, c.CustomerOrder, c.DeliverLineCode, c.DeliverLineName, c.OrderDate, c.NoOneProjectSortDate, c.SortingLineCode })
+                }).GroupBy(c => new { c.OrderId, c.CustomerCode, c.CustomerName, c.ProductCode, c.ProductName, c.NoOneProjectBatchNo, c.CustomerOrder, c.DeliverLineCode, c.DeliverLineName, c.OrderDate, c.NoOneProjectSortDate, c.SortingLineCode })
                 .ToArray()
                 .OrderBy(a => a.Key.CustomerOrder)
                 .Select(a => new
@@ -794,7 +794,7 @@ namespace THOK.SMS.Bll.Service
                     a.Key.ProductCode,
                     a.Key.ProductName,
                     Quantity = a.Sum(b => b.Quantity),
-                    a.Key.BatchNo,
+                    a.Key.NoOneProjectBatchNo,
                     a.Key.CustomerOrder,
                     a.Key.DeliverLineCode,
                     a.Key.DeliverLineName,
@@ -806,7 +806,7 @@ namespace THOK.SMS.Bll.Service
             foreach (var row in uploadOrder)
             {
                 string rowData = (i++).ToString() + "," + row.OrderId + "," + row.CustomerCode + "," + row.CustomerName + "," + row.ProductCode + ","
-                    + row.ProductName + "," + row.Quantity + "," + row.BatchNo + "," + row.CustomerOrder + ","
+                    + row.ProductName + "," + row.Quantity + "," + row.NoOneProjectBatchNo + "," + row.CustomerOrder + ","
                     + row.DeliverLineCode + "," + row.DeliverLineName + "," + row.OrderDate + "," + row.NoOneProjectSortDate + ","
                     + row.SortingLineCode + ",1;";
                 writer.WriteLine(rowData);

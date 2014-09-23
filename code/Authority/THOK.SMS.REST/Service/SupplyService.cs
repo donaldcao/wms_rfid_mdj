@@ -208,7 +208,7 @@ namespace THOK.SMS.REST.Service
                             if (supplyPosition.PositionCapacity - supplyPositionStorage.Quantity - supplyPositionStorage.WaitQuantity >= 30)
                             {
                                 var position = positionQuery.Where(p => p.ChannelCode == supplyPosition.PositionName).FirstOrDefault();
-                                if (position != null)
+                                if (supplyPosition.PositionType != "01" && position != null)
                                 {
                                     position.HasGoods = false;
                                 }

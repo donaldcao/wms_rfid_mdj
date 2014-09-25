@@ -7,6 +7,7 @@ using THOK.WCS.Dal.Interfaces;
 using THOK.SMS.DbModel;
 using System.Transactions;
 using THOK.Wms.Dal.Interfaces;
+using EntityFramework.Extensions;
 
 namespace THOK.SMS.REST.Service
 {
@@ -31,6 +32,12 @@ namespace THOK.SMS.REST.Service
 
         [Dependency]
         public IPositionRepository PositionRepository { get; set; }
+
+        [Dependency]
+        public ICellPositionRepository CellPositionRepository { get; set; }
+
+        [Dependency]
+        public ICellRepository CellRepository { get; set; }
 
         public bool CreateSupplyTask(int position, int quantity,DateTime orderdate, int batchNo, out string error)
         {
@@ -178,6 +185,7 @@ namespace THOK.SMS.REST.Service
 
             try
             {
+                WCSPositionToSupplyPosition(out error);
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
@@ -189,6 +197,9 @@ namespace THOK.SMS.REST.Service
 
                     foreach (var supplyPosition in supplyPositions)
                     {
+                        supplyPositionStorageQuery.Where(s => s.PositionID == supplyPosition.Id
+                            && s.ProductCode != supplyPosition.ProductCode).Delete();
+
                         var supplyPositionStorages = supplyPositionStorageQuery.Where(s => s.PositionID == supplyPosition.Id
                             && s.ProductCode == supplyPosition.ProductCode);
 
@@ -217,6 +228,48 @@ namespace THOK.SMS.REST.Service
                     }
 
                     SupplyPositionStorageRepository.SaveChanges();
+                    scope.Complete();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }
+        }
+
+        public bool WCSPositionToSupplyPosition(out string error)
+        {
+            error = string.Empty;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
+                    var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
+                    var positionQuery = PositionRepository.GetQueryable();
+                    var cellPositionQuery = CellPositionRepository.GetQueryable();
+                    var cellQuery = CellRepository.GetQueryable();
+
+                    var positions = positionQuery.Join(cellPositionQuery, p => p.ID, c => c.StockInPositionID,(p,c)=>new {Position = p,CellPosition =c})
+                        .Join(cellQuery, r => r.CellPosition.CellCode, c => c.CellCode, (r, c) => new { Position = r.Position, CellPosition = r.CellPosition,Cell = c })
+                        .Where(r => (r.Position.PositionType == "02" || r.Position.PositionType == "03" || r.Position.PositionType == "04")
+                            && !string.IsNullOrEmpty(r.Position.ChannelCode));
+
+                    foreach (var position in positions)
+                    {
+                        var supplyPosition = supplyPositionQuery.Where(s=>s.PositionName == position.Position.ChannelCode).FirstOrDefault();
+                        if (supplyPosition != null && position.Cell.Product!= null && supplyPosition.ProductCode != position.Cell.DefaultProductCode)
+                        {
+                            supplyPositionStorageQuery.Where(s => s.PositionID == supplyPosition.Id).Delete();
+                            supplyPosition.ProductCode = position.Cell.DefaultProductCode;
+                            supplyPosition.ProductName = position.Cell.Product.ProductName;                           
+                        }
+                    }
+
+                    SupplyPositionRepository.SaveChanges();
                     scope.Complete();
                     return true;
                 }

@@ -10,6 +10,8 @@ using THOK.WCS.DbModel;
 using System.Collections;
 using System.Collections.Generic;
 using THOK.WCS.Bll.Interfaces;
+using THOK.SMS.Dal.Interfaces;
+using THOK.SMS.DbModel;
 
 namespace THOK.WCS.REST.Service
 {
@@ -69,6 +71,11 @@ namespace THOK.WCS.REST.Service
 
         [Dependency]
         public ITaskService TaskService { get; set; }
+
+        [Dependency]
+        public ISupplyPositionRepository SupplyPositionRepository { get; set; }
+        [Dependency]
+        public ISupplyPositionStorageRepository SupplyPositionStorageRepository { get; set; }
 
         public bool Arrive(string positionName,string barcode, out string error)
         {
@@ -394,6 +401,9 @@ namespace THOK.WCS.REST.Service
                     var taskQuery = TaskRepository.GetQueryable();
                     var pathQuery = PathRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();
+                    var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
+                    var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
+
                     var task = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
                         .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = p })
@@ -442,6 +452,29 @@ namespace THOK.WCS.REST.Service
                             task.Task.CurrentPositionID = task.TargetPosition.ID;
                             nextPosition.HasGoods = true;
                             task.Task.State = "04";
+
+                            var supplyPosition = supplyPositionQuery.Where(s => s.PositionName == nextPosition.ChannelCode
+                                && s.ProductCode == task.Task.ProductCode).FirstOrDefault();
+                            if (supplyPosition != null)
+                            {
+                                var supplyPositionStorage = supplyPositionStorageQuery.Where(s => s.PositionID == supplyPosition.Id
+                                    && s.ProductCode == supplyPosition.ProductCode).FirstOrDefault();
+
+                                if (supplyPositionStorage == null)
+                                {
+                                    supplyPositionStorage = new SupplyPositionStorage();
+                                    supplyPositionStorage.PositionID = supplyPosition.Id;
+                                    supplyPositionStorage.ProductCode = supplyPosition.ProductCode;
+                                    supplyPositionStorage.ProductName = supplyPosition.ProductName;
+                                    supplyPositionStorage.Quantity = task.Task.TaskQuantity;
+                                    supplyPositionStorage.WaitQuantity = 0;
+                                    SupplyPositionStorageRepository.Add(supplyPositionStorage);
+                                }
+                                else
+                                {
+                                    supplyPositionStorage.Quantity += task.Task.TaskQuantity;
+                                }
+                            }
                         }
                         else
                         {

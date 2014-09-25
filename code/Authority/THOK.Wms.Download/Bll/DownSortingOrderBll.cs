@@ -264,7 +264,7 @@ namespace THOK.Wms.Download.Bll
                 masterrow["quantity_sum"] = Convert.ToDecimal(row["QUANTITY_SUM"].ToString());//总数量
                 masterrow["amount_sum"] = Convert.ToDecimal(row["AMOUNT_SUM"].ToString());//总金额
                 masterrow["detail_num"] = Convert.ToInt32(row["DETAIL_NUM"].ToString());//明细数
-                masterrow["deliver_order"] = row["DELIVER_ORDER"].ToString(); //客户送货顺序
+                masterrow["deliver_order"] = row["DELIVER_ORDER"] == null ? "0" : row["DELIVER_ORDER"].ToString(); //客户送货顺序
                 masterrow["deliver_date"] = row["ORDER_DATE"].ToString();//配送日期
                 masterrow["description"] = row["DIST_BILL_ID"].ToString();
                 masterrow["is_active"] = row["ISACTIVE"].ToString().Trim();//送货线路编码

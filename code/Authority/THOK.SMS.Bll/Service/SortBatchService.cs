@@ -233,7 +233,7 @@ namespace THOK.SMS.Bll.Service
                             sortBatch.NoOneProjectBatchNo = 1;
                         }
                         sortBatch.SortingLineCode = item;
-                        sortBatch.NoOneProjectSortDate = DateTime.Today.AddDays(1);
+                        sortBatch.NoOneProjectSortDate = date.AddDays(1);
                         sortBatch.Status = "01";
                         SortBatchRepository.Add(sortBatch);
                     }
@@ -429,7 +429,7 @@ namespace THOK.SMS.Bll.Service
                             sortBatch.NoOneProjectBatchNo = 1;
                         }
                         sortBatch.SortingLineCode = item;
-                        sortBatch.NoOneProjectSortDate = DateTime.Today.AddDays(1);
+                        sortBatch.NoOneProjectSortDate = date.AddDays(1);
                         sortBatch.Status = "01";
                         SortBatchRepository.Add(sortBatch);
                     }

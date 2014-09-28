@@ -448,7 +448,7 @@ namespace THOK.SMS.Bll.Service
                         //正常分拣线
                         if (productType == "1" || productType == "0")
                         {
-                            sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date)).Id;
+                            sortOrderDispatch.SortBatchId = sortBatchQuery.FirstOrDefault(a => a.SortingLineCode.Equals(sortOrderDispatch.SortingLineCode) && a.OrderDate.Equals(date) && a.Status.Equals("01")).Id;
                         }
                         //异型烟分拣线
                         if (productType == "2" || productType == "0")

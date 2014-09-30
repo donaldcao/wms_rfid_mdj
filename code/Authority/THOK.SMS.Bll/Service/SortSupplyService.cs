@@ -57,7 +57,8 @@ namespace THOK.SMS.Bll.Service
                     s.ProductCode,
                     s.ProductName,
                     s.ChannelCode,
-                    s.Channel.ChannelName
+                    s.Channel.ChannelName,
+                    Status = s.Status == "0" ? "未计划" : "已计划"
                 }).ToArray();
             return new { total, rows = sortSupplysArray };
         }

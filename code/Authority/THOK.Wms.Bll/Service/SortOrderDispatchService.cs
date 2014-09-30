@@ -48,7 +48,7 @@ namespace THOK.Wms.Bll.Service
             {
                 sortDispatch = sortDispatch.Where(s => s.SortingLineCode == SortingLineCode);
             }
-            var temp = sortDispatch.OrderBy(b => b.OrderDate).AsEnumerable().Select(b => new
+            var temp = sortDispatch.OrderByDescending(b => b.OrderDate).AsEnumerable().Select(b => new
            {
                b.ID,
                b.SortingLineCode,

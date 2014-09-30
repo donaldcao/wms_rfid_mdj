@@ -152,7 +152,7 @@ namespace THOK.SMS.Bll.Service
                 sortBatchDetials = sortBatchDetials.Where(a => a.BatchNo.Equals(sortBatch.BatchNo));
             }
             int total = sortBatchDetials.Count();
-            sortBatchDetials = sortBatchDetials.OrderBy(a => a.Id).Skip((page - 1) * rows).Take(rows);
+            sortBatchDetials = sortBatchDetials.OrderByDescending(a => a.OrderDate).Skip((page - 1) * rows).Take(rows);
             var sortBatchArray = sortBatchDetials.AsEnumerable().Select(a => new
             {
                 a.Id,

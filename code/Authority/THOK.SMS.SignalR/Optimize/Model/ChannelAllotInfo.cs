@@ -17,6 +17,8 @@ namespace THOK.SMS.SignalR.Optimize.Model
 
         public string ProductCode { get; set; }
 
+        public string ProductName { get; set; }
+
         public int Quantity { get; set; }
 
         public int RemainQuantity { get; set; }

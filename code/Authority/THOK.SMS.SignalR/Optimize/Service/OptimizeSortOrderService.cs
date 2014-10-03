@@ -645,6 +645,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     GroupNo = c.Channel.GroupNo,
                     OrderNo = c.Channel.OrderNo,
                     ProductCode = c.ProductCode,
+                    ProductName=c.ProductName,
                     Quantity = c.Channel.IsAcceptRemainQuantity && c.ProductCode == c.Channel.ProductCode 
                         ? (int)Math.Ceiling((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50
                         : (int)Math.Floor((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50,
@@ -653,6 +654,34 @@ namespace THOK.SMS.SignalR.Optimize.Service
                         : ((c.Quantity - c.Channel.RemainQuantity) % 50),
                     ChannelCapacity = c.Channel.ChannelCapacity
                 }).ToArray();
+
+            //计算补货提前量
+            foreach (var channelAllot in channelAllotInfos)
+            {
+                while (true)
+                {
+                    if (channelAllot.RemainQuantity <= (channelAllot.ChannelCapacity - 50) && channelAllot.Quantity > 0)
+                    {
+                        channelAllot.RemainQuantity += 50;
+
+                        //补货任务生成
+                        SortSupply addSortSupply = new SortSupply();
+                        addSortSupply.SortBatchId = sortBatchId;
+                        addSortSupply.PackNo = 0;
+                        addSortSupply.ChannelCode = channelAllot.ChannelCode;
+                        addSortSupply.ProductCode = channelAllot.ProductCode;
+                        addSortSupply.ProductName = channelAllot.ProductName;
+                        addSortSupply.Status = "0";
+                        SortSupplyRepository.Add(addSortSupply);
+
+                        channelAllot.Quantity -= 50;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
 
             int psCount = deliverLineCodes.Count();
             int PsTemp = 0;

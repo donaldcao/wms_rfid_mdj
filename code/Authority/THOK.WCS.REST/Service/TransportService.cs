@@ -217,6 +217,7 @@ namespace THOK.WCS.REST.Service
                     var productSizeQuery = ProductSizeRepository.GetQueryable();
                     var cellQuery = CellRepository.GetQueryable();
                     var storageQuery = StorageRepository.GetQueryable();
+                    var productQuery = ProductRepository.GetQueryable();
                                         
                     var tasks = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
@@ -333,7 +334,9 @@ namespace THOK.WCS.REST.Service
                         srmTask.HasGetRequest = task.CurrentPosition.HasGetRequest;
                         srmTask.HasPutRequest = nextPosition.HasPutRequest;
 
-                        srmTask.Barcode = "888888"; //?
+                        var product = productQuery.Where(p => p.ProductCode == task.Task.ProductCode).FirstOrDefault();
+                        string barcode = product != null ? (product.PieceBarcode ?? string.Empty).PadLeft(13, '0') : "888888";
+                        srmTask.Barcode = barcode.Substring(barcode.Length - 6);
 
                         srmTask.ProductName = task.Task.ProductName;
                         var originCell = cellQuery.Join(cellPositionQuery, c => c.CellCode, p => p.CellCode, (c, p) => new { Cell = c,Position = p.StockOutPosition})

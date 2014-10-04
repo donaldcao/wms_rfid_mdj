@@ -645,7 +645,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     GroupNo = c.Channel.GroupNo,
                     OrderNo = c.Channel.OrderNo,
                     ProductCode = c.ProductCode,
-                    ProductName=c.ProductName,
+                    ProductName = c.ProductName,
                     Quantity = c.Channel.IsAcceptRemainQuantity && c.ProductCode == c.Channel.ProductCode 
                         ? (int)Math.Ceiling((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50
                         : (int)Math.Floor((double)(c.Quantity - c.Channel.RemainQuantity) / (double)50) * 50,
@@ -653,14 +653,14 @@ namespace THOK.SMS.SignalR.Optimize.Service
                         ? c.Channel.RemainQuantity
                         : ((c.Quantity - c.Channel.RemainQuantity) % 50),
                     ChannelCapacity = c.Channel.ChannelCapacity
-                }).ToArray();
+                }).OrderBy(c=>c.OrderNo).ToArray();
 
             //计算补货提前量
-            foreach (var channelAllot in channelAllotInfos)
+            while (true)
             {
-                while (true)
+                foreach (var channelAllot in channelAllotInfos)
                 {
-                    if (channelAllot.RemainQuantity <= (channelAllot.ChannelCapacity - 50) && channelAllot.Quantity > 0)
+                    if ((channelAllot.ChannelCapacity - channelAllot.RemainQuantity) >= 50 && channelAllot.Quantity >= 50)
                     {
                         channelAllot.RemainQuantity += 50;
 
@@ -678,8 +678,13 @@ namespace THOK.SMS.SignalR.Optimize.Service
                     }
                     else
                     {
-                        break;
+                        continue; 
                     }
+                }
+
+                if (!channelAllotInfos.Any(c => (c.ChannelCapacity - c.RemainQuantity) >= 50 && c.Quantity >= 50))
+                {
+                    break;
                 }
             }
 
@@ -768,7 +773,7 @@ namespace THOK.SMS.SignalR.Optimize.Service
                                             packInfo.SortOrderAllot.SortOrderAllotDetails.Add(addSortOrderAllotDetail);
                                         }
 
-                                        if (channelAllotInfo.RemainQuantity <= (channelAllotInfo.ChannelCapacity - 50) && channelAllotInfo.Quantity >= 50)
+                                        if ((channelAllotInfo.ChannelCapacity - channelAllotInfo.RemainQuantity) >= 50 && channelAllotInfo.Quantity >= 50)
                                         {
                                             channelAllotInfo.RemainQuantity += 50;
 

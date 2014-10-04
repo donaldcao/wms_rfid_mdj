@@ -11,9 +11,9 @@
     //点击查询结果
     function searchResult() {
         var productChoose = $('#productChoose').combogrid('getValue');
-        var productInfo = $('#productInfo').val();
+        var productValue = $('#productValue').val();
         $("#details").datagrid({
-            url: '/DefaultProductSet/GetCellBy/?QueryString=' + productChoose + '&Value=' + productInfo
+            url: '/DefaultProductSet/GetCellBy/?QueryString=' + productChoose + '&Value=' + productValue
         });
         $("#details").datagrid('reload');
         $('#dlgSearch').dialog('close');
@@ -30,7 +30,7 @@
                 <option value="ProductCode">卷烟编码</option>
                 <option value="ProductName">卷烟名称</option>
             </select>
-            <input id="productInfo" type="text">
+            <input id="productValue" type="text">
         </div>
     </div>
 </div>

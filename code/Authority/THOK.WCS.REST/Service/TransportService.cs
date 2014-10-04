@@ -213,6 +213,7 @@ namespace THOK.WCS.REST.Service
                     var taskQuery = TaskRepository.GetQueryable();
                     var pathQuery = PathRepository.GetQueryable();
                     var positionQuery = PositionRepository.GetQueryable();
+                    var cellPositionQuery = CellPositionRepository.GetQueryable();
                     var productSizeQuery = ProductSizeRepository.GetQueryable();
                     var cellQuery = CellRepository.GetQueryable();
                     var storageQuery = StorageRepository.GetQueryable();
@@ -335,10 +336,18 @@ namespace THOK.WCS.REST.Service
                         srmTask.Barcode = "888888"; //?
 
                         srmTask.ProductName = task.Task.ProductName;
-                        var originCell = cellQuery.Where(c => c.CellCode == task.Task.OriginCellCode).FirstOrDefault();
-                        var targetCell = cellQuery.Where(c => c.CellCode == task.Task.TargetCellCode).FirstOrDefault();
-                        srmTask.OriginCellName = originCell != null ? originCell.CellName : "";
-                        srmTask.TargetCellName = targetCell != null ? targetCell.CellName : "";
+                        var originCell = cellQuery.Join(cellPositionQuery, c => c.CellCode, p => p.CellCode, (c, p) => new { Cell = c,Position = p.StockOutPosition})
+                            .Where(r => r.Position.ID == task.CurrentPosition.ID)
+                            .Select(r=>r.Cell)
+                            .FirstOrDefault();
+
+                        var targetCell = cellQuery.Join(cellPositionQuery, c => c.CellCode, p => p.CellCode, (c, p) => new { Cell = c, Position = p.StockInPosition })
+                            .Where(r => r.Position.ID == nextPosition.ID)
+                            .Select(r => r.Cell)
+                            .FirstOrDefault();
+
+                        srmTask.OriginCellName = originCell != null ? originCell.CellName : string.Format("{0}(当前位置未配置货位)", task.CurrentPosition.PositionName);
+                        srmTask.TargetCellName = targetCell != null ? targetCell.CellName : string.Format("{0}(当前位置未配置货位)", nextPosition.PositionName);
                         srmTask.PiecesQutity = task.Task.TaskQuantity;
                         srmTask.BarQutity = task.Task.BarQutity;
 

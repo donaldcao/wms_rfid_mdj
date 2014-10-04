@@ -226,7 +226,7 @@ namespace THOK.WCS.REST.Service
                             && r.CurrentPosition.AbleStockOut
                             && r.CurrentPosition.ID != r.TargetPosition.ID
                             && r.CurrentPosition.SRMName.Contains(srmName)
-                            && ((new string[] { "01", "05" }).Contains(r.TargetPosition.PositionType) || !r.TargetPosition.HasGoods)
+                            && ((new string[] { "01", "05", "06" }).Contains(r.TargetPosition.PositionType) || !r.TargetPosition.HasGoods)
                         )
                         .OrderBy(r => r.Task.TaskLevel)
                         .ThenBy(r => Math.Abs(travelPos - r.CurrentPosition.TravelPos))

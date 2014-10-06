@@ -121,8 +121,9 @@ namespace Authority.Controllers.Wms.StockBill
             DownDecidePlanBll planBll = new DownDecidePlanBll();
             string strResult = string.Empty;
             bool bResult = InBillMasterService.Delete(BillNo, out strResult);
-            if (bResult)
-                planBll.DeleteMiddleBill(BillNo);
+            //不存在中间表  WMS_MIDDLE_IN_BILL
+            //if (bResult)
+            //    planBll.DeleteMiddleBill(BillNo);
             string msg = bResult ? "删除成功" : "删除失败";
             return Json(JsonMessageHelper.getJsonMessage(bResult, msg, strResult), "text", JsonRequestBehavior.AllowGet);
         }

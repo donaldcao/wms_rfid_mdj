@@ -28,7 +28,9 @@ namespace THOK.Wms.Download.Dao
         /// <returns></returns>
         public DataTable GetInBillMaster(string inBillNoList)
         {
-            string sql = string.Format("SELECT * FROM V_WMS_IN_ORDER WHERE {0} ", inBillNoList);
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
+            string sql = string.Format("SELECT * FROM {0} WHERE {1} ", string.Format(downInterFaceViewName, "V_WMS_IN_ORDER"), inBillNoList);
             return this.ExecuteQuery(sql).Tables[0];
         }
         /// <summary>

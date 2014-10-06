@@ -22,7 +22,9 @@ namespace THOK.Wms.Download.Dao
         /// <summary>从营销系统下载出库单主表单据数据 2013-09-09 21:56:33 牡丹江浪潮 JJ</summary>
         public DataTable GetOutBillMaster2(string outBillNoList)
         {
-            string sql = string.Format("SELECT * FROM V_WMS_OUT_ORDER WHERE {0} ", outBillNoList);
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
+            string sql = string.Format("SELECT * FROM {0} WHERE {1} ", string.Format(downInterFaceViewName, "V_WMS_OUT_ORDER"), outBillNoList);
             return this.ExecuteQuery(sql).Tables[0];
         }
         #endregion
@@ -61,7 +63,10 @@ namespace THOK.Wms.Download.Dao
         /// <summary>从营销系统下载出库单明细表数据,合单数据 2013-09-10 09:27:45 JJ</summary>
         public DataTable GetOutBillDetail2(string outBillNoList)
         {
-            string sql = string.Format("SELECT A.*,B.BRAND_N AS BRANDCODE FROM V_WMS_OUT_ORDER_DETAIL A LEFT JOIN V_WMS_BRAND B ON A.BRAND_CODE=B.BRAND_CODE WHERE {0} ", outBillNoList);
+            SysParameterDao parameterDao = new SysParameterDao();
+            string downInterFaceViewName = parameterDao.FindDownInterFaceViewName();
+            string sql = string.Format("SELECT A.*,B.BRAND_N AS BRANDCODE FROM {0} A LEFT JOIN {1} B ON A.BRAND_CODE=B.BRAND_CODE WHERE {2} ",
+                string.Format(downInterFaceViewName, "V_WMS_OUT_ORDER_DETAIL"), string.Format(downInterFaceViewName, "V_WMS_BRAND"), outBillNoList);
             return this.ExecuteQuery(sql).Tables[0];
         } 
         #endregion

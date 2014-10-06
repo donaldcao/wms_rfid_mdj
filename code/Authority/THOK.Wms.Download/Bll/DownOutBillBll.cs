@@ -78,7 +78,7 @@ namespace THOK.Wms.Download.Bll
                 DataTable emply = dao.FindEmployee(EmployeeCode);
                 DataTable outMasterBillNo = this.GetOutBillNo2(startDate);
                 string billnolist = UtinString.MakeString(outMasterBillNo, "bill_no");
-                string billnolistStr = string.Format("ORDER_DATE ='{0}' AND ORDER_ID NOT IN({1}) ", startDate, billnolist);
+                string billnolistStr = string.Format("ORDER_DATE ='{0}' ", startDate);
                 DataTable masterdt = this.GetOutBillMaster2(billnolistStr);
                 DataRow[] masterdr = masterdt.Select("ORDER_ID NOT IN(" + billnolist + ")");
 

@@ -61,6 +61,9 @@ namespace THOK.SMS.Bll.Service
         [Dependency]
         public ISortOrderDetailRepository SortOrderDetailRepository { get; set; }
 
+        [Dependency]
+        public ISupplyTaskRepository SupplyTaskRepository { get; set; }
+
         protected override Type LogPrefix
         {
             get { return this.GetType(); }
@@ -563,10 +566,12 @@ namespace THOK.SMS.Bll.Service
                     //删除手工补货表
                     ChannelAllotRepository.GetQueryable()
                         .Where(a => a.SortBatchId.Equals(sortBatch.Id)).Delete();
-
+                    
                     //删除分拣补货计划表
-                    SortSupplyRepository.GetQueryable()
-                       .Where(a => a.SortBatchId.Equals(sortBatch.Id)).Delete();
+                    var sortSupplyQuery=SortSupplyRepository.GetQueryable()
+                       .Where(a => a.SortBatchId.Equals(sortBatch.Id));
+                    SupplyTaskRepository.GetQueryable().Where(a => sortSupplyQuery.Select(b => b.Id).Contains(a.SupplyId)).Delete();
+                    sortSupplyQuery.Delete();
                 }
                 sortBatchs.NoOneProjectBatchNo = sortBatch.NoOneProjectBatchNo;
                 sortBatchs.Status = sortBatch.Status;

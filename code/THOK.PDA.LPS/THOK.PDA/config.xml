@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <ConnetionType>
+    <Type name="Type" value="NetWork" />
+  </ConnetionType>
+  <HttpConnectionStr>
+    <Type name="HttpConnStr" value="http://10.92.69.111:8081/" />
+    <Type name="positionName" value="" />  
+  </HttpConnectionStr>
+</Config>

@@ -18,7 +18,7 @@ namespace AS.PDA.Util
             request.AllowWriteStreamBuffering = true;
             request.Method = "POST";
 
-            byte[] buffer = Encoding.Default.GetBytes("AS");
+            byte[] buffer = Encoding.Default.GetBytes("LPS");
             request.ContentLength = buffer.Length;
 
             Stream requestStream = request.GetRequestStream();

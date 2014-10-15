@@ -407,7 +407,12 @@ namespace THOK.WCS.REST.Service
 
             try
             {
-                TaskService.FinishTask(taskid, out error);
+                var task = TaskRepository.GetQueryable().Where(i => i.ID == taskid).FirstOrDefault();
+                if (task != null && task.State == "04" && TaskService.FinishTask(taskid, out error))
+                {
+                    return true;
+                }
+
                 using (TransactionScope scope = new TransactionScope())
                 {
                     var taskQuery = TaskRepository.GetQueryable();
@@ -416,26 +421,26 @@ namespace THOK.WCS.REST.Service
                     var supplyPositionQuery = SupplyPositionRepository.GetQueryable();
                     var supplyPositionStorageQuery = SupplyPositionStorageRepository.GetQueryable();
 
-                    var task = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
+                    var taskinfo = taskQuery.Join(pathQuery, t => t.PathID, p => p.ID, (t, p) => new { Task = t, Path = p })
                         .Join(positionQuery, r => r.Task.OriginPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = p })
                         .Join(positionQuery, r => r.Task.CurrentPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = p })
                         .Join(positionQuery, r => r.Task.TargetPositionID, p => p.ID, (r, p) => new { Task = r.Task, Path = r.Path, OriginPosition = r.OriginPosition, CurrentPosition = r.CurrentPosition, TargetPosition = p })
                         .Where(r => r.Task.ID == taskid && r.Task.State == "02")
                         .FirstOrDefault();
 
-                    if (task != null)
+                    if (taskinfo != null)
                     {
                         Position nextPosition = null;
 
                         IDictionary<int, Position> pathNodePositions = new Dictionary<int, Position>();
-                        pathNodePositions.Add(pathNodePositions.Count + 1, task.OriginPosition);
-                        foreach (var pathNode in task.Path.PathNodes.OrderBy(p => p.PathNodeOrder).ToArray())
+                        pathNodePositions.Add(pathNodePositions.Count + 1, taskinfo.OriginPosition);
+                        foreach (var pathNode in taskinfo.Path.PathNodes.OrderBy(p => p.PathNodeOrder).ToArray())
                         {
                             pathNodePositions.Add(pathNodePositions.Count + 1, pathNode.Position);
                         }
-                        pathNodePositions.Add(pathNodePositions.Count + 1, task.TargetPosition);
+                        pathNodePositions.Add(pathNodePositions.Count + 1, taskinfo.TargetPosition);
 
-                        var currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == task.CurrentPosition.ID)
+                        var currentPositionIndex = pathNodePositions.Where(p => p.Value.ID == taskinfo.CurrentPosition.ID)
                             .Select(p => p.Key)
                             .OrderByDescending(k => k)
                             .FirstOrDefault();
@@ -451,22 +456,22 @@ namespace THOK.WCS.REST.Service
                             nextPosition = pathNodePositions[currentPositionIndex + 1];
                         }
 
-                        if (nextPosition != null && nextPosition.ID != task.TargetPosition.ID)
+                        if (nextPosition != null && nextPosition.ID != taskinfo.TargetPosition.ID)
                         {
-                            task.CurrentPosition.HasGoods = false;
-                            task.Task.CurrentPositionID = nextPosition.ID;
+                            taskinfo.CurrentPosition.HasGoods = false;
+                            taskinfo.Task.CurrentPositionID = nextPosition.ID;
                             nextPosition.HasGoods = true;
-                            task.Task.State = "01";
+                            taskinfo.Task.State = "01";
                         }
-                        else if (nextPosition != null && nextPosition.ID == task.TargetPosition.ID)
+                        else if (nextPosition != null && nextPosition.ID == taskinfo.TargetPosition.ID)
                         {
-                            task.CurrentPosition.HasGoods = false;
-                            task.Task.CurrentPositionID = task.TargetPosition.ID;
+                            taskinfo.CurrentPosition.HasGoods = false;
+                            taskinfo.Task.CurrentPositionID = taskinfo.TargetPosition.ID;
                             nextPosition.HasGoods = true;
-                            task.Task.State = "04";
+                            taskinfo.Task.State = "04";
 
                             var supplyPosition = supplyPositionQuery.Where(s => s.PositionName == nextPosition.ChannelCode
-                                && s.ProductCode == task.Task.ProductCode).FirstOrDefault();
+                                && s.ProductCode == taskinfo.Task.ProductCode).FirstOrDefault();
                             if (supplyPosition != null)
                             {
                                 var supplyPositionStorage = supplyPositionStorageQuery.Where(s => s.PositionID == supplyPosition.Id
@@ -478,19 +483,19 @@ namespace THOK.WCS.REST.Service
                                     supplyPositionStorage.PositionID = supplyPosition.Id;
                                     supplyPositionStorage.ProductCode = supplyPosition.ProductCode;
                                     supplyPositionStorage.ProductName = supplyPosition.ProductName;
-                                    supplyPositionStorage.Quantity = task.Task.TaskQuantity;
+                                    supplyPositionStorage.Quantity = taskinfo.Task.TaskQuantity;
                                     supplyPositionStorage.WaitQuantity = 0;
                                     SupplyPositionStorageRepository.Add(supplyPositionStorage);
                                 }
                                 else
                                 {
-                                    supplyPositionStorage.Quantity += task.Task.TaskQuantity;
+                                    supplyPositionStorage.Quantity += taskinfo.Task.TaskQuantity;
                                 }
                             }
                         }
                         else
                         {
-                            task.Task.State = "04";                            
+                            taskinfo.Task.State = "04";                            
                         }
 
                         TaskRepository.SaveChanges();
@@ -502,8 +507,7 @@ namespace THOK.WCS.REST.Service
                         return false;
                     }
                 }
-                TaskService.FinishTask(taskid, out error);
-                return true;
+                return TaskService.FinishTask(taskid, out error);
             }
             catch (Exception ex)
             {

@@ -10,6 +10,8 @@ using THOK.Common.Entity;
 using THOK.WMS.Upload.Bll;
 using System.Data;
 using EntityFramework.Extensions;
+using THOK.Authority.Dal.Interfaces;
+using THOK.Authority.DbModel;
 
 namespace THOK.Wms.Bll.Service
 {
@@ -33,6 +35,8 @@ namespace THOK.Wms.Bll.Service
 
         [Dependency]
         public IStorageRepository StorageRepository { get; set; }
+        [Dependency]
+        public ISystemParameterRepository SystemParameterRepository { get; set; }
 
         UploadBll upload = new UploadBll();
 
@@ -1364,63 +1368,85 @@ namespace THOK.Wms.Bll.Service
         /// <summary>查询 拆盘位信息</summary>
         public object GetSplitPalletCell(int page, int rows, string productCode, string shelfType)
         {
-            IQueryable<Cell> cellQuery = null;
-            string cpw = "001-07", dpz1 = "001-07-001", dpz2 = "001-07-002", xpz1 = "001-07-003", yxy1 = "001-07-004";
+            SystemParameter systemParameter=SystemParameterRepository.GetQueryable().FirstOrDefault(a=>a.ParameterName=="DownInterFaceViewName");
+            if (systemParameter.ParameterValue == "LPS_{0}")
+            {
+                IQueryable<Cell> cellQuery = null;
+                string SplitPalletArea = "001-19";
+                cellQuery = CellRepository.GetQueryable().Where(c => c.AreaCode == SplitPalletArea && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
 
-            if ((productCode == "" || productCode == null) && (shelfType == "" || shelfType == null))
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
-            }
-            else if ((productCode != "" || productCode != null) && (shelfType == "" || shelfType == null))
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.AreaCode == cpw && (c.DefaultProductCode.Contains(productCode)));
-            }
-            else if ((productCode == "" || productCode == null) && shelfType == "01")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
-            }
-            else if ((productCode != "" || productCode != null) && shelfType == "01")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode)));
-            }
-            else if ((productCode == "" || productCode == null) && shelfType == "02")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
-            }
-            else if ((productCode != "" || productCode != null) && shelfType == "02")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode)));
-            }
-            else if ((productCode == "" || productCode == null) && shelfType == "03")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
-            }
-            else if ((productCode != "" || productCode != null) && shelfType == "03")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode)));
-            }
-            else if ((productCode == "" || productCode == null) && shelfType == "04")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
-            }
-            else if ((productCode != "" || productCode != null) && shelfType == "04")
-            {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode)));
+                var cell = cellQuery.OrderBy(b => b.CellCode).Select(b => new
+                {
+                    b.CellCode,
+                    b.CellName,
+                    b.DefaultProductCode,
+                    DefaultProductName = b.Product.ProductName
+                });
+                int total = cell.Count();
+                cell = cell.Skip((page - 1) * rows).Take(rows);
+                return new { total, rows = cell.ToArray() };
             }
             else
             {
-                cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                IQueryable<Cell> cellQuery = null;
+                string cpw = "001-07", dpz1 = "001-07-001", dpz2 = "001-07-002", xpz1 = "001-07-003", yxy1 = "001-07-004";
+
+                if ((productCode == "" || productCode == null) && (shelfType == "" || shelfType == null))
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                else if ((productCode != "" || productCode != null) && (shelfType == "" || shelfType == null))
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.AreaCode == cpw && (c.DefaultProductCode.Contains(productCode)));
+                }
+                else if ((productCode == "" || productCode == null) && shelfType == "01")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                else if ((productCode != "" || productCode != null) && shelfType == "01")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode)));
+                }
+                else if ((productCode == "" || productCode == null) && shelfType == "02")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                else if ((productCode != "" || productCode != null) && shelfType == "02")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz2 && (c.DefaultProductCode.Contains(productCode)));
+                }
+                else if ((productCode == "" || productCode == null) && shelfType == "03")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                else if ((productCode != "" || productCode != null) && shelfType == "03")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == xpz1 && (c.DefaultProductCode.Contains(productCode)));
+                }
+                else if ((productCode == "" || productCode == null) && shelfType == "04")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                else if ((productCode != "" || productCode != null) && shelfType == "04")
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == yxy1 && (c.DefaultProductCode.Contains(productCode)));
+                }
+                else
+                {
+                    cellQuery = CellRepository.GetQueryable().Where(c => c.ShelfCode == dpz1 && (c.DefaultProductCode.Contains(productCode) || c.DefaultProductCode.Equals(null)));
+                }
+                var cell = cellQuery.OrderBy(b => b.CellCode).Select(b => new
+                {
+                    b.CellCode,
+                    b.CellName,
+                    b.DefaultProductCode,
+                    DefaultProductName = b.Product.ProductName
+                });
+                int total = cell.Count();
+                cell = cell.Skip((page - 1) * rows).Take(rows);
+                return new { total, rows = cell.ToArray() };
             }
-            var cell = cellQuery.OrderBy(b => b.CellCode).Select(b => new
-            {
-                b.CellCode,
-                b.CellName,
-                b.DefaultProductCode,
-                DefaultProductName = b.Product.ProductName
-            });
-            int total = cell.Count();
-            cell = cell.Skip((page - 1) * rows).Take(rows);
-            return new { total, rows = cell.ToArray() };
+            return null;
         }
         public bool SaveSplitPalletCell(Cell cell, out string strResult)
         {
